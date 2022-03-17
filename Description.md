@@ -9,7 +9,7 @@ The articles retrieved should be textual only, without any html tags (?? How abo
 - www.aktualne.cz
 - www.seznamzpravy.cz
 - www.denik.cz
-- irozhlas.cz
+- www.irozhlas.cz
 - www.ceskenoviny.cz
 - www.lidovky.cz
 
