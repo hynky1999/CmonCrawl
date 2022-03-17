@@ -57,7 +57,7 @@ From quick skimming through documentation, there is no significant difference. B
 It is clear that program will be IO-bound. Thus we will decide between asyncio and threading. Since we will be spawning a lot of requests the fastest and best approach seems to be asyncio, because threading will use a lot of resources to orchestr threads.
 
 ## Cluster distribution
-I plan to organize program to two parts. One will be responsible for getting urls to query from CC index and second for actual data retrieve. Thus we can retrieve urls then has then and divide them into N buckets and distribute each bucket to a computer in cluster. Deployment using Docker could be considered.
+I plan to organize program to two parts. One will be responsible for getting urls to query from CC index and second for actual data retrieve. Thus we can retrieve urls for given domain and then divide them into N buckets and distribute each bucket to a node in cluster. This can be done simply by hashing url. Deployment using Docker could be considered.
 
 ## Error recovery and resuming
 TBD
@@ -66,7 +66,7 @@ TBD
 
 ## Interesting Resources
 https://michaelnielsen.org/ddi/how-to-crawl-a-quarter-billion-webpages-in-40-hours/ Although very old, it provides pretty good insights.
-Redis idea seemed interesting for resuming.
+Redis idea seems to be pretty niche resuming tasks and error recovery.
 
 
 
