@@ -33,7 +33,7 @@ There are many reasons against vanilla crawling, this [article](https://scrapeop
 ## Article url Discovery ?
 In typical vanilla crawling, we build list of urls to visit as we go. Visit url, find links and add this links to frontier/list of urls to visit next. We also have to make sure we don't visit links multiple times to prevent cycling.
 
-With CC things are much easier. Since space of all urls is finite, CC indexes all urls. We can than take such index and query for specified domain to get all urls with respect to that domain. Note that sometimes news servers use subdomain to distinguish between categories. This needs to be accounted for. Another releases new crawls in monthly frequencies and for each crawl new index is created. Thus to retrieve urls from all crawls and remove duplicates.
+With CC things are much easier. Since space of all urls is finite, CC indexes all urls. We can than take such index and query for specified domain to get all urls with respect to that domain. Note that sometimes news servers use subdomain to distinguish between categories. This needs to be accounted for. Another important thing is that CC releases new crawls in monthly frequencies and for each crawl new index is created. Thus to retrieve urls from all crawls and remove duplicates.
 
 As I said it is possible to query CC index, but there are multiple ways to do it.
 1. [Query CDXJ Api provided by CC](https://pywb.readthedocs.io/en/latest/manual/cdxserver_api.html#api-reference) easier, but probably slower
@@ -54,7 +54,7 @@ Thus we are left with two libraries for parsing HTML files.
 From quick skimming through documentation, there is no significant difference. Both are capable parsing html document and then return nodes based on css selectors or path. I haven't found any reliable benchmark of these only few articles [1](https://medium.com/@ArtMyftiu/web-data-extraction-in-its-multitudes-using-python-b5849b92931c) , [2](https://rushter.com/blog/python-fast-html-parser/). Also people of HackerNews confirmed this bias so it must be true :)
 
 ## Concurrency
-It is clear that program will be IO-bound. Thus we will decide between asyncio and threading. Since we will be spawning a lot of requests the fast and best approach seems to be asyncio, because threading will use a lot of resources to orchestr threads.
+It is clear that program will be IO-bound. Thus we will decide between asyncio and threading. Since we will be spawning a lot of requests the fastest and best approach seems to be asyncio, because threading will use a lot of resources to orchestr threads.
 
 ## Cluster distribution
 I plan to organize program to two parts. One will be responsible for getting urls to query from CC index and second for actual data retrieve. Thus we can retrieve urls then has then and divide them into N buckets and distribute each bucket to a computer in cluster. Deployment using Docker could be considered.
