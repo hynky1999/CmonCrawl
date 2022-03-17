@@ -66,7 +66,7 @@ TBD
 
 ## Interesting Resources
 https://michaelnielsen.org/ddi/how-to-crawl-a-quarter-billion-webpages-in-40-hours/ Although very old, it provides pretty good insights.
-Redis idea seems to be pretty niche resuming tasks and error recovery.
+Redis idea seems to be pretty niche for resuming tasks and error recovery.
 
 
 
