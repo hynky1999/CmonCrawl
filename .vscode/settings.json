@@ -1,0 +1,5 @@
+{
+  "html.format.wrapLineLength": 80,
+  "python.formatting.provider": "black",
+  "python.linting.enabled": true
+}

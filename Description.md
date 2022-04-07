@@ -1,81 +1,10 @@
-# Discussion on implementation
-
-Layout problem with date
-
-## Why CommonCrawl and not vanilla crawling ?
-
-There are many reasons against vanilla crawling, this [article](https://scrapeops.io/blog/the-state-of-web-scraping-2022/) summarizes them pretty well.
-
-### Main problems:
-
-- Admins don't like bots making too many requests on their site -> various technics to block bots/crawlers from website eg. (ip filtering, canvas fingerprints). This needs to be dealt with.
-- Cloudflare/Captcha protection on many sites
-- Big bottleneck of network bandwidth (can be partially solved by events)
-- Prevention of circles when discovering new urls
-- Javascript rendering (SPA)
-
-### Advantages:
-
-- We can theoretically access any site available, with CC we can only retrieved urls indexed by CC
-
-## Article url Discovery ?
-
-In typical vanilla crawling, we build list of urls to visit as we go. Visit url, find links and add this links to frontier/list of urls to visit next. We also have to make sure we don't visit links multiple times to prevent cycling.
-
-With CC things are much easier. Since space of all urls is finite, CC indexes all urls. We can than take such index and query for specified domain to get all urls with respect to that domain. Note that sometimes news servers use subdomain to distinguish between categories. This needs to be accounted for. Another important thing is that CC releases new crawls in monthly frequencies and for each crawl new index is created. Thus to retrieve urls from all crawls and remove duplicates.
-
-As I said it is possible to query CC index, but there are multiple ways to do it.
-
-1. [Query CDXJ Api provided by CC](https://pywb.readthedocs.io/en/latest/manual/cdxserver_api.html#api-reference) easier, but probably slower
-2. [Manually Query CC Index Table](https://github.com/commoncrawl/cc-index-table/blob/master/README.md) harder, but faster
-
-## Article Retrieve
-
-Index value for given url, provides us with link for [WARC](https://www.iso.org/obp/ui/#!iso:std:68004:en) file containing the data of crawl of url. It also provides offset in WARC file so that there is no need to download whole WARC file.
-
-## What is WARC file ?
-
-In brief it is basically a data format for storing web crawls. For each url it contains HTTP response+request and content retrieved. Little bit more detailed info about [WARC](https://archive-it.org/blog/post/the-stack-warc-file/).
-
-## How to Parse HTML file ?
-
-We can of course do this manually, but I don't see any benefit in doing so.
-Thus we are left with two libraries for parsing HTML files.
-
-1. [BeautifulSoup4](https://www.crummy.com/software/BeautifulSoup/bs4/doc)
-2. [selectolax](https://selectolax.readthedocs.io/en/latest/lexbor.html)
-
-From quick skimming through documentation, there is no significant difference. Both are capable parsing html document and then return nodes based on css selectors or path. I haven't found any reliable benchmark of these only few articles [1](https://medium.com/@ArtMyftiu/web-data-extraction-in-its-multitudes-using-python-b5849b92931c) , [2](https://rushter.com/blog/python-fast-html-parser/). Also people of HackerNews confirmed this bias so it must be true :)
-
-## Concurrency
-
-It is clear that program will be IO-bound. Thus we will decide between asyncio and threading. Since we will be spawning a lot of requests the fastest and best approach seems to be asyncio, because threading will use a lot of resources to orchestr threads.
-
-## Cluster distribution
-
-I plan to organize program to two parts. One will be responsible for getting urls to query from CC index and second for actual data retrieve. Thus we can retrieve urls for given domain and then divide them into N buckets and distribute each bucket to a node in cluster. This can be done simply by hashing url. Deployment using Docker could be considered.
-
-## Error recovery and resuming
-
-TBD
-
-## Interesting Resources
-
-https://michaelnielsen.org/ddi/how-to-crawl-a-quarter-billion-webpages-in-40-hours/ Although very old, it provides pretty good insights.
-Redis idea seems to be pretty niche for resuming tasks and error recovery.
-
-Deníček
-mypy
-
-Každé druhé pondělí v 11:00 v kanceláři N233.
-
 # Short description
 
-The goal of my semestr project is to create distributed web crawler
+The goal of my semester project is to create distributed web crawler
 for extracting articles and metadata from the Czech news websites.
 The crawler will not directly crawl the web but instead it will crawl archived websites
 gathered by Common Crawl initiative.
-For each website the program will retrieve all possible articles orignating on the website.
+For each website the program will retrieve all possible articles originating on the website.
 The articles will be cleared of all html tags and only the article text with its structure will be
 extracted.
 Aside from the article itself the program will retrieve these attributes if
@@ -95,21 +24,19 @@ The program will support these websites.
 - www.ceskenoviny.cz (2016-Today)
 - www.lidovky.cz (2013-Today)
 
-The program will be written in Python 3.10 with usage of type annotations(typing).
+The project will be written in Python 3.10 with usage of type annotations(typing).
 Main focus will be given to scalability(deployment on cluster), fault-tolerance and high throughput.
-The scalability factor will be achieved with usage of orchestration system Docker.
-The fault-tolerance will be achived with usage of shared persisten storage eg. database,
-namely speaking of Redis DB and RabitMQ message queues.
-The last factor high single threaded throughput will be achieved with usage of asynchronous
-programming using pythons asyncio library.
+Docker-swarm will be used for orchestration purposes. Reddis will be used for semi-persistent storage and
+ActiveMQ will be used for message queues. To achieve high single-threaded throughput async programming
+concepts will be used(asyncio).
 
 # Architecture
 
-![helo](./Pipeline.drawio.svg)
+![Architecture](./Pipeline.drawio.svg)
 
-The project will be splitted into two parts. Aggregator and Processor.
+The project will be split into two parts. Aggregator and Processor.
 The main task of Aggregator is to aggregate all article urls for supported websites and pass them to Processor.
-The main task of Processor is to extracted the data from websites
+The main task of Processor is to extracted the data from websites and save them on the disc
 
 ## Aggregator
 
@@ -122,7 +49,7 @@ We can than query such index for specified domain to get all urls with respect
 to that domain. Note that sometimes news servers use subdomain to distinguish between categories.
 This needs to be accounted for. Another important thing is that CC releases new crawls in monthly
 frequencies and for each crawl new index is created. Thus it is still needed to check for duplicate urls.
-As I said it is possible to query CC index, but there are multiple ways to do it.
+As I said it is possible to query CC index and there are multiple ways to do it.
 
 1. [Query CDXJ Api provided by CC](https://pywb.readthedocs.io/en/latest/manual/cdxserver_api.html#api-reference)
    Easy to query, speed depends on external API server
@@ -134,50 +61,84 @@ As I said it is possible to query CC index, but there are multiple ways to do it
 As we wish to build a distributed application, we cannot use in memory lists, because we can run multiple
 aggregators, thus data storage needs to be shared. For this task we will use RedisDB. It's in-memory key-value
 database. RedisDB was chosen because we need fast R/W(this is achieved by storing data in-memory) and
-we don't need complex data structures, thus key-value storage is fine. It also provides persistency with it's
-memory snapshots. Another DB which was considered was Memcached. However it doesn't provide presitency and keys
+we don't need complex data structures, thus key-value storage is fine. It also provides semi-persistency with it's
+memory snapshots. Another DB which was considered was Memcached. However it doesn't provide persistency and keys
 can be only 256B longer, which could be an issue.
 
 ## Processor
 
-The processor pipeline can be seen in overview image. We will describe its components now
+The processor pipeline can be seen in overview image. Since pipelines don't interfere with each other
+we can run multiple pipelines at the same time in one Processor using async programming.
+This is very important because a lot of time will be spend waiting for Downloader to download date.
+
+We will describe its components now
 
 ### Downloader
 
-This module will receive link to an WARC file and its offset and will download it and pass it to Router.
+This module will receive link to an WARC file and offset in WARC and will download WARC segment containing date for
+specified link. It will parse important info from HTTP headers and pass the info alongside with received HTML file.
 
 #### What is WARC file ?
 
-In brief it is basically a data format for storing web crawls. For each url it contains HTTP response+request and content retrieved. Little bit more detailed info about [WARC](https://archive-it.org/blog/post/the-stack-warc-file/).
+In brief it is a data format for storing web crawls. For each url it contains HTTP response+request
+and content retrieved.
+More detailed info about [WARC](https://archive-it.org/blog/post/the-stack-warc-file/).
 
 ### Router
 
-Router will lookup registred Extractors and choose an Extractor based on regex match in url.
-Similiar idea to how [Django](https://www.djangoproject.com/) routes requests to views.
-
-1000 souborů v jednom adresáři.
+Router will lookup registered Extractors and choose an Extractor based on regex match in url received from Downloader.
+Similar idea to how [Django](https://www.djangoproject.com/) routes requests to views.
 
 ### Extractor
 
-## How to Parse HTML file ?
+Extractor receives parsed information from WARC file along with HTML file content.
+It's goal is to extract information as described in _Short Description_. Since every domain
+stores information differently there will be needed one extractor per domain. Extractors will be defined
+as python files and will be registered to Router for forwarding. Each extractor file will contain a class
+which is derived from Extractor based class and thus appropriate method(parse method) will exist on such a class.
 
-We can of course do this manually, but I don't see any benefit in doing so.
-Thus we are left with two libraries for parsing HTML files.
+#### HTML parsing ?
+
+HTML parsing can be done manually using regex without any deeper knowledge of html structure.
+However this approach will lead to not well maintainable code and as second problem it is hard
+to extract more complex structures using just regex. Therefore html parser will be used to perceive
+html structure.
+In python there are two leading libraries for parsing HTML files.
 
 1. [BeautifulSoup4](https://www.crummy.com/software/BeautifulSoup/bs4/doc)
 2. [selectolax](https://selectolax.readthedocs.io/en/latest/lexbor.html)
 
-From quick skimming through documentation, there is no significant difference. Both are capable parsing html document and then return nodes based on css selectors or path. I haven't found any reliable benchmark of these only few articles [1](https://medium.com/@ArtMyftiu/web-data-extraction-in-its-multitudes-using-python-b5849b92931c) , [2](https://rushter.com/blog/python-fast-html-parser/). Also people of HackerNews confirmed this bias so it must be true :)
+From quick skimming through documentation, there is no significant difference.
+Both are capable of parsing html documents and querying based on css selectors.
+I haven't found any reliable benchmark of these only few articles [1](https://medium.com/@ArtMyftiu/web-data-extraction-in-its-multitudes-using-python-b5849b92931c) , [2](https://rushter.com/blog/python-fast-html-parser/). Also people of HackerNews confirmed this bias so it must be true :)
 
-## Concurrency
+### Outstreamer
 
-It is clear that program will be IO-bound. Thus we will decide between asyncio and threading. Since we will be spawning a lot of requests the fastest and best approach seems to be asyncio, because threading will use a lot of resources to orchestr threads.
+This implement logic for saving retrieved data on local disc.
 
-## Cluster distribution
+## MiddleWare
 
-I plan to organize program to two parts. One will be responsible for getting urls to query from CC index and second for actual data retrieve. Thus we can retrieve urls for given domain and then divide them into N buckets and distribute each bucket to a node in cluster. This can be done simply by hashing url. Deployment using Docker could be considered.
+Aggregator and Processor needs to be connected. We will implement this connection using message queue.
+Message queue is chosen because we ideally want to delivery one message from Aggregator to exactly one Processor.
+The problem here is that while theoretically possible in practice it's not possible to implement exactly one delivery
+with reasonable throughput. This is due to the fact that network is unreliable and receiving nodes can go offline
+at any time without acknowledging the completion of message. Therefore the at most one strategy is chosen, because
+few dropped articles don't make any difference and at least one is not the best solution because we would have to
+add another layer after the pipeline to remove duplicates. There are many protocols implements wanted properties.
+Namely Reddis Streams, ActiveMQ, RabbitMQ and many others. The problem with Reddis streams is that it doesn't
+allow for strong persistent unlike ActiveMQ. Both ActiveMQ and RabbitMQ are feasible for task. At the end ActiveMQ
+was chosen.
 
-## Error recovery and resuming
+## Misc
+
+### Threading vs Async
+
+It is clear that program will be IO-bound. Most of the time will be spent waiting for data to download from external
+server. This means that parallelization is not good approach for such task and it yields good results
+if the task is CPU bound. Therefore the decision is between asyncio and threading.
+Since a lot of requests will be spawned at the same time the fastest and best approach seems to be asyncio,
+because threading will use a lot of resources for thread orchestration and we don't need features that threading
+would bring us.
 
 ### Why CommonCrawl and not vanilla crawling ?
 
@@ -195,22 +156,3 @@ this [article](https://scrapeops.io/blog/the-state-of-web-scraping-2022/) summar
 ### Advantages:
 
 - We can theoretically access any site available, with CC we can only retrieved urls indexed by CC
-
-## Article url Discovery ?
-
-In typical vanilla crawling, we build list of urls to visit as we go. Visit url, find links and add this links to frontier/list of urls to visit next. We also have to make sure we don't visit links multiple times to prevent cycling.
-
-With CC things are much easier. Since space of all urls is finite, CC indexes all urls. We can than take such index and query for specified domain to get all urls with respect to that domain. Note that sometimes news servers use subdomain to distinguish between categories. This needs to be accounted for. Another important thing is that CC releases new crawls in monthly frequencies and for each crawl new index is created. Thus to retrieve urls from all crawls and remove duplicates.
-
-As I said it is possible to query CC index, but there are multiple ways to do it.
-
-1. [Query CDXJ Api provided by CC](https://pywb.readthedocs.io/en/latest/manual/cdxserver_api.html#api-reference) easier, but probably slower
-2. [Manually Query CC Index Table](https://github.com/commoncrawl/cc-index-table/blob/master/README.md) harder, but faster
-
-Formating using black
-Pylance for types
-
-Novinky cz, huge javascript leap
-aktualne just cz->en + littble bit of structre change
-seznamyzpravy same structure as new novinky.cz
-denik.cz cz->en
