@@ -1,4 +1,6 @@
+from contextlib import redirect_stderr
 from typing import List
+import reddis_helpers
 import unittest
 
 
@@ -44,3 +46,19 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
 
         # Checked by alternative client
         self.assertEqual(len(recs), 194393)
+
+
+class TestRedisAynsc(unittest.IsolatedAsyncioTestCase):
+    async def SetUp(self) -> None:
+        self.redis_conn = reddis_helpers.create_connection("redis://localhost:6379")
+        await self.redis_conn.flushall()
+
+    async def test_process_and_forward(self):
+        record = index_query.Domain_Record("idnes.cz", 0, 1)
+        result = await redirect_helpers.process_and_forward(self.redis_conn, record)
+        self.assertTrue(result)
+        result = await redirect_helpers.process_and_forward(self.redis_conn, record)
+        self.assertFalse(result)
+        record = index_query.Domain_Record("seznam.cz", 0, 1)
+        result = await redirect_helpers.process_and_forward(self.redis_conn, record)
+        self.assertTrue(result)
