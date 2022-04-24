@@ -31,6 +31,7 @@ class Domain_Crawl:
 @dataclass
 class Domain_Record:
     filename: str
+    url: str
     offset: int
     length: int
 
@@ -102,6 +103,7 @@ class DomainIndexer(AsyncIterable[Domain_Record]):
                     filename=js["filename"],
                     offset=js["offset"],
                     length=js["length"],
+                    url=js["url"],
                 )
                 for js in r_json
             ]
@@ -148,7 +150,6 @@ class DomainIndexerIterator(AsyncIterator[Domain_Record]):
         prefetch_size: int = 4,
     ):
         self.__client = client
-        self.__sum = 0
         self.__opt_prefetch_size = prefetch_size
         self.__i: int = 0
         self.__domain_records: List[Domain_Record] = []
