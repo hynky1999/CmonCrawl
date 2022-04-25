@@ -1,16 +1,12 @@
 from typing import List
+from Aggregator.index_query import Domain_Record, DomainIndexer
 import unittest
-
-
-import index_query
 
 
 class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self) -> None:
         self.CC_SERVERS = ["https://index.commoncrawl.org/CC-MAIN-2022-05-index"]
-        self.di = await index_query.DomainIndexer(
-            ["idnes.cz"], cc_servers=self.CC_SERVERS
-        ).aopen()
+        self.di = await DomainIndexer(["idnes.cz"], cc_servers=self.CC_SERVERS).aopen()
         self.client = self.di.client
 
     async def asyncTearDown(self) -> None:
@@ -38,9 +34,14 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(len(responses), 12066)
 
     async def test_iterator(self):
-        recs: List[index_query.Domain_Record] = []
+        recs: List[Domain_Record] = []
         async for record in self.di:
             recs.append(record)
 
         # Checked by alternative client
         self.assertEqual(len(recs), 194393)
+
+
+if __name__ == "__main__":
+    unittest.main()
+

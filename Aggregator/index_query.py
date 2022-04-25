@@ -3,7 +3,7 @@ from collections import deque
 from dataclasses import dataclass
 
 from Aggregator.errors import PageResponseError
-from ndjson_decoder import Decoder
+from Aggregator.ndjson_decoder import Decoder
 from types import TracebackType
 from typing import (
     AsyncIterable,
@@ -31,6 +31,7 @@ class Domain_Crawl:
 @dataclass
 class Domain_Record:
     filename: str
+    url: str
     offset: int
     length: int
 
@@ -61,10 +62,7 @@ class DomainIndexer(AsyncIterable[Domain_Record]):
 
     @staticmethod
     async def get_number_of_pages(
-        client: ClientSession,
-        cdx_server: str,
-        url: str,
-        page_size: int | None = None,
+        client: ClientSession, cdx_server: str, url: str, page_size: int | None = None
     ) -> Tuple[int, int]:
         params: Dict[str, str | int] = {
             "showNumPages": "true",
@@ -102,6 +100,7 @@ class DomainIndexer(AsyncIterable[Domain_Record]):
                     filename=js["filename"],
                     offset=js["offset"],
                     length=js["length"],
+                    url=js["url"],
                 )
                 for js in r_json
             ]
@@ -148,7 +147,6 @@ class DomainIndexerIterator(AsyncIterator[Domain_Record]):
         prefetch_size: int = 4,
     ):
         self.__client = client
-        self.__sum = 0
         self.__opt_prefetch_size = prefetch_size
         self.__i: int = 0
         self.__domain_records: List[Domain_Record] = []
@@ -178,10 +176,7 @@ class DomainIndexerIterator(AsyncIterator[Domain_Record]):
             self.__prefetch_queue.append(
                 asyncio.create_task(
                     DomainIndexer.get_captured_responses(
-                        self.__client,
-                        next_crawl.crawl,
-                        next_crawl.domain,
-                        page=i,
+                        self.__client, next_crawl.crawl, next_crawl.domain, page=i
                     )
                 )
             )
@@ -207,10 +202,7 @@ class DomainIndexerIterator(AsyncIterator[Domain_Record]):
             self.__prefetch_queue.append(
                 asyncio.create_task(
                     DomainIndexer.get_captured_responses(
-                        self.__client,
-                        err.CC_server,
-                        err.domain,
-                        page=err.page,
+                        self.__client, err.CC_server, err.domain, page=err.page
                     )
                 )
             )

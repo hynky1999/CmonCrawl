@@ -1,0 +1,19 @@
+version: "3.9"
+services:
+  redis-duplicates:
+    build: "./Aggregator/redis_duplicates"
+    container_name: "redis-duplicates"
+    ports:
+      - "6379:6379"
+    volumes:
+      - "redis-duplicated-af:/appends_dir"
+
+  unittests:
+    build: .
+    container_name: "unittests"
+    depends_on:
+      - redis-duplicates
+
+volumes:
+  redis-duplicated-af:
+    driver: "local"
