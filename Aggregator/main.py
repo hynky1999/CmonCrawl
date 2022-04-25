@@ -1,5 +1,5 @@
 from index_query import DomainIndexer, Domain_Record
-from reddis_helpers import create_pool
+from Aggregator.redis_duplicates.reddis_helpers import create_pool
 import aioredis
 
 

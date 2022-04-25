@@ -1,18 +1,12 @@
-from contextlib import redirect_stderr
 from typing import List
-import reddis_helpers
+from Aggregator.index_query import Domain_Record, DomainIndexer
 import unittest
-
-
-import index_query
 
 
 class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self) -> None:
         self.CC_SERVERS = ["https://index.commoncrawl.org/CC-MAIN-2022-05-index"]
-        self.di = await index_query.DomainIndexer(
-            ["idnes.cz"], cc_servers=self.CC_SERVERS
-        ).aopen()
+        self.di = await DomainIndexer(["idnes.cz"], cc_servers=self.CC_SERVERS).aopen()
         self.client = self.di.client
 
     async def asyncTearDown(self) -> None:
@@ -40,7 +34,7 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(len(responses), 12066)
 
     async def test_iterator(self):
-        recs: List[index_query.Domain_Record] = []
+        recs: List[Domain_Record] = []
         async for record in self.di:
             recs.append(record)
 
@@ -48,17 +42,6 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(len(recs), 194393)
 
 
-class TestRedisAynsc(unittest.IsolatedAsyncioTestCase):
-    async def SetUp(self) -> None:
-        self.redis_conn = reddis_helpers.create_connection("redis://localhost:6379")
-        await self.redis_conn.flushall()
+if __name__ == "__main__":
+    unittest.main()
 
-    async def test_process_and_forward(self):
-        record = index_query.Domain_Record("idnes.cz", 0, 1)
-        result = await redirect_helpers.process_and_forward(self.redis_conn, record)
-        self.assertTrue(result)
-        result = await redirect_helpers.process_and_forward(self.redis_conn, record)
-        self.assertFalse(result)
-        record = index_query.Domain_Record("seznam.cz", 0, 1)
-        result = await redirect_helpers.process_and_forward(self.redis_conn, record)
-        self.assertTrue(result)
