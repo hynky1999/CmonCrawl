@@ -1,9 +1,10 @@
 from __future__ import annotations
 from collections import deque
 from dataclasses import dataclass
+from importlib.util import resolve_name
 
 from Aggregator.errors import PageResponseError
-from ndjson_decoder import Decoder
+from Aggregator.ndjson_decoder import Decoder
 from types import TracebackType
 from typing import (
     AsyncIterable,
@@ -62,10 +63,7 @@ class DomainIndexer(AsyncIterable[Domain_Record]):
 
     @staticmethod
     async def get_number_of_pages(
-        client: ClientSession,
-        cdx_server: str,
-        url: str,
-        page_size: int | None = None,
+        client: ClientSession, cdx_server: str, url: str, page_size: int | None = None
     ) -> Tuple[int, int]:
         params: Dict[str, str | int] = {
             "showNumPages": "true",
@@ -94,7 +92,7 @@ class DomainIndexer(AsyncIterable[Domain_Record]):
 
         async with client.get(cdx_server, params=params) as response:
             if not response.ok:
-                raise PageResponseError(cdx_server, url, page)
+                raise PageResponseError(url, status=response.status, reason=response.reason, page=page)
             r_json = await response.json(
                 content_type="text/x-ndjson", loads=Decoder().decode
             )
@@ -179,10 +177,7 @@ class DomainIndexerIterator(AsyncIterator[Domain_Record]):
             self.__prefetch_queue.append(
                 asyncio.create_task(
                     DomainIndexer.get_captured_responses(
-                        self.__client,
-                        next_crawl.crawl,
-                        next_crawl.domain,
-                        page=i,
+                        self.__client, next_crawl.crawl, next_crawl.domain, page=i
                     )
                 )
             )
@@ -208,10 +203,7 @@ class DomainIndexerIterator(AsyncIterator[Domain_Record]):
             self.__prefetch_queue.append(
                 asyncio.create_task(
                     DomainIndexer.get_captured_responses(
-                        self.__client,
-                        err.CC_server,
-                        err.domain,
-                        page=err.page,
+                        self.__client, err.CC_server, err.domain, page=err.page
                     )
                 )
             )
