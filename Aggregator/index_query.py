@@ -1,6 +1,7 @@
 from __future__ import annotations
 from collections import deque
 from dataclasses import dataclass
+from importlib.util import resolve_name
 
 from Aggregator.errors import PageResponseError
 from Aggregator.ndjson_decoder import Decoder
@@ -91,7 +92,7 @@ class DomainIndexer(AsyncIterable[Domain_Record]):
 
         async with client.get(cdx_server, params=params) as response:
             if not response.ok:
-                raise PageResponseError(cdx_server, url, page)
+                raise PageResponseError(url, status=response.status, reason=response.reason, page=page)
             r_json = await response.json(
                 content_type="text/x-ndjson", loads=Decoder().decode
             )

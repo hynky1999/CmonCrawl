@@ -1,6 +1,9 @@
 class PageResponseError(BaseException):
-    def __init__(self, CC_server: str, domain: str, page: int, *args: object) -> None:
+    def __init__(
+        self, domain: str, status: str, reason: str, *args: object, page: int = 0
+    ) -> None:
         super().__init__(*args)
-        self.CC_server = CC_server
         self.domain = domain
         self.page = page
+        self.status = status
+        self.reason = reason
