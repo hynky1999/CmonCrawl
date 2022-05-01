@@ -29,6 +29,7 @@ class RouterTests(unittest.TestCase):
         # python path from this file
         self.router.load_modules(os.path.join(os.path.dirname(path), "test_routes"))
         self.router.register_route("AAA", [r"www.idnes*", r"1111.cz"])
+        # Names to to match by NAME in file
         self.router.register_route("BBB", r"seznam.cz")
 
     def test_router_route_by_name(self):
