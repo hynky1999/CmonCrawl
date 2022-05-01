@@ -1,5 +1,5 @@
 import aioredis
-import asyncio
+import time
 from index_query import Domain_Record
 
 
