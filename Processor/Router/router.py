@@ -44,10 +44,13 @@ class Router:
         regex_compiled = [re.compile(regex) for regex in regex]
         self.__registered_routes.append(Route(name, regex_compiled))
 
-    def route(self, url: str) -> Union[ModuleType, None]:
+    def route(
+        self, url: str, pipe_params: Dict[str, object] = {}
+    ) -> Union[ModuleType, None]:
         for route in self.__registered_routes:
             for regex in route.regexes:
                 if regex.match(url):
+                    pipe_params["proccessor_cls"] = self.__modules[route.name]
                     return self.__modules[route.name]
         return None
 

@@ -32,9 +32,11 @@ class RouterTests(unittest.TestCase):
         self.router.register_route("BBB", r"seznam.cz")
 
     def test_router_route_by_name(self):
-        c1 = self.router.route("www.idnes.cz")
-        c2 = self.router.route("www.i.cz")
-        c3 = self.router.route("seznam.cz")
+        params = {}
+        c1 = self.router.route("www.idnes.cz", params)
+        c2 = self.router.route("www.i.cz", params)
+        c3 = self.router.route("seznam.cz", params)
+        self.assertEqual(c3, params["proccessor_cls"])
         self.assertEqual(c1.__name__, "a")
         self.assertEqual(c3.__name__, "b")
         self.assertIsNone(c2, None)
