@@ -11,4 +11,5 @@ async def download_url(client: ClientSession, params: Dict[str, Any]) -> str:
         if not response.ok:
             raise PageResponseError(url, response.reason, response.status)
         html = await response.text()
+        params['response'] = html
         return html
