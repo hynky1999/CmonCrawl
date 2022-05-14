@@ -1,25 +1,34 @@
 import unittest
 import os
-from aiohttp import ClientSession
-from Processor.Downloader.download import download_url
+import re
+from Processor.Downloader.download import Downloader
 from Processor.Router.router import Router
 
 
 class TestDownloader(unittest.IsolatedAsyncioTestCase):
-    def setUp(self) -> None:
-        self.client: ClientSession = ClientSession()
+    async def asyncSetUp(self) -> None:
+        self.downloader: Downloader = await Downloader().aopen()
 
     async def test_download_url(self):
         params = {}
-        params["url"] = "https://crawler-test.com/titles/empty_title"
-        response = await download_url(self.client, params)
-        self.assertEqual(response, params["response"])
-        response = response.replace("\n", "").replace(" ", "")
-        self.assertTrue(
-            response.startswith(
-                "<!DOCTYPEhtml><html><head><title></title><metacontent="
-            )
-        )
+        length = 30698
+        offset = 863866755
+        url = "crawl-data/CC-MAIN-2022-05/segments/1642320302715.38/warc/CC-MAIN-20220121010736-20220121040736-00132.warc.gz"
+        res = await self.downloader.download_url(url, offset, length, False, params)
+        self.assertIsNotNone(re.search("Provozovatelem serveru iDNES.cz je MAFRA", res))
+
+    async def test_digest_verification_sha(self):
+        params = {}
+        length = 30698
+        offset = 863866755
+        url = "crawl-data/CC-MAIN-2022-05/segments/1642320302715.38/warc/CC-MAIN-20220121010736-20220121040736-00132.warc.gz"
+        res = await self.downloader.download_url(url, offset, length, False, params)
+        hash_type="sha1"
+        digest ='5PWKBZGXQFKX4VHAFUMMN34FC76OBXVX'
+        self.assertTrue(self.downloader.verify_digest(hash_type, digest, res))
+
+    async def asyncTearDown(self) -> None:
+        await self.downloader.aclose(None, None, None)
 
 
 class RouterTests(unittest.TestCase):
