@@ -5,7 +5,6 @@ from types import TracebackType
 from aiohttp import ClientSession
 from typing import Any, Dict, Type
 from Aggregator.errors import PageResponseError
-from Processor.Downloader.warc import parse_warc
 from hashlib import sha1
 
 
@@ -54,7 +53,6 @@ class Downloader:
                 if digest != hash:
                     raise ValueError(f'Digest mismatch: "{digest}" != "{hash}"')
 
-
                 if self.verify_digest(hash_type, hash, content) == False:
                     raise ValueError("Digest verification failed")
 
@@ -75,7 +73,6 @@ class Downloader:
 
     def unwrap(self, response: bytes, pipe_params: Dict[str, Any] = {}) -> str:
         content = gzip.decompress(response).decode(DEFAULT_ENCODE)
-        parse_warc(content, pipe_params)
         return pipe_params["content"]
 
     async def aclose(

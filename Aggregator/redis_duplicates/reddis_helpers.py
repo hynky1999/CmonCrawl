@@ -1,11 +1,11 @@
 import aioredis
 import time
-from Aggregator.index_query import Domain_Record
+from Aggregator.index_query import DomainRecord
 from Aggregator.distributed_queue import Queue
 
 
 async def process_and_forward(
-    redis_conn: aioredis.Redis, queue: Queue[Domain_Record], record: Domain_Record
+    redis_conn: aioredis.Redis, queue: Queue[DomainRecord], record: DomainRecord
 ) -> int | None:
     # Already set
     if await redis_conn.get(record.url) is not None:
