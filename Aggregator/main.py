@@ -1,40 +1,35 @@
-from distutils.log import error
+from datetime import datetime
 import time
 from Aggregator.index_query import IndexAggregator
 import asyncio
 
 
 async def main():
-    records = []
-
-    async def dumb_aggregator(dr):
-        records.append(dr)
-        return 1
 
     cc_servers = [
         "https://index.commoncrawl.org/CC-MAIN-2022-21-index",
-        "https://index.commoncrawl.org/CC-MAIN-2022-05-index",
-        "https://index.commoncrawl.org/CC-MAIN-2021-49-index",
-        "https://index.commoncrawl.org/CC-MAIN-2021-43-index",
-        "https://index.commoncrawl.org/CC-MAIN-2021-39-index",
-        "https://index.commoncrawl.org/CC-MAIN-2021-31-index",
+        # "https://index.commoncrawl.org/CC-MAIN-2022-05-index",
+        # "https://index.commoncrawl.org/CC-MAIN-2021-49-index",
+        # "https://index.commoncrawl.org/CC-MAIN-2021-43-index",
+        # "https://index.commoncrawl.org/CC-MAIN-2021-39-index",
+        # "https://index.commoncrawl.org/CC-MAIN-2021-31-index",
+        # "https://index.commoncrawl.org/CC-MAIN-2008-2009-index"
     ]
 
-    async with IndexAggregator(["idnes.cz"], cc_servers=cc_servers) as di:
+    async with IndexAggregator(
+        ["idnes.cz"],
+        cc_servers=cc_servers,
+        since=datetime(2020, 1, 1),
+        to=datetime(2020, 1, 2),
+    ) as di:
         st = time.time()
-        try:
-            await di.aggregate(dumb_aggregator, max_retries=9999)
-        except Exception as e:
-            print(type(e))
-
-        print(f"First test {time.time() - st}")
-
-        st = time.time()
-        await asyncio.sleep(20)
         print("Starting second test")
+        list = []
         async for record in di:
-            await dumb_aggregator(di)
+            list.append(record)
+
         print(f"Second test {time.time() - st}")
+        print(len(list))
 
 
-asyncio.run(main())
+asyncio.run(main(), debug=True)

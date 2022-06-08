@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List
 from Aggregator.index_query import DomainRecord, IndexAggregator
 import unittest
@@ -7,7 +8,7 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self) -> None:
         self.CC_SERVERS = ["https://index.commoncrawl.org/CC-MAIN-2022-05-index"]
         self.di = await IndexAggregator(
-            ["idnes.cz"], cc_servers=self.CC_SERVERS
+            ["idnes.cz"], cc_servers=self.CC_SERVERS, max_retries=50
         ).aopen()
         self.client = self.di.client
 
@@ -35,51 +36,59 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
         )
         self.assertEqual(len(responses), 12066)
 
-    async def test_iterator(self):
+    async def test_since(self):
+        # That is crawl date not published date
         records: List[DomainRecord] = []
+        self.di.since = datetime(2022, 1, 21)
 
-        async def dumb_aggregator(dr: DomainRecord):
-            records.append(dr)
-            return 1
+        async for record in self.di:
+            self.assertGreaterEqual(record.timestamp, self.di.since)
+            records.append(record)
 
-        await self.di.aggregate(dumb_aggregator, max_retries=9999)
+        self.assertEqual(len(records), 131149)
 
-        # Checked by alternative client
-        self.assertEqual(len(records), 194393)
-
-    async def test_aggregate(self):
+    async def test_to(self):
+        # That is crawl date not published date
         records: List[DomainRecord] = []
+        self.di.to = datetime(2022, 1, 21)
 
-        async def dumb_aggregator(dr: DomainRecord):
-            records.append(dr)
-            return 1
+        async for record in self.di:
+            self.assertLessEqual(record.timestamp, self.di.to)
+            records.append(record)
 
-        await self.di.aggregate(dumb_aggregator, max_retries=9999)
+        self.assertEqual(len(records), 63244)
 
-        # Checked by alternative client
-        self.assertEqual(len(records), 194393)
-
-    async def test_aggregate_full(self):
-        async def dumb_aggregator(dr: DomainRecord):
-            records.append(dr)
-            return 1
-
+    async def test_limit(self):
         records: List[DomainRecord] = []
-        try:
-            async with IndexAggregator(
-                domains=["idnes.cz"],
-                cc_servers=[
-                    "https://index.commoncrawl.org/CC-MAIN-2022-21-index",
-                    "https://index.commoncrawl.org/CC-MAIN-2022-05-index",
-                    "https://index.commoncrawl.org/CC-MAIN-2021-49-index",
-                    "https://index.commoncrawl.org/CC-MAIN-2021-43-index",
-                    "https://index.commoncrawl.org/CC-MAIN-2021-39-index",
-                    "https://index.commoncrawl.org/CC-MAIN-2021-31-index",
-                ],
-            ) as di:
-                await di.aggregate(dumb_aggregator, max_retries=9999)
-        except Exception as e:
-            print(e)
+        self.di.limit = 10
+        async for record in self.di:
+            records.append(record)
+
+        self.assertEqual(len(records), 10)
+
+    async def test_init_queue_since_to(self):
+        iterator = self.di.IndexAggregatorIterator(
+            self.client,
+            self.di.domains,
+            [],
+            since=datetime(2022, 5, 1),
+            to=datetime(2022, 1, 10),
+        )
+        # Generates only for 2020
+        q = iterator.init_crawls_queue(
+            self.di.domains,
+            self.di.cc_servers
+            + [
+                "https://index.commoncrawl.org/CC-MAIN-2021-43-index",
+                "https://index.commoncrawl.org/CC-MAIN-2022-21-index",
+            ],
+        )
+        self.assertEqual(len(q), 2)
+
+    async def test_iterator_single(self):
+        records: List[DomainRecord] = []
+        async for record in self.di:
+            records.append(record)
 
         # Checked by alternative client
         self.assertEqual(len(records), 194393)
