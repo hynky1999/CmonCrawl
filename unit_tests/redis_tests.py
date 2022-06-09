@@ -1,3 +1,4 @@
+from datetime import datetime
 import unittest
 from collections import deque
 from Aggregator.index_query import DomainRecord
@@ -15,10 +16,10 @@ class TestRedisAynsc(unittest.IsolatedAsyncioTestCase):
 
     async def test_process_and_forward(self):
 
-        record = DomainRecord("x", "idnes.cz", 0, 1)
+        record = DomainRecord("x", "idnes.cz", 0, 1, datetime.now())
         queue: DummyQueue[DomainRecord] = DummyQueue()
         await process_and_forward(self.redis_conn, queue, record)
         await process_and_forward(self.redis_conn, queue, record)
-        record2 = DomainRecord("x", "seznam.cz", 0, 1)
+        record2 = DomainRecord("x", "seznam.cz", 0, 1, datetime.now())
         await process_and_forward(self.redis_conn, queue, record2)
         self.assertEqual(queue.queue, deque([record2, record]))
