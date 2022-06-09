@@ -1,13 +1,18 @@
+from pathlib import Path
+from typing import Any
 import unittest
 import os
 import re
 from datetime import datetime
 from Aggregator.index_query import DomainRecord
 from Processor.Downloader.download import Downloader
+from Processor.Downloader.warc import PipeMetadata
+from Processor.OutStreamer.stream_to_file import OutStreamerFile
 from Processor.Router.router import Router
+from UserDefineExtractors.aktualne_cz import AktualneExtractor
 
 
-class TestDownloader(unittest.IsolatedAsyncioTestCase):
+class DownloaderTests(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self) -> None:
         self.downloader: Downloader = await Downloader().aopen()
 
@@ -55,7 +60,50 @@ class RouterTests(unittest.TestCase):
         c2 = self.router.route("www.i.cz", params)
         c3 = self.router.route("seznam.cz", params)
         self.assertEqual(c3, params["proccessor_cls"])
-        self.assertEqual(c1.__name__, "a")
-        self.assertEqual(c3.__name__, "b")
+        self.assertEqual(c1.__name__ if c1 is not None else "", "a")
+        self.assertEqual(c3.__name__ if c3 is not None else "", "b")
         self.assertIsNone(c2, None)
 
+
+class ExtractorTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.aktualne_extractor = AktualneExtractor()
+
+    def test_aktualne_article1(self):
+        with open("sites/aktualneCZ/article1.html", "r") as f:
+            content = f.read()
+
+        pipe_params = {}
+        self.aktualne_extractor.extract(content, pipe_params)
+        pipe_params_extracted: dict[str, Any] = pipe_params["extracted"]
+        self.assertEqual(
+            pipe_params_extracted["headline"],
+            "Brankář Mazanec bude v Nashvillu další rok",
+        )
+        self.assertEqual(
+            pipe_params_extracted["article"],
+            """
+Hokejový brankář Marek Mazanec prodloužil smlouvu s Nashvillem.
+Marek Mazanec odchytal v dresu Nashvillu zatím 27 zápasů NHL.
+Marek Mazanec odchytal v dresu Nashvillu zatím 27 zápasů NHL. | Foto: Reuters
+Nashville - Hokejový brankář Marek Mazanec prodloužil smlouvu s Nashvillem. S vedením Predators uzavřel roční dvoucestný kontrakt, který mu v případě působení v NHL zaručuje příjem 575 000 dolarů za sezonu. Na farmě by si vydělal 100 000 dolarů.
+Mazancovi končí dvouletá nováčkovská smlouva, kterou podepsal s Nashvillem po předloňském zisku extraligového titulu s Plzní. V první zámořské sezoně odchytal v NHL 25 utkání, v tomto ročníku nastoupil za Predators jen do dvou zápasů. Jinak působil ve farmářském týmu Milwaukee Admirals v AHL.
+""",
+        )
+
+
+class OutStremaerTests(unittest.IsolatedAsyncioTestCase):
+    def setUp(self) -> None:
+        self.outstreamer_file = OutStreamerFile(origin=Path("./test"))
+
+    async def test_simple_write(self):
+        file = await self.outstreamer_file.stream("test", PipeMetadata(dict(), dict()))
+        self.assertTrue(os.path.exists(file))
+
+    async def test_clean_up(self):
+        file = await self.outstreamer_file.stream("test", PipeMetadata(dict(), dict()))
+        await self.outstreamer_file.clean_up()
+        self.assertFalse(os.path.exists(file))
+
+    async def AsyncTearDown(self) -> None:
+        await self.outstreamer_file.clean_up()

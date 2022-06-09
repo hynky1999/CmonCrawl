@@ -3,18 +3,24 @@ from base64 import b32decode
 import gzip
 from types import TracebackType
 from aiohttp import ClientSession
-from typing import Any, Dict, Tuple, Type
+from typing import Tuple, Type
 from Aggregator.index_query import DomainRecord
 from hashlib import sha1
 
 from Processor.Downloader.errors import PageDownloadException
+from Processor.Downloader.warc import PipeMetadata, parse_warc
 
 
 DEFAULT_ENCODE = "latin-1"
 
 
 class Downloader:
-    def __init__(self, base_url: str = "https://data.commoncrawl.org/"):
+    def __init__(
+        self,
+        base_url: str = "https://data.commoncrawl.org/",
+        digest_verification: bool = True,
+    ):
+        self.digest_verification = digest_verification
         self.BASE_URL = base_url
 
     async def aopen(self) -> Downloader:
@@ -26,11 +32,8 @@ class Downloader:
         return await self.aopen()
 
     async def download(
-        self,
-        domain_record: DomainRecord,
-        digest_verification: bool = True,
-        digest: str = "",
-    ) -> Tuple[str, Dict[str, Any]]:
+        self, domain_record: DomainRecord, digest: str = ""
+    ) -> Tuple[str, PipeMetadata]:
         # Because someone thought having non c-like range is good idea
         # Both end/start are inclusive
         headers = {
@@ -47,12 +50,12 @@ class Downloader:
                 )
             # will be unziped
             reponse_bytes = await response.content.read()
-            metadata: Dict[str, Any] = {}
-            content = self.unwrap(reponse_bytes)
+            content, metadata = parse_warc(self.unwrap(reponse_bytes))
+
             if digest_verification:
                 hash_type: str
                 hash: str
-                hash_type, hash = metadata["warc_header"]["payload_digest"].split(":")
+                hash_type, hash = metadata.warc_header["payload_digest"].split(":")
                 if digest != hash:
                     raise ValueError(f'Digest mismatch: "{digest}" != "{hash}"')
 
