@@ -1,6 +1,8 @@
 import unittest
 import os
 import re
+from datetime import datetime
+from Aggregator.index_query import DomainRecord
 from Processor.Downloader.download import Downloader
 from Processor.Router.router import Router
 
@@ -10,21 +12,27 @@ class TestDownloader(unittest.IsolatedAsyncioTestCase):
         self.downloader: Downloader = await Downloader().aopen()
 
     async def test_download_url(self):
-        params = {}
-        length = 30698
-        offset = 863866755
-        url = "crawl-data/CC-MAIN-2022-05/segments/1642320302715.38/warc/CC-MAIN-20220121010736-20220121040736-00132.warc.gz"
-        res = await self.downloader.download_url(url, offset, length, False, params)
+        dr = DomainRecord(
+            url="www.idnes.cz",
+            filename="crawl-data/CC-MAIN-2022-05/segments/1642320302715.38/warc/CC-MAIN-20220121010736-20220121040736-00132.warc.gz",
+            length=30698,
+            offset=863866755,
+            timestamp=datetime.today(),
+        )
+        res, _ = await self.downloader.download(dr, False)
         self.assertIsNotNone(re.search("Provozovatelem serveru iDNES.cz je MAFRA", res))
 
     async def test_digest_verification_sha(self):
-        params = {}
-        length = 30698
-        offset = 863866755
-        url = "crawl-data/CC-MAIN-2022-05/segments/1642320302715.38/warc/CC-MAIN-20220121010736-20220121040736-00132.warc.gz"
-        res = await self.downloader.download_url(url, offset, length, False, params)
-        hash_type="sha1"
-        digest ='5PWKBZGXQFKX4VHAFUMMN34FC76OBXVX'
+        dr = DomainRecord(
+            url="idnes.cz",
+            filename="crawl-data/CC-MAIN-2022-05/segments/1642320302715.38/warc/CC-MAIN-20220121010736-20220121040736-00132.warc.gz",
+            length=30698,
+            offset=863866755,
+            timestamp=datetime.today(),
+        )
+        res, _ = await self.downloader.download(dr, False)
+        hash_type = "sha1"
+        digest = "5PWKBZGXQFKX4VHAFUMMN34FC76OBXVX"
         self.assertTrue(self.downloader.verify_digest(hash_type, digest, res))
 
     async def asyncTearDown(self) -> None:

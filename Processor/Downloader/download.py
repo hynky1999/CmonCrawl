@@ -3,9 +3,11 @@ from base64 import b32decode
 import gzip
 from types import TracebackType
 from aiohttp import ClientSession
-from typing import Any, Dict, Type
-from Aggregator.errors import PageResponseError
+from typing import Any, Dict, Tuple, Type
+from Aggregator.index_query import DomainRecord
 from hashlib import sha1
+
+from Processor.Downloader.errors import PageDownloadException
 
 
 DEFAULT_ENCODE = "latin-1"
@@ -23,40 +25,41 @@ class Downloader:
     async def __aenter__(self) -> Downloader:
         return await self.aopen()
 
-    async def download_url(
+    async def download(
         self,
-        cc_url: str,
-        offset: int,
-        length: int,
+        domain_record: DomainRecord,
         digest_verification: bool = True,
         digest: str = "",
-        pipe_params: Dict[str, Any] = {},
-    ) -> str:
+    ) -> Tuple[str, Dict[str, Any]]:
         # Because someone thought having non c-like range is good idea
         # Both end/start are inclusive
-        headers = {"Range": "bytes={}-{}".format(offset, offset + length - 1)}
-        url = f"{self.BASE_URL}{cc_url}"
+        headers = {
+            "Range": "bytes={}-{}".format(
+                domain_record.offset, domain_record.offset + domain_record.length - 1
+            )
+        }
+        url = f"{self.BASE_URL}{domain_record.filename}"
 
         async with self.client.get(url, headers=headers) as response:
             if not response.ok:
-                raise PageResponseError(url, response.reason, response.status)
+                raise PageDownloadException(
+                    domain_record, response.reason, response.status
+                )
             # will be unziped
             reponse_bytes = await response.content.read()
-            content = self.unwrap(reponse_bytes, pipe_params)
-            pipe_params["url"] = url
-            content = pipe_params["content"]
-            # TODO verification
+            metadata: Dict[str, Any] = {}
+            content = self.unwrap(reponse_bytes)
             if digest_verification:
-                hash_type, hash = pipe_params["warc_header"]["payload_digest"].split(
-                    ":"
-                )
+                hash_type: str
+                hash: str
+                hash_type, hash = metadata["warc_header"]["payload_digest"].split(":")
                 if digest != hash:
                     raise ValueError(f'Digest mismatch: "{digest}" != "{hash}"')
 
                 if self.verify_digest(hash_type, hash, content) == False:
                     raise ValueError("Digest verification failed")
 
-            return pipe_params["content"]
+            return content, metadata
 
     def verify_digest(
         self, hash_type: str, digest: str, content: str, encoding: str = DEFAULT_ENCODE
@@ -71,9 +74,9 @@ class Downloader:
             raise ValueError(f"Unknown hash type {hash_type}")
         return True
 
-    def unwrap(self, response: bytes, pipe_params: Dict[str, Any] = {}) -> str:
+    def unwrap(self, response: bytes) -> str:
         content = gzip.decompress(response).decode(DEFAULT_ENCODE)
-        return pipe_params["content"]
+        return content
 
     async def aclose(
         self,
