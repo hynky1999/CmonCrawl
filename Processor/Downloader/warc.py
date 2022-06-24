@@ -1,18 +1,8 @@
-from dataclasses import dataclass
 from datetime import datetime
 import re
 from typing import Any, Dict
 from datetime import datetime
-
-
-@dataclass
-class PipeMetadata:
-    """
-    Metadata for a pipe.
-    """
-
-    warc_header: Dict[str, Any]
-    http_header: Dict[str, Any]
+from Processor.utils import PipeMetadata
 
 
 def parse_warc_header(warc: str):
@@ -49,10 +39,9 @@ def parse_http_header(http: str):
     return http_header
 
 
-def parse_warc(warc_str: str):
+def parse_warc(warc_str: str, metadata: PipeMetadata):
     warc_h, http_h, html = map(str.strip, warc_str.split("\r\n\r\n", maxsplit=2))
-
-    warc_header = parse_warc_header(warc_h)
-    http_header = parse_http_header(http_h)
-    return html, PipeMetadata(warc_header, http_header)
+    metadata.warc_header = parse_warc_header(warc_h)
+    metadata.http_header = parse_http_header(http_h)
+    return html
 

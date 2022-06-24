@@ -3,7 +3,7 @@ from base64 import b32decode
 import gzip
 from types import TracebackType
 from aiohttp import ClientSession
-from typing import Tuple, Type
+from typing import Type
 from Aggregator.index_query import DomainRecord
 from hashlib import sha1
 
@@ -32,8 +32,8 @@ class Downloader:
         return await self.aopen()
 
     async def download(
-        self, domain_record: DomainRecord, digest: str = ""
-    ) -> Tuple[str, PipeMetadata]:
+        self, domain_record: DomainRecord, metadata: PipeMetadata
+    ) -> str:
         # Because someone thought having non c-like range is good idea
         # Both end/start are inclusive
         headers = {
@@ -50,19 +50,23 @@ class Downloader:
                 )
             # will be unziped
             reponse_bytes = await response.content.read()
-            content, metadata = parse_warc(self.unwrap(reponse_bytes))
+            content = parse_warc(self.unwrap(reponse_bytes), metadata)
 
-            if digest_verification:
+            if self.digest_verification:
                 hash_type: str
                 hash: str
+                if metadata.warc_header is None:
+                    raise ValueError("No digest found")
+
                 hash_type, hash = metadata.warc_header["payload_digest"].split(":")
-                if digest != hash:
+                digest = metadata.domain_record.digest
+                if digest is not None and digest != hash:
                     raise ValueError(f'Digest mismatch: "{digest}" != "{hash}"')
 
                 if self.verify_digest(hash_type, hash, content) == False:
                     raise ValueError("Digest verification failed")
 
-            return content, metadata
+            return content
 
     def verify_digest(
         self, hash_type: str, digest: str, content: str, encoding: str = DEFAULT_ENCODE

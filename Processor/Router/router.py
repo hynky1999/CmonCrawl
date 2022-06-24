@@ -6,6 +6,8 @@ from dataclasses import dataclass
 from types import ModuleType
 from typing import Dict, List, Union
 
+from Processor.Extractor.extractor import BaseExtractor
+
 
 @dataclass
 class Route:
@@ -15,8 +17,8 @@ class Route:
 
 class Router:
     def __init__(self):
-        self.__registered_routes: List[Route] = []
-        self.__modules: Dict[str, ModuleType] = {}
+        self.registered_routes: List[Route] = []
+        self.modules: Dict[str, BaseExtractor] = {}
 
     def load_module(self, module_path: str):
         module_name = os.path.splitext(os.path.basename(module_path))[0]
@@ -26,10 +28,16 @@ class Router:
 
         module: ModuleType = importlib.util.module_from_spec(spec)
         sys.modules[f"rc__{module_name}"] = module
+        if spec.loader is None:
+            raise Exception("Failed to load module: " + module_name)
+
         spec.loader.exec_module(module)
 
         name: str = getattr(module, "NAME", module_name)
-        self.__modules[name] = module
+        extractor: BaseExtractor | None = getattr(module, "Extractor", None)
+        if extractor is None:
+            raise Exception("Missing Extractor class in module: " + module_name)
+        self.modules[name] = extractor
 
     def load_modules(self, folder: str):
         for path in os.listdir(folder):
@@ -42,15 +50,12 @@ class Router:
         if isinstance(regex, str):
             regex = [regex]
         regex_compiled = [re.compile(regex) for regex in regex]
-        self.__registered_routes.append(Route(name, regex_compiled))
+        self.registered_routes.append(Route(name, regex_compiled))
 
-    def route(
-        self, url: str, pipe_params: Dict[str, object] = {}
-    ) -> Union[ModuleType, None]:
-        for route in self.__registered_routes:
+    def route(self, url: str) -> BaseExtractor:
+        for route in self.registered_routes:
             for regex in route.regexes:
                 if regex.match(url):
-                    pipe_params["proccessor_cls"] = self.__modules[route.name]
-                    return self.__modules[route.name]
-        return None
+                    return self.modules[route.name]
+        raise ValueError("No route found for url: " + url)
 

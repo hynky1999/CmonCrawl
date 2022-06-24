@@ -1,23 +1,37 @@
-from abc import ABC
-from typing import Any, Dict
+from abc import ABC, abstractclassmethod, abstractmethod
 from Processor.Downloader.download import DEFAULT_ENCODE
+from Processor.utils import PipeMetadata
+import chardet
 
 
 class BaseExtractor(ABC):
     def __init__(self):
         pass
 
-    def extract(self, response: str, pipe_params: Dict[str, Any]) -> str:
-        article = self.preprocess(response, pipe_params)
-        return self.extract_no_preprocess(article, pipe_params)
+    def filter(self, resopnse: str, metadata: PipeMetadata):
+        # Leaves everything in
+        return True
 
-    def extract_no_preprocess(
-        self, response: str, pipe_params: Dict[str, Any]
-    ) -> str:
+    def extract(self, response: str, metadata: PipeMetadata) -> str | None:
+        if self.filter(response, metadata) is False:
+            return None
+
+        article = self.preprocess(response, metadata)
+        return self.extract_no_preprocess(article, metadata)
+
+    @abstractmethod
+    def extract_no_preprocess(self, response: str, metadata: PipeMetadata) -> str:
         raise NotImplementedError()
 
-    def preprocess(self, response: str, pipe_params: Dict[str, Any]) -> str:
-        decoded = response.encode(DEFAULT_ENCODE).decode(pipe_params.get("encoding", DEFAULT_ENCODE))
+    def preprocess(self, response: str, metadata: PipeMetadata) -> str:
+        encoding = self.__guess_encoding(response, metadata)
+        decoded = response.encode(DEFAULT_ENCODE).decode(encoding)
         linux_decoded = decoded.replace("\r\n", "\n")
         return linux_decoded
+
+    def __guess_encoding(self, response: str, metadata: PipeMetadata) -> str:
+        if metadata.domain_record.encoding is not None:
+            return metadata.domain_record.encoding
+
+        return chardet.detect(response)
 

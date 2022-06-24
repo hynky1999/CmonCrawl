@@ -2,6 +2,7 @@ from __future__ import annotations
 from collections import deque
 from dataclasses import dataclass
 from datetime import datetime
+import re
 
 from Aggregator.errors import PageResponseError
 from Aggregator.ndjson_decoder import Decoder
@@ -33,7 +34,9 @@ class DomainRecord:
     url: str
     offset: int
     length: int
-    timestamp: datetime
+    digest: str | None = None
+    encoding: str | None = None
+    timestamp: datetime = datetime.now()
 
 
 class IndexAggregator(AsyncIterable[DomainRecord]):
@@ -69,7 +72,6 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         return await self.aopen()
 
     def __aiter__(self):
-        # This will never happend but it cannot deduce it
         return self.IndexAggregatorIterator(
             self.client,
             self.domains,
@@ -178,10 +180,12 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         )
         domain_records = [
             DomainRecord(
-                filename=js["filename"],
-                offset=js["offset"],
-                length=js["length"],
-                url=js["url"],
+                filename=js.get("filename", 0),
+                offset=int(js.get("offset", 0)),
+                length=int(js.get("length", 0)),
+                url=js.get("url", ""),
+                encoding=js.get("encoding", None),
+                digest=js.get("digest", None),
                 timestamp=timestamp_to_datetime(js["timestamp"]),
             )
             for js in r_json
@@ -357,7 +361,11 @@ def to_timestamp_format(date: datetime):
 
 
 def crawl_to_year(crawl: str) -> int:
-    return int(crawl.split("/")[-1].split("-")[-3])
+    year = re.search(r"(?:MAIN-)(\d{4})", crawl)
+    if year is None:
+        raise ValueError(f"Invalid crawl {crawl}")
+
+    return int(year.groups()[0])
 
 
 def timestamp_to_datetime(timestamp: str) -> datetime:
