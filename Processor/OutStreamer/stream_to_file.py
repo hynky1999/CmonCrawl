@@ -11,6 +11,7 @@ class OutStreamerFile(OutStreamer):
     def __init__(
         self,
         origin: Path,
+        extension: str = ".html",
         directory_prefix: str = "directory_",
         max_directory_size: int = 1000,
     ):
@@ -21,6 +22,7 @@ class OutStreamerFile(OutStreamer):
         self.diretory_prefix = directory_prefix
         self.directories: List[Path] = []
         self.__create_new_folder(self.__get_folder_path())
+        self.extension = extension
 
     def __get_folder_path(self) -> Path:
         return self.origin / Path(f"{self.diretory_prefix}{self.directory_num}")
@@ -45,7 +47,7 @@ class OutStreamerFile(OutStreamer):
             self.__create_new_folder(self.__get_folder_path())
 
         file_path = Path(self.__get_folder_path()) / Path(
-            f"{hash(response)}_{self.directory_size}"
+            f"{hash(response)}_{self.directory_size}{self.extension}"
         )
         try:
             self.directory_size += 1

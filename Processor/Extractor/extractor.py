@@ -33,5 +33,9 @@ class BaseExtractor(ABC):
         if metadata.domain_record.encoding is not None:
             return metadata.domain_record.encoding
 
-        return chardet.detect(response)
+        encoding = chardet.detect(response.encode(DEFAULT_ENCODE))['encoding']
+        if encoding is None:
+            encoding = DEFAULT_ENCODE
+        return encoding
+
 
