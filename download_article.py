@@ -1,3 +1,4 @@
+import argparse
 from datetime import datetime
 from os import path
 from pathlib import Path
@@ -13,6 +14,7 @@ from Processor.Pipeline.pipeline import ProcessorPipeline
 from Processor.Router.router import Router
 
 FOLDER = "articles_downloaded"
+
 
 
 async def article_download(
@@ -50,8 +52,15 @@ async def article_download(
     print("Finished pipeline")
 
 
+
+
+
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python3 download_article.py <url>")
-        sys.exit(1)
-    asyncio.run(article_download(sys.argv[1]))
+    parser = argparse.ArgumentParser(description="Download articles")
+    parser.add_argument("url")
+    parser.add_argument("--limit", type=int, default=5)
+    parser.add_argument("--since", default=MIN_DATE)
+    parser.add_argument("--to", default=MAX_DATE)
+    args = parser.parse_args()
+    asyncio.run(article_download(**vars(args)))
+
