@@ -10,6 +10,6 @@ class PipeMetadata:
     """
 
     domain_record: DomainRecord
+    article_data: Any = None
     warc_header: Dict[str, Any] | None = None
     http_header: Dict[str, Any] | None = None
-

@@ -1,4 +1,3 @@
-from random import betavariate
 from Processor.Extractor.extractor import BaseExtractor
 from Processor.utils import PipeMetadata
 from bs4 import BeautifulSoup
