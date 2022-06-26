@@ -67,33 +67,6 @@ class RouterTests(unittest.TestCase):
         self.assertEqual(c3, self.router.modules["BBB"])
 
 
-# class ExtractorTests(unittest.TestCase):
-#     def setUp(self) -> None:
-#         self.aktualne_extractor = AktualneExtractor()
-
-#     def test_aktualne_article1(self):
-#         with open("sites/aktualneCZ/article1.html", "r") as f:
-#             content = f.read()
-
-#         pipe_params = {}
-#         self.aktualne_extractor.extract(content, pipe_params)
-#         pipe_params_extracted: dict[str, Any] = pipe_params["extracted"]
-#         self.assertEqual(
-#             pipe_params_extracted["headline"],
-#             "Brankář Mazanec bude v Nashvillu další rok",
-#         )
-#         self.assertEqual(
-#             pipe_params_extracted["article"],
-#             """
-# Hokejový brankář Marek Mazanec prodloužil smlouvu s Nashvillem.
-# Marek Mazanec odchytal v dresu Nashvillu zatím 27 zápasů NHL.
-# Marek Mazanec odchytal v dresu Nashvillu zatím 27 zápasů NHL. | Foto: Reuters
-# Nashville - Hokejový brankář Marek Mazanec prodloužil smlouvu s Nashvillem. S vedením Predators uzavřel roční dvoucestný kontrakt, který mu v případě působení v NHL zaručuje příjem 575 000 dolarů za sezonu. Na farmě by si vydělal 100 000 dolarů.
-# Mazancovi končí dvouletá nováčkovská smlouva, kterou podepsal s Nashvillem po předloňském zisku extraligového titulu s Plzní. V první zámořské sezoně odchytal v NHL 25 utkání, v tomto ročníku nastoupil za Predators jen do dvou zápasů. Jinak působil ve farmářském týmu Milwaukee Admirals v AHL.
-# """,
-#         )
-
-
 class OutStremaerTests(unittest.IsolatedAsyncioTestCase):
     def setUp(self) -> None:
         self.outstreamer_file = OutStreamerFile(origin=Path("./test"))

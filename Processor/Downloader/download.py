@@ -11,7 +11,7 @@ from Processor.Downloader.errors import PageDownloadException
 from Processor.Downloader.warc import PipeMetadata, parse_warc
 
 
-DEFAULT_ENCODE = "latin-1"
+DEFAULT_ENCODE = "utf-8"
 
 
 class Downloader:

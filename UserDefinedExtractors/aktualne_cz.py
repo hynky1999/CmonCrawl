@@ -11,12 +11,16 @@ from Processor.Extractor.extractor_utils import (
 from Processor.utils import PipeMetadata
 from bs4 import BeautifulSoup, NavigableString, Tag
 
-from article_data import ArticleData, article_transform
+from article_utils.article_data import (
+    ArticleData,
+    article_transform,
+    text_unification_transform,
+)
 
 
 head_extract_dict: Dict[str, TagDescriptor] = {
     "headline": TagDescriptor("meta", {"property": "og:title"}),
-    "keywords": TagDescriptor("meta", {"property": "keywords"}),
+    "keywords": TagDescriptor("meta", {"name": "keywords"}),
     "publication_date": TagDescriptor("meta", {"property": "article:published_time"}),
     "category": TagDescriptor("meta", {"property": "article:section"}),
 }
@@ -25,13 +29,14 @@ head_extract_dict: Dict[str, TagDescriptor] = {
 head_extract_transform_dict: Dict[str, Callable[[str], Any]] = {
     "keywords": lambda x: x.split(","),
     "publication_date": datetime.fromisoformat,
+    "headline": lambda x: x.replace(r" | Aktuálně.cz", "").strip(),
 }
 
 
 article_extract_dict: Dict[str, Any] = {
-    "brief": TagDescriptor("meta", {"property": "article__perex"}),
-    "content": TagDescriptor("meta", {"property": "article__name"}),
-    "author": TagDescriptor("meta", {"property": "article__author"}),
+    "brief": TagDescriptor("div", {"class": "article__perex"}),
+    "content": TagDescriptor("div", {"class": "article__content"}),
+    "author": TagDescriptor("a", {"class": "author__name"}),
 }
 
 
@@ -60,27 +65,34 @@ class Extractor(BaseExtractor):
         extracted_metadata: Dict[str, Any] = transform(
             transform(
                 transform(
-                    head_extract_dict,
-                    all_same_transform(head_extract_dict, get_tag_transform(head)),
+                    transform(
+                        head_extract_dict,
+                        all_same_transform(head_extract_dict, get_tag_transform(head)),
+                    ),
+                    all_same_transform(
+                        head_extract_dict, get_attribute_transform("content")
+                    ),
                 ),
-                all_same_transform(
-                    head_extract_dict, get_attribute_transform("content")
-                ),
-            ),
-            head_extract_transform_dict,
+                head_extract_transform_dict,
+            ), all_same_transform(head_extract_dict, text_unification_transform)
         )
 
         return extracted_metadata
 
     def extract_article(self, soup: BeautifulSoup) -> Dict[str, Any]:
-        article = soup.find("article")
+        article = soup.find("div", attrs={"class": "article"})
         if article is None or isinstance(article, NavigableString):
             return dict()
         article_data = transform(
             transform(
-                article_extract_dict,
-                all_same_transform(article_extract_dict, get_tag_transform(article)),
+                transform(
+                    article_extract_dict,
+                    all_same_transform(
+                        article_extract_dict, get_tag_transform(article)
+                    ),
+                ),
+                article_extract_transform_dict,
             ),
-            article_extract_transform_dict,
+            all_same_transform(article_extract_dict, text_unification_transform),
         )
         return article_data
