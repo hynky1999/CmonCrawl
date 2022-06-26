@@ -2,7 +2,6 @@ import argparse
 from datetime import datetime
 from os import path
 from pathlib import Path
-import sys
 from typing import List
 from Aggregator.constants import MAX_DATE, MIN_DATE
 from Processor.Downloader.download import Downloader
@@ -43,12 +42,13 @@ async def article_download(
             print(e)
 
     print(f"Downloaded {len(records)} articles")
-    async with Downloader(digest_verification=True) as downloader:
-        pipeline = ProcessorPipeline(
-            router=router, downloader=downloader, outstreamer=outstreamer
-        )
-        for dr in records:
-            await pipeline.process_domain_record(dr)
+    downloader = await Downloader(digest_verification=True).aopen()
+    pipeline = ProcessorPipeline(
+        router=router, downloader=downloader, outstreamer=outstreamer
+    )
+    for dr in records:
+        await pipeline.process_domain_record(dr)
+    await downloader.aclose(None, None, None)
     print("Finished pipeline")
 
 
@@ -63,4 +63,3 @@ if __name__ == "__main__":
     parser.add_argument("--to", default=MAX_DATE)
     args = parser.parse_args()
     asyncio.run(article_download(**vars(args)))
-
