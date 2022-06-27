@@ -11,9 +11,6 @@ from Processor.Downloader.errors import PageDownloadException
 from Processor.Downloader.warc import PipeMetadata, parse_warc
 
 
-DEFAULT_ENCODE = "utf-8"
-
-
 class Downloader:
     def __init__(
         self,
@@ -50,7 +47,7 @@ class Downloader:
                 )
             # will be unziped
             reponse_bytes = await response.content.read()
-            content = parse_warc(self.unwrap(reponse_bytes), metadata)
+            content = parse_warc(self.unwrap(reponse_bytes, metadata.domain_record.encoding), metadata)
 
             if self.digest_verification:
                 hash_type: str
@@ -63,13 +60,21 @@ class Downloader:
                 if digest is not None and digest != hash:
                     raise ValueError(f'Digest mismatch: "{digest}" != "{hash}"')
 
-                if self.verify_digest(hash_type, hash, content) == False:
+                if (
+                    self.verify_digest(
+                        hash_type,
+                        hash,
+                        content,
+                        metadata.domain_record.encoding
+                    )
+                    == False
+                ):
                     raise ValueError("Digest verification failed")
 
             return content
 
     def verify_digest(
-        self, hash_type: str, digest: str, content: str, encoding: str = DEFAULT_ENCODE
+        self, hash_type: str, digest: str, content: str, encoding: str
     ) -> bool:
         # ADD md5
         digest_decoded = b32decode(digest)
@@ -81,8 +86,8 @@ class Downloader:
             raise ValueError(f"Unknown hash type {hash_type}")
         return True
 
-    def unwrap(self, response: bytes) -> str:
-        content = gzip.decompress(response).decode(DEFAULT_ENCODE)
+    def unwrap(self, response: bytes, encoding: str) -> str:
+        content = gzip.decompress(response).decode(encoding)
         return content
 
     async def aclose(

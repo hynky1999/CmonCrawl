@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
+from typing import Any, Dict
 from Processor.Downloader.warc import PipeMetadata
 
 
@@ -8,7 +9,7 @@ class OutStreamer(ABC):
         pass
 
     @abstractmethod
-    async def stream(self, response: str, metadata: PipeMetadata) -> Path:
+    async def stream(self, extracted_data: Dict[Any, Any],  metadata: PipeMetadata) -> Path:
         raise NotImplementedError()
 
     @abstractmethod

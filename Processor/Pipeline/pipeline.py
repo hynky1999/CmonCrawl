@@ -17,13 +17,11 @@ class ProcessorPipeline:
         metadata = PipeMetadata(domain_record=domain_record)
         downloaded_article = await self.downloader.download(domain_record, metadata)
         # This will not be None
-        extractor_cls = self.router.route(metadata.domain_record.url)
-        extractor = extractor_cls()
-        output: str = extractor.extract(downloaded_article, metadata)
+        extractor = self.router.route(metadata.domain_record.url)
+        output = extractor.extract(downloaded_article, metadata)
         if output is None:
             return None
         path = await self.oustreamer.stream(output, metadata)
 
         print("Successfully downloaded article from {}".format(domain_record.url))
         return path
-

@@ -35,7 +35,7 @@ def parse_http_header(http: str):
         http_header["date"] = datetime.strptime(
             date.group(0), "%a, %d %b %Y %H:%M:%S %Z"
         )
-    
+
     http_response_code = re.search(r"(?<=HTTP/1.1 )(\d+)", http)
     if http_response_code is not None:
         http_header["http_response_code"] = http_response_code.group(0).strip()
@@ -50,4 +50,3 @@ def parse_warc(warc_str: str, metadata: PipeMetadata):
     metadata.warc_header = parse_warc_header(warc_h)
     metadata.http_header = parse_http_header(http_h)
     return html
-
