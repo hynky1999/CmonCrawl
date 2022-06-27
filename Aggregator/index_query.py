@@ -35,7 +35,7 @@ class DomainRecord:
     offset: int
     length: int
     digest: str | None = None
-    encoding: str | None = None
+    encoding: str = 'latin-1'
     timestamp: datetime = datetime.now()
 
 

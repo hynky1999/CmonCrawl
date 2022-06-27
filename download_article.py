@@ -7,13 +7,12 @@ from Aggregator.constants import MAX_DATE, MIN_DATE
 from Processor.Downloader.download import Downloader
 from Aggregator.index_query import DomainRecord, IndexAggregator
 import asyncio
-from Processor.OutStreamer.stream_to_file import OutStreamerFile
+from Processor.OutStreamer.stream_to_file import OutStreamerFileDefault
 from Processor.Pipeline.pipeline import ProcessorPipeline
 
 from Processor.Router.router import Router
 
 FOLDER = "articles_downloaded"
-
 
 
 async def article_download(
@@ -30,7 +29,7 @@ async def article_download(
     router = Router()
     router.load_modules(str(Path(path.curdir) / Path("UserDefinedExtractors")))
     router.register_route("DummyExtractor", [f".*"])
-    outstreamer = OutStreamerFile(origin=Path("./articles_downloaded"))
+    outstreamer = OutStreamerFileDefault(origin=Path("./articles_downloaded"))
 
     async with IndexAggregator(
         [url], cc_servers=cc_server, since=since, to=to, limit=limit
@@ -50,9 +49,6 @@ async def article_download(
         await pipeline.process_domain_record(dr)
     await downloader.aclose(None, None, None)
     print("Finished pipeline")
-
-
-
 
 
 if __name__ == "__main__":

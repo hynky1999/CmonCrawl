@@ -1,54 +1,49 @@
 from datetime import datetime
 import json
 from pathlib import Path
-import re
 import unittest
-from Aggregator.index_query import DomainRecord
-from Processor.Extractor.extractor import BaseExtractor
-from Processor.utils import PipeMetadata
 from UserDefinedExtractors.aktualne_cz import Extractor as AktualneExtractor
-from article_utils.article_data import ArticleData
+
+
+from process_article import parse_article
 
 SITES_PATH = Path("unit_tests") / "sites"
 TRUTH_JSONS = "truth"
 TEST_ARTICLES = "test_articles"
+FILTER_ARTICLES = "filter_articles"
 
 
-def data_from_truth_and_site(article: Path, extractor: BaseExtractor):
-    with open(article, "r") as f:
-        content = f.read()
-
-    url = re.search('og:url" content="(.*)"', content).group(1)
-    metadata = PipeMetadata(
-        DomainRecord(
-            filename=article.name,
-            url=url,
-            offset=0,
-            length=100,
-        )
+def parse_extracted_json(extracted_path: Path):
+    with open(extracted_path, "r") as f:
+        extracted = json.load(f)
+    extracted["publication_date"] = datetime.fromisoformat(
+        extracted["publication_date"]
     )
-
-    extractor.extract(content, metadata)
-    article_data = metadata.article_data
-
-    truth_path = article.parent.parent / TRUTH_JSONS / (article.stem + ".json")
-    with open(truth_path, "r") as f:
-        expected = json.load(f)
-    expected["publication_date"] = datetime.fromisoformat(
-        expected.get("publication_date")
-    )
-    return article_data, ArticleData(**expected)
+    return extracted
 
 
 class AktualneCZTests(unittest.TestCase):
     def setUp(self) -> None:
         self.aktualne_extractor = AktualneExtractor()
 
-    def test_all_articles(self):
-        print(Path.cwd())
-        for article in (SITES_PATH / "aktualneCZ" / TEST_ARTICLES).iterdir():
-            site, truth = data_from_truth_and_site(article, self.aktualne_extractor)
-
+    def test_extract_articles(self):
+        for article_path in (SITES_PATH / "aktualneCZ" / TEST_ARTICLES).iterdir():
+            article_test, metadata_test = parse_article(article_path)
+            extracted_test = self.aktualne_extractor.extract(
+                article_test, metadata_test
+            )
+            extracted_truth = parse_extracted_json(
+                article_path.parent.parent / TRUTH_JSONS / (article_path.stem + ".json")
+            )
+            self.assertIsNotNone(extracted_test)
             # Test all attributes
-            for key in truth.__dict__:
-                self.assertEqual(getattr(site, key), getattr(truth, key))
+            for key in extracted_truth:
+                self.assertEqual(extracted_test.get(key), extracted_truth.get(key))
+
+    def test_filter_articles(self):
+        # 1 Tests wrong section -> Aktualne+
+        # 2 Tests wrong author(Aktualne) -> missing
+        # 3 Tests blog section
+        for article_f in (SITES_PATH / "aktualneCZ" / FILTER_ARTICLES).iterdir():
+            article, metadata = parse_article(article_f)
+            self.assertIsNone(self.aktualne_extractor.extract(article, metadata))

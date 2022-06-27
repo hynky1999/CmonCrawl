@@ -6,7 +6,7 @@ from datetime import datetime
 from Aggregator.index_query import DomainRecord
 from Processor.Downloader.download import Downloader
 from Processor.Downloader.warc import PipeMetadata
-from Processor.OutStreamer.stream_to_file import OutStreamerFile
+from Processor.OutStreamer.stream_to_file import OutStreamerFileDefault
 from Processor.Router.router import Router
 from download_article import article_download
 
@@ -39,7 +39,11 @@ class DownloaderTests(unittest.IsolatedAsyncioTestCase):
         res = await self.downloader.download(dr, metadata)
         hash_type = "sha1"
         digest = "5PWKBZGXQFKX4VHAFUMMN34FC76OBXVX"
-        self.assertTrue(self.downloader.verify_digest(hash_type, digest, res))
+        self.assertTrue(
+            self.downloader.verify_digest(
+                hash_type, digest, res, metadata.domain_record.encoding
+            )
+        )
 
     async def asyncTearDown(self) -> None:
         await self.downloader.aclose(None, None, None)
@@ -58,7 +62,7 @@ class RouterTests(unittest.TestCase):
     def test_router_route_by_name(self):
         c1 = self.router.route("www.idnes.cz")
         try:
-            c2 = self.router.route("www.i.cz")
+            self.router.route("www.i.cz")
         except ValueError:
             pass
 
@@ -69,21 +73,17 @@ class RouterTests(unittest.TestCase):
 
 class OutStremaerTests(unittest.IsolatedAsyncioTestCase):
     def setUp(self) -> None:
-        self.outstreamer_file = OutStreamerFile(origin=Path("./test"))
+        self.outstreamer_file = OutStreamerFileDefault(origin=Path("./test"))
+        self.metadata = PipeMetadata(DomainRecord("", "", 0, 0))
 
     async def test_simple_write(self):
-        file = await self.outstreamer_file.stream("test", PipeMetadata(dict(), dict()))
+        file = await self.outstreamer_file.stream(dict(), self.metadata)
         self.assertTrue(os.path.exists(file))
 
     async def test_clean_up(self):
-        file = await self.outstreamer_file.stream("test", PipeMetadata(dict(), dict()))
+        file = await self.outstreamer_file.stream(dict(), self.metadata)
         await self.outstreamer_file.clean_up()
         self.assertFalse(os.path.exists(file))
 
     async def AsyncTearDown(self) -> None:
         await self.outstreamer_file.clean_up()
-
-
-class ArticleDownloadTests(unittest.IsolatedAsyncioTestCase):
-    async def test_simple(self):
-        await article_download("idnes.cz")

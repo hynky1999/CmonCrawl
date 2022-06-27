@@ -4,7 +4,7 @@ import sys
 import re
 from dataclasses import dataclass
 from types import ModuleType
-from typing import Dict, List, Union
+from typing import ClassVar, Dict, List, Type, Union
 
 from Processor.Extractor.extractor import BaseExtractor
 
@@ -34,10 +34,10 @@ class Router:
         spec.loader.exec_module(module)
 
         name: str = getattr(module, "NAME", module_name)
-        extractor: BaseExtractor | None = getattr(module, "Extractor", None)
+        extractor: Type[BaseExtractor] | None = getattr(module, "Extractor", None)
         if extractor is None:
             raise Exception("Missing Extractor class in module: " + module_name)
-        self.modules[name] = extractor
+        self.modules[name] = extractor()
 
     def load_modules(self, folder: str):
         for path in os.listdir(folder):
@@ -58,4 +58,3 @@ class Router:
                 if regex.match(url):
                     return self.modules[route.name]
         raise ValueError("No route found for url: " + url)
-
