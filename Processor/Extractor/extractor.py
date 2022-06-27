@@ -1,8 +1,7 @@
-from abc import ABC, abstractclassmethod, abstractmethod
+from abc import ABC, abstractmethod
 from Processor.Downloader.download import DEFAULT_ENCODE
 from Processor.utils import PipeMetadata
 import chardet
-
 
 class BaseExtractor(ABC):
     def __init__(self):
