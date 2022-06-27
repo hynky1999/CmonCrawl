@@ -11,7 +11,7 @@ class Extractor(BaseExtractor):
             charset = head.find("charset")
             del charset
 
-        return str(soup)
+        return {"html": str(soup)}
 
     def filter(self, response: str, metadata: PipeMetadata):
         return True
