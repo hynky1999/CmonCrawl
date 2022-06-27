@@ -14,6 +14,7 @@ from aiohttp import ClientSession, ContentTypeError
 import asyncio
 import random
 
+DEFAULT_ENCODING = "latin-1"
 
 @dataclass
 class DomainCrawl:
@@ -35,7 +36,7 @@ class DomainRecord:
     offset: int
     length: int
     digest: str | None = None
-    encoding: str = 'latin-1'
+    encoding: str = DEFAULT_ENCODING
     timestamp: datetime = datetime.now()
 
 
@@ -184,7 +185,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
                 offset=int(js.get("offset", 0)),
                 length=int(js.get("length", 0)),
                 url=js.get("url", ""),
-                encoding=js.get("encoding", None),
+                encoding=js.get("encoding", DEFAULT_ENCODING),
                 digest=js.get("digest", None),
                 timestamp=timestamp_to_datetime(js["timestamp"]),
             )

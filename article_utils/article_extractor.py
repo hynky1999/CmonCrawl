@@ -21,7 +21,7 @@ class ArticleExtractor(BaseExtractor):
 
         metadata.name = extracted_dict.get("headline")
         if metadata.name is not None:
-            metadata.name = metadata.name.strip()[:12]
+            metadata.name = f"{metadata.url_parsed.netloc.split('.')[-1]}_{metadata.name.strip()[:12]}"
 
         return extracted_dict
 

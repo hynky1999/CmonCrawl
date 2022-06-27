@@ -7,6 +7,7 @@ from xmlrpc.client import Boolean
 from Processor.Downloader.warc import PipeMetadata
 from Processor.OutStreamer.outstreamer import OutStreamer
 from aiofiles import open as asyncOpen
+from hashlib import md5
 
 import os
 
@@ -49,13 +50,13 @@ class OutStreamerFileDefault(OutStreamer):
     def get_file_name(self, metadata: PipeMetadata):
         name = metadata.name
         if name is None:
-            name = metadata.url_parsed.hostname
+            name = f"{metadata.url_parsed.hostname}_{md5(metadata.url_parsed.path.encode()).hexdigest()}"
 
         return f"{name}_{self.directory_size}{self.extension}"
 
     def metadata_to_string(self, extracted_data: Dict[Any, Any]) -> str:
         output = "\r\n\r\n".join(
-            [f"{key}: {value}" for key, value in extracted_data.items()]
+            [f"{key}: \r\n {value}" for key, value in extracted_data.items()]
         )
         return output
 
@@ -76,14 +77,14 @@ class OutStreamerFileDefault(OutStreamer):
         retries: int,
     ) -> Path:
         # Preemptive so we dont' have to lock
-        self.directory_num += 1
+        self.directory_size += 1
         if retries > self.max_retries:
             raise OSError("Failed to write file")
         try:
             async with asyncOpen(file_path, "w") as f:
                 out = self.metadata_to_string(extracted_data)
                 await f.write(out)
-        except OSError:
+        except OSError as e:
             await asyncio.sleep(random.randint(1, 2))
             return await self.__stream(file_path, extracted_data, retries + 1)
         return file_path
