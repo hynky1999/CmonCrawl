@@ -29,9 +29,13 @@ class ArticleExtractor(BaseExtractor):
     def check_required(self, extracted_dict: Dict[Any, Any]):
         for key, value in REQUIRED_FIELDS.items():
             if key not in extracted_dict:
+                print(f"Extractor {self.__class__.__name__}: failed to extract {key}")
                 return False
 
             if value and extracted_dict[key] is None:
+                print(
+                    f"Extractor {self.__class__.__name__}: None for key: {key} is not allowed"
+                )
                 return False
 
         return True
