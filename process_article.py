@@ -17,7 +17,11 @@ def parse_article(article_path: Path):
     with open(article_path, "r") as f:
         article = f.read()
 
-    url = re.search('og:url" content="(.*)"', article).group(1)
+    url = re.search('og:url" content="(.*)"', article)
+    if url is None:
+        url = ""
+    else:
+        url = url.group(1)
     metadata = PipeMetadata(
         DomainRecord(
             filename=article_path.name,
@@ -51,4 +55,5 @@ if __name__ == "__main__":
     router = Router()
     router.load_modules(str(Path("UserDefinedExtractors").absolute()))
     router.register_route("aktualne_cz", [r".*aktualne\.cz.*"])
+    router.register_route("idnes_cz", [r".*idnes\.cz.*"])
     asyncio.run(article_process(**vars(args), router=router))
