@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from typing import Any, Callable, Dict
-from bs4 import Tag
+from bs4 import NavigableString, Tag
 
 
 @dataclass
@@ -9,8 +9,11 @@ class TagDescriptor:
     attrs: Dict[str, str] = field(default_factory=dict)
 
 
-def get_tag_transform(tag: Tag):
+def get_tag_transform(tag: Tag | NavigableString | None):
     def transform(tag_desc: TagDescriptor):
+        if tag is None or isinstance(tag, NavigableString):
+            return None
+
         tag_found = tag.find(name=tag_desc.tag, attrs=tag_desc.attrs)
         if tag_found is None:
             return None
@@ -20,7 +23,10 @@ def get_tag_transform(tag: Tag):
 
 
 def get_attribute_transform(attr_name: str):
-    def transform(tag: Tag):
+    def transform(tag: Tag | NavigableString | None):
+        if tag is None or isinstance(tag, NavigableString):
+            return None
+
         meta_content = tag.get(attr_name, None)
         if meta_content is None:
             return None

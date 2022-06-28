@@ -1,6 +1,4 @@
-from dataclasses import dataclass
-from datetime import datetime
-from typing import Any, Callable, Dict, List
+from typing import Any, Callable, Dict
 
 from bs4 import BeautifulSoup, NavigableString, Tag
 
@@ -76,10 +74,13 @@ def head_extract_transform(
 
 
 def article_extract_transform(
-    soup: BeautifulSoup,
+    soup: BeautifulSoup | Tag | NavigableString | None,
     article_extract_dict: Dict[str, TagDescriptor],
     article_extract_transform_dict: Dict[str, Callable[[Tag], Any]],
 ) -> Dict[str, Any]:
+    if soup is None:
+        return dict()
+
     article_data = transform(
         transform(
             transform(
@@ -91,3 +92,35 @@ def article_extract_transform(
         all_same_transform(article_extract_dict, text_unification_transform),
     )
     return article_data
+
+
+def author_extract_transform(author: Tag | None | NavigableString):
+    if author is None:
+        return None
+
+    text = author.text.strip()
+    # Not name
+    if len(text.split(" ")) < 2:
+        return None
+
+    return text
+
+
+def must_exist_filter(soup: BeautifulSoup, filter_dict: Dict[str, Any]):
+    must_exist = [
+        soup.find(tag_desc.tag, **tag_desc.attrs) for tag_desc in filter_dict.values()
+    ]
+    if any(map(lambda x: x is None, must_exist)):
+        return False
+
+    return True
+
+
+def must_not_exist_filter(soup: BeautifulSoup, filter_dict: Dict[str, Any]):
+    must_not_exist = [
+        soup.find(tag_desc.tag, **tag_desc.attrs) for tag_desc in filter_dict.values()
+    ]
+    if any(map(lambda x: x is not None, must_not_exist)):
+        return False
+
+    return True

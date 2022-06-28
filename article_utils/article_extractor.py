@@ -23,6 +23,7 @@ class ArticleExtractor(BaseExtractor):
         if metadata.name is not None:
             metadata.name = f"{metadata.url_parsed.netloc.split('.')[-1]}_{metadata.name.strip()[:12]}"
 
+        metadata.article_data = extracted_dict
         return extracted_dict
 
     def check_required(self, extracted_dict: Dict[Any, Any]):
