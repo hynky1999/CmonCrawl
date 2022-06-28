@@ -13,6 +13,7 @@ class BaseExtractor(ABC):
 
     def extract(self, response: str, metadata: PipeMetadata) -> Dict[Any, Any] | None:
         if self.filter(response, metadata) is False:
+            print("Filtered out by extractor")
             return None
 
         article = self.preprocess(response, metadata)

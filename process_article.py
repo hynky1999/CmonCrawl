@@ -17,7 +17,7 @@ def parse_article(article_path: Path):
     with open(article_path, "r") as f:
         article = f.read()
 
-    url = re.search('og:url" content="(.*)"', article)
+    url = re.search(r'og:url" content="([^\s]*)"', article)
     if url is None:
         url = ""
     else:
@@ -56,4 +56,5 @@ if __name__ == "__main__":
     router.load_modules(str(Path("UserDefinedExtractors").absolute()))
     router.register_route("aktualne_cz", [r".*aktualne\.cz.*"])
     router.register_route("idnes_cz", [r".*idnes\.cz.*"])
+    router.register_route("seznamzpravy_cz", [r".*seznamzpravy\.cz.*"])
     asyncio.run(article_process(**vars(args), router=router))
