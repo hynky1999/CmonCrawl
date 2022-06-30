@@ -7,7 +7,10 @@ from Aggregator.constants import MAX_DATE, MIN_DATE
 from Processor.Downloader.download import Downloader
 from Aggregator.index_query import DomainRecord, IndexAggregator
 import asyncio
-from Processor.OutStreamer.stream_to_file import OutStreamerFileDefault
+from Processor.OutStreamer.stream_to_file import (
+    OutStreamerFileDefault,
+    OutStreamerFileJSON,
+)
 from Processor.Pipeline.pipeline import ProcessorPipeline
 
 from Processor.Router.router import Router
@@ -27,9 +30,11 @@ async def article_download(
 
     # At start so we can fail faster
     router = Router()
-    router.load_modules(str(Path(path.curdir) / Path("UserDefinedExtractors")))
-    router.register_route("DummyExtractor", [f".*"])
-    outstreamer = OutStreamerFileDefault(origin=Path("./articles_downloaded"))
+    router.load_modules(str(Path("UserDefinedExtractors").absolute()))
+    router.register_route("aktualne_cz", [r".*aktualne\.cz.*"])
+    router.register_route("idnes_cz", [r".*idnes\.cz.*"])
+    router.register_route("seznamzpravy_cz", [r".*seznamzpravy\.cz.*"])
+    outstreamer = OutStreamerFileJSON(origin=Path("./articles_downloaded"))
 
     async with IndexAggregator(
         [url], cc_servers=cc_server, since=since, to=to, limit=limit
@@ -41,13 +46,15 @@ async def article_download(
             print(e)
 
     print(f"Downloaded {len(records)} articles")
-    downloader = await Downloader(digest_verification=True).aopen()
-    pipeline = ProcessorPipeline(
-        router=router, downloader=downloader, outstreamer=outstreamer
-    )
-    for dr in records:
-        await pipeline.process_domain_record(dr)
-    await downloader.aclose(None, None, None)
+    async with Downloader(digest_verification=True) as downloader:
+        pipeline = ProcessorPipeline(
+            router=router, downloader=downloader, outstreamer=outstreamer
+        )
+        for dr in records:
+            try:
+                await pipeline.process_domain_record(dr)
+            except Exception as e:
+                print(e)
     print("Finished pipeline")
 
 

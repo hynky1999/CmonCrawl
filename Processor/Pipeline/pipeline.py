@@ -20,6 +20,7 @@ class ProcessorPipeline:
         extractor = self.router.route(metadata.domain_record.url)
         output = extractor.extract(downloaded_article, metadata)
         if output is None:
+            print(f" Failed to download {metadata.domain_record.url}")
             return None
         path = await self.oustreamer.stream(output, metadata)
 

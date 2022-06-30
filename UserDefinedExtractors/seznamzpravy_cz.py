@@ -10,53 +10,61 @@ from bs4 import BeautifulSoup, NavigableString, Tag
 from article_utils.article_extractor import ArticleExtractor
 
 from article_utils.article_utils import (
+    ALLOWED_H,
     article_extract_transform,
     article_transform,
     author_extract_transform,
     head_extract_transform,
-    must_not_exist_filter,
 )
+
+
+def seznamzpravy_extract_publication_date(tag: Tag | NavigableString | None):
+    if tag is None:
+        return None
+    try:
+        return datetime.strptime(tag.text, "%d. %m. %Y %H:%M")
+    except ValueError:
+        pass
+    return None
 
 
 head_extract_dict: Dict[str, TagDescriptor] = {
     "headline": TagDescriptor("meta", {"property": "og:title"}),
     "keywords": TagDescriptor("meta", {"name": "keywords"}),
-    "publication_date": TagDescriptor("meta", {"property": "article:published_time"}),
 }
 
 
 head_extract_transform_dict: Dict[str, Callable[[str], Any]] = {
     "keywords": lambda x: x.split(","),
-    "publication_date": datetime.fromisoformat,
     "headline": lambda x: x.replace(r" - iDNES.cz", "").strip(),
 }
 
 
 article_extract_dict: Dict[str, Any] = {
-    "brief": TagDescriptor("div", {"class": "opener"}),
-    "content": TagDescriptor("div", {"class": "bbtext"}),
-    "author": TagDescriptor("div", {"class": "authors"}),
-    "comments_num": TagDescriptor("li", {"class": "community-discusion"}),
+    "brief": TagDescriptor("p", {"data-dot": "ogm-article-perex"}),
+    "content": TagDescriptor("div", {"class": "mol-rich-content--for-article"}),
+    "author": TagDescriptor("div", {"data-dot": "ogm-article-author"}),
+    "publication_date": TagDescriptor(
+        "div", {"data-dot": "ogm-date-of-publication__date"}
+    ),
 }
 
 article_extract_transform_dict: Dict[str, Callable[[Tag], Any]] = {
-    "content": article_transform,
+    "content": lambda x: article_transform(
+        x,
+        fc_eval=lambda x: x.name in ALLOWED_H
+        or (x.name == "div" and x.attrs.get("data-dot", "") == "mol-paragraph"),
+    ),
     "brief": lambda x: x.text if x else None,
     "author": lambda x: author_extract_transform(
-        get_tag_transform(x)(TagDescriptor("span", {"itemprop": "name"}))
+        get_tag_transform(x)(TagDescriptor("span", {"data-dot": "mol-author-names"}))
     ),
-    "comments_num": lambda x: idnes_extract_comments_num(x),
+    "publication_date": seznamzpravy_extract_publication_date,
 }
 
 
 filter_head_extract_dict: Dict[str, Any] = {
     "type": TagDescriptor("meta", {"property": "og:type"}),
-}
-
-filter_must_not_exist: Dict[str, TagDescriptor] = {
-    # Prevents Premium "articles"
-    "idnes_plus": TagDescriptor("div", {"id": "paywall-unlock"}),
-    "brisk": TagDescriptor("span", {"class": "brisk", "text": "Soutěž"}),
 }
 
 
@@ -67,15 +75,15 @@ class Extractor(ArticleExtractor):
         )
 
         extracted_article = article_extract_transform(
-            soup.find(attrs={"id": "content"}),
+            soup.find("section", attrs={"data-dot": "tpl-content"}),
             article_extract_dict,
             article_extract_transform_dict,
         )
 
         # merge dicts
         extracted_dict = {**extracted_head, **extracted_article}
-        category = metadata.url_parsed.path.split("/")[1]
-        extracted_dict["category"] = category
+        extracted_dict["category"] = None
+        extracted_dict["comments_num"] = None
 
         return extracted_dict
 
@@ -86,16 +94,4 @@ class Extractor(ArticleExtractor):
         if head_extracted.get("type") != "article":
             return False
 
-        if not must_not_exist_filter(soup, filter_must_not_exist):
-            return False
-
         return True
-
-
-def idnes_extract_comments_num(tag: Tag | NavigableString | None):
-    if tag is None:
-        return None
-    comments_num = re.search(r"(\d+) (přísp)", tag.text)
-    if comments_num is None:
-        return None
-    return comments_num.group(1)

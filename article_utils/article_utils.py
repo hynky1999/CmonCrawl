@@ -1,4 +1,5 @@
 from typing import Any, Callable, Dict
+from xmlrpc.client import Boolean
 
 from bs4 import BeautifulSoup, NavigableString, Tag
 
@@ -25,12 +26,17 @@ REQUIRED_FIELDS = {
     "comments_num": False,
 }
 
+ALLOWED_H = [f"h{i}" for i in range(1, 7)]
 
-def article_transform(article: Tag):
+
+def article_transform(article: Tag, fc_eval: Callable[[Tag], Boolean] = None):
     if article is None:
         return None
 
-    ps = article.find_all(["p", *[f"h{i}" for i in range(1, 7)]], recursive=False)
+    if fc_eval is None:
+        ps = article.find_all(["p", *ALLOWED_H], recursive=False)
+    else:
+        ps = article.find_all(fc_eval, recursive=False)
     texts = LINE_SEPARATOR.join([p.text for p in ps])
     return texts
 
