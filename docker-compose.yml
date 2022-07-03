@@ -1,19 +1,26 @@
 version: "3.9"
 services:
-  redis-duplicates:
-    build: "./Aggregator/redis_duplicates"
-    container_name: "redis-duplicates"
+  artemis:
+    build: "./Artemis"
+    container_name: "artemis"
     ports:
-      - "6379:6379"
-    volumes:
-      - "redis-duplicated-af:/appends_dir"
+      - "8161:8161"
 
-  unittests:
-    build: .
-    container_name: "unittests"
+  # producer-seznamzpravy.cz:
+  #   build: ./Aggregator
+  #   container_name: "seznamzpravy"
+  #   command: "seznamzpravy.cz"
+  #   depends_on:
+  #     - consumer
+
+  producer-idnes.cz:
+    build: ./Aggregator
+    container_name: "idnescz"
+    command: "idnes.cz"
     depends_on:
-      - redis-duplicates
-
-volumes:
-  redis-duplicated-af:
-    driver: "local"
+      - artemis
+    # consumer:
+    #   build: ./Processor
+    #   container_name: "consumer"
+    # depends_on:
+    #   - artemis

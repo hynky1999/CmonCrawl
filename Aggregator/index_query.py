@@ -4,17 +4,17 @@ from dataclasses import dataclass
 from datetime import datetime
 import re
 
-from Aggregator.errors import PageResponseError
-from Aggregator.ndjson_decoder import Decoder
+from errors import PageResponseError
+from ndjson_decoder import Decoder
 from types import TracebackType
 from typing import Any, AsyncIterable, AsyncIterator, Deque, List, Dict, Tuple, Type
-from Aggregator.constants import MIN_DATE, MAX_DATE
 
 from aiohttp import ClientSession, ContentTypeError
 import asyncio
 import random
 
 DEFAULT_ENCODING = "latin-1"
+
 
 @dataclass
 class DomainCrawl:
@@ -46,10 +46,12 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         domains: List[str],
         cc_indexes_server: str = "http://index.commoncrawl.org/collinfo.json",
         cc_servers: List[str] = [],
-        since: datetime = MIN_DATE,
-        to: datetime = MAX_DATE,
+        since: datetime = datetime.min,
+        to: datetime = datetime.max,
         limit: int | None = None,
         max_retries: int = 5,
+        prefetch_size: int = 3,
+        sleep_step: int = 2,
     ) -> None:
         self.domains = domains
         self.cc_indexes_server = cc_indexes_server
@@ -58,12 +60,14 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         self.to = to
         self.limit = limit
         self.max_retries = max_retries
+        self.prefetch_size = prefetch_size
+        self.sleep_step = sleep_step
 
     async def aopen(self) -> IndexAggregator:
         self.client: ClientSession = ClientSession()
         await self.client.__aenter__()
 
-        if len(self.cc_servers) == 0:
+        if self.cc_servers is None or len(self.cc_servers) == 0:
             self.cc_servers = await self.get_all_CC_indexes(
                 self.client, self.cc_indexes_server
             )
@@ -81,6 +85,8 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
             to=self.to,
             limit=self.limit,
             max_retries=self.max_retries,
+            prefetch_size=self.prefetch_size,
+            sleep_step=self.sleep_step,
         )
 
     async def aclose(
@@ -158,8 +164,8 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         cdx_server: str,
         domain: str,
         page: int = 0,
-        since: datetime = MIN_DATE,
-        to: datetime = MAX_DATE,
+        since: datetime = datetime.min,
+        to: datetime = datetime.max,
         retries: int = 0,
     ) -> List[DomainRecord]:
         params: Dict[str, str | int] = {
@@ -208,8 +214,8 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
             client: ClientSession,
             domains: List[str],
             CC_files: List[str],
-            since: datetime = MIN_DATE,
-            to: datetime = MAX_DATE,
+            since: datetime = datetime.min,
+            to: datetime = datetime.max,
             limit: int | None = None,
             max_retries: int = 5,
             prefetch_size: int = 4,

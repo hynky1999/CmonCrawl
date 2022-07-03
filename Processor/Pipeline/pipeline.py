@@ -1,8 +1,7 @@
-from Aggregator.index_query import DomainRecord
-from Processor.Router.router import Router
-from Processor.Downloader.download import Downloader
-from Processor.OutStreamer.outstreamer import OutStreamer
-from Processor.utils import PipeMetadata
+from Router.router import Router
+from Downloader.download import Downloader
+from OutStreamer.outstreamer import OutStreamer
+from utils import DomainRecord, PipeMetadata
 
 
 class ProcessorPipeline:

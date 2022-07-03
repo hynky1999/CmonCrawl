@@ -1,4 +1,4 @@
-from Aggregator.index_query import DomainRecord
+from utils import DomainRecord
 
 
 class PageDownloadException(BaseException):

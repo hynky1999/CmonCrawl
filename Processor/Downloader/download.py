@@ -4,11 +4,11 @@ import gzip
 from types import TracebackType
 from aiohttp import ClientSession
 from typing import Type
-from Aggregator.index_query import DomainRecord
 from hashlib import sha1
 
-from Processor.Downloader.errors import PageDownloadException
-from Processor.Downloader.warc import PipeMetadata, parse_warc
+from Downloader.errors import PageDownloadException
+from Downloader.warc import PipeMetadata, parse_warc
+from utils import DomainRecord
 
 
 class Downloader:
@@ -47,7 +47,9 @@ class Downloader:
                 )
             # will be unziped
             reponse_bytes = await response.content.read()
-            content = parse_warc(self.unwrap(reponse_bytes, metadata.domain_record.encoding), metadata)
+            content = parse_warc(
+                self.unwrap(reponse_bytes, metadata.domain_record.encoding), metadata
+            )
 
             if self.digest_verification:
                 hash_type: str
@@ -62,10 +64,7 @@ class Downloader:
 
                 if (
                     self.verify_digest(
-                        hash_type,
-                        hash,
-                        content,
-                        metadata.domain_record.encoding
+                        hash_type, hash, content, metadata.domain_record.encoding
                     )
                     == False
                 ):

@@ -4,9 +4,9 @@ import sys
 import re
 from dataclasses import dataclass
 from types import ModuleType
-from typing import ClassVar, Dict, List, Type, Union
+from typing import Dict, List, Type, Union
 
-from Processor.Extractor.extractor import BaseExtractor
+from Extractor.extractor import BaseExtractor
 
 
 @dataclass
