@@ -13,10 +13,10 @@ from Pipeline.pipeline import ProcessorPipeline
 from utils import DomainRecord
 from Router.router import Router
 
-# logging.basicConfig(
-#     format="%(asctime)s - %(filename)s:%(lineno)d - " "%(levelname)s - %(message)s",
-#     level="DEBUG",
-# )
+logging.basicConfig(
+    format="%(asctime)s - %(filename)s:%(lineno)d - " "%(levelname)s - %(message)s",
+    level="DEBUG",
+)
 
 TASK_MAX_SIZE = 100
 
@@ -102,7 +102,7 @@ async def processor(queue_host: str, queue_port: int, pills_to_die: int):
                 pending_extracts.add(
                     asyncio.create_task(pipeline.process_domain_record(dr))
                 )
-            except TimeoutError | asyncio.CancelledError:
+            except asyncio.TimeoutError:
                 break
 
     await asyncio.gather(*pending_extracts)
