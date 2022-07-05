@@ -1,12 +1,15 @@
 import argparse
 import asyncio
+from dataclasses import dataclass
 from datetime import datetime
 import json
 import logging
 from pathlib import Path
-from xmlrpc.client import Boolean
+from typing import Dict, Set
 
-from aiostomp.aiostomp import Frame, AioStomp
+from stomp import Connection, ConnectionListener
+from stomp.utils import Frame
+from stomp.exception import StompException
 from Downloader.download import Downloader
 from OutStreamer.stream_to_file import OutStreamerFileJSON
 from Pipeline.pipeline import ProcessorPipeline
@@ -15,47 +18,14 @@ from Router.router import Router
 
 logging.basicConfig(
     format="%(asctime)s - %(filename)s:%(lineno)d - " "%(levelname)s - %(message)s",
-    level="DEBUG",
+    level="INFO",
 )
 
-TASK_MAX_SIZE = 100
 
-
-async def report_error(error: str):
-    print("report_error:", error)
-
-
-def on_poison_pill_wrapper(end_feature: asyncio.Future[Boolean], pills_to_die: int):
-    pills = 0
-
-    async def inner(frame: Frame, message: str | bytes | None):
-        nonlocal pills
-        pills += 1
-        if pills == pills_to_die:
-            end_feature.set_result(True)
-        return True
-
-    return inner
-
-
-def on_message_wrapper(messages: asyncio.Queue[DomainRecord]):
-    async def on_message(frame: Frame, message: str | bytes | None):
-        if isinstance(message, bytes) and message is not None:
-            message = message.decode()
-
-        if message is None:
-            return True
-
-        msg_json = json.loads(message)
-        try:
-            msg_json["timestamp"] = datetime.fromisoformat(msg_json.get("timestamp"))
-            domain_record = DomainRecord(**msg_json)
-            messages.put_nowait(domain_record)
-        except ValueError:
-            pass
-        return True
-
-    return on_message
+@dataclass
+class Message:
+    dr: DomainRecord
+    headers: Dict[str, str]
 
 
 def init_pipeline(downloader: Downloader):
@@ -69,49 +39,91 @@ def init_pipeline(downloader: Downloader):
     return pipeline
 
 
-async def processor(queue_host: str, queue_port: int, pills_to_die: int):
-    downloader = await Downloader().aopen()
-    # async with Downloader() as downloader:
-    pipeline = init_pipeline(downloader)
-    messages = asyncio.Queue(0)
-    finished: asyncio.Future[Boolean] = asyncio.get_event_loop().create_future()
-    client = AioStomp(
-        host=queue_host,
-        port=queue_port,
-        error_handler=report_error,
-        reconnect_max_attempts=30,
-        heartbeat_interval_cx=0,
-        heartbeat_interval_cy=0,
-    )
-    await client.connect(username="consumer", password="consumer")
-    client.subscribe("queue/articles.idnes.cz", handler=on_message_wrapper(messages))
-    client.subscribe(
-        "topic/poisson_pill.#",
-        handler=on_poison_pill_wrapper(finished, pills_to_die),
-    )
-    pending_extracts = set()
-    while not messages.empty() or not finished.done():
-        if len(pending_extracts) > 0:
-            _, pending_extracts = await asyncio.wait(
-                pending_extracts, return_when="FIRST_COMPLETED"
-            )
+def init_connection(listener: ConnectionListener, conn: Connection):
+    conn.set_listener("", listener)
+    conn.connect(login="consumer", passcode="consumer", wait=True)
+    conn.subscribe("/queue/articles.#", id="articles", ack="client-individual")
+    conn.subscribe("/topic/poisson_pill.#", id="poisson_pill", ack="auto")
+    return conn
 
-        while len(pending_extracts) < TASK_MAX_SIZE:
+
+class Listener(ConnectionListener):
+    def __init__(self, messages: asyncio.Queue[Message]):
+        self.messages = messages
+        self.pills = 0
+
+    def on_message(self, frame: Frame):
+        if frame.headers.get("type") == "pill":
+            self.pills += 1
+        else:
+            msg_json = json.loads(frame.body)
             try:
-                dr = await asyncio.wait_for(messages.get(), 4)
-                pending_extracts.add(
-                    asyncio.create_task(pipeline.process_domain_record(dr))
+                msg_json["timestamp"] = datetime.fromisoformat(
+                    msg_json.get("timestamp")
                 )
-            except asyncio.TimeoutError:
+                domain_record = DomainRecord(**msg_json)
+                self.messages.put_nowait(Message(domain_record, frame.headers))
+            except ValueError:
+                pass
+
+
+async def call_pipeline_with_ack(
+    pipeline: ProcessorPipeline, msg: Message, client: Connection
+):
+    await pipeline.process_domain_record(msg.dr)
+    # Ack at any result
+    client.ack(msg.headers.get("message-id"), msg.headers.get("subscription"))
+    return msg
+
+
+async def processor(
+    queue_host: str, queue_port: int, pills_to_die: int, queue_size: int
+):
+    pending_extracts: Set[asyncio.Task[Message | None]] = set()
+    conn = Connection(
+        [(queue_host, queue_port)], reconnect_attempts_max=-1, heartbeats=(10000, 10000)
+    )
+    listener = Listener(asyncio.Queue(0))
+    async with Downloader() as downloader:
+        # async with Downloader() as downloader:
+        pipeline = init_pipeline(downloader)
+        while not listener.messages.empty() or listener.pills < pills_to_die:
+            try:
+                # Auto reconnect if queue disconnects
+                if not conn.is_connected():
+                    conn = init_connection(listener, conn)
+
+                if len(pending_extracts) > 0:
+                    done, pending_extracts = await asyncio.wait(
+                        pending_extracts, return_when="FIRST_COMPLETED"
+                    )
+                    for task in done:
+                        message = task.result()
+                        if message is not None:
+                            logging.info(f"Downloaded {message.dr.url}")
+
+                while (
+                    len(pending_extracts) < queue_size and not listener.messages.empty()
+                ):
+                    pending_extracts.add(
+                        asyncio.create_task(
+                            call_pipeline_with_ack(
+                                pipeline, listener.messages.get_nowait(), conn
+                            )
+                        )
+                    )
+            except (KeyboardInterrupt, StompException) as e:
+                logging.error(e)
                 break
 
     await asyncio.gather(*pending_extracts)
-    client.close()
+    conn.disconnect()
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Processor")
-    parser.add_argument("--queue_host", type=str, default="localhost")
+    parser.add_argument("--queue_host", type=str, default="artemis")
     parser.add_argument("--queue_port", type=int, default=61613)
+    parser.add_argument("--queue_size", type=int, default=100)
     parser.add_argument("--pills_to_die", type=int, default=1)
     asyncio.run(processor(**vars(parser.parse_args())))

@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import List
-from Aggregator.index_query import DomainRecord, IndexAggregator
+from index_query import DomainRecord, IndexAggregator
 import unittest
 
 
@@ -96,4 +96,3 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

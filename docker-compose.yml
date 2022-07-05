@@ -3,24 +3,32 @@ services:
   artemis:
     build: "./Artemis"
     container_name: "artemis"
+    volumes:
+      - artemis-data:/data
     ports:
       - "8161:8161"
 
-  # producer-seznamzpravy.cz:
-  #   build: ./Aggregator
-  #   container_name: "seznamzpravy"
-  #   command: "seznamzpravy.cz"
-  #   depends_on:
-  #     - consumer
+  producer-seznamzpravy.cz:
+    build: ./Aggregator
+    container_name: "seznamzpravy"
+    command: "seznamzpravy.cz"
+    depends_on:
+      - consumer
 
   producer-idnes.cz:
     build: ./Aggregator
     container_name: "idnescz"
     command: "idnes.cz"
     depends_on:
+      - consumer
+
+  consumer:
+    build: ./Processor
+    container_name: "consumer"
+    volumes:
+      - ./output:/output
+    depends_on:
       - artemis
-    # consumer:
-    #   build: ./Processor
-    #   container_name: "consumer"
-    # depends_on:
-    #   - artemis
+
+volumes:
+  artemis-data:
