@@ -1,0 +1,50 @@
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<html>
+<head>
+    <title>ActiveMQ Artemis Example</title>
+    <link rel="stylesheet" type="text/css" href="../../../common/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../../common/prettify.css" />
+    <script type="text/javascript" src="../../../common/prettify.js"></script>
+</head>
+<body onload="prettyPrint()">
+<h1>JMS Colocated Failover Shared Store Example</h1>
+<p>To run the example, simply type <strong>mvn verify</strong> from this directory. This example will always spawn and stop multiple brokers.</p>
+<p>This example demonstrates how you can colocate live and backup brokers in the same VM. We do this by creating an HA Policy that is colocated. Colocated means that backup brokers can be created and maintained by live brokers on behalf of other live brokers requesting a backup. In this example we create a colocated shared store broker.</p>
+<p>This example starts 2 live brokers each with a backup broker that backs up the other live broker.</p>
+<p>The first live broker will be killed and the backup in the second will become live</p>
+<p>The following shows how to configure the live brokers to request and allow backups to be deployed</p>
+<pre><code>&lt;ha-policy&gt;
+   &lt;shared-store&gt;
+      &lt;colocated&gt;
+         &lt;backup-port-offset&gt;100&lt;/backup-port-offset&gt;
+         &lt;backup-request-retries&gt;-1&lt;/backup-request-retries&gt;
+         &lt;backup-request-retry-interval&gt;2000&lt;/backup-request-retry-interval&gt;
+         &lt;max-backups&gt;1&lt;/max-backups&gt;
+         &lt;request-backup&gt;true&lt;/request-backup&gt;
+         &lt;master/&gt;
+         &lt;slave/&gt;
+      &lt;/colocated&gt;
+   &lt;/shared-store&gt;
+&lt;/ha-policy&gt;
+</code></pre>
+<p>notice that we have used a template to set some sensible defaults but overridden the backup strategy so back ups are full brokers.</p>
+</body>
+</html>

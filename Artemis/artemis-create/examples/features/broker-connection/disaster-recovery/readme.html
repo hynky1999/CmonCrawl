@@ -1,0 +1,41 @@
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<html>
+<head>
+    <title>ActiveMQ Artemis Example</title>
+    <link rel="stylesheet" type="text/css" href="../../../common/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../../common/prettify.css" />
+    <script type="text/javascript" src="../../../common/prettify.js"></script>
+</head>
+<body onload="prettyPrint()">
+<h1>AMQP Broker Disaster Recovery</h1>
+<p>To run the example, simply type <strong>mvn verify</strong> from this directory, or <strong>mvn -PnoServer verify</strong> if you want to create and start the broker manually.</p>
+<p>On this broker you will have two brokers connected to each other.</p>
+<p>This broker configure two servers:</p>
+<ul>
+<li>server0</li>
+<li>server1</li>
+</ul>
+<p>Each broker has a broker connection towards the other broker, with a mirror tag configured:</p>
+<p><code>xml &lt;broker-connections&gt; &lt;amqp-connection uri=&quot;tcp://localhost:5661&quot; name=&quot;otherBroker&quot; retry-interval=&quot;1000&quot;&gt; &lt;mirror/&gt; &lt;/amqp-connection&gt; &lt;/broker-connections&gt;</code></p>
+<p>Watever happens in server0 is replicated to server1 and vice versa.</p>
+<p>In case you want to play this in real life, all you have to do is to move your consumers and producers from one broker towards the other broker.</p>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<html>
+<head>
+    <title>ActiveMQ Artemis Example</title>
+    <link rel="stylesheet" type="text/css" href="../../../common/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../../common/prettify.css" />
+    <script type="text/javascript" src="../../../common/prettify.js"></script>
+</head>
+<body onload="prettyPrint()">
+<h1>Proton Ruby Example</h1>
+<p>ActiveMQ Artemis can be configured to accept requests from any AMQP client that supports the 1.0 version of the protocol. This example shows a simply proton ruby client that sends and receives messages.</p>
+<p>To run the example you will need the following packages installed, alsa-lib.i686 libXv.i686 libXScrnSaver.i686 qt.i686 qt-x11.i686 qtwebkit-2.2.2-2.fc18.i686, gcc, ruby.</p>
+<p>On fedora you can install these via the <code>yum install alsa-lib.i686 libXv.i686 libXScrnSaver.i686 qt.i686 qt-x11.i686 qtwebkit-2.2.2-2.fc18.i686, gcc, ruby</code> command.</p>
+<p>you will also need the qpid-proton libraries installed, again <code>yum install qpid-proton</code>.</p>
+<p>lastly you wull have to create the gems <code>gem install qpid_proton</code>.</p>
+<p>To configure ActiveMQ Artemis to accept AMQP client connections you need to add an Acceptor like so:</p>
+<pre><code>&lt;acceptor name=&quot;proton-acceptor&quot;&gt;tcp://localhost:5672?protocols=AMQP&lt;/acceptor&gt;
+</code></pre>
+<h2>Example step-by-step</h2>
+<p>Firstly create the broker by running the command <strong>mvn verify</strong>.</p>
+<p>Start the broker manually under ./target/server1/bin by calling <code>./artemis run</code>.</p>
+<p>Then in a separate window you can run the send ruby script by running the command <code>ruby src/main/scripts/send.rb</code>.</p>
+<p>You can then receive the message via the receive ruby script by running <code>ruby src/main/scripts/receive.rb</code>.</p>
+</body>
+</html>

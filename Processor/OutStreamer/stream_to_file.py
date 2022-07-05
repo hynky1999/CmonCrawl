@@ -4,8 +4,8 @@ from pathlib import Path
 import random
 from typing import Any, Dict, List
 from xmlrpc.client import Boolean
-from Processor.Downloader.warc import PipeMetadata
-from Processor.OutStreamer.outstreamer import OutStreamer
+from Downloader.warc import PipeMetadata
+from OutStreamer.outstreamer import OutStreamer
 from aiofiles import open as asyncOpen
 from hashlib import md5
 

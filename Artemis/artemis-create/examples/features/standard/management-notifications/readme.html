@@ -1,0 +1,46 @@
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<html>
+<head>
+    <title>ActiveMQ Artemis Example</title>
+    <link rel="stylesheet" type="text/css" href="../../../common/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../../common/prettify.css" />
+    <script type="text/javascript" src="../../../common/prettify.js"></script>
+</head>
+<body onload="prettyPrint()">
+<h1>Management Notification Example</h1>
+<p>To run the example, simply type <strong>mvn verify</strong> from this directory, or <strong>mvn -PnoServer verify</strong> if you want to start and create the broker manually.</p>
+<p>This example shows how to receive management notifications from ActiveMQ Artemis using JMS Messages.</p>
+<p>ActiveMQ Artemis servers emit management notifications when events of interest occur (consumers are created or closed, destinations are created or deleted, security authentication fails, etc.). These notifications can be received either by using JMX (see &quot;jmx&quot; example) or by receiving JMS Messages from a well-known destination.</p>
+<p>This example will setup a JMS MessageListener to receive management notifications. We will also perform normal JMS operations to see the kind of notifications they trigger.</p>
+<h2>Example configuration</h2>
+<p>ActiveMQ Artemis can configured to send JMS messages when management notifications are emitted on the server.</p>
+<p>By default, the management name is called <code>activemq.notifications</code> but this can be configured in <a href="server0/broker.xml">broker.xml</a>. For this example, we will set it to <code>jms.topic.notificationsTopic</code> to be able to receive notifications from a JMS Topic.</p>
+<pre><code>&lt;management-notification-address&gt;jms.topic.notificationsTopic&lt;/management-notification-address&gt;
+</code></pre>
+<p>The notification queue requires permission to create/delete temporary queues and consume messages. This is also configured in <a href="server0/broker.xml">broker.xml</a></p>
+<pre><code>&lt;security-setting match=&quot;jms.topic.notificationsTopic&quot;&gt;
+   &lt;permission type=&quot;consume&quot; roles=&quot;guest&quot;/&gt;
+   &lt;permission type=&quot;createNonDurableQueue&quot; roles=&quot;guest&quot;/&gt;
+   &lt;permission type=&quot;deleteNonDurableQueue&quot; roles=&quot;guest&quot;/&gt;
+&lt;/security-setting&gt;
+</code></pre>
+</body>
+</html>

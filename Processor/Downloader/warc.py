@@ -2,7 +2,7 @@ from datetime import datetime
 import re
 from typing import Any, Dict
 from datetime import datetime
-from Processor.utils import PipeMetadata
+from utils import PipeMetadata
 
 
 def parse_warc_header(warc: str):

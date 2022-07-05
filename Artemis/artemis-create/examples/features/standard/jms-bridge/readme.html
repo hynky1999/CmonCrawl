@@ -1,0 +1,47 @@
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<html>
+<head>
+    <title>ActiveMQ Artemis Example</title>
+    <link rel="stylesheet" type="text/css" href="../../../common/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../../common/prettify.css" />
+    <script type="text/javascript" src="../../../common/prettify.js"></script>
+</head>
+<body onload="prettyPrint()">
+<h1>JMS Bridge Example</h1>
+<p>To run the example, simply type <strong>mvn verify</strong> from this directory, or <strong>mvn -PnoServer verify</strong> if you want to start and create the broker manually.</p>
+<p>This example shows you how to create a JMS Bridge between two ActiveMQ Artemis brokers.</p>
+<p><img src="jms-bridge.png" alt="" /></p>
+<p>The example will use two ActiveMQ Artemis brokers:</p>
+<ul>
+<li>Server #0 – the <em>Source</em> broker. It will be configured with a JMS Topic bound to JNDI under <code>source/topic</code></li>
+<li>Server #1 – the <em>Target</em> broker. It will be configured with a JMS Queue bound to JNDI under <code>target/queue</code></li>
+</ul>
+<p>The JMS Bridge will be started in the example code and be configured to bridge messages from the <em>source</em> destination (the topic hosted on broker #0) and the <em>target</em> destination (the queue hosted on broker #1)</p>
+<p>The client will check the bridge works by:</p>
+<ol>
+<li>sending a message to the <em>source</em> topic</li>
+<li>receive a message from the <em>target</em> queue</li>
+<li>check that both messages correspond to the same content.</li>
+</ol>
+<h3>JMS Bridge Configuration</h3>
+<p>The JMS Bridge is a POJO that we configure with both source and target JNDI configurations. In the actual example we are programmatically creating the Bridge.</p>
+</body>
+</html>

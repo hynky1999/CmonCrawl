@@ -1,0 +1,1574 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <title>Core · ActiveMQ Artemis Documentation</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.7.1">
+        
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="jms-core-mapping.html" />
+    
+    
+    <link rel="prev" href="openwire.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="notice.html">
+            
+                <a href="notice.html">
+            
+                    
+                    Legal Notice
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="preface.html">
+            
+                <a href="preface.html">
+            
+                    
+                    Preface
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="project-info.html">
+            
+                <a href="project-info.html">
+            
+                    
+                    Project Info
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="versions.html">
+            
+                <a href="versions.html">
+            
+                    
+                    Versions
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="messaging-concepts.html">
+            
+                <a href="messaging-concepts.html">
+            
+                    
+                    Messaging Concepts
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="architecture.html">
+            
+                <a href="architecture.html">
+            
+                    
+                    Architecture
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="using-server.html">
+            
+                <a href="using-server.html">
+            
+                    
+                    Using the Server
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="upgrading.html">
+            
+                <a href="upgrading.html">
+            
+                    
+                    Upgrading
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10" >
+            
+                <span>
+            
+                    
+                    Address
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.1" data-path="address-model.html">
+            
+                <a href="address-model.html">
+            
+                    
+                    Model
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2" data-path="address-settings.html">
+            
+                <a href="address-settings.html">
+            
+                    
+                    Settings
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11" data-path="protocols-interoperability.html">
+            
+                <a href="protocols-interoperability.html">
+            
+                    
+                    Protocols and Interoperability
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12" data-path="amqp.html">
+            
+                <a href="amqp.html">
+            
+                    
+                    AMQP
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.12.1" data-path="amqp-broker-connections.html">
+            
+                <a href="amqp-broker-connections.html">
+            
+                    
+                    Broker Connections
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.13" data-path="mqtt.html">
+            
+                <a href="mqtt.html">
+            
+                    
+                    MQTT
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.14" data-path="stomp.html">
+            
+                <a href="stomp.html">
+            
+                    
+                    STOMP
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.15" data-path="openwire.html">
+            
+                <a href="openwire.html">
+            
+                    
+                    OpenWire
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.16" data-path="core.html">
+            
+                <a href="core.html">
+            
+                    
+                    Core
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.17" data-path="jms-core-mapping.html">
+            
+                <a href="jms-core-mapping.html">
+            
+                    
+                    Mapping JMS Concepts to the Core API
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.18" data-path="using-jms.html">
+            
+                <a href="using-jms.html">
+            
+                    
+                    Using JMS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.19" data-path="client-classpath.html">
+            
+                <a href="client-classpath.html">
+            
+                    
+                    The Client Classpath
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.20" data-path="examples.html">
+            
+                <a href="examples.html">
+            
+                    
+                    Examples
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.21" data-path="wildcard-routing.html">
+            
+                <a href="wildcard-routing.html">
+            
+                    
+                    Routing Messages With Wild Cards
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.22" data-path="wildcard-syntax.html">
+            
+                <a href="wildcard-syntax.html">
+            
+                    
+                    Wildcard Syntax
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.23" data-path="filter-expressions.html">
+            
+                <a href="filter-expressions.html">
+            
+                    
+                    Filter Expressions
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.24" data-path="persistence.html">
+            
+                <a href="persistence.html">
+            
+                    
+                    Persistence
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.25" data-path="configuring-transports.html">
+            
+                <a href="configuring-transports.html">
+            
+                    
+                    Configuring Transports
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.26" data-path="config-reload.html">
+            
+                <a href="config-reload.html">
+            
+                    
+                    Configuration Reload
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.27" data-path="connection-ttl.html">
+            
+                <a href="connection-ttl.html">
+            
+                    
+                    Detecting Dead Connections
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.28" data-path="slow-consumers.html">
+            
+                <a href="slow-consumers.html">
+            
+                    
+                    Detecting Slow Consumers
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.29" data-path="network-isolation.html">
+            
+                <a href="network-isolation.html">
+            
+                    
+                    Avoiding Network Isolation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.30" data-path="critical-analysis.html">
+            
+                <a href="critical-analysis.html">
+            
+                    
+                    Detecting Broker Issues (Critical Analysis)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.31" data-path="transaction-config.html">
+            
+                <a href="transaction-config.html">
+            
+                    
+                    Resource Manager Configuration
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.32" data-path="flow-control.html">
+            
+                <a href="flow-control.html">
+            
+                    
+                    Flow Control
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.33" data-path="send-guarantees.html">
+            
+                <a href="send-guarantees.html">
+            
+                    
+                    Guarantees of sends and commits
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.34" data-path="undelivered-messages.html">
+            
+                <a href="undelivered-messages.html">
+            
+                    
+                    Message Redelivery and Undelivered Messages
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.35" data-path="message-expiry.html">
+            
+                <a href="message-expiry.html">
+            
+                    
+                    Message Expiry
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.36" data-path="large-messages.html">
+            
+                <a href="large-messages.html">
+            
+                    
+                    Large Messages
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.37" data-path="paging.html">
+            
+                <a href="paging.html">
+            
+                    
+                    Paging
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.38" data-path="scheduled-messages.html">
+            
+                <a href="scheduled-messages.html">
+            
+                    
+                    Scheduled Messages
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.39" data-path="last-value-queues.html">
+            
+                <a href="last-value-queues.html">
+            
+                    
+                    Last-Value Queues
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.40" data-path="non-destructive-queues.html">
+            
+                <a href="non-destructive-queues.html">
+            
+                    
+                    Non-Destructive Queues
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.41" data-path="ring-queues.html">
+            
+                <a href="ring-queues.html">
+            
+                    
+                    Ring Queues
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.42" data-path="retroactive-addresses.html">
+            
+                <a href="retroactive-addresses.html">
+            
+                    
+                    Retroactive Addresses
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.43" data-path="exclusive-queues.html">
+            
+                <a href="exclusive-queues.html">
+            
+                    
+                    Exclusive Queues
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.44" data-path="message-grouping.html">
+            
+                <a href="message-grouping.html">
+            
+                    
+                    Message Grouping
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.45" data-path="consumer-priority.html">
+            
+                <a href="consumer-priority.html">
+            
+                    
+                    Consumer Priority
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.46" data-path="pre-acknowledge.html">
+            
+                <a href="pre-acknowledge.html">
+            
+                    
+                    Extra Acknowledge Modes
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.47" data-path="management.html">
+            
+                <a href="management.html">
+            
+                    
+                    Management
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.48" data-path="management-console.html">
+            
+                <a href="management-console.html">
+            
+                    
+                    Management Console
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.49" data-path="metrics.html">
+            
+                <a href="metrics.html">
+            
+                    
+                    Metrics
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.50" data-path="security.html">
+            
+                <a href="security.html">
+            
+                    
+                    Security
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.51" data-path="masking-passwords.html">
+            
+                <a href="masking-passwords.html">
+            
+                    
+                    Masking Passwords
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.52" data-path="broker-plugins.html">
+            
+                <a href="broker-plugins.html">
+            
+                    
+                    Broker Plugins
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.53" data-path="resource-limits.html">
+            
+                <a href="resource-limits.html">
+            
+                    
+                    Resource Limits
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.54" data-path="jms-bridge.html">
+            
+                <a href="jms-bridge.html">
+            
+                    
+                    The JMS Bridge
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.55" data-path="client-reconnection.html">
+            
+                <a href="client-reconnection.html">
+            
+                    
+                    Client Reconnection and Session Reattachment
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.56" data-path="diverts.html">
+            
+                <a href="diverts.html">
+            
+                    
+                    Diverting and Splitting Message Flows
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.57" data-path="core-bridges.html">
+            
+                <a href="core-bridges.html">
+            
+                    
+                    Core Bridges
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.58" data-path="transformers.html">
+            
+                <a href="transformers.html">
+            
+                    
+                    Transformers
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.59" data-path="duplicate-detection.html">
+            
+                <a href="duplicate-detection.html">
+            
+                    
+                    Duplicate Message Detection
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.60" data-path="clusters.html">
+            
+                <a href="clusters.html">
+            
+                    
+                    Clusters
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.61" data-path="federation.html">
+            
+                <a href="federation.html">
+            
+                    
+                    Federation
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.61.1" data-path="federation-address.html">
+            
+                <a href="federation-address.html">
+            
+                    
+                    Address Federation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.61.2" data-path="federation-queue.html">
+            
+                <a href="federation-queue.html">
+            
+                    
+                    Queue Federation
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.62" data-path="ha.html">
+            
+                <a href="ha.html">
+            
+                    
+                    High Availability and Failover
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.63" data-path="connection-routers.html">
+            
+                <a href="connection-routers.html">
+            
+                    
+                    Connection Routers
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.64" data-path="graceful-shutdown.html">
+            
+                <a href="graceful-shutdown.html">
+            
+                    
+                    Graceful Server Shutdown
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.65" data-path="libaio.html">
+            
+                <a href="libaio.html">
+            
+                    
+                    Libaio Native Libraries
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.66" data-path="thread-pooling.html">
+            
+                <a href="thread-pooling.html">
+            
+                    
+                    Thread management
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.67" data-path="web-server.html">
+            
+                <a href="web-server.html">
+            
+                    
+                    Embedded Web Server
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.68" data-path="logging.html">
+            
+                <a href="logging.html">
+            
+                    
+                    Logging
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.69" data-path="rest.html">
+            
+                <a href="rest.html">
+            
+                    
+                    REST Interface
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.70" data-path="embedding-activemq.html">
+            
+                <a href="embedding-activemq.html">
+            
+                    
+                    Embedding the Broker
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.71" data-path="karaf.html">
+            
+                <a href="karaf.html">
+            
+                    
+                    Apache Karaf
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.72" data-path="tomcat.html">
+            
+                <a href="tomcat.html">
+            
+                    
+                    Apache Tomcat
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.73" data-path="spring-integration.html">
+            
+                <a href="spring-integration.html">
+            
+                    
+                    Spring Integration
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.74" data-path="cdi-integration.html">
+            
+                <a href="cdi-integration.html">
+            
+                    
+                    CDI Integration
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.75" data-path="intercepting-operations.html">
+            
+                <a href="intercepting-operations.html">
+            
+                    
+                    Intercepting Operations
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.76" data-path="data-tools.html">
+            
+                <a href="data-tools.html">
+            
+                    
+                    Data Tools
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.77" data-path="activation-tools.html">
+            
+                <a href="activation-tools.html">
+            
+                    
+                    Activation Tools
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.78" data-path="maven-plugin.html">
+            
+                <a href="maven-plugin.html">
+            
+                    
+                    Maven Plugin
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.79" data-path="unit-testing.html">
+            
+                <a href="unit-testing.html">
+            
+                    
+                    Unit Testing
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.80" data-path="perf-tuning.html">
+            
+                <a href="perf-tuning.html">
+            
+                    
+                    Troubleshooting and Performance Tuning
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.81" data-path="perf-tools.html">
+            
+                <a href="perf-tools.html">
+            
+                    
+                    Performance Tools
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.82" data-path="configuration-index.html">
+            
+                <a href="configuration-index.html">
+            
+                    
+                    Configuration Reference
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.83" data-path="restart-sequence.html">
+            
+                <a href="restart-sequence.html">
+            
+                    
+                    Restart Sequence
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >Core</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="using-core">Using Core</h1>
+<p>Apache ActiveMQ Artemis core is a messaging system with its own API. We call
+this the <em>core API</em>.</p>
+<p>If you don&apos;t want to use the JMS API or any of the other supported protocols
+you can use the core API directly. The core API provides all the functionality
+of JMS but without much of the complexity. It also provides features that are
+not available using JMS.</p>
+<h2 id="core-messaging-concepts">Core Messaging Concepts</h2>
+<p>Some of the core messaging concepts are similar to JMS concepts, but core
+messaging concepts are also different in some ways as well. In general the core
+API is simpler than the JMS API, since we remove distinctions between queues,
+topics and subscriptions. We&apos;ll discuss each of the major core messaging
+concepts in turn, but to see the API in detail please consult the Javadoc.</p>
+<p>Also refer to the <a href="address-model.html">address model</a> chapter for a high-level
+overview of these concepts as well as configuration details.</p>
+<h3 id="message">Message</h3>
+<ul>
+<li><p>A message is the unit of data which is sent between clients and servers.</p>
+</li>
+<li><p>A message has a body which is a buffer containing convenient methods for
+reading and writing data into it.</p>
+</li>
+<li><p>A message has a set of properties which are key-value pairs. Each property
+key is a string and property values can be of type integer, long, short,
+byte, byte[], String, double, float or boolean.</p>
+</li>
+<li><p>A message has an <em>address</em> it is being sent to. When the message arrives on
+the server it is routed to any queues that are bound to the address. The
+routing semantics (i.e. anycast or multicast) are determined by the &quot;routing
+type&quot; of the address and queue. If the queues are bound with any filter, the
+message will only be routed to that queue if the filter matches. An address may
+have many queues bound to it or even none. There may also be entities other
+than queues (e.g. <em>diverts</em>) bound to addresses.</p>
+</li>
+<li><p>Messages can be either durable or non durable. Durable messages in a durable
+queue will survive a server crash or restart. Non durable messages will never
+survive a server crash or restart.</p>
+</li>
+<li><p>Messages can be specified with a priority value between 0 and 9. 0 represents
+the lowest priority and 9 represents the highest. The broker will attempt to
+deliver higher priority messages before lower priority ones.</p>
+</li>
+<li><p>Messages can be specified with an optional expiry time. The broker will not
+deliver messages after its expiry time has been exceeded.</p>
+</li>
+<li><p>Messages also have an optional timestamp which represents the time the
+message was sent.</p>
+</li>
+<li><p>Apache ActiveMQ Artemis also supports the sending/consuming of very large
+messages much larger than can fit in available RAM at any one time.</p>
+</li>
+</ul>
+<h3 id="address">Address</h3>
+<p>A server maintains a mapping between an address and a set of queues. Zero or
+more queues can be bound to a single address. Each queue can be bound with an
+optional message filter. When a message is routed, it is routed to the set of
+queues bound to the message&apos;s address. If any of the queues are bound with a
+filter expression, then the message will only be routed to the subset of bound
+queues which match that filter expression.</p>
+<p>Other entities, such as <em>diverts</em> can also be bound to an address and messages
+will also be routed there.</p>
+<blockquote>
+<p><strong>Note:</strong></p>
+<p>Although core supports publish-subscribe semantics there is no such thing as
+a &quot;topic&quot; per se. &quot;Topic&quot; is mainly a JMS term. In core we just deal with
+<em>addresses</em>, <em>queues</em>, and <em>routing types</em>.</p>
+<p>For example, a JMS topic would be implemented by a single address to which
+many queues are bound using multicast routing. Each queue represents a
+&quot;subscription&quot; in normal &quot;topic&quot; terms. A JMS queue would be implemented as a
+single address to which one queue is bound using anycast routing - that queue
+represents the JMS queue.</p>
+</blockquote>
+<h3 id="queue">Queue</h3>
+<p>Queues can be durable, meaning the messages they contain survive a server crash
+or restart, as long as the messages in them are durable. Non durable queues do
+not survive a server restart or crash even if the messages they contain are
+durable.</p>
+<p>Queues can also be temporary, meaning they are automatically deleted when the
+client connection is closed, if they are not explicitly deleted before that.</p>
+<p>Queues can be bound with an optional filter expression. If a filter expression
+is supplied then the server will only route messages that match that filter
+expression to any queues bound to the address.</p>
+<p>Many queues can be bound to a single address. A particular queue is only bound
+to a maximum of one address.</p>
+<h3 id="routing-type">Routing Type</h3>
+<p>The routing type determines the semantics used when routing messages to the
+queues bound to the address where the message was sent. Two types are
+supported:</p>
+<ul>
+<li><p><code>ANYCAST</code></p>
+<p>The message is routed to only <strong>one</strong> of the queues bound to the address. If
+multiple queues are bound to the address then messages are routed to them in a
+round-robin fashion.</p>
+</li>
+<li><p><code>MULTICAST</code></p>
+<p>The message is route to <strong>all</strong> of the queues bound to the address.</p>
+</li>
+</ul>
+<h2 id="core-api">Core API</h2>
+<h3 id="serverlocator">ServerLocator</h3>
+<p>Clients use <code>ServerLocator</code> instances to create <code>ClientSessionFactory</code>
+instances. <code>ServerLocator</code> instances are used to locate servers and create
+connections to them.</p>
+<p>In JMS terms think of a <code>ServerLocator</code> in the same way you would a JMS
+Connection Factory.</p>
+<p><code>ServerLocator</code> instances are created using the <code>ActiveMQClient</code> factory class.</p>
+<h3 id="clientsessionfactory">ClientSessionFactory</h3>
+<p>Clients use <code>ClientSessionFactory</code> instances to create <code>ClientSession</code>
+instances. <code>ClientSessionFactory</code> instances are basically the connection to a
+server</p>
+<p>In JMS terms think of them as JMS Connections.</p>
+<p><code>ClientSessionFactory</code> instances are created using the <code>ServerLocator</code> class.</p>
+<h3 id="clientsession">ClientSession</h3>
+<p>A client uses a <code>ClientSession</code>for consuming and producing messages and for
+grouping them in transactions. <code>ClientSession</code> instances can support both
+transactional and non transactional semantics and also provide an <code>XAResource</code>
+interface so messaging operations can be performed as part of a
+<a href="http://www.oracle.com/technetwork/java/javaee/tech/jta-138684.html" target="_blank">JTA</a>
+transaction.</p>
+<p><code>ClientSession</code> instances group <code>ClientConsumer</code> instances and <code>ClientProducer</code>
+instances.</p>
+<p><code>ClientSession</code> instances can be registered with an optional
+<code>SendAcknowledgementHandler</code>. This allows your client code to be notified
+asynchronously when sent messages have successfully reached the server. This
+unique Apache ActiveMQ Artemis feature, allows you to have full guarantees that
+sent messages have reached the server without having to block on each message
+sent until a response is received. Blocking on each messages sent is costly
+since it requires a network round trip for each message sent. By not blocking
+and receiving send acknowledgements asynchronously you can create true end to
+end asynchronous systems which is not possible using the standard JMS API. For
+more information on this advanced feature please see the section <a href="send-guarantees.html">Guarantees of
+sends and commits</a>.</p>
+<h3 id="identifying-your-session-for-management-and-debugging">Identifying your session for management and debugging</h3>
+<p>Assigning IDs to your core sessions can help you with monitoring and debugging the cluster using the <a href="management-console.html">management console</a>.</p>
+<pre><code class="lang-java"> ClientSession session;
+ <span class="hljs-comment">// ...</span>
+ session.addMetaData(ClientSession.JMS_SESSION_IDENTIFIER_PROPERTY, <span class="hljs-string">&quot;jms-client-id&quot;</span>);
+ session.addMetaData(<span class="hljs-string">&quot;jms-client-id&quot;</span>, <span class="hljs-string">&quot;my-session&quot;</span>);
+</code></pre>
+<p>Such ID will then appear in the <strong>Client ID</strong> column under the <strong>Connections</strong>, <strong>Consumers</strong> and <strong>Producers</strong> tabs.</p>
+<p>If you are using the JMS API, the <code>setClientID</code> would give you the same effect.</p>
+<h3 id="clientconsumer">ClientConsumer</h3>
+<p>Clients use <code>ClientConsumer</code> instances to consume messages from a queue. Core
+messaging supports both synchronous and asynchronous message consumption
+semantics. <code>ClientConsumer</code> instances can be configured with an optional filter
+expression and will only consume messages which match that expression.</p>
+<h3 id="clientproducer">ClientProducer</h3>
+<p>Clients create <code>ClientProducer</code> instances on <code>ClientSession</code> instances so they
+can send messages. <code>ClientProducer</code> instances can specify an address to which
+all sent messages are routed, or they can have no specified address, and the
+address is specified at send time for the message.</p>
+<blockquote>
+<p><strong>Warning</strong></p>
+<p>Please note that <code>ClientSession</code>, <code>ClientProducer</code> and <code>ClientConsumer</code>
+instances are <em>designed to be re-used</em>.</p>
+<p>It&apos;s an anti-pattern to create new <code>ClientSession</code>, <code>ClientProducer</code> and
+<code>ClientConsumer</code> instances for each message you produce or consume. If you do
+this, your application will perform very poorly. This is  discussed further
+in the section on performance tuning <a href="perf-tuning.html">Performance Tuning</a>.</p>
+</blockquote>
+<h2 id="a-simple-example-of-using-core">A simple example of using Core</h2>
+<p>Here&apos;s a very simple program using the core messaging API to send and receive a
+message. Logically it&apos;s comprised of two sections: firstly setting up the
+producer to write a message to an <em>address</em>, and secondly, creating a <em>queue</em>
+for the consumer using anycast routing, creating the consumer, and <em>starting</em>
+it.</p>
+<pre><code class="lang-java">ServerLocator locator = ActiveMQClient.createServerLocator(<span class="hljs-string">&quot;vm://0&quot;</span>);
+
+<span class="hljs-comment">// In this simple example, we just use one session for both producing and receiving</span>
+
+ClientSessionFactory factory =  locator.createClientSessionFactory();
+ClientSession session = factory.createSession();
+
+<span class="hljs-comment">// A producer is associated with an address ...</span>
+
+ClientProducer producer = session.createProducer(<span class="hljs-string">&quot;example&quot;</span>);
+ClientMessage message = session.createMessage(<span class="hljs-keyword">true</span>);
+message.getBodyBuffer().writeString(<span class="hljs-string">&quot;Hello&quot;</span>);
+
+<span class="hljs-comment">// We need a queue attached to the address ...</span>
+
+session.createQueue(<span class="hljs-string">&quot;example&quot;</span>, RoutingType.ANYCAST, <span class="hljs-string">&quot;example&quot;</span>, <span class="hljs-keyword">true</span>);
+
+<span class="hljs-comment">// And a consumer attached to the queue ...</span>
+
+ClientConsumer consumer = session.createConsumer(<span class="hljs-string">&quot;example&quot;</span>);
+
+<span class="hljs-comment">// Once we have a queue, we can send the message ...</span>
+
+producer.send(message);
+
+<span class="hljs-comment">// We need to start the session before we can -receive- messages ...</span>
+
+session.start();
+ClientMessage msgReceived = consumer.receive();
+
+System.out.println(<span class="hljs-string">&quot;message = &quot;</span> + msgReceived.getBodyBuffer().readString());
+
+session.close();
+</code></pre>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="openwire.html" class="navigation navigation-prev " aria-label="Previous page: OpenWire">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="jms-core-mapping.html" class="navigation navigation-next " aria-label="Next page: Mapping JMS Concepts to the Core API">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Core","level":"1.16","depth":1,"next":{"title":"Mapping JMS Concepts to the Core API","level":"1.17","depth":1,"path":"jms-core-mapping.md","ref":"jms-core-mapping.md","articles":[]},"previous":{"title":"OpenWire","level":"1.15","depth":1,"path":"openwire.md","ref":"openwire.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"styles":{"ebook":"styles/ebook.css","epub":"styles/epub.css","mobi":"styles/mobi.css","pdf":"styles/pdf.css","print":"styles/print.css","website":"styles/website.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"showLevel":false,"styles":{"ebook":"styles/ebook.css","epub":"styles/epub.css","mobi":"styles/mobi.css","pdf":"styles/pdf.css","print":"styles/print.css","website":"styles/website.css"}}},"github":"apache/activemq-artemis","theme":"default","githubHost":"https://github.com/","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"version":"2.23.1","title":"ActiveMQ Artemis Documentation","links":{"home":"http://activemq.apache.org/artemis","issues":"https://issues.apache.org/jira/browse/ARTEMIS","contribute":"http://activemq.apache.org/contributing.html"},"gitbook":"3.x.x","description":"ActiveMQ Artemis User Guide and Reference Documentation"},"file":{"path":"core.md","mtime":"2022-06-14T19:55:22.257Z","type":"markdown"},"gitbook":{"version":"3.7.1","time":"2022-06-14T19:55:23.109Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

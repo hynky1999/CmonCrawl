@@ -1,0 +1,34 @@
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<html>
+<head>
+    <title>ActiveMQ Artemis Example</title>
+    <link rel="stylesheet" type="text/css" href="../../../common/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../../common/prettify.css" />
+    <script type="text/javascript" src="../../../common/prettify.js"></script>
+</head>
+<body onload="prettyPrint()">
+<h1>JMS Message Priority Example</h1>
+<p>To run the example, simply type <strong>mvn verify</strong> from this directory, or <strong>mvn -PnoServer verify</strong> if you want to start and create the broker manually.</p>
+<p>This example shows how messages with different priorities are delivered in different orders.</p>
+<p>The Message Priority property carries the delivery preference of sent messages. It can be set by the message's standard header field 'JMSPriority' as defined in JMS specification version 1.1. The value is of type integer, ranging from 0 (the lowest) to 9 (the highest). When messages are being delivered, their priorities will effect their order of delivery. Messages of higher priorities will likely be delivered before those of lower priorities. Messages of equal priorities are delivered in the natural order of their arrival at their destinations. Please consult the JMS 1.1 specification for full details.</p>
+<p>In this example, three messages are sent to a queue with different priorities. The first message is sent with default priority (4), the second is sent with a higher priority (5), and the third has the highest priority (9). At the receiving end, we will show the order of receiving of the three messages. You will see that the third message, though last sent, will 'jump' forward to be the first one received. The second is also received ahead of the message first sent, but behind the third message. The first message, regardless of its being sent first, arrives last.</p>
+</body>
+</html>

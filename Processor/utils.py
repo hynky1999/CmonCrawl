@@ -1,7 +1,20 @@
 from dataclasses import dataclass
+from datetime import datetime
 from typing import Any, Dict
 from urllib.parse import urlparse
-from Aggregator.index_query import DomainRecord
+
+DEFAULT_ENCODING = "latin-1"
+
+
+@dataclass
+class DomainRecord:
+    filename: str
+    url: str
+    offset: int
+    length: int
+    digest: str | None = None
+    encoding: str = DEFAULT_ENCODING
+    timestamp: datetime = datetime.now()
 
 
 @dataclass

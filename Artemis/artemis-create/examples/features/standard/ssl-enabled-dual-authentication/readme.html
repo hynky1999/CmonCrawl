@@ -1,0 +1,67 @@
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<html>
+<head>
+    <title>ActiveMQ Artemis Example</title>
+    <link rel="stylesheet" type="text/css" href="../../../common/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../../common/prettify.css" />
+    <script type="text/javascript" src="../../../common/prettify.js"></script>
+</head>
+<body onload="prettyPrint()">
+<h1>JMS SSL Dual Authentication Example</h1>
+<p>To run the example, simply type <strong>mvn verify</strong> from this directory, or <strong>mvn -PnoServer verify</strong> if you want to start and create the broker manually.</p>
+<p>This example shows you how to configure 2-way SSL along with 2 different authentications mechanisms so that SSL and non-SSL clients can send and consume messages to/from ActiveMQ Artemis. The non-SSL authentication mechanism simply uses username and password. The SSL authentication mechanism uses the client's certificate.</p>
+<p>To configure 2-way SSL you need to configure the acceptor as follows:</p>
+<pre><code>&lt;acceptor name=&quot;netty-ssl-acceptor&quot;&gt;tcp://localhost:5500?sslEnabled=true;needClientAuth=true;keyStorePath=server-keystore.jks;keyStorePassword=securepass;trustStorePath=client-ca-truststore.jks;trustStorePassword=securepass&lt;/acceptor&gt;
+</code></pre>
+<p>In the server-side URL, the <code>server-keystore.jks</code> is the key store file holding the server's certificate. The <code>client-ca-truststore.jks</code> is the file holding the certificates which the broker trusts. Notice also the <code>sslEnabled</code> and <code>needClientAuth</code> parameters which enable SSL and require clients to present their own certificate respectively.</p>
+<p>Here's the URL the client uses to connect over SSL:</p>
+<pre><code>tcp://localhost:5500?sslEnabled=true&amp;trustStorePath=server-ca-truststore.jks&amp;trustStorePassword=securepass&amp;keyStorePath=client-keystore.jks&amp;keyStorePassword=securepass
+</code></pre>
+<p>In the client-side URL, the <code>client-keystore.jks</code> is the key store file holding the client's certificate. The <code>server-ca-truststore.jks</code> is the file holding the certificates which the client trusts. The <code>sslEnabled</code> parameter is present here as well just as it is on the server.</p>
+<p>The various keystore files are generated using the following commands:</p>
+<p>```shell</p>
+<h1>!/bin/bash</h1>
+<p>set -e</p>
+<p>KEY_PASS=securepass STORE_PASS=securepass CA_VALIDITY=365000 VALIDITY=36500</p>
+<h1>Create a key and self-signed certificate for the CA, to sign server certificate requests and use for trust:</h1>
+<h1>-----------------------------------------------------------------------------------------------------------</h1>
+<p>keytool -storetype pkcs12 -keystore server-ca-keystore.p12 -storepass $STORE_PASS -keypass $KEY_PASS -alias server-ca -genkey -keyalg &quot;RSA&quot; -keysize 2048 -dname &quot;CN=ActiveMQ Artemis Server Certification Authority, OU=Artemis, O=ActiveMQ&quot; -validity $CA_VALIDITY -ext bc:c=ca:true keytool -storetype pkcs12 -keystore server-ca-keystore.p12 -storepass $STORE_PASS -alias server-ca -exportcert -rfc &gt; server-ca.crt</p>
+<h1>Create trust store with the server CA cert:</h1>
+<h1>-------------------------------------------</h1>
+<p>keytool -keystore server-ca-truststore.p12 -storepass $STORE_PASS -keypass $KEY_PASS -importcert -alias server-ca -file server-ca.crt -noprompt</p>
+<h1>Create a key pair for the server, and sign it with the CA:</h1>
+<h1>----------------------------------------------------------</h1>
+<p>keytool -keystore server-keystore.jks -storepass $STORE_PASS -keypass $KEY_PASS -alias server -genkey -keyalg &quot;RSA&quot; -keysize 2048 -dname &quot;CN=ActiveMQ Artemis Server, OU=Artemis, O=ActiveMQ, L=AMQ, S=AMQ, C=AMQ&quot; -validity $VALIDITY -ext bc=ca:false -ext eku=sA -ext san=dns:localhost,ip:127.0.0.1</p>
+<p>keytool -keystore server-keystore.jks -storepass $STORE_PASS -alias server -certreq -file server.csr keytool -keystore server-ca-keystore.p12 -storepass $STORE_PASS -alias server-ca -gencert -rfc -infile server.csr -outfile server.crt -validity $VALIDITY -ext bc=ca:false -ext san=dns:localhost,ip:127.0.0.1</p>
+<p>keytool -keystore server-keystore.jks -storepass $STORE_PASS -keypass $KEY_PASS -importcert -alias server-ca -file server-ca.crt -noprompt keytool -keystore server-keystore.jks -storepass $STORE_PASS -keypass $KEY_PASS -importcert -alias server -file server.crt</p>
+<h1>Create a key and self-signed certificate for the CA, to sign client certificate requests and use for trust:</h1>
+<h1>-----------------------------------------------------------------------------------------------------------</h1>
+<p>keytool -keystore client-ca-keystore.jks -storepass $STORE_PASS -keypass $KEY_PASS -alias client-ca -genkey -keyalg &quot;RSA&quot; -keysize 2048 -dname &quot;CN=ActiveMQ Artemis Client Certification Authority, OU=Artemis, O=ActiveMQ&quot; -validity $CA_VALIDITY -ext bc:c=ca:true keytool -keystore client-ca-keystore.jks -storepass $STORE_PASS -alias client-ca -exportcert -rfc &gt; client-ca.crt</p>
+<h1>Create trust store with the client CA cert:</h1>
+<h1>-------------------------------------------</h1>
+<p>keytool -storetype pkcs12 -keystore client-ca-keystore.p12 -storepass $STORE_PASS -keypass $KEY_PASS -alias client-ca -genkey -keyalg &quot;RSA&quot; -keysize 2048 -dname &quot;CN=ActiveMQ Artemis Client Certification Authority, OU=Artemis, O=ActiveMQ&quot; -validity $CA_VALIDITY -ext bc:c=ca:true keytool -storetype pkcs12 -keystore client-ca-keystore.p12 -storepass $STORE_PASS -alias client-ca -exportcert -rfc &gt; client-ca.crt</p>
+<h1>Create a key pair for the client, and sign it with the CA:</h1>
+<h1>----------------------------------------------------------</h1>
+<p>keytool -keystore client-keystore.jks -storepass $STORE_PASS -keypass $KEY_PASS -alias client -genkey -keyalg &quot;RSA&quot; -keysize 2048 -dname &quot;CN=ActiveMQ Artemis Client, OU=Artemis, O=ActiveMQ, L=AMQ, S=AMQ, C=AMQ&quot; -validity $VALIDITY -ext bc=ca:false -ext eku=cA -ext san=dns:localhost,ip:127.0.0.1</p>
+<p>keytool -keystore client-keystore.jks -storepass $STORE_PASS -alias client -certreq -file client.csr keytool -keystore client-ca-keystore.p12 -storepass $STORE_PASS -alias client-ca -gencert -rfc -infile client.csr -outfile client.crt -validity $VALIDITY -ext bc=ca:false -ext eku=cA -ext san=dns:localhost,ip:127.0.0.1</p>
+<p>keytool -keystore client-keystore.jks -storepass $STORE_PASS -keypass $KEY_PASS -importcert -alias client-ca -file client-ca.crt -noprompt keytool -keystore client-keystore.jks -storepass $STORE_PASS -keypass $KEY_PASS -importcert -alias client -file client.crt ```</p>
+</body>
+</html>

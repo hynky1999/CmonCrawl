@@ -1,0 +1,48 @@
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<html>
+<head>
+    <title>ActiveMQ Artemis Example</title>
+    <link rel="stylesheet" type="text/css" href="../../../common/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../../common/prettify.css" />
+    <script type="text/javascript" src="../../../common/prettify.js"></script>
+</head>
+<body onload="prettyPrint()">
+<h1>Running the ActiveMQ Artemis JMeter Performance Testing Examples</h1>
+<h2>Create and run a sample broker for performance testing:</h2>
+<p>```sh artemis create my-broker --queues exampleQueue --topics exampleTopic</p>
+<p>my-broker/bin/artemis run ```</p>
+<h2>Download and Install JMeter's latest release:</h2>
+<p>https://jmeter.apache.org/download_jmeter.cgi</p>
+<h2>Copy artemis-jms-client dependencies under $JMETER_HOME/lib folder:</h2>
+<ul>
+<li>artemis-jms-client-all.jar</li>
+</ul>
+<h6>Create a jndi.properties file with the connectionFactory:</h6>
+<p><code>connectionFactory.ConnectionFactory=tcp://localhost:61616</code></p>
+<h6>Pack jndi.properties file into a jar file and put it under $JMETER_HOME/lib folder:</h6>
+<p><code>sh jar -cf artemis-jndi.jar jndi.properties</code></p>
+<h6>Open jMeter and run the available Test Plan examples:</h6>
+<ul>
+<li>1.jms_p2p_test.jmx</li>
+<li>2.pub_sub_test.jmx</li>
+</ul>
+</body>
+</html>

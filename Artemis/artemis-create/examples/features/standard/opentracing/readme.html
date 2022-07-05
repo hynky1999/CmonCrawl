@@ -1,0 +1,68 @@
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<html>
+<head>
+    <title>ActiveMQ Artemis Example</title>
+    <link rel="stylesheet" type="text/css" href="../../../common/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../../common/prettify.css" />
+    <script type="text/javascript" src="../../../common/prettify.js"></script>
+</head>
+<body onload="prettyPrint()">
+<h1>Opentracing Plugin Example</h1>
+<p>This plugin embraces <a href="https://github.com/open-telemetry/opentelemetry-java/tree/main/sdk-extensions/autoconfigure">OpenTelemetry Autoconfiguration</a> using environment-based properties to configure OpenTelemetry SDK.</p>
+<h2>Run Opentracing Plugin Example</h2>
+<p><a href="https://www.youtube.com/watch?v=MVGx7QrztZQ"><img src="https://img.youtube.com/vi/MVGx7QrztZQ/0.jpg" alt="Running the Example Demo" /></a></p>
+<p>To run the example, simply type <strong>mvn verify</strong> from this directory, or <strong>mvn -PnoServer verify</strong> if you want to start and create the broker manually.</p>
+<blockquote>
+<p><strong><em>NOTE:</em></strong>   You must have <a href="https://github.com/open-telemetry/opentelemetry-java/tree/main/sdk-extensions/autoconfigure#jaeger-exporter">jeager</a> running at <code>http://localhost:16686</code>. You can learn more about Jeager <a href="https://www.jaegertracing.io/">here</a></p>
+<p>command to start your jeager instance <code>docker run -p 16686:16686 -p 14250:14250 jaegertracing/all-in-one:&lt;your_version&gt;</code></p>
+</blockquote>
+<p>After seeing a <strong><code>Build Success</code></strong>, open the browser, connect to your Jeager running instance and check for spans.</p>
+<h2>Customise Opentracing Plugin Example</h2>
+<p>The <a href="./src/main/resources/tracing.properties"><code>tracing.properties</code></a> has configuration properties that autoconfigure <a href="https://github.com/open-telemetry/opentelemetry-java/tree/main/sdk-extensions/autoconfigure#exporters">Opentelemetry Exporter</a> . We reconfigured it and used Jeager as the default exporter, sending data through at <code>http://localhost:14250</code> You can change this by choosing to use:</p>
+<ul>
+<li>
+<p><a href="https://github.com/open-telemetry/opentelemetry-java/tree/1e073fcff20697fd5f2eb39bd6246d06a1231089/sdk-extensions/autoconfigure#otlp-exporter-both-span-and-metric-exporters">otlp exporter</a> , by uncommenting (removing <code>#</code>) the following</p>
+<ul>
+<li>otlp enabler: <code>otel.traces.exporter=otlp</code></li>
+<li>otlp endpoint: <code>otel.exporter.otlp.endpoint=http://localhost:4317</code> Change port and host to match your running instance.</li>
+<li>otlp traces-endpoint: <code>otel.exporter.otlp.traces.endpoint=http://localhost:4317</code> Change port and host to match your running instance.</li>
+</ul>
+</li>
+<li>
+<p><a href="https://github.com/open-telemetry/opentelemetry-java/tree/main/sdk-extensions/autoconfigure#zipkin-exporter">Zipkin Exporter</a> , by uncommenting (removing <code>#</code>) the following</p>
+</li>
+<li>Zipkin enabler: <code>otel.traces.exporter=zipkin</code></li>
+<li>Zipkin endpoint: <code>otel.exporter.zipkin.endpoint=http://localhost:9411/api/v2/spans</code>. Change port and host to match your running instance. &gt; <strong>Note:</strong> command to start Zipkin instance <code>docker run -p 9411:9411 openzipkin/zipkin</code></li>
+</ul>
+<p>You can also change the default service name from <code>opentracing_plugin</code> to any string by changing the value of <code>otel.service.name</code></p>
+<h2>How to start exporters</h2>
+<ul>
+<li><a href="https://zipkin.io/pages/quickstart">Zipkin</a>: The quickest way is by use of docker.</li>
+<li>Open the terminal, copy, paste and run the command <code>docker run -d -p 9411:9411 openzipkin/zipkin</code></li>
+<li>open the browser, enter the url <code>http://localhost:9411</code> and on the page that appears, click the <strong>Run Queries</strong> button.</li>
+<li>
+<p><a href="https://www.jaegertracing.io/docs/1.30/getting-started/">Jeager</a>: The quickest way is by use of docker.</p>
+</li>
+<li>open the terminal and paste the command below <code>docker run -d --name jaeger \ e COLLECTOR_ZIPKIN_HOST_PORT=:9411 \ p 5775:5775/udp \ p 6831:6831/udp \ p 6832:6832/udp \ p 5778:5778 \ p 16686:16686 \ p 14250:14250 \ p 14268:14268 \ p 14269:14269 \ p 9411:9411 \ jaegertracing/all-in-one:1.30</code></li>
+<li>open the browser, enter the url <code>http://localhost:16686/search</code>, click <strong>Search</strong>, select your service-name from the dropdown below the service name and finally click <strong>Find Traces</strong> Button.</li>
+</ul>
+</body>
+</html>

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Any, Dict
-from Processor.utils import PipeMetadata
+from utils import PipeMetadata
 
 
 class BaseExtractor(ABC):

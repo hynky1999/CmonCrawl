@@ -1,0 +1,1592 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <title>Message Redelivery and Undelivered Messages · ActiveMQ Artemis Documentation</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.7.1">
+        
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="message-expiry.html" />
+    
+    
+    <link rel="prev" href="send-guarantees.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="notice.html">
+            
+                <a href="notice.html">
+            
+                    
+                    Legal Notice
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="preface.html">
+            
+                <a href="preface.html">
+            
+                    
+                    Preface
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="project-info.html">
+            
+                <a href="project-info.html">
+            
+                    
+                    Project Info
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="versions.html">
+            
+                <a href="versions.html">
+            
+                    
+                    Versions
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="messaging-concepts.html">
+            
+                <a href="messaging-concepts.html">
+            
+                    
+                    Messaging Concepts
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="architecture.html">
+            
+                <a href="architecture.html">
+            
+                    
+                    Architecture
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="using-server.html">
+            
+                <a href="using-server.html">
+            
+                    
+                    Using the Server
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="upgrading.html">
+            
+                <a href="upgrading.html">
+            
+                    
+                    Upgrading
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10" >
+            
+                <span>
+            
+                    
+                    Address
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.1" data-path="address-model.html">
+            
+                <a href="address-model.html">
+            
+                    
+                    Model
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2" data-path="address-settings.html">
+            
+                <a href="address-settings.html">
+            
+                    
+                    Settings
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11" data-path="protocols-interoperability.html">
+            
+                <a href="protocols-interoperability.html">
+            
+                    
+                    Protocols and Interoperability
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12" data-path="amqp.html">
+            
+                <a href="amqp.html">
+            
+                    
+                    AMQP
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.12.1" data-path="amqp-broker-connections.html">
+            
+                <a href="amqp-broker-connections.html">
+            
+                    
+                    Broker Connections
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.13" data-path="mqtt.html">
+            
+                <a href="mqtt.html">
+            
+                    
+                    MQTT
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.14" data-path="stomp.html">
+            
+                <a href="stomp.html">
+            
+                    
+                    STOMP
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.15" data-path="openwire.html">
+            
+                <a href="openwire.html">
+            
+                    
+                    OpenWire
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.16" data-path="core.html">
+            
+                <a href="core.html">
+            
+                    
+                    Core
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.17" data-path="jms-core-mapping.html">
+            
+                <a href="jms-core-mapping.html">
+            
+                    
+                    Mapping JMS Concepts to the Core API
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.18" data-path="using-jms.html">
+            
+                <a href="using-jms.html">
+            
+                    
+                    Using JMS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.19" data-path="client-classpath.html">
+            
+                <a href="client-classpath.html">
+            
+                    
+                    The Client Classpath
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.20" data-path="examples.html">
+            
+                <a href="examples.html">
+            
+                    
+                    Examples
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.21" data-path="wildcard-routing.html">
+            
+                <a href="wildcard-routing.html">
+            
+                    
+                    Routing Messages With Wild Cards
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.22" data-path="wildcard-syntax.html">
+            
+                <a href="wildcard-syntax.html">
+            
+                    
+                    Wildcard Syntax
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.23" data-path="filter-expressions.html">
+            
+                <a href="filter-expressions.html">
+            
+                    
+                    Filter Expressions
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.24" data-path="persistence.html">
+            
+                <a href="persistence.html">
+            
+                    
+                    Persistence
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.25" data-path="configuring-transports.html">
+            
+                <a href="configuring-transports.html">
+            
+                    
+                    Configuring Transports
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.26" data-path="config-reload.html">
+            
+                <a href="config-reload.html">
+            
+                    
+                    Configuration Reload
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.27" data-path="connection-ttl.html">
+            
+                <a href="connection-ttl.html">
+            
+                    
+                    Detecting Dead Connections
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.28" data-path="slow-consumers.html">
+            
+                <a href="slow-consumers.html">
+            
+                    
+                    Detecting Slow Consumers
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.29" data-path="network-isolation.html">
+            
+                <a href="network-isolation.html">
+            
+                    
+                    Avoiding Network Isolation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.30" data-path="critical-analysis.html">
+            
+                <a href="critical-analysis.html">
+            
+                    
+                    Detecting Broker Issues (Critical Analysis)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.31" data-path="transaction-config.html">
+            
+                <a href="transaction-config.html">
+            
+                    
+                    Resource Manager Configuration
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.32" data-path="flow-control.html">
+            
+                <a href="flow-control.html">
+            
+                    
+                    Flow Control
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.33" data-path="send-guarantees.html">
+            
+                <a href="send-guarantees.html">
+            
+                    
+                    Guarantees of sends and commits
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.34" data-path="undelivered-messages.html">
+            
+                <a href="undelivered-messages.html">
+            
+                    
+                    Message Redelivery and Undelivered Messages
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.35" data-path="message-expiry.html">
+            
+                <a href="message-expiry.html">
+            
+                    
+                    Message Expiry
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.36" data-path="large-messages.html">
+            
+                <a href="large-messages.html">
+            
+                    
+                    Large Messages
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.37" data-path="paging.html">
+            
+                <a href="paging.html">
+            
+                    
+                    Paging
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.38" data-path="scheduled-messages.html">
+            
+                <a href="scheduled-messages.html">
+            
+                    
+                    Scheduled Messages
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.39" data-path="last-value-queues.html">
+            
+                <a href="last-value-queues.html">
+            
+                    
+                    Last-Value Queues
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.40" data-path="non-destructive-queues.html">
+            
+                <a href="non-destructive-queues.html">
+            
+                    
+                    Non-Destructive Queues
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.41" data-path="ring-queues.html">
+            
+                <a href="ring-queues.html">
+            
+                    
+                    Ring Queues
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.42" data-path="retroactive-addresses.html">
+            
+                <a href="retroactive-addresses.html">
+            
+                    
+                    Retroactive Addresses
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.43" data-path="exclusive-queues.html">
+            
+                <a href="exclusive-queues.html">
+            
+                    
+                    Exclusive Queues
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.44" data-path="message-grouping.html">
+            
+                <a href="message-grouping.html">
+            
+                    
+                    Message Grouping
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.45" data-path="consumer-priority.html">
+            
+                <a href="consumer-priority.html">
+            
+                    
+                    Consumer Priority
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.46" data-path="pre-acknowledge.html">
+            
+                <a href="pre-acknowledge.html">
+            
+                    
+                    Extra Acknowledge Modes
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.47" data-path="management.html">
+            
+                <a href="management.html">
+            
+                    
+                    Management
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.48" data-path="management-console.html">
+            
+                <a href="management-console.html">
+            
+                    
+                    Management Console
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.49" data-path="metrics.html">
+            
+                <a href="metrics.html">
+            
+                    
+                    Metrics
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.50" data-path="security.html">
+            
+                <a href="security.html">
+            
+                    
+                    Security
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.51" data-path="masking-passwords.html">
+            
+                <a href="masking-passwords.html">
+            
+                    
+                    Masking Passwords
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.52" data-path="broker-plugins.html">
+            
+                <a href="broker-plugins.html">
+            
+                    
+                    Broker Plugins
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.53" data-path="resource-limits.html">
+            
+                <a href="resource-limits.html">
+            
+                    
+                    Resource Limits
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.54" data-path="jms-bridge.html">
+            
+                <a href="jms-bridge.html">
+            
+                    
+                    The JMS Bridge
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.55" data-path="client-reconnection.html">
+            
+                <a href="client-reconnection.html">
+            
+                    
+                    Client Reconnection and Session Reattachment
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.56" data-path="diverts.html">
+            
+                <a href="diverts.html">
+            
+                    
+                    Diverting and Splitting Message Flows
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.57" data-path="core-bridges.html">
+            
+                <a href="core-bridges.html">
+            
+                    
+                    Core Bridges
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.58" data-path="transformers.html">
+            
+                <a href="transformers.html">
+            
+                    
+                    Transformers
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.59" data-path="duplicate-detection.html">
+            
+                <a href="duplicate-detection.html">
+            
+                    
+                    Duplicate Message Detection
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.60" data-path="clusters.html">
+            
+                <a href="clusters.html">
+            
+                    
+                    Clusters
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.61" data-path="federation.html">
+            
+                <a href="federation.html">
+            
+                    
+                    Federation
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.61.1" data-path="federation-address.html">
+            
+                <a href="federation-address.html">
+            
+                    
+                    Address Federation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.61.2" data-path="federation-queue.html">
+            
+                <a href="federation-queue.html">
+            
+                    
+                    Queue Federation
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.62" data-path="ha.html">
+            
+                <a href="ha.html">
+            
+                    
+                    High Availability and Failover
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.63" data-path="connection-routers.html">
+            
+                <a href="connection-routers.html">
+            
+                    
+                    Connection Routers
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.64" data-path="graceful-shutdown.html">
+            
+                <a href="graceful-shutdown.html">
+            
+                    
+                    Graceful Server Shutdown
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.65" data-path="libaio.html">
+            
+                <a href="libaio.html">
+            
+                    
+                    Libaio Native Libraries
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.66" data-path="thread-pooling.html">
+            
+                <a href="thread-pooling.html">
+            
+                    
+                    Thread management
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.67" data-path="web-server.html">
+            
+                <a href="web-server.html">
+            
+                    
+                    Embedded Web Server
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.68" data-path="logging.html">
+            
+                <a href="logging.html">
+            
+                    
+                    Logging
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.69" data-path="rest.html">
+            
+                <a href="rest.html">
+            
+                    
+                    REST Interface
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.70" data-path="embedding-activemq.html">
+            
+                <a href="embedding-activemq.html">
+            
+                    
+                    Embedding the Broker
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.71" data-path="karaf.html">
+            
+                <a href="karaf.html">
+            
+                    
+                    Apache Karaf
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.72" data-path="tomcat.html">
+            
+                <a href="tomcat.html">
+            
+                    
+                    Apache Tomcat
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.73" data-path="spring-integration.html">
+            
+                <a href="spring-integration.html">
+            
+                    
+                    Spring Integration
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.74" data-path="cdi-integration.html">
+            
+                <a href="cdi-integration.html">
+            
+                    
+                    CDI Integration
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.75" data-path="intercepting-operations.html">
+            
+                <a href="intercepting-operations.html">
+            
+                    
+                    Intercepting Operations
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.76" data-path="data-tools.html">
+            
+                <a href="data-tools.html">
+            
+                    
+                    Data Tools
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.77" data-path="activation-tools.html">
+            
+                <a href="activation-tools.html">
+            
+                    
+                    Activation Tools
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.78" data-path="maven-plugin.html">
+            
+                <a href="maven-plugin.html">
+            
+                    
+                    Maven Plugin
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.79" data-path="unit-testing.html">
+            
+                <a href="unit-testing.html">
+            
+                    
+                    Unit Testing
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.80" data-path="perf-tuning.html">
+            
+                <a href="perf-tuning.html">
+            
+                    
+                    Troubleshooting and Performance Tuning
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.81" data-path="perf-tools.html">
+            
+                <a href="perf-tools.html">
+            
+                    
+                    Performance Tools
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.82" data-path="configuration-index.html">
+            
+                <a href="configuration-index.html">
+            
+                    
+                    Configuration Reference
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.83" data-path="restart-sequence.html">
+            
+                <a href="restart-sequence.html">
+            
+                    
+                    Restart Sequence
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >Message Redelivery and Undelivered Messages</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="message-redelivery-and-undelivered-messages">Message Redelivery and Undelivered Messages</h1>
+<p>Messages can be delivered unsuccessfully (e.g. if the transacted session
+used to consume them is rolled back). Such a message goes back to its
+queue ready to be redelivered. However, this means it is possible for a
+message to be delivered again and again without success thus remaining
+in the queue indefinitely, clogging the system.</p>
+<p>There are 2 ways to deal with these undelivered messages:</p>
+<ul>
+<li><p>Delayed redelivery.</p>
+<p>It is possible to delay messages redelivery.  This gives the client some
+time to recover from any transient failures and to prevent overloading
+its network or CPU resources.</p>
+</li>
+<li><p>Dead Letter Address.</p>
+<p>It is also possible to configure a dead letter address so that after
+a specified number of unsuccessful deliveries, messages are removed
+from their queue and sent to the dead letter address.  These messages
+will not be delivered again from this queue.</p>
+</li>
+</ul>
+<p>Both options can be combined for maximum flexibility.</p>
+<h2 id="delayed-redelivery">Delayed Redelivery</h2>
+<p>Delaying redelivery can often be useful in cases where clients regularly
+fail or rollback. Without a delayed redelivery, the system can get into a
+&quot;thrashing&quot; state, with delivery being attempted, the client rolling back,
+and delivery being re-attempted ad infinitum in quick succession,
+consuming valuable CPU and network resources.</p>
+<h3 id="configuring-delayed-redelivery">Configuring Delayed Redelivery</h3>
+<p>Delayed redelivery is defined in the address-setting configuration:</p>
+<pre><code class="lang-xml"><span class="hljs-comment">&lt;!-- delay redelivery of messages for 5s --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">address-setting</span> <span class="hljs-attr">match</span>=<span class="hljs-string">&quot;exampleQueue&quot;</span>&gt;</span>
+   <span class="hljs-comment">&lt;!-- default is 1.0 --&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">redelivery-delay-multiplier</span>&gt;</span>1.5<span class="hljs-tag">&lt;/<span class="hljs-name">redelivery-delay-multiplier</span>&gt;</span>
+   <span class="hljs-comment">&lt;!-- default is 0 (no delay) --&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">redelivery-delay</span>&gt;</span>5000<span class="hljs-tag">&lt;/<span class="hljs-name">redelivery-delay</span>&gt;</span>
+   <span class="hljs-comment">&lt;!-- default is 0.0) --&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">redelivery-collision-avoidance-factor</span>&gt;</span>0.15<span class="hljs-tag">&lt;/<span class="hljs-name">redelivery-collision-avoidance-factor</span>&gt;</span>
+   <span class="hljs-comment">&lt;!-- default is redelivery-delay * 10 --&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">max-redelivery-delay</span>&gt;</span>50000<span class="hljs-tag">&lt;/<span class="hljs-name">max-redelivery-delay</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">address-setting</span>&gt;</span>
+</code></pre>
+<p>If a <code>redelivery-delay</code> is specified, Apache ActiveMQ Artemis will wait this delay
+before redelivering the messages.</p>
+<p>By default, there is no redelivery delay (<code>redelivery-delay</code>is set to
+0).</p>
+<p>Other subsequent messages will be delivery regularly, only the cancelled
+message will be sent asynchronously back to the queue after the delay.</p>
+<p>You can specify a multiplier (the <code>redelivery-delay-multiplier</code>) that will
+take effect on top of the <code>redelivery-delay</code>.  Each time a message is redelivered
+the delay period will be equal to the previous delay <em> <code>redelivery-delay-multiplier</code>.
+A <code>max-redelivery-delay</code> can be set to prevent the delay from becoming too large.
+The <code>max-redelivery-delay</code> is defaulted to <code>redelivery-delay</code> \</em> 10.</p>
+<p><strong>Example:</strong></p>
+<ul>
+<li><p>redelivery-delay=5000, redelivery-delay-multiplier=2, max-redelivery-delay=15000,
+redelivery-collision-avoidance-factor=0.0</p>
+</li>
+<li><p>Delivery Attempt 1. (Unsuccessful)</p>
+</li>
+<li>Wait Delay Period: 5000</li>
+<li>Delivery Attempt 2. (Unsuccessful)</li>
+<li>Wait Delay Period: 10000                   // (5000  * 2) &lt; max-delay-period.  Use 10000</li>
+<li>Delivery Attempt 3: (Unsuccessful)</li>
+<li>Wait Delay Period: 15000                   // (10000 * 2) &gt; max-delay-period:  Use max-delay-delivery</li>
+</ul>
+<p>Address wildcards can be used to configure redelivery delay for a set of
+addresses (see <a href="wildcard-syntax.html">Understanding the Wildcard Syntax</a>), so you don&apos;t have to specify redelivery delay
+individually for each address.</p>
+<p>The <code>redelivery-delay</code> can be also be modified by configuring the
+<code>redelivery-collision-avoidance-factor</code>. This factor will be made either
+positive or negative at random to control whether the ultimate value will
+increase or decrease the <code>redelivery-delay</code>. Then it&apos;s multiplied by a random
+number between 0.0 and 1.0. This result is then multiplied by the
+<code>redelivery-delay</code> and then added to the <code>redelivery-delay</code> to arrive at the
+final value.</p>
+<p>The algorithm may sound complicated but the bottom line is quite simple: the
+larger <code>redelivery-collision-avoidance-factor</code> you choose the larger the variance
+of the <code>redelivery-delay</code> will be. The <code>redelivery-collision-avoidance-factor</code>
+must be between 0.0 and 1.0.</p>
+<p><strong>Example:</strong></p>
+<ul>
+<li><p>redelivery-delay=1000, redelivery-delay-multiplier=1, max-redelivery-delay=15000,
+redelivery-collision-avoidance-factor=0.5, (bold values chosen using
+<code>java.util.Random</code>)</p>
+</li>
+<li><p>Delivery Attempt 1. (Unsuccessful)</p>
+</li>
+<li>Wait Delay Period: 875                     // 1000 + (1000 <em> ((0.5 \</em> <strong>-1</strong>) * <strong>.25</strong>)</li>
+<li>Delivery Attempt 2. (Unsuccessful)</li>
+<li>Wait Delay Period: 1375                    // 1000 + (1000 <em> ((0.5 \</em> <strong>1</strong>) * <strong>.75</strong>)</li>
+<li>Delivery Attempt 3: (Unsuccessful)</li>
+<li>Wait Delay Period: 975                     // 1000 + (1000 <em> ((0.5 \</em> <strong>-1</strong>) * <strong>.05</strong>)</li>
+</ul>
+<p>This feature can be particularly useful in environments where there are
+multiple consumers on the same queue all interacting transactionally
+with the same external system (e.g. a database). If there is overlapping
+data in messages which are consumed concurrently then one transaction can
+succeed while all the rest fail. If those failed messages are redelivered
+at the same time then this process where one consumer succeeds and the
+rest fail will continue. By randomly padding the redelivery-delay by a
+small, configurable amount these redelivery &quot;collisions&quot; can be avoided.</p>
+<h3 id="example">Example</h3>
+<p>See <a href="examples.html">the examples chapter</a> for an example which shows how
+delayed redelivery is configured and used with JMS.</p>
+<h2 id="dead-letter-addresses">Dead Letter Addresses</h2>
+<p>To prevent a client infinitely receiving the same undelivered message
+(regardless of what is causing the unsuccessful deliveries), messaging
+systems define <em>dead letter addresses</em>: after a specified unsuccessful
+delivery attempts, the message is removed from its queue and sent
+to a dead letter address.</p>
+<p>Any such messages can then be diverted to queue(s) where they can later
+be perused by the system administrator for action to be taken.</p>
+<p>Apache ActiveMQ Artemis&apos;s addresses can be assigned a dead letter address. Once the
+messages have been unsuccessfully delivered for a given number of
+attempts, they are removed from their queue and sent to the relevant
+dead letter address. These <em>dead letter</em> messages can later be consumed
+from the dead letter address for further inspection.</p>
+<h3 id="configuring-dead-letter-addresses">Configuring Dead Letter Addresses</h3>
+<p>Dead letter address is defined in the address-setting configuration:</p>
+<pre><code class="lang-xml"><span class="hljs-comment">&lt;!-- undelivered messages in exampleQueue will be sent to the dead letter address
+deadLetterQueue after 3 unsuccessful delivery attempts --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">address-setting</span> <span class="hljs-attr">match</span>=<span class="hljs-string">&quot;exampleQueue&quot;</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">dead-letter-address</span>&gt;</span>deadLetterAddress<span class="hljs-tag">&lt;/<span class="hljs-name">dead-letter-address</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">max-delivery-attempts</span>&gt;</span>3<span class="hljs-tag">&lt;/<span class="hljs-name">max-delivery-attempts</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">address-setting</span>&gt;</span>
+</code></pre>
+<p>If a <code>dead-letter-address</code> is not specified, messages will be removed after
+<code>max-delivery-attempts</code> unsuccessful attempts.</p>
+<p>By default, messages are redelivered 10 times at the maximum. Set
+<code>max-delivery-attempts</code> to -1 for infinite redeliveries.</p>
+<p>A <code>dead letter address</code> can be set globally for a set of matching
+addresses and you can set <code>max-delivery-attempts</code> to -1 for a specific
+address setting to allow infinite redeliveries only for this address.</p>
+<p>Address wildcards can be used to configure dead letter settings for a
+set of addresses (see <a href="wildcard-syntax.html">Understanding the Wildcard Syntax</a>).</p>
+<h3 id="dead-letter-properties">Dead Letter Properties</h3>
+<p>Dead letter messages get <a href="copied-message-properties.md">special properties</a>.</p>
+<h3 id="automatically-creating-dead-letter-resources">Automatically Creating Dead Letter Resources</h3>
+<p>It&apos;s common to segregate undelivered messages by their original address.
+For example, a message sent to the <code>stocks</code> address that couldn&apos;t be
+delivered for some reason might be ultimately routed to the <code>DLQ.stocks</code>
+queue, and likewise a message sent to the <code>orders</code> address that couldn&apos;t
+be delivered might be routed to the <code>DLQ.orders</code> queue.</p>
+<p>Using this pattern can make it easy to track and administrate
+undelivered messages. However, it can pose a challenge in environments
+which predominantly use auto-created addresses and queues. Typically
+administrators in those environments don&apos;t want to manually create
+an <code>address-setting</code> to configure the <code>dead-letter-address</code> much less
+the actual <code>address</code> and <code>queue</code> to hold the undelivered messages.</p>
+<p>The solution to this problem is to set the <code>auto-create-dead-letter-resources</code>
+<code>address-setting</code> to <code>true</code> (it&apos;s <code>false</code> by default) so that the broker will
+create the <code>address</code> and <code>queue</code> to deal with the undelivered messages
+automatically. The <code>address</code> created will be the one defined by the
+<code>dead-letter-address</code>. A <code>MULTICAST</code> <code>queue</code> will be created on that <code>address</code>.
+It will be named by the <code>address</code> to which the message was previously sent, and
+it will have a filter defined using the property <code>_AMQ_ORIG_ADDRESS</code> so that it
+ will only receive messages sent to the relevant <code>address</code>. The <code>queue</code> name
+ can be configured with a prefix and suffix. See the relevant settings in the
+ table below:</p>
+<table>
+<thead>
+<tr>
+<th><code>address-setting</code></th>
+<th>default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dead-letter-queue-prefix</code></td>
+<td><code>DLQ.</code></td>
+</tr>
+<tr>
+<td><code>dead-letter-queue-suffix</code></td>
+<td>(empty string)</td>
+</tr>
+</tbody>
+</table>
+<p>Here is an example configuration:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">address-setting</span> <span class="hljs-attr">match</span>=<span class="hljs-string">&quot;#&quot;</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">dead-letter-address</span>&gt;</span>DLA<span class="hljs-tag">&lt;/<span class="hljs-name">dead-letter-address</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">max-delivery-attempts</span>&gt;</span>3<span class="hljs-tag">&lt;/<span class="hljs-name">max-delivery-attempts</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">auto-create-dead-letter-resources</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">auto-create-dead-letter-resources</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">dead-letter-queue-prefix</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">dead-letter-queue-prefix</span>&gt;</span> <span class="hljs-comment">&lt;!-- override the default --&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">dead-letter-queue-suffix</span>&gt;</span>.DLQ<span class="hljs-tag">&lt;/<span class="hljs-name">dead-letter-queue-suffix</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">address-setting</span>&gt;</span>
+</code></pre>
+<p>The queue holding the undeliverable messages can be accessed directly
+either by using the queue&apos;s name by itself (e.g. when using the core
+client) or by using the fully qualified queue name (e.g. when using
+a JMS client) just like any other queue. Also, note that the queue is
+auto-created which means it will be auto-deleted as per the relevant
+<code>address-settings</code>.</p>
+<h3 id="example">Example</h3>
+<p>See: Dead Letter section of the <a href="examples.html">Examples</a> for an example
+that shows how dead letter resources can be statically configured and
+used with JMS.</p>
+<h2 id="delivery-count-persistence">Delivery Count Persistence</h2>
+<p>In normal use, Apache ActiveMQ Artemis does not update delivery count <em>persistently</em>
+until a message is rolled back (i.e. the delivery count is not updated
+<em>before</em> the message is delivered to the consumer). In most messaging
+use cases, the messages are consumed, acknowledged and forgotten as soon
+as they are consumed. In these cases, updating the delivery count
+persistently before delivering the message would add an extra persistent
+step <em>for each message delivered</em>, implying a significant performance
+penalty.</p>
+<p>However, if the delivery count is not updated persistently before the
+message delivery happens, in the event of a server crash, messages might
+have been delivered but that will not have been reflected in the
+delivery count. During the recovery phase, the server will not have
+knowledge of that and will deliver the message with <code>redelivered</code> set to
+<code>false</code> while it should be <code>true</code>.</p>
+<p>As this behavior breaks strict JMS semantics, Apache ActiveMQ Artemis allows to persist
+delivery count before message delivery but this feature is disabled by default
+due to performance implications.</p>
+<p>To enable it, set <code>persist-delivery-count-before-delivery</code> to <code>true</code> in
+<code>broker.xml</code>:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">persist-delivery-count-before-delivery</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">persist-delivery-count-before-delivery</span>&gt;</span>
+</code></pre>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="send-guarantees.html" class="navigation navigation-prev " aria-label="Previous page: Guarantees of sends and commits">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="message-expiry.html" class="navigation navigation-next " aria-label="Next page: Message Expiry">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Message Redelivery and Undelivered Messages","level":"1.34","depth":1,"next":{"title":"Message Expiry","level":"1.35","depth":1,"path":"message-expiry.md","ref":"message-expiry.md","articles":[]},"previous":{"title":"Guarantees of sends and commits","level":"1.33","depth":1,"path":"send-guarantees.md","ref":"send-guarantees.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"styles":{"ebook":"styles/ebook.css","epub":"styles/epub.css","mobi":"styles/mobi.css","pdf":"styles/pdf.css","print":"styles/print.css","website":"styles/website.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"showLevel":false,"styles":{"ebook":"styles/ebook.css","epub":"styles/epub.css","mobi":"styles/mobi.css","pdf":"styles/pdf.css","print":"styles/print.css","website":"styles/website.css"}}},"github":"apache/activemq-artemis","theme":"default","githubHost":"https://github.com/","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"version":"2.23.1","title":"ActiveMQ Artemis Documentation","links":{"home":"http://activemq.apache.org/artemis","issues":"https://issues.apache.org/jira/browse/ARTEMIS","contribute":"http://activemq.apache.org/contributing.html"},"gitbook":"3.x.x","description":"ActiveMQ Artemis User Guide and Reference Documentation"},"file":{"path":"undelivered-messages.md","mtime":"2022-06-14T19:55:22.319Z","type":"markdown"},"gitbook":{"version":"3.7.1","time":"2022-06-14T19:55:23.109Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

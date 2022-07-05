@@ -1,8 +1,8 @@
-from Aggregator.index_query import DomainRecord
-from Processor.Router.router import Router
-from Processor.Downloader.download import Downloader
-from Processor.OutStreamer.outstreamer import OutStreamer
-from Processor.utils import PipeMetadata
+import logging
+from Router.router import Router
+from Downloader.download import Downloader
+from OutStreamer.outstreamer import OutStreamer
+from utils import DomainRecord, PipeMetadata
 
 
 class ProcessorPipeline:
@@ -24,5 +24,7 @@ class ProcessorPipeline:
             return None
         path = await self.oustreamer.stream(output, metadata)
 
-        print("Successfully downloaded article from {}".format(domain_record.url))
+        logging.debug(
+            f"Successfully downloaded article from {domain_record.url} at {path}"
+        )
         return path

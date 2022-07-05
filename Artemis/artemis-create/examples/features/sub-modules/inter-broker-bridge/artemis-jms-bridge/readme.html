@@ -1,0 +1,90 @@
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<html>
+<head>
+    <title>ActiveMQ Artemis Example</title>
+    <link rel="stylesheet" type="text/css" href="../../../common/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../../common/prettify.css" />
+    <script type="text/javascript" src="../../../common/prettify.js"></script>
+</head>
+<body onload="prettyPrint()">
+<h1>Artemis to 5.x JMS Bridge</h1>
+<p>This is an example of using the JMS bridge shipped with the Artemis broker to bridge to a 5.x broker.</p>
+<p>Notes:</p>
+<ul>
+<li>The Artemis JMS bridge is a general purpose bridge and can be used to bridge to any JMS provider which implements JNDI. This example however is just focusing on integration with 5.x.</li>
+<li>The Artemis JMS bridge can &quot;push&quot; <em>and</em> &quot;pull&quot; messages so it can be used to move messages both ways.</li>
+</ul>
+<h2>Prerequisites</h2>
+<ul>
+<li>install ActiveMQ 5.x</li>
+<li>install ActiveMQ Artemis</li>
+</ul>
+<h2>Preparing</h2>
+<p>1) From the root dir run <code>mvn clean package</code>.</p>
+<p>2) Copy artemis-jms-bridge/target/artemis-jms-bridge-<version>.war to the web directory of the Artemis installation.</p>
+<p>3) Create an instance of the Artemis broker <code>$ARTEMIS_HOME/bin/artemis create --allow-anonymous myBroker</code></p>
+<p>4) Edit the <code>$ARTEMIS_INSTANCE/etc/broker.xml</code> and change the <code>artemis</code> acceptor to run on 61617 and add the <code>invm</code> acceptor.</p>
+<p><code>xml &lt;acceptors&gt; &lt;acceptor name=&quot;artemis&quot;&gt;tcp://0.0.0.0:61617?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=CORE,AMQP,STOMP,HORNETQ,MQTT,OPENWIRE;useEpoll=true;amqpCredits=1000;amqpLowCredits=300&lt;/acceptor&gt; &lt;acceptor name=&quot;invm&quot;&gt;vm://0&lt;/acceptor&gt; &lt;/acceptors&gt;</code></p>
+<p>5) Edit <code>$ARTEMIS_INSTANCE/etc/bootstrap.xml</code> and add the war file.</p>
+<p><code>xml &lt;app url=&quot;bridge&quot; war=&quot;artemis-jms-bridge-&lt;version&gt;.war&quot;/&gt;</code></p>
+<h2>Testing</h2>
+<p>Start the ActiveMQ broker.</p>
+<p><code>$ACTIVEMQ_HOME/bin/standalone</code></p>
+<p>Start the Artemis broker.</p>
+<p><code>$ARTEMIS_INSTANCE/bin/artemis run</code></p>
+<p>Send some messages to the queue TEST.BAR via the Artemis console.</p>
+<p><code>$ARTEMIS_INSTANCE/bin/artemis producer --destination queue://TEST.BAR --url tcp://localhost:61617 --message-count 1</code></p>
+<p>Log into the ActiveMQ 5.x console and browse the messages in the TEST.BAR queue.</p>
+<h1>5.x to Artemis Camel JMS Bridge</h1>
+<p>This is an alternative to using the Artemis JMS bridge using Camel in the 5.x broker to bridge messages to Artemis. There isn't anything to deploy here. It's just a set of instructions.</p>
+<p>This approach might be preferred if for example you only have access to the 5.x broker.</p>
+<h2>Prerequisites</h2>
+<ul>
+<li>install ActiveMQ 5.x</li>
+<li>install ActiveMQ Artemis</li>
+</ul>
+<h2>Preparing</h2>
+<p>1) Copy <code>lib/client/artemis-jms-client-all.jar</code> to the <code>$5X_HOME/lib</code> directory.</p>
+<p>2) Add the bridge configuration to <code>activemq.xml</code>:</p>
+<p>```xml <bean id="5xConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory"> <property name="brokerURL" value="tcp://localhost:61616"/> <property name="userName" value="admin"/> <property name="password" value="password"/> </bean></p>
+<p><bean id="jmsConfig" class="org.apache.camel.component.jms.JmsConfiguration"> <property name="connectionFactory" ref="5xConnectionFactory"/> <property name="concurrentConsumers" value="10"/> </bean></p>
+<p><bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent"> <property name="configuration" ref="jmsConfig"/> </bean></p>
+<p><bean id="artemisConnectionFactory" class="org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory"> <constructor-arg name="url" value="tcp://localhost:61617"/> </bean></p>
+<p><bean id="artemisConfig" class="org.apache.camel.component.jms.JmsConfiguration"> <property name="connectionFactory" ref="artemisConnectionFactory"/> <property name="concurrentConsumers" value="10"/> </bean></p>
+<p><bean id="artemis" class="org.apache.camel.component.jms.JmsComponent"> <property name="configuration" ref="artemisConfig"/> </bean></p>
+<p><camelContext id="bridgeContext" trace="false" xmlns="http://camel.apache.org/schema/spring"> <route id="bridge_TEST.FOO"> <from uri="activemq:queue:TEST.FOO"/> <to uri="artemis:queue:TEST.FOO"/> </route> </camelContext> ```</p>
+<p>3) Ensure the <code>xsi:schemalocation</code> in activemq.xml contains the necessary Camel schemas:</p>
+<p><code>http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd</code></p>
+<p>4) Create an instance of the Artemis broker <code>$ARTEMIS_HOME/bin/artemis create --allow-anonymous myBroker</code></p>
+<p>5) Edit the <code>$ARTEMIS_INSTANCE/etc/broker.xml</code> and change the acceptor to listen to port 61617. Comment or remove all other acceptors.</p>
+<p><code>xml &lt;acceptors&gt; &lt;acceptor name=&quot;artemis&quot;&gt;tcp://0.0.0.0:61617?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=CORE,AMQP,STOMP,HORNETQ,MQTT,OPENWIRE;useEpoll=true;amqpCredits=1000;amqpLowCredits=300&lt;/acceptor&gt; &lt;/acceptors&gt;</code></p>
+<p>6) Edit <code>$ARTEMIS_INSTANCE/etc/bootstrap.xml</code> so that the embedded web broker runs on a different port that the 5.x broker (e.g. 8162):</p>
+<p><code>xml &lt;web path=&quot;web&quot;&gt; &lt;binding uri=&quot;http://localhost:8162&quot;/&gt;</code></p>
+<h2>Testing</h2>
+<p>Start the Artemis broker.</p>
+<p><code>$ARTEMIS_INSTANCE/bin/artemis run</code></p>
+<p>Start the ActiveMQ 5.x broker.</p>
+<p><code>$5X_HOME/bin/activemq start</code></p>
+<p>Send some messages to the ActiveMQ 5.x broker.</p>
+<p><code>$5X_HOME/bin/activemq producer --user admin --password password --destination queue://TEST.FOO</code></p>
+<p>Log into the ActiveMQ Artemis console and browse the messages in the <code>TEST.FOO</code> queue.</p>
+</body>
+</html>
