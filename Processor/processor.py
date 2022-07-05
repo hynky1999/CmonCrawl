@@ -5,7 +5,7 @@ from datetime import datetime
 import json
 import logging
 from pathlib import Path
-from typing import Dict, Set
+from typing import Dict, Set, Tuple
 
 from stomp import Connection, ConnectionListener
 from stomp.utils import Frame
@@ -70,16 +70,16 @@ class Listener(ConnectionListener):
 async def call_pipeline_with_ack(
     pipeline: ProcessorPipeline, msg: Message, client: Connection
 ):
-    await pipeline.process_domain_record(msg.dr)
+    path = await pipeline.process_domain_record(msg.dr)
     # Ack at any result
     client.ack(msg.headers.get("message-id"), msg.headers.get("subscription"))
-    return msg
+    return (msg, path)
 
 
 async def processor(
     queue_host: str, queue_port: int, pills_to_die: int, queue_size: int
 ):
-    pending_extracts: Set[asyncio.Task[Message | None]] = set()
+    pending_extracts: Set[asyncio.Task[Tuple[Message, Path] | None]] = set()
     conn = Connection(
         [(queue_host, queue_port)], reconnect_attempts_max=-1, heartbeats=(10000, 10000)
     )
@@ -98,9 +98,9 @@ async def processor(
                             pending_extracts, return_when="FIRST_COMPLETED"
                         )
                         for task in done:
-                            message = task.result()
-                            if message is not None:
-                                logging.info(f"Downloaded {message.dr.url}")
+                            message, path = task.result()
+                            if path is not None:
+                                logging.info(f"Downloaded {message.dr.url} to {path}")
 
                     while (
                         len(pending_extracts) < queue_size
@@ -128,6 +128,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Processor")
     parser.add_argument("--queue_host", type=str, default="artemis")
     parser.add_argument("--queue_port", type=int, default=61613)
-    parser.add_argument("--queue_size", type=int, default=300)
+    parser.add_argument("--queue_size", type=int, default=80)
     parser.add_argument("--pills_to_die", type=int, default=1)
     asyncio.run(processor(**vars(parser.parse_args())))

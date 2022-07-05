@@ -1,3 +1,4 @@
+import logging
 from Router.router import Router
 from Downloader.download import Downloader
 from OutStreamer.outstreamer import OutStreamer
@@ -23,5 +24,7 @@ class ProcessorPipeline:
             return None
         path = await self.oustreamer.stream(output, metadata)
 
-        print("Successfully downloaded article from {}".format(domain_record.url))
+        logging.debug(
+            f"Successfully downloaded article from {domain_record.url} at {path}"
+        )
         return path
