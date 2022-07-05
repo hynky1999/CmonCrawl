@@ -1,0 +1,38 @@
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<html>
+<head>
+    <title>ActiveMQ Artemis Example</title>
+    <link rel="stylesheet" type="text/css" href="../../../common/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../../common/prettify.css" />
+    <script type="text/javascript" src="../../../common/prettify.js"></script>
+</head>
+<body onload="prettyPrint()">
+<h1>Stomp WebSockets Example</h1>
+<p>To run the example, simply type <strong>mvn verify</strong> from this directory, or <strong>mvn -PnoServer verify</strong> if you want to start and create the broker manually.</p>
+<p>This example shows you how to configure ActiveMQ Artemis to send and receive Stomp messages from modern web browser using Web Sockets.</p>
+<p>The example will start a ActiveMQ Artemis broker configured with Stomp over Web Sockets and JMS. Web browsers clients and Java application will exchange message using a JMS Topic.</p>
+<h2>Example step-by-step</h2>
+<p>To subscribe to the topic from your web browser, open the <a href="chat/index.html">Chat Example</a> from another tab. The chat example is preconfigured to connect to the ActiveMQ Artemis broker with the URL <code>ws://localhost:61613</code> and subscribe to the JMS Topic (through its core address <code>chat</code>).</p>
+<p>You can open as many Web clients as you want and they will all exchange messages through the topic</p>
+<h2>Documentation</h2>
+<p>A JavaScript library is used on the browser side to be able to use Stomp Over Web Sockets (please see its <a href="http://jmesnil.net/stomp-websocket/doc/">documentation</a> for a complete description).</p>
+</body>
+</html>

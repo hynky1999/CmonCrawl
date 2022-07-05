@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema elementFormDefault="qualified" version="1.0" targetNamespace="http://activemq.apache.org/schema" xmlns:tns="http://activemq.apache.org/schema" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="access" type="tns:accessDTO"/>
+
+  <xs:element name="allowlist" type="tns:allowListDTO"/>
+
+  <xs:element name="app" type="tns:appDTO"/>
+
+  <xs:element name="authorisation" type="tns:authorisationDTO"/>
+
+  <xs:element name="binding" type="tns:bindingDTO"/>
+
+  <xs:element name="broker" type="tns:brokerDTO"/>
+
+  <xs:element name="component" type="tns:componentDTO"/>
+
+  <xs:element name="connector" type="tns:jmxConnectorDTO"/>
+
+  <xs:element name="default-access" type="tns:defaultAccessDTO"/>
+
+  <xs:element name="entry" type="tns:entryDTO"/>
+
+  <xs:element name="jaas-security" type="tns:jaasSecurityDTO"/>
+
+  <xs:element name="management-context" type="tns:managementContextDTO"/>
+
+  <xs:element name="match" type="tns:matchDTO"/>
+
+  <xs:element name="property" type="tns:propertyDTO"/>
+
+  <xs:element name="request-log" type="tns:requestLogDTO"/>
+
+  <xs:element name="role-access" type="tns:roleAccessDTO"/>
+
+  <xs:element name="security-manager" type="tns:securityManagerDTO"/>
+
+  <xs:element name="server" type="tns:serverDTO"/>
+
+  <xs:element name="web" type="tns:webServerDTO"/>
+
+  <xs:element name="whitelist" type="tns:whiteListDTO"/>
+
+  <xs:complexType name="accessDTO">
+    <xs:sequence/>
+    <xs:attribute name="method" type="xs:string"/>
+    <xs:attribute name="roles" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="allowListDTO">
+    <xs:sequence>
+      <xs:element ref="tns:entry" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="entryDTO">
+    <xs:sequence/>
+    <xs:attribute name="domain" type="xs:string"/>
+    <xs:attribute name="key" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="appDTO">
+    <xs:sequence/>
+    <xs:attribute name="url" type="xs:string"/>
+    <xs:attribute name="war" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="authorisationDTO">
+    <xs:sequence>
+      <xs:element ref="tns:whitelist" minOccurs="0"/>
+      <xs:element ref="tns:allowlist" minOccurs="0"/>
+      <xs:element ref="tns:default-access"/>
+      <xs:element ref="tns:role-access"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="whiteListDTO">
+    <xs:sequence>
+      <xs:element ref="tns:entry" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="defaultAccessDTO">
+    <xs:sequence>
+      <xs:element ref="tns:access" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="roleAccessDTO">
+    <xs:sequence>
+      <xs:element ref="tns:match" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="matchDTO">
+    <xs:sequence>
+      <xs:element ref="tns:access" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="domain" type="xs:string"/>
+    <xs:attribute name="key" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="bindingDTO">
+    <xs:sequence>
+      <xs:element ref="tns:app" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="uri" type="xs:string"/>
+    <xs:attribute name="clientAuth" type="xs:boolean"/>
+    <xs:attribute name="passwordCodec" type="xs:string"/>
+    <xs:attribute name="keyStorePath" type="xs:string"/>
+    <xs:attribute name="trustStorePath" type="xs:string"/>
+    <xs:attribute name="includedTLSProtocols" type="xs:string"/>
+    <xs:attribute name="excludedTLSProtocols" type="xs:string"/>
+    <xs:attribute name="includedCipherSuites" type="xs:string"/>
+    <xs:attribute name="excludedCipherSuites" type="xs:string"/>
+    <xs:attribute name="keyStorePassword" type="xs:string"/>
+    <xs:attribute name="trustStorePassword" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="brokerDTO">
+    <xs:sequence>
+      <xs:choice>
+        <xs:element ref="tns:jaas-security"/>
+        <xs:element ref="tns:security-manager"/>
+      </xs:choice>
+      <xs:element ref="tns:server"/>
+      <xs:element ref="tns:web" minOccurs="0"/>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="tns:component"/>
+        <xs:element ref="tns:web"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="security">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:complexType name="serverDTO">
+    <xs:sequence>
+      <xs:element name="configurationFile" type="xs:string" minOccurs="0"/>
+      <xs:element name="configurationURI" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="configuration" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="webServerDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:componentDTO">
+        <xs:sequence>
+          <xs:element ref="tns:binding" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element ref="tns:app" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element ref="tns:request-log" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="bind" type="xs:string"/>
+        <xs:attribute name="path" type="xs:string" use="required"/>
+        <xs:attribute name="clientAuth" type="xs:boolean"/>
+        <xs:attribute name="passwordCodec" type="xs:string"/>
+        <xs:attribute name="keyStorePath" type="xs:string"/>
+        <xs:attribute name="trustStorePath" type="xs:string"/>
+        <xs:attribute name="customizer" type="xs:string"/>
+        <xs:attribute name="keyStorePassword" type="xs:string"/>
+        <xs:attribute name="trustStorePassword" type="xs:string"/>
+        <xs:attribute name="includedTLSProtocols" type="xs:string"/>
+        <xs:attribute name="excludedTLSProtocols" type="xs:string"/>
+        <xs:attribute name="includedCipherSuites" type="xs:string"/>
+        <xs:attribute name="excludedCipherSuites" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="componentDTO">
+    <xs:sequence/>
+    <xs:attribute name="componentClassName" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="requestLogDTO">
+    <xs:sequence/>
+    <xs:attribute name="filename" type="xs:string" use="required"/>
+    <xs:attribute name="append" type="xs:boolean"/>
+    <xs:attribute name="extended" type="xs:boolean"/>
+    <xs:attribute name="logCookies" type="xs:boolean"/>
+    <xs:attribute name="logTimeZone" type="xs:string"/>
+    <xs:attribute name="filenameDateFormat" type="xs:string"/>
+    <xs:attribute name="retainDays" type="xs:int"/>
+    <xs:attribute name="ignorePaths" type="xs:string"/>
+    <xs:attribute name="logDateFormat" type="xs:string"/>
+    <xs:attribute name="logLocale" type="xs:string"/>
+    <xs:attribute name="logLatency" type="xs:boolean"/>
+    <xs:attribute name="logServer" type="xs:boolean"/>
+    <xs:attribute name="preferProxiedForAddress" type="xs:boolean"/>
+    <xs:attribute name="format" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="jmxConnectorDTO">
+    <xs:sequence/>
+    <xs:attribute name="connector-host" type="xs:string"/>
+    <xs:attribute name="connector-port" type="xs:int" use="required"/>
+    <xs:attribute name="rmi-registry-port" type="xs:int"/>
+    <xs:attribute name="jmx-realm" type="xs:string"/>
+    <xs:attribute name="object-name" type="xs:string"/>
+    <xs:attribute name="authenticator-type" type="xs:string"/>
+    <xs:attribute name="secured" type="xs:boolean"/>
+    <xs:attribute name="key-store-provider" type="xs:string"/>
+    <xs:attribute name="key-store-type" type="xs:string"/>
+    <xs:attribute name="key-store-path" type="xs:string"/>
+    <xs:attribute name="key-store-password" type="xs:string"/>
+    <xs:attribute name="trust-store-provider" type="xs:string"/>
+    <xs:attribute name="trust-store-type" type="xs:string"/>
+    <xs:attribute name="trust-store-path" type="xs:string"/>
+    <xs:attribute name="trust-store-password" type="xs:string"/>
+    <xs:attribute name="password-codec" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="jaasSecurityDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:security">
+        <xs:sequence/>
+        <xs:attribute name="domain" type="xs:string" use="required"/>
+        <xs:attribute name="certificate-domain" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="managementContextDTO">
+    <xs:sequence>
+      <xs:element ref="tns:connector" minOccurs="0"/>
+      <xs:element ref="tns:authorisation" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="propertyDTO">
+    <xs:sequence/>
+    <xs:attribute name="key" type="xs:string"/>
+    <xs:attribute name="value" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="securityManagerDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:security">
+        <xs:sequence>
+          <xs:element ref="tns:property" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="class-name" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>
+

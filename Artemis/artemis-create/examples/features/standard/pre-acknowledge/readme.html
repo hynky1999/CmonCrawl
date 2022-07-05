@@ -1,0 +1,37 @@
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<html>
+<head>
+    <title>ActiveMQ Artemis Example</title>
+    <link rel="stylesheet" type="text/css" href="../../../common/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../../common/prettify.css" />
+    <script type="text/javascript" src="../../../common/prettify.js"></script>
+</head>
+<body onload="prettyPrint()">
+<h1>JMS Pre-Acknowledge Example</h1>
+<p>To run the example, simply type <strong>mvn verify</strong> from this directory, or <strong>mvn -PnoServer verify</strong> if you want to start and create the broker manually.</p>
+<p>Standard JMS supports three acknowledgement modes: AUTO_ACKNOWLEDGE, CLIENT_ACKNOWLEDGE, and DUPS_OK_ACKNOWLEDGE. For a full description on these modes please consult the JMS specification, or any JMS tutorial.</p>
+<p>All of these standard modes involve sending acknowledgements from the client to the server. However in some cases, you really don't mind losing messages in event of failure, so it would make sense to acknowledge the message on the broker <strong>before</strong> delivering it to the client.</p>
+<p>By acknowledging the message before sending to the client, you can avoid extra network traffic and CPU work done in sending acknowledgements from client to server.</p>
+<p>The down-side of acknowledging on the broker before delivery, is that if the system crashes after acknowledging the message, but before the message has been received by the client, then, on recovery, that message will be lost. This makes pre-acknowledgement not appropriate for all use cases, but it is very useful for some use-cases when you can cope with such loss of messages</p>
+<p>An example of a use-case where it might be a good idea to use pre-acknowledge, is for stock price update messages. With these messages it might be ok to lose a message in event of crash, since the next price update message will arrive soon, overriding the previous price.</p>
+<p>In order to use pre-acknowledge functionality with ActiveMQ Artemis the session has to be created with a special, ActiveMQ Artemis specific acknowledgement mode, given by the value of <code>ActiveMQJMSConstants.PRE_ACKNOWLEDGE</code>.</p>
+</body>
+</html>

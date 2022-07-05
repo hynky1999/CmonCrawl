@@ -1,0 +1,433 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <title>Connectors · ActiveMQ Artemis Documentation</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.7.1">
+        
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="destinations.html" />
+    
+    
+    <link rel="prev" href="configuration.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="preface.html">
+            
+                <a href="preface.html">
+            
+                    
+                    Preface
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="key-differences.html">
+            
+                <a href="key-differences.html">
+            
+                    
+                    Key Differences
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="configuration.html">
+            
+                <a href="configuration.html">
+            
+                    
+                    Configuration
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.5" data-path="connectors.html">
+            
+                <a href="connectors.html">
+            
+                    
+                    Connectors
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="destinations.html">
+            
+                <a href="destinations.html">
+            
+                    
+                    Destinations
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="VirtualTopics.html">
+            
+                <a href="VirtualTopics.html">
+            
+                    
+                    Virtual Topics
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="authentication.html">
+            
+                <a href="authentication.html">
+            
+                    
+                    Authentication
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="authorization.html">
+            
+                <a href="authorization.html">
+            
+                    
+                    Authorization
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10" data-path="ssl.html">
+            
+                <a href="ssl.html">
+            
+                    
+                    SSL
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11" data-path="message-store.html">
+            
+                <a href="message-store.html">
+            
+                    
+                    Message Store
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12" data-path="notice.html">
+            
+                <a href="notice.html">
+            
+                    
+                    Legal Notice
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >Connectors</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="connectors">Connectors</h1>
+<p>After broker is started, you&apos;ll want to connect your clients to it. So, let&apos;s start with comparing ActiveMQ and Artemis configurations in area of client connectors. In ActiveMQ terminology, they are called <em>transport connectors</em>, and the default configuration looks something like this (in <code>conf/activemq.xml</code>).</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">transportConnectors</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">transportConnector</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;openwire&quot;</span> <span class="hljs-attr">uri</span>=<span class="hljs-string">&quot;tcp://0.0.0.0:61616?maximumConnections=1000&amp;amp;wireFormat.maxFrameSize=104857600&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">transportConnector</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;amqp&quot;</span> <span class="hljs-attr">uri</span>=<span class="hljs-string">&quot;amqp://0.0.0.0:5672?maximumConnections=1000&amp;amp;wireFormat.maxFrameSize=104857600&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">transportConnector</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;stomp&quot;</span> <span class="hljs-attr">uri</span>=<span class="hljs-string">&quot;stomp://0.0.0.0:61613?maximumConnections=1000&amp;amp;wireFormat.maxFrameSize=104857600&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">transportConnector</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;mqtt&quot;</span> <span class="hljs-attr">uri</span>=<span class="hljs-string">&quot;mqtt://0.0.0.0:1883?maximumConnections=1000&amp;amp;wireFormat.maxFrameSize=104857600&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">transportConnector</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;ws&quot;</span> <span class="hljs-attr">uri</span>=<span class="hljs-string">&quot;ws://0.0.0.0:61614?maximumConnections=1000&amp;amp;wireFormat.maxFrameSize=104857600&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">transportConnectors</span>&gt;</span>
+</code></pre>
+<p>In Artemis, client connectors are called <em>acceptors</em> and they are configured in <code>etc/broker.xml</code> like this</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">acceptors</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">acceptor</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;artemis&quot;</span>&gt;</span>tcp://0.0.0.0:61616?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=CORE,AMQP,STOMP,HORNETQ,MQTT,OPENWIRE<span class="hljs-tag">&lt;/<span class="hljs-name">acceptor</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">acceptor</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;amqp&quot;</span>&gt;</span>tcp://0.0.0.0:5672?protocols=AMQP<span class="hljs-tag">&lt;/<span class="hljs-name">acceptor</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">acceptor</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;stomp&quot;</span>&gt;</span>tcp://0.0.0.0:61613?protocols=STOMP<span class="hljs-tag">&lt;/<span class="hljs-name">acceptor</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">acceptor</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;hornetq&quot;</span>&gt;</span>tcp://0.0.0.0:5445?protocols=HORNETQ,STOMP<span class="hljs-tag">&lt;/<span class="hljs-name">acceptor</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">acceptor</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;mqtt&quot;</span>&gt;</span>tcp://0.0.0.0:1883?protocols=MQTT<span class="hljs-tag">&lt;/<span class="hljs-name">acceptor</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">acceptors</span>&gt;</span>
+</code></pre>
+<p>As you can notice the syntax is very similar, but there are still some differences that we need to understand. First, as we said earlier, there&apos;s no notion of blocking    and non-blocking (nio) transport in Artemis, so you should treat everything as non-blocking. Also, in Artemis the low level transport is distinct from the actual messaging protocol (like AMQP or MQTT) used on top of it. One acceptor can handle multiple messaging protocols on the same port. By default, all protocols are accepted on the single port, but you can restrict this using the <code>protocols=X,Y</code> uri attribute pattern as shown in the example above.</p>
+<p>Besides <em>tcp</em> network protocol, Artemis support <em>InVm</em> and <em>Web Socket</em> transports. The <em>InVm</em> transport is similar to ActiveMQ&apos;s <em>vm</em> transport and is used to connect clients to the embedded broker. The difference is that you can use any messaging protocol on top of <em>InVm</em> transport in Artemis, while <em>vm</em> transport in ActiveMQ is tied to OpenWire.</p>
+<p>One of the advantages of using Netty for IO layer, is that Web Sockets are supported out of the box. So, there&apos;s no need for the separate <em>ws</em> transport like in ActiveMQ, the <em>tcp</em> (Netty) acceptor in Artemis will detect Web Socket clients and handle them accordingly.  </p>
+<p>To summarize this topic, here&apos;s a table that shows you how to migrate your ActiveMQ transport connectors to the Artemis acceptors </p>
+<table>
+<thead>
+<tr>
+<th>ActiveMQ</th>
+<th>Artemis (options in the acceptor URL)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OpenWire</td>
+<td>protocols=OpenWire (version 10+)</td>
+</tr>
+<tr>
+<td>NIO</td>
+<td>-</td>
+</tr>
+<tr>
+<td>AMQP</td>
+<td>protocols=AMQP</td>
+</tr>
+<tr>
+<td>STOMP</td>
+<td>protocols=STOMP</td>
+</tr>
+<tr>
+<td>VM (OpenWire only)</td>
+<td>InVM (all protocols, peer to tcp)</td>
+</tr>
+<tr>
+<td>HTTP (OpenWire-based)</td>
+<td>-</td>
+</tr>
+<tr>
+<td>MQTT</td>
+<td>protocols=MQTT</td>
+</tr>
+<tr>
+<td>WebSocket (STOMP and MQTT)</td>
+<td>handled by tcp (all protocols)</td>
+</tr>
+</tbody>
+</table>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="configuration.html" class="navigation navigation-prev " aria-label="Previous page: Configuration">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="destinations.html" class="navigation navigation-next " aria-label="Next page: Destinations">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Connectors","level":"1.5","depth":1,"next":{"title":"Destinations","level":"1.6","depth":1,"path":"destinations.md","ref":"destinations.md","articles":[]},"previous":{"title":"Configuration","level":"1.4","depth":1,"path":"configuration.md","ref":"configuration.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"styles":{"ebook":"styles/ebook.css","epub":"styles/epub.css","mobi":"styles/mobi.css","pdf":"styles/pdf.css","print":"styles/print.css","website":"styles/website.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"showLevel":false,"styles":{"ebook":"styles/ebook.css","epub":"styles/epub.css","mobi":"styles/mobi.css","pdf":"styles/pdf.css","print":"styles/print.css","website":"styles/website.css"}}},"github":"apache/activemq-artemis","theme":"default","githubHost":"https://github.com/","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"ActiveMQ Artemis Documentation","links":{"home":"http://activemq.apache.org/artemis","issues":"https://issues.apache.org/jira/browse/ARTEMIS","contribute":"http://activemq.apache.org/contributing.html"},"gitbook":"3.x.x","description":"ActiveMQ Artemis Migration Guide"},"file":{"path":"connectors.md","mtime":"2022-06-14T19:42:45.223Z","type":"markdown"},"gitbook":{"version":"3.7.1","time":"2022-06-14T19:55:36.570Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

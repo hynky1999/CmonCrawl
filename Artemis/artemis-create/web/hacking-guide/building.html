@@ -1,0 +1,396 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <title>Building · ActiveMQ Artemis Documentation</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.7.1">
+        
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="tests.html" />
+    
+    
+    <link rel="prev" href="ide.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="notice.html">
+            
+                <a href="notice.html">
+            
+                    
+                    Legal Notice
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="code.html">
+            
+                <a href="code.html">
+            
+                    
+                    Working with the Code
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="ide.html">
+            
+                <a href="ide.html">
+            
+                    
+                    IDE Integration
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.5" data-path="building.html">
+            
+                <a href="building.html">
+            
+                    
+                    Building
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="tests.html">
+            
+                <a href="tests.html">
+            
+                    
+                    Tests
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="code-coverage-report.html">
+            
+                <a href="code-coverage-report.html">
+            
+                    
+                    Code coverage report
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="formatting.html">
+            
+                <a href="formatting.html">
+            
+                    
+                    Code Formatting
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="validating-releases.html">
+            
+                <a href="validating-releases.html">
+            
+                    
+                    Validating releases
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10" data-path="maintainers.html">
+            
+                <a href="maintainers.html">
+            
+                    
+                    Notes for Maintainers
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11" data-path="history.html">
+            
+                <a href="history.html">
+            
+                    
+                    History
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >Building</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="building">Building</h1>
+<p>We use Apache Maven to build the code, distribution, etc. and to manage dependencies.</p>
+<p>We use <code>gitbook</code> to build the docs.</p>
+<p>The minimum required Maven version is 3.0.0.</p>
+<p>Note that there are some <a href="https://cwiki.apache.org/confluence/display/MAVEN/Maven+3.x+Compatibility+Notes" target="_blank">compatibility issues with Maven 3.X</a>
+still unsolved. This is specially true for the <a href="https://maven.apache.org/plugins-archives/maven-site-plugin-3.3/maven-3.html" target="_blank">&apos;site&apos; plugin</a>.</p>
+<h2 id="full-release">Full Release</h2>
+<h4 id="upgrading-the-gitbook-version-and-regenerating-the-npm-shrinkwrapjson-file">Upgrading the <code>gitbook</code> version and regenerating the <code>npm-shrinkwrap.json</code> file</h4>
+<p>The full release uses <code>gitbook</code> to build a static website from the documentation. This is automatically installed using
+an <code>NPM</code> plugin and is controlled via a package.json file.</p>
+<p>Install <code>NPM</code> using the instructions below</p>
+<pre><code>cd artemis-website
+alter the `package.json` changing the version
+npm cache clean; rm -rf ./node_modules/ ./node npm-shrinkwrap.json
+npm install --save-dev
+npm shrinkwrap --dev
+</code></pre><p>The new npm-shrinkwrap.json should be written, commit it.</p>
+<h3 id="gitbook">gitbook</h3>
+<p>Artemis will automate the execution and download of npm. But it may be useful to install it on your system. Simply type:</p>
+<pre><code>$ npm install -g gitbook-cli
+</code></pre><p>If you don&apos;t have <code>npm</code> installed then you would need to install it first.</p>
+<h4 id="install-npm-on-fedora">Install npm On Fedora</h4>
+<pre><code>$ yum install npm
+</code></pre><h4 id="install-npm-on-fedora-24">Install npm On Fedora 24</h4>
+<p>This is what you should do if you are using Fedora 24+.</p>
+<pre><code>$ dnf install nodejs
+</code></pre><h4 id="install-npm-on-mac-os">Install npm On Mac-OS</h4>
+<p>The easiest way would be through brew <a href="https://brew.sh" target="_blank">brew</a></p>
+<p>You first install brew using the instructions on the <a href="https://brew.sh" target="_blank">brew</a> website.</p>
+<p>After you installed brew you can install npm by:</p>
+<pre><code>brew install npm
+</code></pre><p>To build the full release with documentation, Javadocs, and the full web site:</p>
+<pre><code>$ mvn -Prelease package
+</code></pre><p>To install it to your local maven repo:</p>
+<pre><code>$ mvn -Prelease install
+</code></pre><h2 id="build-the-distribution-without-docs">Build the distribution without docs</h2>
+<p>It is possible to build a distribution without the manuals and Javadocs.
+simply run</p>
+<pre><code>$ mvn package
+</code></pre><h2 id="building-the-docs">Building the docs</h2>
+<p>From either <code>docs/hacking-guide/en</code> or <code>docs/user-manual/en</code> run <code>gitbook build</code> (after you&apos;ve installed gitbook)</p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="ide.html" class="navigation navigation-prev " aria-label="Previous page: IDE Integration">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="tests.html" class="navigation navigation-next " aria-label="Next page: Tests">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Building","level":"1.5","depth":1,"next":{"title":"Tests","level":"1.6","depth":1,"path":"tests.md","ref":"tests.md","articles":[]},"previous":{"title":"IDE Integration","level":"1.4","depth":1,"path":"ide.md","ref":"ide.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"styles":{"ebook":"styles/ebook.css","epub":"styles/epub.css","mobi":"styles/mobi.css","pdf":"styles/pdf.css","print":"styles/print.css","website":"styles/website.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"showLevel":false,"styles":{"ebook":"styles/ebook.css","epub":"styles/epub.css","mobi":"styles/mobi.css","pdf":"styles/pdf.css","print":"styles/print.css","website":"styles/website.css"}}},"github":"apache/activemq-artemis","theme":"default","githubHost":"https://github.com/","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"ActiveMQ Artemis Documentation","links":{"home":"http://activemq.apache.org/artemis","issues":"https://issues.apache.org/jira/browse/ARTEMIS","contribute":"http://activemq.apache.org/contributing.html"},"gitbook":"3.x.x","description":"ActiveMQ Artemis Hacking Guide"},"file":{"path":"building.md","mtime":"2022-06-14T19:42:45.220Z","type":"markdown"},"gitbook":{"version":"3.7.1","time":"2022-06-14T19:55:35.207Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

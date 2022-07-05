@@ -1,0 +1,75 @@
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<html>
+<head>
+    <title>ActiveMQ Artemis Example</title>
+    <link rel="stylesheet" type="text/css" href="../../../common/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../../common/prettify.css" />
+    <script type="text/javascript" src="../../../common/prettify.js"></script>
+</head>
+<body onload="prettyPrint()">
+<h1>Federated Queue Example</h1>
+<p>To run the example, simply type <strong>mvn verify</strong> from this directory, or <strong>mvn -PnoServer verify</strong> if you want to start and create the broker manually.</p>
+<p>This example demonstrates a core queue deployed on three different brokers. The three brokers are configured to form a federated queue mesh.</p>
+<p>In the example we name the brokers, eu-west, eu-east and us-central to give an idea of the use case.</p>
+<p><img src="eu-west-east-us-central.png" alt="EU West, EU East and US Central Diagram" /></p>
+<p>The following is then carried out:</p>
+<ol>
+<li>
+<p>create a consumer on the queue on each node, and we create a producer on only one of the nodes.</p>
+</li>
+<li>
+<p>send some messages via the producer on EU West, and we verify that <strong>only the local</strong> consumer receives the sent messages.</p>
+</li>
+<li>
+<p>Next then verify the same on US Central.</p>
+</li>
+<li>
+<p>Now the consumer on EU West is closed leaving it no local consumers.</p>
+</li>
+<li>
+<p>Send some more messages to server EU West</p>
+</li>
+<li>
+<p>We now consume those messages on EU East demonstrating that messages will <strong>re-route</strong> to the another broker based on upstream priority. You will note, US Central is configured to be -1 priority compared to EU East, there for messages should re-route to EU East as it will have a slightly higher priority for its consumers to consume. If US Central and EU East were even priority then the re-direct would be loaded between the two.</p>
+</li>
+<li>
+<p>Next the consumer on US Central is closed leaving it no local consumers. And we send some more messages to US Cental</p>
+</li>
+<li>
+<p>Again we consume on EU East demonstrating that US Central messages also can <strong>re-route</strong>, if no local-consumer.</p>
+</li>
+<li>
+<p>Now we restart EU West and US Centrals consumers.</p>
+</li>
+<li>
+<p>We produce and consume on US Central, showing that dynamically re-adjusts now local consumers exist and messages delivery by priority to local consumer.</p>
+</li>
+<li>
+<p>And repeat the same on EU West.</p>
+</li>
+</ol>
+<p>In other words, we are showing how with Federated Queues, ActiveMQ Artemis <strong>routes</strong>  sent messages to local consumers as priority, but is able to re-route the sent messages to other distant brokers if consumers are attached to those brokers. Decoupling the location where producers and consumers need to be.</p>
+<p>Here's the relevant snippet from the broker configuration, which tells the broker to form a cluster between the two nodes and to load balance the messages between the nodes.</p>
+<p>The config that defines the federation you can see in the broker.xml for each broker is within the following tags. You will note upstreams are different in each as well as the federation name, which has to be globally unique.</p>
+<p><code>&lt;federations&gt; ... &lt;/federations&gt;</code></p>
+<p>For more information on ActiveMQ Artemis Federation please see the federation section of the user manual.</p>
+</body>
+</html>

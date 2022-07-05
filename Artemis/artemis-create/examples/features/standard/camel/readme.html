@@ -1,0 +1,35 @@
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<html>
+<head>
+    <title>ActiveMQ Artemis Example</title>
+    <link rel="stylesheet" type="text/css" href="../../../common/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../../common/prettify.css" />
+    <script type="text/javascript" src="../../../common/prettify.js"></script>
+</head>
+<body onload="prettyPrint()">
+<h1>Camel Example</h1>
+<p>To run the example, simply type <strong>mvn verify</strong> from this directory, or <strong>mvn -PnoServer verify</strong> if you want to start and create the broker manually.</p>
+<p>This example contains 2 different Maven modules:</p>
+<p>1) <code>camel-broker</code> The module responsible for creating the broker, deploying the WAR-based Camel application, and running the client. 2) <code>camel-war</code> The module used to build the WAR-based Camel application.</p>
+<p>The overall goal of this example is to demonstrate how to build and deploy a Camel route to the broker.</p>
+<p>The client itself is essentially the same as the one in the <code>core-bridge</code> example except there is only 1 broker in this example rather than 2. A Camel route defined in the WAR is responsible for moving messages between 2 queues. The client sends a message to one queue, the Camel route moves that message to a second queue, and then the client reads that message from the second queue.</p>
+</body>
+</html>

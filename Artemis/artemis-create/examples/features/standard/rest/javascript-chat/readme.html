@@ -1,0 +1,38 @@
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<html>
+<head>
+    <title>ActiveMQ Artemis Example</title>
+    <link rel="stylesheet" type="text/css" href="../../../common/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../../common/prettify.css" />
+    <script type="text/javascript" src="../../../common/prettify.js"></script>
+</head>
+<body onload="prettyPrint()">
+<h1>Rest Chat Application Example</h1>
+<p>This is an example of producing and consuming messages through a topic.  The client is Javascript code within your browser.</p>
+<p>The example is a very simple chat application between two browser windows.</p>
+<p>Step 1:</p>
+<pre><code>mvn jetty:run
+</code></pre>
+<p>This will bring up ActiveMQ Artemis and the ActiveMQ Artemis REST Interface.</p>
+<p>Step 2:</p>
+<p>Bring up two browsers and point them to <code>http://localhost:8080</code>.  In the textbox type a message you want to send.  Click the &quot;Click to send message&quot; button and you'll see the message show up in both browser windows.</p>
+</body>
+</html>

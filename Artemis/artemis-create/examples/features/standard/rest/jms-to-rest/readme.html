@@ -1,0 +1,58 @@
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<html>
+<head>
+    <title>ActiveMQ Artemis Example</title>
+    <link rel="stylesheet" type="text/css" href="../../../common/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../../common/prettify.css" />
+    <script type="text/javascript" src="../../../common/prettify.js"></script>
+</head>
+<body onload="prettyPrint()">
+<h1>Mixed JMS and REST Producers/Consumers Example</h1>
+<p>This is an example of mixing JMS producers and consumers with REST producers and consumers.  The REST clients have been written in both Java using RESTEasy's client library and within the Python language.  You will need Python 2.6.1 or higher to be able to run the Python clients.</p>
+<p>To run the example you will need 5 shell-script windows (or you'll need to run 4 processes in background)</p>
+<p>Step 1:</p>
+<pre><code>mvn jetty:run
+</code></pre>
+<p>This will bring up ActiveMQ Artemis and the ActiveMQ Artemis REST Interface.</p>
+<p>Step 2:</p>
+<pre><code>mvn exec:java -Dexec.mainClass=&quot;RestReceive&quot;
+</code></pre>
+<p>This will bring up a Java REST client that is continuously pulling the broker through a consume-next (see doco for details).</p>
+<p>Step 3:</p>
+<pre><code>mvn exec:java -Dexec.mainClass=&quot;JmsReceive&quot;
+</code></pre>
+<p>This will bring up a Java JMS consumer that is using the MessageListener interface to consume messages.  It will extract a Order instance from the JMS Message it receives.</p>
+<p>Step 4:</p>
+<pre><code>python receiveOrder.py
+</code></pre>
+<p>This runs a very simple Python program to consume messages</p>
+<p>Step 5: Use one of these three commands to post messages to the system.  One of the receive clients will consume the message.</p>
+<pre><code>mvn exec:java -Dexec.mainClass=&quot;JmsSend&quot;
+</code></pre>
+<p>A JMS client will create an Order object and send it to the queue.  You'll see one of the 4 clients receive the message. Notice that the REST clients automatically cause the Order object to be transformed on the broker and passed as XML to the REST client.</p>
+<pre><code>mvn exec:java -Dexec.mainClass=&quot;RestSend&quot;
+</code></pre>
+<p>This is a REST client that uses the Acknowledgement protocol to receive a message from the queue.</p>
+<pre><code>python postOrder.py
+</code></pre>
+<p>This is a Python client that posts one message to the queue RESTfully (of course ;) )</p>
+</body>
+</html>

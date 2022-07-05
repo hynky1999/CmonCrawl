@@ -1,0 +1,96 @@
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<html>
+<head>
+    <title>ActiveMQ Artemis Example</title>
+    <link rel="stylesheet" type="text/css" href="../../../common/common.css" />
+    <link rel="stylesheet" type="text/css" href="../../../common/prettify.css" />
+    <script type="text/javascript" src="../../../common/prettify.js"></script>
+</head>
+<body onload="prettyPrint()">
+<h1>AMQP CPP example</h1>
+<p>ActiveMQ Artemis is a multi protocol broker. It will inspect the initial handshake of clients to determine what protocol to use.</p>
+<p>All you need to do is to connect a client into ActiveMQ's configured port and you should be able connect.</p>
+<p>To run this example simply run the command <strong>mvn verify -Pexample</strong>, execute the compile.sh script and start the executable called ./hello</p>
+<pre><code># first make sure you have the dependencies you need to compile and run the client
+# You will have to adapt this step according to your platform. Consult the [qpid docs](http://qpid.apache.org/releases/qpid-0.30/programming/book/) for more information.
+# There is a list of [packages](http://qpid.apache.org/packages.html) you can install as well.
+[proton-cpp]$ sudo yum install qpid-proton-cpp-devel qpid-proton-cpp-docs
+
+# on a first window
+[proton-cpp]$ mvn verify -Pexample
+
+# on a second window
+# That goes without saying but you will of course need g++ (the C++ compiler) installed
+[proton-cpp]$ ./compile.sh
+[proton-cpp]$ ./hello
+</code></pre>
+<p>You don't need to do anything special to configure the ActiveMQ Artemis broker to accept AMQP clients.</p>
+<p>Just for the sake of documentation though we are setting the port of ActiveMQ Artemis on this example as 5672 which is the port qpid have by default.</p>
+<p>This is totally optional and you don't need to follow this convention. You can use any port you chose including ActiveMQ's 61616 default port:</p>
+<pre><code>&lt;acceptor name=&quot;proton-acceptor&quot;&gt;tcp://localhost:5672&lt;/acceptor&gt;
+</code></pre>
+<h2>Example step-by-step</h2>
+<p>We are using qpid cpp client on this example. There are several libraries you may chose from for AMQP. We have ellect one that we consider simple enough for users.</p>
+<p>This example is based on <a href="http://qpid.apache.org/releases/qpid-0.30/messaging-api/cpp/examples/hello_world.cpp.html">qpid's hello world example</a>.</p>
+<ol>
+<li>qpid-cpp-client-devel installed.</li>
+</ol>
+<p>Assuming you are on Linux Fedora, you will need to run this following command</p>
+<pre><code>yum install qpid-cpp-client-devel
+</code></pre>
+<p>Consult the <a href="http://qpid.apache.org/releases/qpid-0.30/programming/book/">qpid documentation</a>, and <a href="http://qpid.apache.org/packages.html">the required</a> packages for information on other platoforms.</p>
+<ol>
+<li>Make the proper C++ imports</li>
+<li>Create an amqp qpid 1.0 connection.
+<p>std::string broker = argc &gt; 1 ? argv[1] : &quot;localhost:61616&quot;; std::string address = argc &gt; 2 ? argv[2] : &quot;jms.queue.exampleQueue&quot;; std::string connectionOptions = argc &gt; 3 ? argv[3] : &quot;{protocol:amqp1.0}&quot;; // Look at the <a href="http://qpid.apache.org/releases/qpid-0.30/programming/book/connections.html#connection-options">docs</a> for more options</p>
+<p>Connection connection(broker, connectionOptions); connection.open();</p>
+</li>
+<li>
+<p>Create a session</p>
+<p>Session session = connection.createSession();</p>
+</li>
+<li>
+<p>Create a sender</p>
+<p>Sender sender = session.createSender(address);</p>
+</li>
+<li>
+<p>send a simple message</p>
+<p>sender.send(Message(&quot;Hello world!&quot;));</p>
+</li>
+<li>
+<p>create a receiver</p>
+<p>Receiver receiver = session.createReceiver(address);</p>
+</li>
+<li>
+<p>receive the simple message</p>
+<p>Message message = receiver.fetch(Duration::SECOND * 1);</p>
+</li>
+<li>
+<p>acknowledge the message</p>
+<p>session.acknowledge();</p>
+</li>
+<li>
+<p>close the connection</p>
+<p>connection.close();</p>
+</li>
+</ol>
+</body>
+</html>
