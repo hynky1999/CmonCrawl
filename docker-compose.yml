@@ -3,10 +3,12 @@ services:
   artemis:
     build: "./Artemis"
     container_name: "artemis"
-    volumes:
-      - artemis-data:/data
+    # Persistent volume don't use this for testing as it will filter out same urls
+    # volumes:
+    #   - artemis-data:/var/lib/artemis/data
     ports:
       - "8161:8161"
+      - "61613:61613"
 
   producer-seznamzpravy.cz:
     build: ./Aggregator
@@ -26,7 +28,7 @@ services:
     build: ./Processor
     container_name: "consumer"
     volumes:
-      - ./output:/output
+      - ./output:/app/output:z
     depends_on:
       - artemis
 

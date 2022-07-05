@@ -48,21 +48,24 @@ async def aggregate(
         max_retries=max_retries,
         sleep_step=sleep_step,
     ) as aggregator:
-        async for domain_record in aggregator:
-            try:
-                if not conn.is_connected():
-                    conn = init_connection(conn)
-                json_str = json.dumps(domain_record.__dict__, default=str)
-                conn.send(
-                    f"/queue/articles.{url}",
-                    json_str,
-                    headers={DUPL_ID_HEADER: domain_record.url},
-                )
-                logging.info(f"Sent url: {domain_record.url}")
-                i += 1
-            except (KeyboardInterrupt, StompException) as e:
-                logging.error(e)
-                break
+        try:
+            async for domain_record in aggregator:
+                try:
+                    if not conn.is_connected():
+                        conn = init_connection(conn)
+                    json_str = json.dumps(domain_record.__dict__, default=str)
+                    conn.send(
+                        f"/queue/articles.{url}",
+                        json_str,
+                        headers={DUPL_ID_HEADER: domain_record.url},
+                    )
+                    logging.info(f"Sent url: {domain_record.url}")
+                    i += 1
+                except (KeyboardInterrupt, StompException) as e:
+                    logging.error(e)
+                    break
+        except Exception as e:
+            logging.error(e)
 
     logging.info("Sent {i} messages")
     conn.disconnect()
