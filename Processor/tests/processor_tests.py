@@ -1,3 +1,4 @@
+import asyncio
 from pathlib import Path
 import unittest
 import os
@@ -83,6 +84,16 @@ class OutStremaerTests(unittest.IsolatedAsyncioTestCase):
         file = await self.outstreamer_file.stream(dict(), self.metadata)
         await self.outstreamer_file.clean_up()
         self.assertFalse(os.path.exists(file))
+
+    async def test_create_directory(self):
+        self.outstreamer_file.max_directory_size = 3
+        writes = [
+            asyncio.create_task(self.outstreamer_file.stream(dict(), self.metadata))
+            for _ in range(15)
+        ]
+        await asyncio.gather(*writes)
+        size = len(os.listdir("./test"))
+        self.assertEqual(size, 5)
 
     async def asyncTearDown(self) -> None:
         await self.outstreamer_file.clean_up()
