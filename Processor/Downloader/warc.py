@@ -36,9 +36,12 @@ def parse_http_header(http: str):
             date.group(0), "%a, %d %b %Y %H:%M:%S %Z"
         )
 
-    http_response_code = re.search(r"(?<=HTTP/1.1 )(\d+)", http)
+    http_response_code = re.search(r"(?<=HTTP/\d\.\d )(\d+)", http)
     if http_response_code is not None:
-        http_header["http_response_code"] = http_response_code.group(0).strip()
+        http_header["http_response_code"] = int(http_response_code.group(0).strip())
+    http_charset = re.search(r"(?<=charset=)(\S+)", http)
+    if http_charset is not None:
+        http_header["charset"] = http_charset.group(0).strip().lower()
 
     return http_header
 
