@@ -1,7 +1,6 @@
 from datetime import datetime
 from typing import Any, Callable, Dict
 from Extractor.extractor_utils import (
-    TagDescriptor,
     get_tag_transform,
 )
 from utils import PipeMetadata
@@ -27,9 +26,9 @@ def seznamzpravy_extract_publication_date(tag: Tag | NavigableString | None):
     return None
 
 
-head_extract_dict: Dict[str, TagDescriptor] = {
-    "headline": TagDescriptor("meta", {"property": "og:title"}),
-    "keywords": TagDescriptor("meta", {"name": "keywords"}),
+head_extract_dict: Dict[str, str] = {
+    "headline": "meta[property='og:title']",
+    "keywords": "meta[name='keywords']",
 }
 
 
@@ -40,12 +39,10 @@ head_extract_transform_dict: Dict[str, Callable[[str], Any]] = {
 
 
 article_extract_dict: Dict[str, Any] = {
-    "brief": TagDescriptor("p", {"data-dot": "ogm-article-perex"}),
-    "content": TagDescriptor("div", {"class": "mol-rich-content--for-article"}),
-    "author": TagDescriptor("div", {"data-dot": "ogm-article-author"}),
-    "publication_date": TagDescriptor(
-        "div", {"data-dot": "ogm-date-of-publication__date"}
-    ),
+    "brief": "p[data-dot='ogm-article-perex']",
+    "content": "div[class*='mol-rich-content--for-article']",
+    "author": "div[data-dot='ogm-article-author'] span[data-dot='mol-author-names']",
+    "publication_date": "div[data-dot='ogm-date-of-publication__date']",
 }
 
 article_extract_transform_dict: Dict[str, Callable[[Tag], Any]] = {
@@ -55,15 +52,13 @@ article_extract_transform_dict: Dict[str, Callable[[Tag], Any]] = {
         or (x.name == "div" and x.attrs.get("data-dot", "") == "mol-paragraph"),
     ),
     "brief": lambda x: x.text if x else None,
-    "author": lambda x: author_extract_transform(
-        get_tag_transform(x)(TagDescriptor("span", {"data-dot": "mol-author-names"}))
-    ),
+    "author": author_extract_transform,
     "publication_date": seznamzpravy_extract_publication_date,
 }
 
 
 filter_head_extract_dict: Dict[str, Any] = {
-    "type": TagDescriptor("meta", {"property": "og:type"}),
+    "type": "meta[property='og:type']",
 }
 
 
@@ -74,7 +69,7 @@ class Extractor(ArticleExtractor):
         )
 
         extracted_article = article_extract_transform(
-            soup.find("section", attrs={"data-dot": "tpl-content"}),
+            soup.select_one("section[data-dot='tpl-content']"),
             article_extract_dict,
             article_extract_transform_dict,
         )
@@ -88,9 +83,5 @@ class Extractor(ArticleExtractor):
 
     def filter(self, response: str, metadata: PipeMetadata):
         soup = BeautifulSoup(response, "html.parser")
-
-        head_extracted = head_extract_transform(soup, filter_head_extract_dict, dict())
-        if head_extracted.get("type") != "article":
-            return False
 
         return True

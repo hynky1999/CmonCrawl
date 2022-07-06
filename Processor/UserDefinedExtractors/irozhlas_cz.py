@@ -1,6 +1,10 @@
 from datetime import datetime
 import re
 from typing import Any, Callable, Dict
+from Extractor.extractor_utils import (
+    TagDescriptor,
+    get_tag_transform,
+)
 from utils import PipeMetadata
 from bs4 import BeautifulSoup, NavigableString, Tag
 from ArticleUtils.article_extractor import ArticleExtractor
@@ -13,43 +17,42 @@ from ArticleUtils.article_utils import (
     must_not_exist_filter,
 )
 
-head_extract_dict: Dict[str, str] = {
-    "headline": "meta[property='og:title']",
-    "keywords": "meta[name='keywords']",
-    "publication_date": "meta[property='article:published_time']",
+
+head_extract_dict: Dict[str, TagDescriptor] = {
+    "headline": TagDescriptor("meta", {"property": "og:title"}),
 }
 
 
 head_extract_transform_dict: Dict[str, Callable[[str], Any]] = {
-    "keywords": lambda x: x.split(","),
-    "publication_date": datetime.fromisoformat,
     "headline": lambda x: x.replace(r" - iDNES.cz", "").strip(),
 }
 
 
 article_extract_dict: Dict[str, Any] = {
-    "brief": "div[class='opener']",
-    "content": "div[class='bbtext']",
-    "author": "div[class='authors'] span[itemprop='name']",
-    "comments_num": "li[class='community-discusion']",
+    "brief": TagDescriptor("div", {"class": "opener"}),
+    "content": TagDescriptor("div", {"class": "bbtext"}),
+    "author": TagDescriptor("div", {"class": "authors"}),
+    "comments_num": TagDescriptor("li", {"class": "community-discusion"}),
 }
 
 article_extract_transform_dict: Dict[str, Callable[[Tag], Any]] = {
     "content": article_transform,
     "brief": lambda x: x.text if x else None,
-    "author": author_extract_transform,
+    "author": lambda x: author_extract_transform(
+        get_tag_transform(x)(TagDescriptor("span", {"itemprop": "name"}))
+    ),
     "comments_num": lambda x: idnes_extract_comments_num(x),
 }
 
 
 filter_head_extract_dict: Dict[str, Any] = {
-    "type": "meta[property='og:type']",
+    "type": TagDescriptor("meta", {"property": "og:type"}),
 }
 
-filter_must_not_exist: Dict[str, str] = {
+filter_must_not_exist: Dict[str, TagDescriptor] = {
     # Prevents Premium "articles"
-    "idnes_plus": "div[id='paywall-unlock']",
-    "brisk": "div.art-info > span[class='brisk']",
+    "idnes_plus": TagDescriptor("div", {"id": "paywall-unlock"}),
+    "brisk": TagDescriptor("span", {"class": "brisk", "text": "Soutěž"}),
 }
 
 
@@ -60,7 +63,7 @@ class Extractor(ArticleExtractor):
         )
 
         extracted_article = article_extract_transform(
-            soup.select_one("div#content"),
+            soup.find(attrs={"id": "content"}),
             article_extract_dict,
             article_extract_transform_dict,
         )

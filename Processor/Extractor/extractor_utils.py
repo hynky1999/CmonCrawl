@@ -1,20 +1,13 @@
-from dataclasses import dataclass, field
 from typing import Any, Callable, Dict
 from bs4 import NavigableString, Tag
 
 
-@dataclass
-class TagDescriptor:
-    tag: str = ""
-    attrs: Dict[str, str] = field(default_factory=dict)
-
-
 def get_tag_transform(tag: Tag | NavigableString | None):
-    def transform(tag_desc: TagDescriptor):
+    def transform(tag_desc: str):
         if tag is None or isinstance(tag, NavigableString):
             return None
 
-        tag_found = tag.find(name=tag_desc.tag, attrs=tag_desc.attrs)
+        tag_found = tag.select_one(tag_desc)
         if tag_found is None:
             return None
         return tag_found
