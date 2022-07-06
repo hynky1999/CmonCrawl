@@ -1,14 +1,17 @@
 from datetime import datetime
+import logging
 from typing import List
 from index_query import DomainRecord, IndexAggregator
 import unittest
+
+logging.basicConfig(level=logging.DEBUG)
 
 
 class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self) -> None:
         self.CC_SERVERS = ["https://index.commoncrawl.org/CC-MAIN-2022-05-index"]
         self.di = await IndexAggregator(
-            ["idnes.cz"], cc_servers=self.CC_SERVERS, max_retries=100
+            ["idnes.cz"], cc_servers=self.CC_SERVERS, max_retry=50
         ).aopen()
         self.client = self.di.client
 
@@ -93,6 +96,15 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
 
         # Checked by alternative client
         self.assertEqual(len(records), 194393)
+
+    async def test_cancel_iterator_tasks(self):
+        self.di.limit = 10
+        async for record in self.di:
+            pass
+        await self.di.aclose(None, None, None)
+        for iterator in self.di.iterators:
+            for task in iterator.prefetch_queue:
+                self.assertTrue(task.cancelled() or task.done())
 
 
 if __name__ == "__main__":

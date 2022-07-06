@@ -45,7 +45,7 @@ async def aggregate(
         to=to,
         limit=limit,
         prefetch_size=prefetch_size,
-        max_retries=max_retries,
+        max_retry=max_retries,
         sleep_step=sleep_step,
     ) as aggregator:
         try:
