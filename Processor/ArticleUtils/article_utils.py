@@ -104,15 +104,14 @@ def author_extract_transform(author: Tag | None | NavigableString):
         return None
 
     text = author.text.strip()
-    # Not name
-    if len(text.split(" ")) < 2:
-        return None
 
     return text
 
 
 def must_exist_filter(soup: BeautifulSoup, filter_dict: Dict[str, Any]):
-    must_exist = [soup.select_one(css_selector) for css_selector in filter_dict.values()]
+    must_exist = [
+        soup.select_one(css_selector) for css_selector in filter_dict.values()
+    ]
     if any(map(lambda x: x is None, must_exist)):
         return False
 
