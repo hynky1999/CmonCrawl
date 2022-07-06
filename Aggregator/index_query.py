@@ -17,6 +17,9 @@ import random
 DEFAULT_ENCODING = "latin-1"
 
 
+ALLOWED_ERR_FOR_RETRIES = [500, 502, 503]
+
+
 @dataclass
 class DomainCrawl:
     domain: str = ""
@@ -148,7 +151,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
             logging.error(e)
             raise PageResponseError(
                 domain,
-                status=0,
+                status=503,
                 reason=e.__class__.__name__,
                 cdx_server=cdx_server,
                 **args,
@@ -180,10 +183,10 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         client: ClientSession,
         cdx_server: str,
         domain: str,
-        page: int = 0,
+        retry: int,
+        page: int,
         since: datetime = datetime.min,
         to: datetime = datetime.max,
-        retry: int = 0,
     ) -> List[DomainRecord]:
         params: Dict[str, str | int] = {
             "output": "json",
@@ -270,6 +273,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         async def __prefetch_next_crawl(self) -> int:
             while len(self.__crawls_remaining) > 0:
                 next_crawl = self.__crawls_remaining.popleft()
+                pages = 0
                 for i in range(self.__max_retry):
                     try:
                         pages, _ = await IndexAggregator.get_number_of_pages(
@@ -279,15 +283,20 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
                             f"Succeeded to get number of pages = {pages} of {next_crawl.domain} from {next_crawl.cdx_server}"
                         )
                         break
-                    except (PageResponseError, TimeoutError):
+                    except (PageResponseError) as err:
                         # Wait some time before retrying
                         logging.error(
-                            f"Failed to retrieve number of pages for {next_crawl.domain} of {next_crawl.cdx_server}"
+                            f"Failed to retrieve number of pages of {err.domain} from {err.cdx_server} with reason {err.status}: {err.reason} retry: {err.retry}/{self.__max_retry}"
                         )
+                        if (
+                            err.retry >= self.__max_retry
+                            or err.status not in ALLOWED_ERR_FOR_RETRIES
+                        ):
+                            break
+
                         await asyncio.sleep(
                             random.randint(0, (i + 1) * self.__sleep_step)
                         )
-                        pass
                 else:
                     # Failed to retrieve it
                     return await self.__prefetch_next_crawl()
@@ -325,9 +334,12 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
                 except PageResponseError as err:
                     # Only when Temporaly Unavailable
                     logging.error(
-                        f"Failed to retrieve page {err.page} of {err.domain} from {err.cdx_server} with reason {err.reason} retry: {err.retry}/{self.__max_retry}"
+                        f"Failed to retrieve page {err.page} of {err.domain} from {err.cdx_server} with reason {err.status}: {err.reason} retry: {err.retry}/{self.__max_retry}"
                     )
-                    if err.retry < self.__max_retry and err.status == 503:
+                    if (
+                        err.retry < self.__max_retry
+                        and err.status in ALLOWED_ERR_FOR_RETRIES
+                    ):
                         await asyncio.sleep(
                             random.randint(0, self.__sleep_step * (1 + err.retry))
                         )

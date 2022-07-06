@@ -35,7 +35,7 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
 
     async def test_caputred_responses(self):
         responses = await self.di.get_captured_responses(
-            self.client, self.CC_SERVERS[0], "idnes.cz", page=0
+            self.client, self.CC_SERVERS[0], "idnes.cz", retry=0, page=0
         )
         self.assertEqual(len(responses), 12066)
         print("XDDDDD", self.client.closed)
@@ -99,7 +99,7 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
 
     async def test_cancel_iterator_tasks(self):
         self.di.limit = 10
-        async for record in self.di:
+        async for _ in self.di:
             pass
         await self.di.aclose(None, None, None)
         for iterator in self.di.iterators:
