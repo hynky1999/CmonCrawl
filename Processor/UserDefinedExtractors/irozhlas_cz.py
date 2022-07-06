@@ -1,25 +1,22 @@
 from datetime import datetime
-import re
+import logging
 from typing import Any, Callable, Dict
-from Extractor.extractor_utils import (
-    TagDescriptor,
-    get_tag_transform,
-)
 from utils import PipeMetadata
-from bs4 import BeautifulSoup, NavigableString, Tag
+from bs4 import BeautifulSoup, Tag
 from ArticleUtils.article_extractor import ArticleExtractor
 
 from ArticleUtils.article_utils import (
+    ALLOWED_H,
     article_extract_transform,
     article_transform,
     author_extract_transform,
     head_extract_transform,
+    must_exist_filter,
     must_not_exist_filter,
 )
 
-
-head_extract_dict: Dict[str, TagDescriptor] = {
-    "headline": TagDescriptor("meta", {"property": "og:title"}),
+head_extract_dict: Dict[str, str] = {
+    "headline": "meta[property='og:title']",
 }
 
 
@@ -29,30 +26,29 @@ head_extract_transform_dict: Dict[str, Callable[[str], Any]] = {
 
 
 article_extract_dict: Dict[str, Any] = {
-    "brief": TagDescriptor("div", {"class": "opener"}),
-    "content": TagDescriptor("div", {"class": "bbtext"}),
-    "author": TagDescriptor("div", {"class": "authors"}),
-    "comments_num": TagDescriptor("li", {"class": "community-discusion"}),
+    "brief": "header.b-detail__head > p.text-lg",
+    "content": "div.b-detail",
+    "author": "div.b-detail > p.meta strong",
+    "publication_date": "header.b-detail__head > p.meta time",
 }
 
 article_extract_transform_dict: Dict[str, Callable[[Tag], Any]] = {
-    "content": article_transform,
-    "brief": lambda x: x.text if x else None,
-    "author": lambda x: author_extract_transform(
-        get_tag_transform(x)(TagDescriptor("span", {"itemprop": "name"}))
+    "content": lambda x: article_transform(
+        x, fc_eval=lambda x: x.name in [*ALLOWED_H, "p"] and len(x.attrs) == 0
     ),
-    "comments_num": lambda x: idnes_extract_comments_num(x),
+    "brief": lambda x: x.text if x else None,
+    "author": author_extract_transform,
+    "publication_date": lambda x: irozhlas_extract_date(x),
 }
 
 
 filter_head_extract_dict: Dict[str, Any] = {
-    "type": TagDescriptor("meta", {"property": "og:type"}),
+    "type": "meta[property='og:type']",
 }
 
-filter_must_not_exist: Dict[str, TagDescriptor] = {
+filter_must_exist: Dict[str, str] = {
     # Prevents Premium "articles"
-    "idnes_plus": TagDescriptor("div", {"id": "paywall-unlock"}),
-    "brisk": TagDescriptor("span", {"class": "brisk", "text": "Soutěž"}),
+    "menu": "#menu-main",
 }
 
 
@@ -63,7 +59,7 @@ class Extractor(ArticleExtractor):
         )
 
         extracted_article = article_extract_transform(
-            soup.find(attrs={"id": "content"}),
+            soup.select_one("article[role='article']"),
             article_extract_dict,
             article_extract_transform_dict,
         )
@@ -72,6 +68,8 @@ class Extractor(ArticleExtractor):
         extracted_dict = {**extracted_head, **extracted_article}
         category = metadata.url_parsed.path.split("/")[1]
         extracted_dict["category"] = category
+        extracted_dict["keywords"] = None
+        extracted_dict["comments_num"] = None
 
         return extracted_dict
 
@@ -82,16 +80,37 @@ class Extractor(ArticleExtractor):
         if head_extracted.get("type") != "article":
             return False
 
-        if not must_not_exist_filter(soup, filter_must_not_exist):
+        if not must_exist_filter(soup, filter_must_exist):
             return False
 
         return True
 
 
-def idnes_extract_comments_num(tag: Tag | NavigableString | None):
-    if tag is None:
+CZ_EN_MONTHS = [
+    "ledna",
+    "února",
+    "března",
+    "dubna",
+    "května",
+    "června",
+    "července",
+    "srpna",
+    "září",
+    "října",
+    "listopadu",
+    "prosince",
+]
+
+
+def irozhlas_extract_date(date_tag: Tag | None):
+    if date_tag is None:
         return None
-    comments_num = re.search(r"(\d+) (přísp)", tag.text)
-    if comments_num is None:
+    date_str = date_tag.text
+    try:
+        _, day, month, year = list(map(lambda x: x.strip(". \n"), date_str.split()))
+        month = CZ_EN_MONTHS.index(month) + 1
+        date_iso = f"{year}-{month:02}-{int(day):02}"
+        return datetime.fromisoformat(date_iso)
+    except ValueError:
+        logging.error(f"IROZHLAS Invalid date: {date_str}")
         return None
-    return comments_num.group(1)
