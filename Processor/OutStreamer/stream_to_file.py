@@ -134,3 +134,16 @@ class OutStreamerFileJSON(OutStreamerFileDefault):
             ensure_ascii=False,
             indent=indent,
         )
+
+
+class OutStreamerFileHTMLContent(OutStreamerFileDefault):
+    def __init__(
+        self,
+        origin: Path,
+        extension: str = ".html",
+        **kwargs: Dict[Any, Any],
+    ):
+        super().__init__(origin, extension, **kwargs)
+
+    def metadata_to_string(self, extracted_data: Dict[Any, Any]) -> str:
+        return extracted_data["html"]

@@ -14,7 +14,7 @@ from aiohttp import ClientError, ClientSession, ContentTypeError
 import asyncio
 import random
 
-DEFAULT_ENCODING = "latin-1"
+DEFAULT_ENCODING = "utf-8"
 
 
 ALLOWED_ERR_FOR_RETRIES = [500, 502, 503]
@@ -285,8 +285,13 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
                         break
                     except (PageResponseError) as err:
                         # Wait some time before retrying
+                        max_retry = (
+                            self.__max_retry
+                            if err.status in ALLOWED_ERR_FOR_RETRIES
+                            else 0
+                        )
                         logging.error(
-                            f"Failed to retrieve number of pages of {err.domain} from {err.cdx_server} with reason {err.status}: {err.reason} retry: {err.retry}/{self.__max_retry}"
+                            f"Failed to retrieve number of pages of {err.domain} from {err.cdx_server} with reason {err.status}: {err.reason} retry: {err.retry}/{max_retry}"
                         )
                         if (
                             err.retry >= self.__max_retry
@@ -333,8 +338,11 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
 
                 except PageResponseError as err:
                     # Only when Temporaly Unavailable
+                    max_retry = (
+                        self.__max_retry if err.status in ALLOWED_ERR_FOR_RETRIES else 0
+                    )
                     logging.error(
-                        f"Failed to retrieve page {err.page} of {err.domain} from {err.cdx_server} with reason {err.status}: {err.reason} retry: {err.retry}/{self.__max_retry}"
+                        f"Failed to retrieve page {err.page} of {err.domain} from {err.cdx_server} with reason {err.status}: {err.reason} retry: {err.retry}/{max_retry}"
                     )
                     if (
                         err.retry < self.__max_retry
@@ -362,9 +370,14 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
                 self.clean()
                 raise StopAsyncIteration
 
-            if len(self.__domain_records.records) == 0:
+            # Nothing prefetched
+            while len(self.__domain_records.records) == 0:
                 prefetch_size = await self.__await_next_prefetch()
-                if prefetch_size == 0:
+                if (
+                    prefetch_size == 0
+                    and len(self.prefetch_queue) == 0
+                    and len(self.__crawls_remaining) == 0
+                ):
                     # No more data to fetch
                     self.clean()
                     raise StopAsyncIteration
