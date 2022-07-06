@@ -2,6 +2,7 @@ from __future__ import annotations
 from collections import deque
 from dataclasses import dataclass
 from datetime import datetime
+import logging
 import re
 
 from errors import PageResponseError
@@ -9,7 +10,7 @@ from ndjson_decoder import Decoder
 from types import TracebackType
 from typing import Any, AsyncIterable, AsyncIterator, Deque, List, Dict, Tuple, Type
 
-from aiohttp import ClientSession, ContentTypeError
+from aiohttp import ClientError, ClientSession, ContentTypeError
 import asyncio
 import random
 
@@ -109,6 +110,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         exc_val: BaseException | None,
         exc_tb: TracebackType | None = None,
     ) -> IndexAggregator:
+        print("CLOSING")
         return await self.aclose(exc_type=exc_type, exc_val=exc_val, exc_tb=exc_tb)
 
     @staticmethod
@@ -120,27 +122,37 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         content_type: str,
         **args: Any,
     ):
-        async with client.get(cdx_server, params=params) as response:
-            if not response.ok:
-                raise PageResponseError(
-                    domain,
-                    status=response.status,
-                    reason=response.reason,
-                    cdx_server=cdx_server,
-                    **args,
-                )
-            try:
-                return await response.json(
-                    content_type=content_type, loads=Decoder().decode
-                )
-            except ContentTypeError as e:
-                raise PageResponseError(
-                    cdx_server,
-                    status=e.status,
-                    reason=e.message,
-                    cdx_server=cdx_server,
-                    **args,
-                )
+        try:
+            async with client.get(cdx_server, params=params) as response:
+                if not response.ok:
+                    raise PageResponseError(
+                        domain,
+                        status=response.status,
+                        reason=response.reason,
+                        cdx_server=cdx_server,
+                        **args,
+                    )
+                try:
+                    return await response.json(
+                        content_type=content_type, loads=Decoder().decode
+                    )
+                except ContentTypeError as e:
+                    raise PageResponseError(
+                        cdx_server,
+                        status=e.status,
+                        reason=e.message,
+                        cdx_server=cdx_server,
+                        **args,
+                    )
+        except (ClientError, TimeoutError) as e:
+            logging.error(e)
+            raise PageResponseError(
+                domain,
+                status=0,
+                reason=e.__class__.__name__,
+                cdx_server=cdx_server,
+                **args,
+            )
 
     @staticmethod
     async def get_number_of_pages(
@@ -263,13 +275,13 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
                         pages, _ = await IndexAggregator.get_number_of_pages(
                             self.__client, next_crawl.cdx_server, next_crawl.domain
                         )
-                        print(
+                        logging.info(
                             f"Succeeded to get number of pages = {pages} of {next_crawl.domain} from {next_crawl.cdx_server}"
                         )
                         break
-                    except PageResponseError:
+                    except (PageResponseError, TimeoutError):
                         # Wait some time before retrying
-                        print(
+                        logging.error(
                             f"Failed to retrieve number of pages for {next_crawl.domain} of {next_crawl.cdx_server}"
                         )
                         await asyncio.sleep(
@@ -305,14 +317,14 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
                 task = self.prefetch_queue.popleft()
                 try:
                     self.__domain_records = await task
-                    print(
+                    logging.info(
                         f"Suceeded to prefetch page {self.__domain_records.origin.page} of {self.__domain_records.origin.domain} from {self.__domain_records.origin.cdx_server}"
                     )
                     return len(self.__domain_records.records)
 
                 except PageResponseError as err:
                     # Only when Temporaly Unavailable
-                    print(
+                    logging.error(
                         f"Failed to retrieve page {err.page} of {err.domain} from {err.cdx_server} with reason {err.reason} retry: {err.retry}/{self.__max_retry}"
                     )
                     if err.retry < self.__max_retry and err.status == 503:

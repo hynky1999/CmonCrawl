@@ -1,4 +1,5 @@
 import importlib.util
+import logging
 import os
 import sys
 import re
@@ -56,5 +57,6 @@ class Router:
         for route in self.registered_routes:
             for regex in route.regexes:
                 if regex.match(url):
+                    logging.debug(f"Routed {url} to {route.name}")
                     return self.modules[route.name]
         raise ValueError("No route found for url: " + url)

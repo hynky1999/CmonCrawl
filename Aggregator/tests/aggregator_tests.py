@@ -38,6 +38,7 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
             self.client, self.CC_SERVERS[0], "idnes.cz", page=0
         )
         self.assertEqual(len(responses), 12066)
+        print("XDDDDD", self.client.closed)
 
     async def test_since(self):
         # That is crawl date not published date
