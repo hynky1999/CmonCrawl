@@ -7,7 +7,7 @@ class PageResponseError(BaseException):
         cdx_server: str,
         *args: object,
         page: int = 0,
-        retries: int = 0
+        retry: int = 0
     ) -> None:
         super().__init__(*args)
         self.domain = domain
@@ -15,7 +15,7 @@ class PageResponseError(BaseException):
         self.cdx_server = cdx_server
         self.status = status
         self.reason = reason
-        self.retires = retries
+        self.retry = retry
 
 
 class LimitError(BaseException):
