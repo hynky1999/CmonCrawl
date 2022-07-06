@@ -105,6 +105,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         exc_val: BaseException | None,
         exc_tb: TracebackType | None = None,
     ) -> IndexAggregator:
+        print("CLOSING")
         return await self.aclose(exc_type=exc_type, exc_val=exc_val, exc_tb=exc_tb)
 
     @staticmethod

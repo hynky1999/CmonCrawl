@@ -8,7 +8,7 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self) -> None:
         self.CC_SERVERS = ["https://index.commoncrawl.org/CC-MAIN-2022-05-index"]
         self.di = await IndexAggregator(
-            ["idnes.cz"], cc_servers=self.CC_SERVERS, max_retries=50
+            ["idnes.cz"], cc_servers=self.CC_SERVERS, max_retries=100
         ).aopen()
         self.client = self.di.client
 
@@ -35,6 +35,7 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
             self.client, self.CC_SERVERS[0], "idnes.cz", page=0
         )
         self.assertEqual(len(responses), 12066)
+        print("XDDDDD", self.client.closed)
 
     async def test_since(self):
         # That is crawl date not published date
