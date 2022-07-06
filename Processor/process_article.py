@@ -56,4 +56,5 @@ if __name__ == "__main__":
     router.register_route("aktualne_cz", [r".*aktualne\.cz.*"])
     router.register_route("idnes_cz", [r".*idnes\.cz.*"])
     router.register_route("seznamzpravy_cz", [r".*seznamzpravy\.cz.*"])
+    router.register_route("irozhlas_cz", [r".*irozhlas\.cz.*"])
     asyncio.run(article_process(**vars(args), router=router))

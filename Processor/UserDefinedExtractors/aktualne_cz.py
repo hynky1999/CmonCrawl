@@ -1,8 +1,5 @@
 from datetime import datetime
 from typing import Any, Callable, Dict
-from Extractor.extractor_utils import (
-    TagDescriptor,
-)
 from utils import PipeMetadata
 from bs4 import BeautifulSoup, Tag
 from ArticleUtils.article_extractor import ArticleExtractor
@@ -12,14 +9,15 @@ from ArticleUtils.article_utils import (
     article_transform,
     author_extract_transform,
     head_extract_transform,
+    must_exist_filter,
 )
 
 
-head_extract_dict: Dict[str, TagDescriptor] = {
-    "headline": TagDescriptor("meta", {"property": "og:title"}),
-    "keywords": TagDescriptor("meta", {"name": "keywords"}),
-    "publication_date": TagDescriptor("meta", {"property": "article:published_time"}),
-    "category": TagDescriptor("meta", {"property": "article:section"}),
+head_extract_dict: Dict[str, str] = {
+    "headline": "meta[property='og:title']",
+    "keywords": "meta[name='keywords']",
+    "publication_date": "meta[property='article:published_time']",
+    "category": "meta[property='article:section']",
 }
 
 
@@ -31,9 +29,9 @@ head_extract_transform_dict: Dict[str, Callable[[str], Any]] = {
 
 
 article_extract_dict: Dict[str, Any] = {
-    "brief": TagDescriptor("div", {"class": "article__perex"}),
-    "content": TagDescriptor("div", {"class": "article__content"}),
-    "author": TagDescriptor("a", {"class": "author__name"}),
+    "brief": "div[class='article__perex']",
+    "content": "div[class='article__content']",
+    "author": "a[class='author__name']",
 }
 
 
@@ -45,12 +43,12 @@ article_extract_transform_dict: Dict[str, Callable[[Tag], Any]] = {
 
 
 filter_head_extract_dict: Dict[str, Any] = {
-    "type": TagDescriptor("meta", {"property": "og:type"}),
+    "type": "meta[property='og:type']",
 }
 
-filter_must_exist: Dict[str, TagDescriptor] = {
+filter_must_exist: Dict[str, str] = {
     # Prevents Aktualne+ "articles"
-    "aktualne_upper_menu": TagDescriptor("div", {"id": "aktu-menu-spa"}),
+    "aktualne_upper_menu": "div[id='aktu-menu-spa']",
 }
 
 filter_allowed_domain_prefixes = ["zpravy", "nazory", "sport", "magazin"]
@@ -63,7 +61,7 @@ class Extractor(ArticleExtractor):
         )
 
         extracted_article = article_extract_transform(
-            soup.find(attrs={"class": "page clearfix"}),
+            soup.select_one("div.page"),
             article_extract_dict,
             article_extract_transform_dict,
         )
@@ -87,11 +85,7 @@ class Extractor(ArticleExtractor):
         if head_extracted["type"] != "article":
             return False
 
-        must_exist = [
-            soup.find(tag_desc.tag, **tag_desc.attrs)
-            for tag_desc in filter_must_exist.values()
-        ]
-        if any(map(lambda x: x is None, must_exist)):
+        if not must_exist_filter(soup, filter_must_exist):
             return False
 
         return True

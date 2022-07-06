@@ -4,7 +4,6 @@ from xmlrpc.client import Boolean
 from bs4 import BeautifulSoup, NavigableString, Tag
 
 from Extractor.extractor_utils import (
-    TagDescriptor,
     all_same_transform,
     get_attribute_transform,
     get_tag_transform,
@@ -53,10 +52,10 @@ def text_unification_transform(text: Any):
 
 def head_extract_transform(
     soup: BeautifulSoup,
-    head_extract_dict: Dict[str, TagDescriptor],
+    head_extract_dict: Dict[str, str],
     head_extract_transform_dict: Dict[str, Callable[[str], Any]],
 ) -> Dict[str, Any]:
-    head = soup.find("head")
+    head = soup.select_one("head")
     if head is None or isinstance(head, NavigableString):
         return dict()
 
@@ -81,7 +80,7 @@ def head_extract_transform(
 
 def article_extract_transform(
     soup: BeautifulSoup | Tag | NavigableString | None,
-    article_extract_dict: Dict[str, TagDescriptor],
+    article_extract_dict: Dict[str, str],
     article_extract_transform_dict: Dict[str, Callable[[Tag], Any]],
 ) -> Dict[str, Any]:
     if soup is None:
@@ -113,9 +112,7 @@ def author_extract_transform(author: Tag | None | NavigableString):
 
 
 def must_exist_filter(soup: BeautifulSoup, filter_dict: Dict[str, Any]):
-    must_exist = [
-        soup.find(tag_desc.tag, **tag_desc.attrs) for tag_desc in filter_dict.values()
-    ]
+    must_exist = [soup.select_one(css_selector) for css_selector in filter_dict.values()]
     if any(map(lambda x: x is None, must_exist)):
         return False
 
@@ -124,7 +121,7 @@ def must_exist_filter(soup: BeautifulSoup, filter_dict: Dict[str, Any]):
 
 def must_not_exist_filter(soup: BeautifulSoup, filter_dict: Dict[str, Any]):
     must_not_exist = [
-        soup.find(tag_desc.tag, **tag_desc.attrs) for tag_desc in filter_dict.values()
+        soup.select_one(css_selector) for css_selector in filter_dict.values()
     ]
     if any(map(lambda x: x is not None, must_not_exist)):
         return False
