@@ -8,6 +8,7 @@ from types import TracebackType
 from aiohttp import ClientError, ClientSession
 from typing import Type
 from hashlib import md5, sha1
+from chardet import detect
 
 from Downloader.errors import PageDownloadException
 from Downloader.warc import PipeMetadata, parse_warc
@@ -53,9 +54,10 @@ class Downloader:
                         domain_record, response.reason, response.status
                     )
                 # will be unziped
-                reponse_bytes = await response.content.read()
+                response_bytes = await response.content.read()
             content = parse_warc(
-                self.unwrap(reponse_bytes, metadata.domain_record.encoding), metadata
+                self.unwrap(response_bytes, metadata.domain_record.encoding),
+                metadata,
             )
         except (ClientError, TimeoutError) as e:
             logging.error(e)
@@ -73,7 +75,16 @@ class Downloader:
             if metadata.warc_header is None:
                 raise ValueError("No digest found")
 
-            hash_type, hash = metadata.warc_header["payload_digest"].split(":")
+            digest = metadata.warc_header.get("payload_digest")
+            if digest is None:
+                logging.warn(
+                    "Warc header has no digest, using digest from domain record"
+                )
+                if metadata.domain_record.digest is None:
+                    raise ValueError("Digest is missing in domain record")
+                hash_type, hash = "sha1", metadata.domain_record.digest
+            else:
+                hash_type, hash = digest.split(":")
             digest = metadata.domain_record.digest
             if digest is not None and digest != hash:
                 raise ValueError(f'Digest mismatch: "{digest}" != "{hash}"')
@@ -108,6 +119,7 @@ class Downloader:
 
     def unwrap(self, response: bytes, encoding: str) -> str:
         content = gzip.decompress(response).decode(encoding)
+
         return content
 
     async def aclose(

@@ -32,13 +32,16 @@ class BaseExtractor(ABC):
         raise NotImplementedError()
 
     def preprocess(self, response: str, metadata: PipeMetadata) -> str:
-        linux_decoded = response.replace("\r\n", "\n")
+        linux = response.replace("\r\n", "\n")
         charset = metadata.http_header.get("charset")
         if charset is None:
-            html_charset_match = re.search(r"(?<=charset=)([^\s\"]+)", linux_decoded)
+            html_charset_match = re.search(r"(?<=charset=)\s*\"([\w-]+)\"", linux)
             if html_charset_match is not None:
-                charset = html_charset_match.group(0).lower()
+                charset = html_charset_match.group(1).lower()
         if charset is None:
             charset = metadata.domain_record.encoding
 
-        return linux_decoded.encode(metadata.domain_record.encoding).decode(charset)
+        decoded = linux.encode(metadata.domain_record.encoding, "replace").decode(
+            charset, "replace"
+        )
+        return decoded

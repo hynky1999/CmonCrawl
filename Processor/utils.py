@@ -1,9 +1,8 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any, Dict
 from urllib.parse import urlparse
-
-DEFAULT_ENCODING = "latin-1"
+DEFAULT_ENCODING = "utf-8"
 
 
 @dataclass
@@ -24,9 +23,9 @@ class PipeMetadata:
     """
 
     domain_record: DomainRecord
-    article_data: Dict[Any, Any] | None = None
-    warc_header: Dict[str, Any] | None = None
-    http_header: Dict[str, Any] | None = None
+    article_data: Dict[Any, Any] = field(default_factory=dict)
+    warc_header: Dict[str, Any] = field(default_factory=dict)
+    http_header: Dict[str, Any] = field(default_factory=dict)
     name: str | None = None
 
     def __post_init__(self):

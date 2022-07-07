@@ -20,9 +20,7 @@ class ArticleExtractor(BaseExtractor):
         # Assumes headline is required
         assert "headline" in REQUIRED_FIELDS
 
-        metadata.name = extracted_dict.get("headline")
-        if metadata.name is not None:
-            metadata.name = f"{metadata.url_parsed.netloc.split('.')[-1]}_{metadata.name.strip()[:12]}"
+        metadata.name = metadata.domain_record.url.replace("/", "_")[:30]
 
         metadata.article_data = extracted_dict
         return extracted_dict

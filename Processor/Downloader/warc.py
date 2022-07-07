@@ -1,4 +1,5 @@
 from datetime import datetime
+import logging
 import re
 from typing import Any, Dict
 from datetime import datetime
@@ -14,7 +15,7 @@ def parse_warc_header(warc: str):
         content_type is None
         or content_type.group(0) != "application/http; msgtype=response"
     ):
-        raise ValueError("Not html content-type")
+        logging.warn("Not html content-type or WARC header not found")
 
     payload_digest = re.search("(?<=WARC-Payload-Digest: )(.*)", warc)
     if payload_digest is not None:
@@ -47,9 +48,17 @@ def parse_http_header(http: str):
 
 
 def parse_warc(warc_str: str, metadata: PipeMetadata):
-    warc_h, http_h, html = warc_str.split("\r\n\r\n", maxsplit=2)
-    # Strip last separator \r\n\r\n
-    html = html[:-4]
+    splitted = warc_str.split("\r\n\r\n", maxsplit=2)
+    warc_h, http_h, html = "", "", ""
+    if len(splitted) == 2:
+        # Old format without warc header
+        http_h, html = splitted
+        html = html[:-1]
+        # Strip last separator \n
+    elif len(splitted) == 3:
+        warc_h, http_h, html = splitted
+        html = html[:-4]
+        # Strip last separator \r\n\r\n
     metadata.warc_header = parse_warc_header(warc_h)
     metadata.http_header = parse_http_header(http_h)
     return html

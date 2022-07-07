@@ -1,6 +1,7 @@
 name: processor
 channels:
   - conda-forge
+  - anaconda
   - defaults
 dependencies:
   - _libgcc_mutex=0.1=main
@@ -16,6 +17,7 @@ dependencies:
   - ca-certificates=2022.4.26=h06a4308_0
   - certifi=2022.6.15=py310h06a4308_0
   - cffi=1.15.0=py310hd667e15_1
+  - chardet=4.0.0=py310h06a4308_1003
   - charset-normalizer=2.0.4=pyhd3eb1b0_0
   - cryptography=37.0.2=py310h597c629_0
   - docopt=0.6.2=py_1
@@ -29,7 +31,7 @@ dependencies:
   - libuuid=1.0.3=h7f8727e_2
   - multidict=5.1.0=py310h7f8727e_2
   - ncurses=6.3=h7f8727e_2
-  - openssl=1.1.1p=h5eee18b_0
+  - openssl=1.1.1o=h7f8727e_0
   - pip=21.2.4=py310h06a4308_0
   - pycparser=2.21=pyhd8ed1ab_0
   - pyopenssl=20.0.1=pyhd8ed1ab_0
