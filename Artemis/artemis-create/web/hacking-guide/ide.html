@@ -1,0 +1,460 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <title>IDE Integration · ActiveMQ Artemis Documentation</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.7.1">
+        
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="building.html" />
+    
+    
+    <link rel="prev" href="code.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="notice.html">
+            
+                <a href="notice.html">
+            
+                    
+                    Legal Notice
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="code.html">
+            
+                <a href="code.html">
+            
+                    
+                    Working with the Code
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.4" data-path="ide.html">
+            
+                <a href="ide.html">
+            
+                    
+                    IDE Integration
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="building.html">
+            
+                <a href="building.html">
+            
+                    
+                    Building
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="tests.html">
+            
+                <a href="tests.html">
+            
+                    
+                    Tests
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="code-coverage-report.html">
+            
+                <a href="code-coverage-report.html">
+            
+                    
+                    Code coverage report
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="formatting.html">
+            
+                <a href="formatting.html">
+            
+                    
+                    Code Formatting
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="validating-releases.html">
+            
+                <a href="validating-releases.html">
+            
+                    
+                    Validating releases
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10" data-path="maintainers.html">
+            
+                <a href="maintainers.html">
+            
+                    
+                    Notes for Maintainers
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11" data-path="history.html">
+            
+                <a href="history.html">
+            
+                    
+                    History
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >IDE Integration</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="ide-integration">IDE Integration</h1>
+<p>There a few files useful for IDE integration under ./etc/ide-settings on a checked out folder. This folder is not part of the source distribution, but it can be easily obtained:</p>
+<ul>
+<li><a href="https://github.com/apache/activemq-artemis/tree/master/etc/ide-settings" target="_blank">https://github.com/apache/activemq-artemis/tree/master/etc/ide-settings</a></li>
+</ul>
+<h2 id="intellij-idea">IntelliJ IDEA</h2>
+<h3 id="importing-the-project">Importing the Project</h3>
+<p>The following steps show how to open the ActiveMQ Artemis maven project in IntelliJ IDEA and setup the correct maven profile to allow running of JUnit tests from within the IDE.  (Steps are based on version: 2018.2)</p>
+<ul>
+<li>Starting from a clean clone</li>
+<li>Build the activemq-artemis source using the maven &apos;dev&apos; profile:</li>
+</ul>
+<p>$ mvn -Pdev install -DskipTests=true</p>
+<ul>
+<li>Await and ensure the outcome is BUILD SUCCESS</li>
+<li>Launch IntelliJ</li>
+<li>From the &apos;Welcome to IntelliJ IDEA&apos; screen select &apos;Open&apos;</li>
+<li>From the &apos;Open File or Project&apos; screen select the pom.xml file in the cloned activemq-artemis directory </li>
+<li>From the &apos;Open Project&apos; screen select &apos;Open as Project&apos;</li>
+</ul>
+<p>This should open the main IntelliJ IDEA window where you will notice some background tasks running via the bottom status bar. These background tasks should successfully import and index the project automatically.</p>
+<p>Once the project has been imported and IntelliJ IDEA has caught up importing all the relevant dependencies, you should be able to run JUnit tests from with the IDE.  Select any test class in the tests -&gt; integration tests folder.  Right click on the class in the project tab and click &quot;Run <classname>&quot;.  If the &quot;Run <classname>&quot; option is present then you&apos;re all set to go.</classname></classname></p>
+<h3 id="note-about-ibm-jdk-on-idea">Note about IBM JDK on Idea</h3>
+<p>If you are running IBM JDK it may be a little tricky to get it working.</p>
+<p>After you add the JDK to the IDE, add also the vm.jar specific to your platform under that jdk.</p>
+<pre><code>(e.g: JAVA_HOME/jre/lib/amd64/default/jclSC180/vm.jar
+</code></pre><p>There&apos;s a <a href="https://stackoverflow.com/questions/27906481/can-intellij-14-be-used-to-work-with-ibm-jdk-1-7/32852361#32852361" target="_blank">SOF Question</a> about this that could be useful in case you are running into this issue.</p>
+<h3 id="style-templates-and-inspection-settings-for-idea">Style Templates and Inspection Settings for Idea</h3>
+<p>We have shared the style templates that are good for this project. If you want to apply them use these steps:</p>
+<ul>
+<li>File-&gt;Import Settings</li>
+<li>Select the file under ./artemis-cloned-folder/etc/ide-settings/idea/IDEA-style.jar</li>
+<li>Select both Code Style Templates and File templates (it&apos;s the default option)</li>
+<li>Select OK and restart Idea</li>
+</ul>
+<p>Alternatively you can copy artemis-codestyle.xml under your home settings at <code>IntelliJIdea15/codestyles</code>.</p>
+<h4 id="to-import-inspection-settings">To import inspection settings:</h4>
+<ul>
+<li>File-&gt;Settings-&gt;Editor-&gt;Inspections-&gt;Manage-&gt;Import</li>
+<li>Select the file ./artemis-cloned-folder/etc/ide-settings/idea/artemis-inspections.xml</li>
+<li>Select OK</li>
+</ul>
+<h3 id="issue-my-junit-tests-are-not-runnable-with-in-the-ide">Issue: My JUnit tests are not runnable with in the IDE.</h3>
+<p>If the &quot;Run <classname>&quot; or &quot;Run all tests&quot; option is not present.  It is likely that the default profile has not been
+imported properly.  To (re)import the &quot;tests&quot; Maven profile in an existing project.</classname></p>
+<ul>
+<li>Open the Maven Projects Tool Window: View -&gt; Tool Windows -&gt; Maven Projects</li>
+<li>Select the &quot;profiles&quot; drop down</li>
+<li>Unselect then reselect the checkbox next to &quot;tests&quot;.</li>
+<li>Click on the &quot;Reimport all maven projects&quot; button in the top left hand corner of the window. (It looks like a circular
+blue arrow.</li>
+<li>Wait for IDEA to reload and try running a JUnit test again.  The option to run should now be present.</li>
+</ul>
+<h2 id="eclipse">Eclipse</h2>
+<p>We recommend using Eclipse Kepler (4.3), due to the built-in support for Maven and Git. Note that there are still some
+Maven plugins used by sub-projects (e.g. documentation) which are not supported even in Eclipse Kepler (4.3).</p>
+<p>Eclipse <a href="https://eclipse.org/m2e/" target="_blank">m2e</a> is already included in &quot;Eclipse IDE for Java Developers&quot;, or it can be installed
+from <a href="http://download.eclipse.org/releases/kepler" target="_blank">Eclipse Kepler release repository</a>.</p>
+<h3 id="git-setup">Git setup</h3>
+<p>It is strongly recommended to turn off the auto-updating of .gitignore files by the Git Team extension.  Otherwise, it
+generates new .gitignore files in many directories that are not needed due to the top level .gitignore file.  To turn
+it off, go to Preferences-&gt;Team-&gt;Git-&gt;Projects and deselect the &quot;Automatically ignore derived resources&quot; checkbox.</p>
+<h3 id="schema-setup">Schema setup</h3>
+<p>For proper schema validation you can add the Artemis schemas to your Eclipse XML Catalog</p>
+<ul>
+<li>Open: Window -&gt; Preferences -&gt; XML -&gt; XML Catalog</li>
+<li>Select Add -&gt; Workspace -&gt; Navigate to artemis-server and select src/main/resources/schema/artemis-server.xsd -&gt; click OK</li>
+<li>Repeat the above steps and add src/main/resources/schema/artemis-configuration.xsd</li>
+</ul>
+<h3 id="checkstyle-setup">Checkstyle setup</h3>
+<p>You can import the Artemis Checkstyle template into eclipse to do Checkstyle validation. As a prerequisite you need to make sure the Checkstyle plugin is installed into Eclipse which you can get form the Eclipse Marketplace. You also will need to configure Sevntu-Checkstyle. See <a href="https://sevntu-checkstyle.github.io/sevntu.checkstyle/" target="_blank">https://sevntu-checkstyle.github.io/sevntu.checkstyle/</a> for instructions. Then to configure the template:</p>
+<ul>
+<li>Open: Window -&gt; Preferences -&gt; Checkstyle</li>
+<li>Select New -&gt; &quot;Project Relative Configuration&quot; in the &quot;Type&quot; dropdown</li>
+<li>Give the configuration a name and under location put &quot;/artemis-pom/etc/checkstyle.xml&quot; then hit ok</li>
+<li>You should now see your new configuration in the list of Checkstyle profiles.  You can select the new configuration as the default if you want.</li>
+</ul>
+<h3 id="annotation-pre-processing">Annotation Pre-Processing</h3>
+<p>ActiveMQ Artemis uses <a href="https://developer.jboss.org/wiki/JBossLoggingTooling" target="_blank">JBoss Logging</a> and that requires source
+code generation from Java annotations. In order for it to &apos;just work&apos; in Eclipse you need to install the
+<em>Maven Integration for Eclipse JDT Annotation Processor Toolkit</em> <a href="https://github.com/jbosstools/m2e-apt" target="_blank">m2e-apt</a>. See
+this <a href="https://community.jboss.org/en/tools/blog/2012/05/20/annotation-processing-support-in-m2e-or-m2e-apt-100-is-out" target="_blank">JBoss blog post</a>
+ for details.</p>
+<h3 id="running-tests-from-eclipse">Running tests from Eclipse</h3>
+<p>Setting up annotation pre-processing in the above section is all you need to run tests in the &quot;unit-tests&quot; project as that will properly add the generated logger to the source.  However, one more step is needed to run tests in other projects such as &quot;performance-tests&quot; or &quot;integration-tests&quot; that have a dependency on &quot;unit-tests&quot;. Currently m2eclipse does not properly link the generated source annotations folder from &quot;unit-tests&quot; which causes the logger that is generated to not be available.  To simplest way to fix this is to manually add a project dependency on &quot;unit-tests&quot; to each of the projects where you want to run a test class from:</p>
+<ul>
+<li>Right click on the test project (i.e. integration-tests): Properties -&gt; Java Build Path -&gt; Projects -&gt; Add</li>
+<li>Select the &quot;unit-tests&quot; project and click Ok</li>
+</ul>
+<p>You should now be able to run tests assuming that the annotation pre-processing was set up properly in the previous step.</p>
+<h3 id="m2e-connector-for-javacc-maven-plugin">M2E Connector for Javacc-Maven-Plugin</h3>
+<p>Eclipse Indigo (3.7) has out-of-the-box support for it.</p>
+<p>As of this writing, Eclipse Kepler (4.3) still lacks support for Maven&apos;s javacc plugin. The available <a href="https://github.com/objectledge/maven-extensions" target="_blank">m2e connector for
+javacc-maven-plugin</a> requires a downgrade of Maven components to be
+installed. manual installation instructions (as of this writing you need to use the development update site). See
+<a href="https://dev.eclipse.org/mhonarc/lists/m2e-users/msg02725.html" target="_blank">this post</a> for how to do this with Eclipse Juno (4.2).</p>
+<p>The current recommended solution for Eclipse Kepler is to mark <code>javacc-maven-plugin</code> as ignored by Eclipse, run Maven
+from the command line and then modify the project <code>activemq-core-client</code> adding the folder
+<code>target/generated-sources/javacc</code> to its build path.</p>
+<h3 id="use-project-working-sets">Use <em>Project Working Sets</em></h3>
+<p>Importing all ActiveMQ Artemis subprojects will create <em>too many</em> projects in Eclipse, cluttering your <em>Package Explorer</em>
+and <em>Project Explorer</em> views. One way to address that is to use
+<a href="https://help.eclipse.org/juno/index.jsp?topic=%2Forg.eclipse.platform.doc.user%2Fconcepts%2Fcworkset.htm" target="_blank">Eclipse&apos;s Working Sets</a>
+feature. A good introduction to it can be found at a
+<a href="https://dzone.com/articles/categorise-projects-package" target="_blank">Dzone article on Eclipse Working Sets</a>.</p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="code.html" class="navigation navigation-prev " aria-label="Previous page: Working with the Code">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="building.html" class="navigation navigation-next " aria-label="Next page: Building">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"IDE Integration","level":"1.4","depth":1,"next":{"title":"Building","level":"1.5","depth":1,"path":"building.md","ref":"building.md","articles":[]},"previous":{"title":"Working with the Code","level":"1.3","depth":1,"path":"code.md","ref":"code.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"styles":{"ebook":"styles/ebook.css","epub":"styles/epub.css","mobi":"styles/mobi.css","pdf":"styles/pdf.css","print":"styles/print.css","website":"styles/website.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"showLevel":false,"styles":{"ebook":"styles/ebook.css","epub":"styles/epub.css","mobi":"styles/mobi.css","pdf":"styles/pdf.css","print":"styles/print.css","website":"styles/website.css"}}},"github":"apache/activemq-artemis","theme":"default","githubHost":"https://github.com/","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"ActiveMQ Artemis Documentation","links":{"home":"http://activemq.apache.org/artemis","issues":"https://issues.apache.org/jira/browse/ARTEMIS","contribute":"http://activemq.apache.org/contributing.html"},"gitbook":"3.x.x","description":"ActiveMQ Artemis Hacking Guide"},"file":{"path":"ide.md","mtime":"2022-06-14T19:42:45.221Z","type":"markdown"},"gitbook":{"version":"3.7.1","time":"2022-06-14T19:55:35.207Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

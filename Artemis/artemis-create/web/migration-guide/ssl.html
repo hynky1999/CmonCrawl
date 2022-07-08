@@ -1,0 +1,415 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <title>SSL · ActiveMQ Artemis Documentation</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.7.1">
+        
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="message-store.html" />
+    
+    
+    <link rel="prev" href="authorization.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="preface.html">
+            
+                <a href="preface.html">
+            
+                    
+                    Preface
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="key-differences.html">
+            
+                <a href="key-differences.html">
+            
+                    
+                    Key Differences
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="configuration.html">
+            
+                <a href="configuration.html">
+            
+                    
+                    Configuration
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="connectors.html">
+            
+                <a href="connectors.html">
+            
+                    
+                    Connectors
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="destinations.html">
+            
+                <a href="destinations.html">
+            
+                    
+                    Destinations
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="VirtualTopics.html">
+            
+                <a href="VirtualTopics.html">
+            
+                    
+                    Virtual Topics
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="authentication.html">
+            
+                <a href="authentication.html">
+            
+                    
+                    Authentication
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="authorization.html">
+            
+                <a href="authorization.html">
+            
+                    
+                    Authorization
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.10" data-path="ssl.html">
+            
+                <a href="ssl.html">
+            
+                    
+                    SSL
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11" data-path="message-store.html">
+            
+                <a href="message-store.html">
+            
+                    
+                    Message Store
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12" data-path="notice.html">
+            
+                <a href="notice.html">
+            
+                    
+                    Legal Notice
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >SSL</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="ssl">SSL</h1>
+<p>The next interesting security related topic is encrypting transport layer using SSL. Both ActiveMQ and Artemis leverage JDK&apos;s Java Secure Socket Extension (JSSE), so things should be easy to migrate.</p>
+<p>Let&apos;s recap quickly how SSL is used in ActiveMQ. First, you need to define the <em>SSL Context</em>. You can do that using <code>&lt;sslContext&gt;</code> configuration section in <code>conf/activemq.xml</code>, like</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">sslContext</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">sslContext</span> <span class="hljs-attr">keyStore</span>=<span class="hljs-string">&quot;file:${activemq.conf}/broker.ks&quot;</span> <span class="hljs-attr">keyStorePassword</span>=<span class="hljs-string">&quot;password&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">sslContext</span>&gt;</span>
+</code></pre>
+<p>The SSL context defines key and trust stores to be used by the broker. After this, you set your transport connector with the <code>ssl</code> schema and  preferably some additional options. </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">transportConnectors</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">transportConnector</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;ssl&quot;</span> <span class="hljs-attr">uri</span>=<span class="hljs-string">&quot;ssl://localhost:61617?transport.needClientAuth=true&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">transportConnectors</span>&gt;</span>
+</code></pre>
+<p>These options are related to <a href="https://docs.oracle.com/javase/8/docs/api/javax/net/ssl/SSLServerSocket.html" target="_blank">SSLServerSocket</a> and are specified as URL parameters with the <code>transport.</code> prefix, like <code>needClientAuth</code> shown in the example above.</p>
+<p>In Artemis, Netty is responsible for all things related to the transport layer, so it handles SSL for us as well. All configuration options are set directly on the acceptor, like</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">acceptors</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">acceptor</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;netty-ssl-acceptor&quot;</span>&gt;</span>tcp://localhost:61617?sslEnabled=true;keyStorePath=${data.dir}/../etc/broker.ks;keyStorePassword=password;needClientAuth=true<span class="hljs-tag">&lt;/<span class="hljs-name">acceptor</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">acceptors</span>&gt;</span>
+</code></pre>
+<p>Note that we used the same Netty connector schema and just added <code>sslEnabled=true</code> parameter to use it with SSL. Next, we can go ahead and define key and trust stores. There&apos;s a slight difference in parameter naming between two brokers, as shown in the table below. </p>
+<table>
+<thead>
+<tr>
+<th>ActiveMQ</th>
+<th>Artemis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>keyStore</td>
+<td>keyStorePath</td>
+</tr>
+<tr>
+<td>keyStorePassword</td>
+<td>keyStorePassword</td>
+</tr>
+<tr>
+<td>trustStore</td>
+<td>trustStorePath</td>
+</tr>
+<tr>
+<td>trustStorePassword</td>
+<td>trustStorePassword</td>
+</tr>
+</tbody>
+</table>
+<p>Finally, you can go and set all other <code>SSLServerSocket</code> parameters you need (like <code>needClientAuth</code> in this example). There&apos;s no extra prefix needed for this in Artemis. </p>
+<p>It&apos;s important to note that you should be able to reuse your existing key and trust stores and just copy them to the new broker.</p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="authorization.html" class="navigation navigation-prev " aria-label="Previous page: Authorization">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="message-store.html" class="navigation navigation-next " aria-label="Next page: Message Store">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"SSL","level":"1.10","depth":1,"next":{"title":"Message Store","level":"1.11","depth":1,"path":"message-store.md","ref":"message-store.md","articles":[]},"previous":{"title":"Authorization","level":"1.9","depth":1,"path":"authorization.md","ref":"authorization.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"styles":{"ebook":"styles/ebook.css","epub":"styles/epub.css","mobi":"styles/mobi.css","pdf":"styles/pdf.css","print":"styles/print.css","website":"styles/website.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"showLevel":false,"styles":{"ebook":"styles/ebook.css","epub":"styles/epub.css","mobi":"styles/mobi.css","pdf":"styles/pdf.css","print":"styles/print.css","website":"styles/website.css"}}},"github":"apache/activemq-artemis","theme":"default","githubHost":"https://github.com/","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"ActiveMQ Artemis Documentation","links":{"home":"http://activemq.apache.org/artemis","issues":"https://issues.apache.org/jira/browse/ARTEMIS","contribute":"http://activemq.apache.org/contributing.html"},"gitbook":"3.x.x","description":"ActiveMQ Artemis Migration Guide"},"file":{"path":"ssl.md","mtime":"2022-06-14T19:42:45.225Z","type":"markdown"},"gitbook":{"version":"3.7.1","time":"2022-06-14T19:55:36.570Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

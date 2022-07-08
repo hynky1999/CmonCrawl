@@ -2,6 +2,7 @@ from datetime import datetime
 import logging
 import re
 from typing import Any, Callable, Dict
+from urllib.parse import ParseResult
 from xmlrpc.client import Boolean
 
 from bs4 import BeautifulSoup, NavigableString, Tag
@@ -112,10 +113,8 @@ def author_extract_transform(author: Tag | None | NavigableString):
 
 
 def headline_extract_transform(headline: str):
-    headline_match = re.search(r"(.*)(?=[-–] \S+\.\S+)?", headline)
-    return (
-        text_unification_transform(headline_match.group(0)) if headline_match else None
-    )
+    headline = re.split(r"[-–]", headline)[0]
+    return text_unification_transform(headline)
 
 
 def must_exist_filter(soup: BeautifulSoup, filter_dict: Dict[str, Any]):
@@ -149,6 +148,14 @@ def extract_publication_date(format: str):
         return None
 
     return inner
+
+
+def extract_category_from_url(url: ParseResult):
+    category_split = str(url).split("/")
+    category = None
+    if len(category_split) > 1:
+        category = category_split[1]
+    return category
 
 
 def extract_date_cz(date_tag: Tag | None):

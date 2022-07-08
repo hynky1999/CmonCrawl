@@ -9,6 +9,7 @@ from ArticleUtils.article_utils import (
     article_extract_transform,
     article_transform,
     author_extract_transform,
+    extract_category_from_url,
     extract_date_cz,
     head_extract_transform,
     headline_extract_transform,
@@ -54,16 +55,6 @@ article_extract_transform_dict: Dict[str, Callable[[Tag], Any]] = {
 }
 
 
-filter_head_extract_dict: Dict[str, Any] = {
-    "type": "meta[property='og:type']",
-}
-
-filter_must_exist: Dict[str, str] = {
-    # Prevents Premium "articles"
-    "menu": "#menu-main",
-}
-
-
 class Extractor(ArticleExtractor):
     UNTIL_DATE = datetime(2019, 8, 6)
 
@@ -80,8 +71,7 @@ class Extractor(ArticleExtractor):
 
         # merge dicts
         extracted_dict = {**extracted_head, **extracted_article}
-        category = metadata.url_parsed.path.split("/")[1]
-        extracted_dict["category"] = category
+        extracted_dict["category"] = extract_category_from_url(metadata.url_parsed)
         headline = None
         headline_tag = soup.select_one("head > title")
         if headline_tag is not None:
@@ -93,6 +83,4 @@ class Extractor(ArticleExtractor):
         return extracted_dict
 
     def filter(self, response: str, metadata: PipeMetadata):
-        soup = BeautifulSoup(response, "html.parser")
-
         return True

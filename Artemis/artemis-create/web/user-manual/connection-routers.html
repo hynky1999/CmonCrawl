@@ -1,0 +1,1586 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <title>Connection Routers · ActiveMQ Artemis Documentation</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.7.1">
+        
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="graceful-shutdown.html" />
+    
+    
+    <link rel="prev" href="ha.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="notice.html">
+            
+                <a href="notice.html">
+            
+                    
+                    Legal Notice
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="preface.html">
+            
+                <a href="preface.html">
+            
+                    
+                    Preface
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="project-info.html">
+            
+                <a href="project-info.html">
+            
+                    
+                    Project Info
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="versions.html">
+            
+                <a href="versions.html">
+            
+                    
+                    Versions
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="messaging-concepts.html">
+            
+                <a href="messaging-concepts.html">
+            
+                    
+                    Messaging Concepts
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="architecture.html">
+            
+                <a href="architecture.html">
+            
+                    
+                    Architecture
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="using-server.html">
+            
+                <a href="using-server.html">
+            
+                    
+                    Using the Server
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="upgrading.html">
+            
+                <a href="upgrading.html">
+            
+                    
+                    Upgrading
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10" >
+            
+                <span>
+            
+                    
+                    Address
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.1" data-path="address-model.html">
+            
+                <a href="address-model.html">
+            
+                    
+                    Model
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2" data-path="address-settings.html">
+            
+                <a href="address-settings.html">
+            
+                    
+                    Settings
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11" data-path="protocols-interoperability.html">
+            
+                <a href="protocols-interoperability.html">
+            
+                    
+                    Protocols and Interoperability
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12" data-path="amqp.html">
+            
+                <a href="amqp.html">
+            
+                    
+                    AMQP
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.12.1" data-path="amqp-broker-connections.html">
+            
+                <a href="amqp-broker-connections.html">
+            
+                    
+                    Broker Connections
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.13" data-path="mqtt.html">
+            
+                <a href="mqtt.html">
+            
+                    
+                    MQTT
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.14" data-path="stomp.html">
+            
+                <a href="stomp.html">
+            
+                    
+                    STOMP
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.15" data-path="openwire.html">
+            
+                <a href="openwire.html">
+            
+                    
+                    OpenWire
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.16" data-path="core.html">
+            
+                <a href="core.html">
+            
+                    
+                    Core
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.17" data-path="jms-core-mapping.html">
+            
+                <a href="jms-core-mapping.html">
+            
+                    
+                    Mapping JMS Concepts to the Core API
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.18" data-path="using-jms.html">
+            
+                <a href="using-jms.html">
+            
+                    
+                    Using JMS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.19" data-path="client-classpath.html">
+            
+                <a href="client-classpath.html">
+            
+                    
+                    The Client Classpath
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.20" data-path="examples.html">
+            
+                <a href="examples.html">
+            
+                    
+                    Examples
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.21" data-path="wildcard-routing.html">
+            
+                <a href="wildcard-routing.html">
+            
+                    
+                    Routing Messages With Wild Cards
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.22" data-path="wildcard-syntax.html">
+            
+                <a href="wildcard-syntax.html">
+            
+                    
+                    Wildcard Syntax
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.23" data-path="filter-expressions.html">
+            
+                <a href="filter-expressions.html">
+            
+                    
+                    Filter Expressions
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.24" data-path="persistence.html">
+            
+                <a href="persistence.html">
+            
+                    
+                    Persistence
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.25" data-path="configuring-transports.html">
+            
+                <a href="configuring-transports.html">
+            
+                    
+                    Configuring Transports
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.26" data-path="config-reload.html">
+            
+                <a href="config-reload.html">
+            
+                    
+                    Configuration Reload
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.27" data-path="connection-ttl.html">
+            
+                <a href="connection-ttl.html">
+            
+                    
+                    Detecting Dead Connections
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.28" data-path="slow-consumers.html">
+            
+                <a href="slow-consumers.html">
+            
+                    
+                    Detecting Slow Consumers
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.29" data-path="network-isolation.html">
+            
+                <a href="network-isolation.html">
+            
+                    
+                    Avoiding Network Isolation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.30" data-path="critical-analysis.html">
+            
+                <a href="critical-analysis.html">
+            
+                    
+                    Detecting Broker Issues (Critical Analysis)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.31" data-path="transaction-config.html">
+            
+                <a href="transaction-config.html">
+            
+                    
+                    Resource Manager Configuration
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.32" data-path="flow-control.html">
+            
+                <a href="flow-control.html">
+            
+                    
+                    Flow Control
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.33" data-path="send-guarantees.html">
+            
+                <a href="send-guarantees.html">
+            
+                    
+                    Guarantees of sends and commits
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.34" data-path="undelivered-messages.html">
+            
+                <a href="undelivered-messages.html">
+            
+                    
+                    Message Redelivery and Undelivered Messages
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.35" data-path="message-expiry.html">
+            
+                <a href="message-expiry.html">
+            
+                    
+                    Message Expiry
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.36" data-path="large-messages.html">
+            
+                <a href="large-messages.html">
+            
+                    
+                    Large Messages
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.37" data-path="paging.html">
+            
+                <a href="paging.html">
+            
+                    
+                    Paging
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.38" data-path="scheduled-messages.html">
+            
+                <a href="scheduled-messages.html">
+            
+                    
+                    Scheduled Messages
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.39" data-path="last-value-queues.html">
+            
+                <a href="last-value-queues.html">
+            
+                    
+                    Last-Value Queues
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.40" data-path="non-destructive-queues.html">
+            
+                <a href="non-destructive-queues.html">
+            
+                    
+                    Non-Destructive Queues
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.41" data-path="ring-queues.html">
+            
+                <a href="ring-queues.html">
+            
+                    
+                    Ring Queues
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.42" data-path="retroactive-addresses.html">
+            
+                <a href="retroactive-addresses.html">
+            
+                    
+                    Retroactive Addresses
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.43" data-path="exclusive-queues.html">
+            
+                <a href="exclusive-queues.html">
+            
+                    
+                    Exclusive Queues
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.44" data-path="message-grouping.html">
+            
+                <a href="message-grouping.html">
+            
+                    
+                    Message Grouping
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.45" data-path="consumer-priority.html">
+            
+                <a href="consumer-priority.html">
+            
+                    
+                    Consumer Priority
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.46" data-path="pre-acknowledge.html">
+            
+                <a href="pre-acknowledge.html">
+            
+                    
+                    Extra Acknowledge Modes
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.47" data-path="management.html">
+            
+                <a href="management.html">
+            
+                    
+                    Management
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.48" data-path="management-console.html">
+            
+                <a href="management-console.html">
+            
+                    
+                    Management Console
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.49" data-path="metrics.html">
+            
+                <a href="metrics.html">
+            
+                    
+                    Metrics
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.50" data-path="security.html">
+            
+                <a href="security.html">
+            
+                    
+                    Security
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.51" data-path="masking-passwords.html">
+            
+                <a href="masking-passwords.html">
+            
+                    
+                    Masking Passwords
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.52" data-path="broker-plugins.html">
+            
+                <a href="broker-plugins.html">
+            
+                    
+                    Broker Plugins
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.53" data-path="resource-limits.html">
+            
+                <a href="resource-limits.html">
+            
+                    
+                    Resource Limits
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.54" data-path="jms-bridge.html">
+            
+                <a href="jms-bridge.html">
+            
+                    
+                    The JMS Bridge
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.55" data-path="client-reconnection.html">
+            
+                <a href="client-reconnection.html">
+            
+                    
+                    Client Reconnection and Session Reattachment
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.56" data-path="diverts.html">
+            
+                <a href="diverts.html">
+            
+                    
+                    Diverting and Splitting Message Flows
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.57" data-path="core-bridges.html">
+            
+                <a href="core-bridges.html">
+            
+                    
+                    Core Bridges
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.58" data-path="transformers.html">
+            
+                <a href="transformers.html">
+            
+                    
+                    Transformers
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.59" data-path="duplicate-detection.html">
+            
+                <a href="duplicate-detection.html">
+            
+                    
+                    Duplicate Message Detection
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.60" data-path="clusters.html">
+            
+                <a href="clusters.html">
+            
+                    
+                    Clusters
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.61" data-path="federation.html">
+            
+                <a href="federation.html">
+            
+                    
+                    Federation
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.61.1" data-path="federation-address.html">
+            
+                <a href="federation-address.html">
+            
+                    
+                    Address Federation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.61.2" data-path="federation-queue.html">
+            
+                <a href="federation-queue.html">
+            
+                    
+                    Queue Federation
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.62" data-path="ha.html">
+            
+                <a href="ha.html">
+            
+                    
+                    High Availability and Failover
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.63" data-path="connection-routers.html">
+            
+                <a href="connection-routers.html">
+            
+                    
+                    Connection Routers
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.64" data-path="graceful-shutdown.html">
+            
+                <a href="graceful-shutdown.html">
+            
+                    
+                    Graceful Server Shutdown
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.65" data-path="libaio.html">
+            
+                <a href="libaio.html">
+            
+                    
+                    Libaio Native Libraries
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.66" data-path="thread-pooling.html">
+            
+                <a href="thread-pooling.html">
+            
+                    
+                    Thread management
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.67" data-path="web-server.html">
+            
+                <a href="web-server.html">
+            
+                    
+                    Embedded Web Server
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.68" data-path="logging.html">
+            
+                <a href="logging.html">
+            
+                    
+                    Logging
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.69" data-path="rest.html">
+            
+                <a href="rest.html">
+            
+                    
+                    REST Interface
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.70" data-path="embedding-activemq.html">
+            
+                <a href="embedding-activemq.html">
+            
+                    
+                    Embedding the Broker
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.71" data-path="karaf.html">
+            
+                <a href="karaf.html">
+            
+                    
+                    Apache Karaf
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.72" data-path="tomcat.html">
+            
+                <a href="tomcat.html">
+            
+                    
+                    Apache Tomcat
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.73" data-path="spring-integration.html">
+            
+                <a href="spring-integration.html">
+            
+                    
+                    Spring Integration
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.74" data-path="cdi-integration.html">
+            
+                <a href="cdi-integration.html">
+            
+                    
+                    CDI Integration
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.75" data-path="intercepting-operations.html">
+            
+                <a href="intercepting-operations.html">
+            
+                    
+                    Intercepting Operations
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.76" data-path="data-tools.html">
+            
+                <a href="data-tools.html">
+            
+                    
+                    Data Tools
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.77" data-path="activation-tools.html">
+            
+                <a href="activation-tools.html">
+            
+                    
+                    Activation Tools
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.78" data-path="maven-plugin.html">
+            
+                <a href="maven-plugin.html">
+            
+                    
+                    Maven Plugin
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.79" data-path="unit-testing.html">
+            
+                <a href="unit-testing.html">
+            
+                    
+                    Unit Testing
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.80" data-path="perf-tuning.html">
+            
+                <a href="perf-tuning.html">
+            
+                    
+                    Troubleshooting and Performance Tuning
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.81" data-path="perf-tools.html">
+            
+                <a href="perf-tools.html">
+            
+                    
+                    Performance Tools
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.82" data-path="configuration-index.html">
+            
+                <a href="configuration-index.html">
+            
+                    
+                    Configuration Reference
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.83" data-path="restart-sequence.html">
+            
+                <a href="restart-sequence.html">
+            
+                    
+                    Restart Sequence
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >Connection Routers</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="connection-routers">Connection Routers</h1>
+<p>Apache ActiveMQ Artemis connection routers allow incoming client connections to be distributed across multiple <a href="target-brokers">target brokers</a>.
+The target brokers are grouped in <a href="#pools">pools</a> and the connection routers use a <a href="#keys">key</a>
+to select a target broker from a pool of brokers according to a <a href="#policies">policy</a>.</p>
+<h2 id="target-broker">Target Broker</h2>
+<p>Target broker is a broker that can accept incoming client connections and is local or remote.
+The local target is a special target that represents the same broker hosting the connection router.
+The remote target is another reachable broker.</p>
+<h2 id="keys">Keys</h2>
+<p>The connection router uses a key to select a target broker.
+It is a string retrieved from an incoming client connection, the supported key types are:</p>
+<ul>
+<li><code>CLIENT_ID</code> is the JMS client ID.</li>
+<li><code>SNI_HOST</code> is the hostname indicated by the client in the SNI extension of the TLS protocol.</li>
+<li><code>SOURCE_IP</code> is the source IP address of the client.</li>
+<li><code>USER_NAME</code> is the username indicated by the client.</li>
+<li><code>ROLE_NAME</code> is a role associated with the authenticated user of the connection.</li>
+</ul>
+<h2 id="pools">Pools</h2>
+<p>The pool is a group of target brokers with periodic checks on their state.
+It provides a list of ready target brokers to distribute incoming client connections only when it is active.
+A pool becomes active when the minimum number of target brokers, as defined by the <code>quorum-size</code> parameter, become ready.
+When it is not active, it doesn&apos;t provide any target avoiding weird distribution at startup or after a restart.
+Including the local broker in the target pool allows broker hosting the router to accept incoming client connections as well.
+By default, a pool doesn&apos;t include the local broker, to include it as a target the <code>local-target-enabled</code> parameter must be <code>true</code>.
+There are three pool types: <a href="#cluster-pool">cluster pool</a>, <a href="#discovery-pool">discovery pool</a> and <a href="#static-pool">static pool</a>.</p>
+<h3 id="cluster-pool">Cluster Pool</h3>
+<p>The cluster pool uses a <a href="clusters.html#configuring-cluster-connections">cluster connection</a> to get the target brokers to add.
+Let&apos;s take a look at a cluster pool example from broker.xml that uses a cluster connection:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">pool</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">cluster-connection</span>&gt;</span>cluster1<span class="hljs-tag">&lt;/<span class="hljs-name">cluster-connection</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">pool</span>&gt;</span>
+</code></pre>
+<h3 id="discovery-pool">Discovery Pool</h3>
+<p>The discovery pool uses a <a href="clusters.html#discovery-groups">discovery group</a> to discover the target brokers to add.
+Let&apos;s take a look at a discovery pool example from broker.xml that uses a discovery group:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">pool</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">discovery-group-ref</span> <span class="hljs-attr">discovery-group-name</span>=<span class="hljs-string">&quot;dg1&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">pool</span>&gt;</span>
+</code></pre>
+<h3 id="static-pool">Static Pool</h3>
+<p>The static pool uses a list of static connectors to define the target brokers to add.
+Let&apos;s take a look at a static pool example from broker.xml that uses a list of static connectors:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">pool</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">static-connectors</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">connector-ref</span>&gt;</span>connector1<span class="hljs-tag">&lt;/<span class="hljs-name">connector-ref</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">connector-ref</span>&gt;</span>connector2<span class="hljs-tag">&lt;/<span class="hljs-name">connector-ref</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">connector-ref</span>&gt;</span>connector3<span class="hljs-tag">&lt;/<span class="hljs-name">connector-ref</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">static-connectors</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">pool</span>&gt;</span>
+</code></pre>
+<h3 id="defining-pools">Defining pools</h3>
+<p>A pool is defined by the <code>pool</code> element that includes the following items:</p>
+<ul>
+<li>the <code>username</code> element defines the username to connect to the target broker;</li>
+<li>the <code>password</code> element defines the password to connect to the target broker;</li>
+<li>the <code>check-period</code> element defines how often to check the target broker, measured in milliseconds, default is <code>5000</code>;</li>
+<li>the <code>quorum-size</code> element defines the minimum number of ready targets to activate the pool, default is <code>1</code>;</li>
+<li>the <code>quorum-timeout</code> element defines the timeout to get the minimum number of ready targets, measured in milliseconds, default is <code>3000</code>;</li>
+<li>the <code>local-target-enabled</code> element defines whether the pool has to include a local target, default is <code>false</code>;</li>
+<li>the <code>cluster-connection</code> element defines the <a href="clusters.html#configuring-cluster-connections">cluster connection</a> used by the <a href="#cluster-pool">cluster pool</a>.</li>
+<li>the <code>static-connectors</code> element defines a list of static connectors used by the <a href="#static-pool">static pool</a>;</li>
+<li>the <code>discovery-group</code> element defines the <a href="clusters.html#discovery-groups">discovery group</a> used by the <a href="#discovery-pool">discovery pool</a>.</li>
+</ul>
+<p>Let&apos;s take a look at a pool example from broker.xml:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">pool</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">quorum-size</span>&gt;</span>2<span class="hljs-tag">&lt;/<span class="hljs-name">quorum-size</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">check-period</span>&gt;</span>1000<span class="hljs-tag">&lt;/<span class="hljs-name">check-period</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">local-target-enabled</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">local-target-enabled</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">static-connectors</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">connector-ref</span>&gt;</span>connector1<span class="hljs-tag">&lt;/<span class="hljs-name">connector-ref</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">connector-ref</span>&gt;</span>connector2<span class="hljs-tag">&lt;/<span class="hljs-name">connector-ref</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">connector-ref</span>&gt;</span>connector3<span class="hljs-tag">&lt;/<span class="hljs-name">connector-ref</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">static-connectors</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">pool</span>&gt;</span>
+</code></pre>
+<h2 id="policies">Policies</h2>
+<p>The policy defines how to select a broker from a pool and allows <a href="#key-values">key values</a> transformation. The included policies are:</p>
+<ul>
+<li><code>FIRST_ELEMENT</code> to select the first target broker from the pool which is ready. It is useful to select the ready target brokers
+according to the priority defined with their sequence order, ie supposing there are 2 target brokers
+this policy selects the second target broker only when the first target broker isn&apos;t ready.</li>
+<li><code>ROUND_ROBIN</code> to select a target sequentially from a pool, this policy is useful to evenly distribute;</li>
+<li><code>CONSISTENT_HASH</code> to select a target by a key. This policy always selects the same target broker for the same key until it is removed from the pool.</li>
+<li><code>LEAST_CONNECTIONS</code> to select the targets with the fewest active connections. This policy helps you maintain an equal distribution of active connections with the target brokers.</li>
+<li><code>CONSISTENT_HASH_MODULO</code> to transform a key value to a number from 0 to N-1, it takes a single <code>modulo</code> property to configure the bound N. One use case is <code>CLIENT_ID</code>
+sharding across a cluster of N brokers. With a consistent hash % N transformation, each client id can map exclusively to just one of the brokers.</li>
+</ul>
+<p>A policy is defined by the <code>policy</code> element. Let&apos;s take a look at a policy example from broker.xml:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">policy</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;FIRST_ELEMENT&quot;</span>/&gt;</span>
+</code></pre>
+<h2 id="cache">Cache</h2>
+<p>The connection router provides a cache with a timeout to improve the stickiness of the target broker selected,
+returning the same target broker for a key value as long as it is present in the cache and is ready.
+So a connection router with the cache enabled doesn&apos;t strictly follow the configured policy.
+By default, the cache is not enabled.</p>
+<p>A cache is defined by the <code>cache</code> element that includes the following items:</p>
+<ul>
+<li>the <code>persisted</code> element defines whether the cache has to persist entries, default is <code>false</code>;</li>
+<li>the <code>timeout</code> element defines the timeout before removing entries, measured in milliseconds, setting 0 will disable the timeout, default is <code>0</code>.</li>
+</ul>
+<p>Let&apos;s take a look at a cache example from broker.xml:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">cache</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">persisted</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">persisted</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">timeout</span>&gt;</span>60000<span class="hljs-tag">&lt;/<span class="hljs-name">timeout</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">cache</span>&gt;</span>
+</code></pre>
+<h2 id="defining-connection-routers">Defining connection routers</h2>
+<p>A connection router is defined by the <code>connection-router</code> element, it includes the following items:</p>
+<ul>
+<li>the <code>name</code> attribute defines the name of the connection router and is used to reference the router from an acceptor;</li>
+<li>the <code>key-type</code> element defines what type of key to select a target broker, the supported values are: <code>CLIENT_ID</code>, <code>SNI_HOST</code>, <code>SOURCE_IP</code>, <code>USER_NAME</code>, <code>ROLE_NAME</code>, default is <code>SOURCE_IP</code>, see <a href="#keys">Keys</a> for further details;</li>
+<li>the <code>key-filter</code> element defines a regular expression to filter the resolved <a href="#key-values">key values</a>;</li>
+<li>the <code>local-target-filter</code> element defines a regular expression to match the <a href="#key-values">key values</a>
+that have to return a local target, the <a href="#key-values">key value</a> could be equal to the special string <code>NULL</code>
+if the value of the key is undefined or it doesn&apos;t match the <code>key-filter</code>;</li>
+<li>the <code>pool</code> element defines the pool to group the target brokers, see <a href="#pools">pools</a>;</li>
+<li>the <code>policy</code> element defines the policy used to select the target brokers from the pool, see <a href="#policies">policies</a>.</li>
+</ul>
+<p>Let&apos;s take a look at some connection router examples from broker.xml:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">connection-routers</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">connection-router</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;local-partition&quot;</span>&gt;</span>
+         <span class="hljs-tag">&lt;<span class="hljs-name">key-type</span>&gt;</span>CLIENT_ID<span class="hljs-tag">&lt;/<span class="hljs-name">key-type</span>&gt;</span>
+         <span class="hljs-tag">&lt;<span class="hljs-name">key-filter</span>&gt;</span>^.{3}<span class="hljs-tag">&lt;/<span class="hljs-name">key-filter</span>&gt;</span>
+         <span class="hljs-tag">&lt;<span class="hljs-name">local-target-filter</span>&gt;</span>^FOO.*<span class="hljs-tag">&lt;/<span class="hljs-name">local-target-filter</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">connection-router</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">connection-router</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;simple-router&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">policy</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;FIRST_ELEMENT&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">pool</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">static-connectors</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">connector-ref</span>&gt;</span>connector1<span class="hljs-tag">&lt;/<span class="hljs-name">connector-ref</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">connector-ref</span>&gt;</span>connector2<span class="hljs-tag">&lt;/<span class="hljs-name">connector-ref</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">connector-ref</span>&gt;</span>connector3<span class="hljs-tag">&lt;/<span class="hljs-name">connector-ref</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">static-connectors</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">pool</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">connection-router</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">connection-router</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;consistent-hash-router&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">key-type</span>&gt;</span>USER_NAME<span class="hljs-tag">&lt;/<span class="hljs-name">key-type</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">local-target-filter</span>&gt;</span>admin<span class="hljs-tag">&lt;/<span class="hljs-name">local-target-filter</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">policy</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;CONSISTENT_HASH&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">pool</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">local-target-enabled</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">local-target-enabled</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">discovery-group-ref</span> <span class="hljs-attr">discovery-group-name</span>=<span class="hljs-string">&quot;dg1&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">pool</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">policy</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;CONSISTENT_HASH&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">connection-router</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">connection-router</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;evenly-balance&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">key-type</span>&gt;</span>CLIENT_ID<span class="hljs-tag">&lt;/<span class="hljs-name">key-type</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">key-filter</span>&gt;</span>^.{3}<span class="hljs-tag">&lt;/<span class="hljs-name">key-filter</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">policy</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;LEAST_CONNECTIONS&quot;</span>/&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">pool</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">username</span>&gt;</span>guest<span class="hljs-tag">&lt;/<span class="hljs-name">username</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">password</span>&gt;</span>guest<span class="hljs-tag">&lt;/<span class="hljs-name">password</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">discovery-group-ref</span> <span class="hljs-attr">discovery-group-name</span>=<span class="hljs-string">&quot;dg2&quot;</span>/&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">pool</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">connection-router</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">connection-routers</span>&gt;</span>
+</code></pre>
+<h2 id="key-values">Key values</h2>
+<p>The key value is retrieved from the incoming client connection.
+If the incoming client connection has no value for the key type used, the key value is set to the special string <code>NULL</code>.
+If the incoming client connection has a value for the key type used, the key value retrieved can be sequentially manipulated using a <code>key-filter</code> and a <code>policy</code>.
+If a <code>key-filter</code> is defined and the filter fails to match, the value is set to the special string <code>NULL</code>.
+If a <code>policy</code> with a key transformation is defined, the key value is set to the transformed value.</p>
+<h2 id="connection-router-workflow">Connection Router Workflow</h2>
+<p>The connection router workflow include the following steps:</p>
+<ul>
+<li>Retrieve the <a href="#key-values">key value</a> from the incoming connection;</li>
+<li>Return the local target broker if the key value matches the local filter;</li>
+<li>Delegate to the <a href="#pools">pool</a>:</li>
+<li>Return the cached target broker if it is ready;</li>
+<li>Get ready/active target brokers from the pool;</li>
+<li>Select one target broker using the <a href="#policies">policy</a>;</li>
+<li>Add the selected broker in the <a href="#cache">cache</a>;</li>
+<li>Return the selected broker.</li>
+</ul>
+<p>Let&apos;s take a look at flowchart of the connection router workflow:
+<img src="images/connection_router_workflow.png" alt="Connection Router Workflow"></p>
+<h2 id="data-gravity">Data gravity</h2>
+<p>The first router configuration: <code>local-partition</code>, demonstrates the simplest use case,
+that of preserving <code>data gravity</code> by confining a subset of application data to a given broker.
+Each broker is given a subset of keys that it will exclusively service or reject.
+If brokers are behind a round-robin load-balancer or have full knowledge of the broker
+urls, <code>their</code> broker will eventually respond. The <code>local-target-filter</code> regular expression
+determines the granularity of partition that is best for preserving <code>data gravity</code> for your applications.</p>
+<p>The challenge is in providing a consistent <a href="#Keys">key</a> in all related application connections.</p>
+<p>Note: the concept of <code>data gravity</code> tries to capture the reality that while addresses are shared by multiple
+applications, it is best to keep related addresses and their data co-located on a single broker. Typically,
+applications should <code>connect</code> to the data rather than the data moving to whatever broker the application connects too.
+This is particularly true when the amount of data (backlog) is large, the cost of movement to follow consumers outweighs
+the cost of delivery to the application.
+With the &apos;data gravity&apos; mindset, operators are less concerned with numbers of connections and more concerned with
+applications and the addresses they need to interact with.</p>
+<h2 id="redirection">Redirection</h2>
+<p>Apache ActiveMQ Artemis provides a native redirection for supported clients and a new management API for other clients.
+The native redirection can be enabled per acceptor and is supported only for AMQP, CORE and OPENWIRE clients.
+The acceptor with the <code>router</code> url parameter will redirect the incoming connections.
+The <code>router</code> url parameter specifies the name of the connection router to use,
+ie the following acceptor will redirect the incoming CORE client connections using the connection router with the name <code>simple-router</code>:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">acceptor</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;artemis&quot;</span>&gt;</span>tcp://0.0.0.0:61616?router=simple-router;protocols=CORE<span class="hljs-tag">&lt;/<span class="hljs-name">acceptor</span>&gt;</span>
+</code></pre>
+<h3 id="native-redirect-sequence">Native Redirect Sequence</h3>
+<p>The clients supporting the native redirection connect to the acceptor with the redirection enabled.
+The acceptor sends to the client the target broker to redirect if it is ready and closes the connection.
+The client connects to the target broker if it has received one before getting disconnected
+otherwise it connected again to the acceptor with the redirection enabled.</p>
+<p><img src="images/native_redirect_sequence.png" alt="Native Redirect Sequence"></p>
+<h3 id="management-api-redirect-sequence">Management API Redirect Sequence</h3>
+<p>The clients not supporting the native redirection queries the management API of connection router
+to get the target broker to redirect. If the API returns a target broker the client connects to it
+otherwise the client queries again the API.</p>
+<p><img src="images/management_api_redirect_sequence.png" alt="Management API Redirect Sequence"></p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="ha.html" class="navigation navigation-prev " aria-label="Previous page: High Availability and Failover">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="graceful-shutdown.html" class="navigation navigation-next " aria-label="Next page: Graceful Server Shutdown">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Connection Routers","level":"1.63","depth":1,"next":{"title":"Graceful Server Shutdown","level":"1.64","depth":1,"path":"graceful-shutdown.md","ref":"graceful-shutdown.md","articles":[]},"previous":{"title":"High Availability and Failover","level":"1.62","depth":1,"path":"ha.md","ref":"ha.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"styles":{"ebook":"styles/ebook.css","epub":"styles/epub.css","mobi":"styles/mobi.css","pdf":"styles/pdf.css","print":"styles/print.css","website":"styles/website.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"showLevel":false,"styles":{"ebook":"styles/ebook.css","epub":"styles/epub.css","mobi":"styles/mobi.css","pdf":"styles/pdf.css","print":"styles/print.css","website":"styles/website.css"}}},"github":"apache/activemq-artemis","theme":"default","githubHost":"https://github.com/","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"version":"2.23.1","title":"ActiveMQ Artemis Documentation","links":{"home":"http://activemq.apache.org/artemis","issues":"https://issues.apache.org/jira/browse/ARTEMIS","contribute":"http://activemq.apache.org/contributing.html"},"gitbook":"3.x.x","description":"ActiveMQ Artemis User Guide and Reference Documentation"},"file":{"path":"connection-routers.md","mtime":"2022-06-14T19:55:22.256Z","type":"markdown"},"gitbook":{"version":"3.7.1","time":"2022-06-14T19:55:23.109Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

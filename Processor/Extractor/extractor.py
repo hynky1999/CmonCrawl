@@ -33,15 +33,4 @@ class BaseExtractor(ABC):
 
     def preprocess(self, response: str, metadata: PipeMetadata) -> str:
         linux = response.replace("\r\n", "\n")
-        charset = metadata.http_header.get("charset")
-        if charset is None:
-            html_charset_match = re.search(r"(?<=charset=)\s*\"([\w-]+)\"", linux)
-            if html_charset_match is not None:
-                charset = html_charset_match.group(1).lower()
-        if charset is None:
-            charset = metadata.domain_record.encoding
-
-        decoded = linux.encode(metadata.domain_record.encoding, "replace").decode(
-            charset, "replace"
-        )
-        return decoded
+        return linux

@@ -1,0 +1,1900 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <title>Configuring Transports · ActiveMQ Artemis Documentation</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.7.1">
+        
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="config-reload.html" />
+    
+    
+    <link rel="prev" href="persistence.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="notice.html">
+            
+                <a href="notice.html">
+            
+                    
+                    Legal Notice
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="preface.html">
+            
+                <a href="preface.html">
+            
+                    
+                    Preface
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="project-info.html">
+            
+                <a href="project-info.html">
+            
+                    
+                    Project Info
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="versions.html">
+            
+                <a href="versions.html">
+            
+                    
+                    Versions
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="messaging-concepts.html">
+            
+                <a href="messaging-concepts.html">
+            
+                    
+                    Messaging Concepts
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="architecture.html">
+            
+                <a href="architecture.html">
+            
+                    
+                    Architecture
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="using-server.html">
+            
+                <a href="using-server.html">
+            
+                    
+                    Using the Server
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="upgrading.html">
+            
+                <a href="upgrading.html">
+            
+                    
+                    Upgrading
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10" >
+            
+                <span>
+            
+                    
+                    Address
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.1" data-path="address-model.html">
+            
+                <a href="address-model.html">
+            
+                    
+                    Model
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2" data-path="address-settings.html">
+            
+                <a href="address-settings.html">
+            
+                    
+                    Settings
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11" data-path="protocols-interoperability.html">
+            
+                <a href="protocols-interoperability.html">
+            
+                    
+                    Protocols and Interoperability
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12" data-path="amqp.html">
+            
+                <a href="amqp.html">
+            
+                    
+                    AMQP
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.12.1" data-path="amqp-broker-connections.html">
+            
+                <a href="amqp-broker-connections.html">
+            
+                    
+                    Broker Connections
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.13" data-path="mqtt.html">
+            
+                <a href="mqtt.html">
+            
+                    
+                    MQTT
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.14" data-path="stomp.html">
+            
+                <a href="stomp.html">
+            
+                    
+                    STOMP
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.15" data-path="openwire.html">
+            
+                <a href="openwire.html">
+            
+                    
+                    OpenWire
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.16" data-path="core.html">
+            
+                <a href="core.html">
+            
+                    
+                    Core
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.17" data-path="jms-core-mapping.html">
+            
+                <a href="jms-core-mapping.html">
+            
+                    
+                    Mapping JMS Concepts to the Core API
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.18" data-path="using-jms.html">
+            
+                <a href="using-jms.html">
+            
+                    
+                    Using JMS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.19" data-path="client-classpath.html">
+            
+                <a href="client-classpath.html">
+            
+                    
+                    The Client Classpath
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.20" data-path="examples.html">
+            
+                <a href="examples.html">
+            
+                    
+                    Examples
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.21" data-path="wildcard-routing.html">
+            
+                <a href="wildcard-routing.html">
+            
+                    
+                    Routing Messages With Wild Cards
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.22" data-path="wildcard-syntax.html">
+            
+                <a href="wildcard-syntax.html">
+            
+                    
+                    Wildcard Syntax
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.23" data-path="filter-expressions.html">
+            
+                <a href="filter-expressions.html">
+            
+                    
+                    Filter Expressions
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.24" data-path="persistence.html">
+            
+                <a href="persistence.html">
+            
+                    
+                    Persistence
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.25" data-path="configuring-transports.html">
+            
+                <a href="configuring-transports.html">
+            
+                    
+                    Configuring Transports
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.26" data-path="config-reload.html">
+            
+                <a href="config-reload.html">
+            
+                    
+                    Configuration Reload
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.27" data-path="connection-ttl.html">
+            
+                <a href="connection-ttl.html">
+            
+                    
+                    Detecting Dead Connections
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.28" data-path="slow-consumers.html">
+            
+                <a href="slow-consumers.html">
+            
+                    
+                    Detecting Slow Consumers
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.29" data-path="network-isolation.html">
+            
+                <a href="network-isolation.html">
+            
+                    
+                    Avoiding Network Isolation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.30" data-path="critical-analysis.html">
+            
+                <a href="critical-analysis.html">
+            
+                    
+                    Detecting Broker Issues (Critical Analysis)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.31" data-path="transaction-config.html">
+            
+                <a href="transaction-config.html">
+            
+                    
+                    Resource Manager Configuration
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.32" data-path="flow-control.html">
+            
+                <a href="flow-control.html">
+            
+                    
+                    Flow Control
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.33" data-path="send-guarantees.html">
+            
+                <a href="send-guarantees.html">
+            
+                    
+                    Guarantees of sends and commits
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.34" data-path="undelivered-messages.html">
+            
+                <a href="undelivered-messages.html">
+            
+                    
+                    Message Redelivery and Undelivered Messages
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.35" data-path="message-expiry.html">
+            
+                <a href="message-expiry.html">
+            
+                    
+                    Message Expiry
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.36" data-path="large-messages.html">
+            
+                <a href="large-messages.html">
+            
+                    
+                    Large Messages
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.37" data-path="paging.html">
+            
+                <a href="paging.html">
+            
+                    
+                    Paging
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.38" data-path="scheduled-messages.html">
+            
+                <a href="scheduled-messages.html">
+            
+                    
+                    Scheduled Messages
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.39" data-path="last-value-queues.html">
+            
+                <a href="last-value-queues.html">
+            
+                    
+                    Last-Value Queues
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.40" data-path="non-destructive-queues.html">
+            
+                <a href="non-destructive-queues.html">
+            
+                    
+                    Non-Destructive Queues
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.41" data-path="ring-queues.html">
+            
+                <a href="ring-queues.html">
+            
+                    
+                    Ring Queues
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.42" data-path="retroactive-addresses.html">
+            
+                <a href="retroactive-addresses.html">
+            
+                    
+                    Retroactive Addresses
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.43" data-path="exclusive-queues.html">
+            
+                <a href="exclusive-queues.html">
+            
+                    
+                    Exclusive Queues
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.44" data-path="message-grouping.html">
+            
+                <a href="message-grouping.html">
+            
+                    
+                    Message Grouping
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.45" data-path="consumer-priority.html">
+            
+                <a href="consumer-priority.html">
+            
+                    
+                    Consumer Priority
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.46" data-path="pre-acknowledge.html">
+            
+                <a href="pre-acknowledge.html">
+            
+                    
+                    Extra Acknowledge Modes
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.47" data-path="management.html">
+            
+                <a href="management.html">
+            
+                    
+                    Management
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.48" data-path="management-console.html">
+            
+                <a href="management-console.html">
+            
+                    
+                    Management Console
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.49" data-path="metrics.html">
+            
+                <a href="metrics.html">
+            
+                    
+                    Metrics
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.50" data-path="security.html">
+            
+                <a href="security.html">
+            
+                    
+                    Security
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.51" data-path="masking-passwords.html">
+            
+                <a href="masking-passwords.html">
+            
+                    
+                    Masking Passwords
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.52" data-path="broker-plugins.html">
+            
+                <a href="broker-plugins.html">
+            
+                    
+                    Broker Plugins
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.53" data-path="resource-limits.html">
+            
+                <a href="resource-limits.html">
+            
+                    
+                    Resource Limits
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.54" data-path="jms-bridge.html">
+            
+                <a href="jms-bridge.html">
+            
+                    
+                    The JMS Bridge
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.55" data-path="client-reconnection.html">
+            
+                <a href="client-reconnection.html">
+            
+                    
+                    Client Reconnection and Session Reattachment
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.56" data-path="diverts.html">
+            
+                <a href="diverts.html">
+            
+                    
+                    Diverting and Splitting Message Flows
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.57" data-path="core-bridges.html">
+            
+                <a href="core-bridges.html">
+            
+                    
+                    Core Bridges
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.58" data-path="transformers.html">
+            
+                <a href="transformers.html">
+            
+                    
+                    Transformers
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.59" data-path="duplicate-detection.html">
+            
+                <a href="duplicate-detection.html">
+            
+                    
+                    Duplicate Message Detection
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.60" data-path="clusters.html">
+            
+                <a href="clusters.html">
+            
+                    
+                    Clusters
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.61" data-path="federation.html">
+            
+                <a href="federation.html">
+            
+                    
+                    Federation
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.61.1" data-path="federation-address.html">
+            
+                <a href="federation-address.html">
+            
+                    
+                    Address Federation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.61.2" data-path="federation-queue.html">
+            
+                <a href="federation-queue.html">
+            
+                    
+                    Queue Federation
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.62" data-path="ha.html">
+            
+                <a href="ha.html">
+            
+                    
+                    High Availability and Failover
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.63" data-path="connection-routers.html">
+            
+                <a href="connection-routers.html">
+            
+                    
+                    Connection Routers
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.64" data-path="graceful-shutdown.html">
+            
+                <a href="graceful-shutdown.html">
+            
+                    
+                    Graceful Server Shutdown
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.65" data-path="libaio.html">
+            
+                <a href="libaio.html">
+            
+                    
+                    Libaio Native Libraries
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.66" data-path="thread-pooling.html">
+            
+                <a href="thread-pooling.html">
+            
+                    
+                    Thread management
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.67" data-path="web-server.html">
+            
+                <a href="web-server.html">
+            
+                    
+                    Embedded Web Server
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.68" data-path="logging.html">
+            
+                <a href="logging.html">
+            
+                    
+                    Logging
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.69" data-path="rest.html">
+            
+                <a href="rest.html">
+            
+                    
+                    REST Interface
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.70" data-path="embedding-activemq.html">
+            
+                <a href="embedding-activemq.html">
+            
+                    
+                    Embedding the Broker
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.71" data-path="karaf.html">
+            
+                <a href="karaf.html">
+            
+                    
+                    Apache Karaf
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.72" data-path="tomcat.html">
+            
+                <a href="tomcat.html">
+            
+                    
+                    Apache Tomcat
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.73" data-path="spring-integration.html">
+            
+                <a href="spring-integration.html">
+            
+                    
+                    Spring Integration
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.74" data-path="cdi-integration.html">
+            
+                <a href="cdi-integration.html">
+            
+                    
+                    CDI Integration
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.75" data-path="intercepting-operations.html">
+            
+                <a href="intercepting-operations.html">
+            
+                    
+                    Intercepting Operations
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.76" data-path="data-tools.html">
+            
+                <a href="data-tools.html">
+            
+                    
+                    Data Tools
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.77" data-path="activation-tools.html">
+            
+                <a href="activation-tools.html">
+            
+                    
+                    Activation Tools
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.78" data-path="maven-plugin.html">
+            
+                <a href="maven-plugin.html">
+            
+                    
+                    Maven Plugin
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.79" data-path="unit-testing.html">
+            
+                <a href="unit-testing.html">
+            
+                    
+                    Unit Testing
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.80" data-path="perf-tuning.html">
+            
+                <a href="perf-tuning.html">
+            
+                    
+                    Troubleshooting and Performance Tuning
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.81" data-path="perf-tools.html">
+            
+                <a href="perf-tools.html">
+            
+                    
+                    Performance Tools
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.82" data-path="configuration-index.html">
+            
+                <a href="configuration-index.html">
+            
+                    
+                    Configuration Reference
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.83" data-path="restart-sequence.html">
+            
+                <a href="restart-sequence.html">
+            
+                    
+                    Restart Sequence
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >Configuring Transports</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="configuring-the-transport">Configuring the Transport</h1>
+<p>In this chapter we&apos;ll describe the concepts required for understanding Apache
+ActiveMQ Artemis transports and where and how they&apos;re configured.</p>
+<h2 id="acceptors">Acceptors</h2>
+<p>One of the most important concepts in Apache ActiveMQ Artemis transports is the
+<em>acceptor</em>. Let&apos;s dive straight in and take a look at an acceptor defined in
+xml in the configuration file <code>broker.xml</code>.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">acceptor</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;netty&quot;</span>&gt;</span>tcp://localhost:61617<span class="hljs-tag">&lt;/<span class="hljs-name">acceptor</span>&gt;</span>
+</code></pre>
+<p>Acceptors are always defined inside an <code>acceptors</code> element. There can be one or
+more acceptors defined in the <code>acceptors</code> element. There&apos;s no upper limit to
+the number of acceptors per server.</p>
+<p>Each acceptor defines a way in which connections can be made to the Apache
+ActiveMQ Artemis server.</p>
+<p>In the above example we&apos;re defining an acceptor that uses
+<a href="https://netty.io/" target="_blank">Netty</a> to listen for connections at port <code>61617</code>.</p>
+<p>The <code>acceptor</code> element contains a <code>URL</code> that defines the kind of Acceptor to
+create along with its configuration. The <code>schema</code> part of the <code>URL</code> defines the
+Acceptor type which can either be <code>tcp</code> or <code>vm</code> which is <code>Netty</code> or an In VM
+Acceptor respectively. For <code>Netty</code> the host and the port of the <code>URL</code> define
+what host and port the <code>acceptor</code> will bind to. For In VM the <code>Authority</code> part
+of the <code>URL</code> defines a unique server id.</p>
+<p>The <code>acceptor</code> can also be configured with a set of key=value pairs used to
+configure the specific transport, the set of valid key=value pairs depends on
+the specific transport be used and are passed straight through to the
+underlying transport. These are set on the <code>URL</code> as part of the query, like so:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">acceptor</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;netty&quot;</span>&gt;</span>tcp://localhost:61617?sslEnabled=true&amp;keyStorePath=/path<span class="hljs-tag">&lt;/<span class="hljs-name">acceptor</span>&gt;</span>
+</code></pre>
+<h2 id="connectors">Connectors</h2>
+<p>Whereas acceptors are used on the server to define how we accept connections,
+connectors are used to define how to connect to a server.</p>
+<p>Let&apos;s look at a connector defined in our <code>broker.xml</code> file:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">connector</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;netty&quot;</span>&gt;</span>tcp://localhost:61617<span class="hljs-tag">&lt;/<span class="hljs-name">connector</span>&gt;</span>
+</code></pre>
+<p>Connectors can be defined inside a <code>connectors</code> element. There can be one or
+more connectors defined in the <code>connectors</code> element. There&apos;s no upper limit to
+the number of connectors per server.</p>
+<p>A <code>connector</code> is used when the server acts as a client itself, e.g.:</p>
+<ul>
+<li>When one server is bridged to another</li>
+<li>When a server takes part in a cluster</li>
+</ul>
+<p>In these cases the server needs to know how to connect to other servers.
+That&apos;s defined by <code>connectors</code>.</p>
+<h2 id="configuring-the-transport-directly-from-the-client">Configuring the Transport Directly from the Client</h2>
+<p>How do we configure a core <code>ClientSessionFactory</code> with the information that it
+needs to connect with a server?</p>
+<p>Connectors are also used indirectly when configuring a core
+<code>ClientSessionFactory</code> to directly talk to a server. Although in this case
+there&apos;s no need to define such a connector in the server side configuration,
+instead we just specify the appropriate URI.</p>
+<p>Here&apos;s an example of creating a <code>ClientSessionFactory</code> which will connect
+directly to the acceptor we defined earlier in this chapter, it uses the
+standard Netty TCP transport and will try and connect on port 61617 to
+localhost (default):</p>
+<pre><code class="lang-java">ServerLocator locator = ActiveMQClient.createServerLocator(<span class="hljs-string">&quot;tcp://localhost:61617&quot;</span>);
+
+ClientSessionFactory sessionFactory = locator.createClientSessionFactory();
+
+ClientSession session = sessionFactory.createSession(...);
+</code></pre>
+<p>Similarly, if you&apos;re using JMS, you can configure the JMS connection factory
+directly on the client side:</p>
+<pre><code class="lang-java">ConnectionFactory connectionFactory = <span class="hljs-keyword">new</span> ActiveMQConnectionFactory(<span class="hljs-string">&quot;tcp://localhost:61617&quot;</span>);
+
+Connection jmsConnection = connectionFactory.createConnection();
+</code></pre>
+<h2 id="configuring-the-netty-transport">Configuring the Netty transport</h2>
+<p>Out of the box, Apache ActiveMQ Artemis currently uses
+<a href="https://netty.io/" target="_blank">Netty</a>, a high performance low level network library.</p>
+<p>Our Netty transport can be configured in several different ways; to use
+straightforward TCP sockets, SSL, or to tunnel over HTTP or HTTPS..</p>
+<p>We believe this caters for the vast majority of transport requirements.</p>
+<h3 id="single-port-support">Single Port Support</h3>
+<p>Apache ActiveMQ Artemis supports using a single port for all protocols, Apache
+ActiveMQ Artemis will automatically detect which protocol is being used CORE,
+AMQP, STOMP, MQTT or OPENWIRE and use the appropriate Apache ActiveMQ Artemis
+handler. It will also detect whether protocols such as HTTP or Web Sockets are
+being used and also use the appropriate decoders. Web Sockets are supported for
+AMQP, STOMP, and MQTT.</p>
+<p>It is possible to limit which protocols are supported by using the <code>protocols</code>
+parameter on the Acceptor like so:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">acceptor</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;netty&quot;</span>&gt;</span>tcp://localhost:61617?protocols=CORE,AMQP<span class="hljs-tag">&lt;/<span class="hljs-name">acceptor</span>&gt;</span>
+</code></pre>
+<h3 id="configuring-netty-tcp">Configuring Netty TCP</h3>
+<p>Netty TCP is a simple unencrypted TCP sockets based transport. If you&apos;re
+running connections across an untrusted network please bear in mind this
+transport is unencrypted. You may want to look at the SSL or HTTPS
+configurations.</p>
+<p>With the Netty TCP transport all connections are initiated from the client side
+(i.e. the server does not initiate any connections to the client). This works
+well with firewall policies that typically only allow connections to be
+initiated in one direction.</p>
+<p>All the valid keys for the <code>tcp</code> URL scheme used for Netty are defined in the
+class
+<code>org.apache.activemq.artemis.core.remoting.impl.netty.TransportConstants</code>.
+Most parameters can be used either with acceptors or connectors, some only work
+with acceptors. The following parameters can be used to configure Netty for
+simple TCP:</p>
+<blockquote>
+<p><strong>Note:</strong></p>
+<p>The <code>host</code> and <code>port</code> parameters are only used in the core API, in XML
+configuration these are set in the URI host and port.</p>
+</blockquote>
+<ul>
+<li><p><code>host</code>. This specifies the host name or IP address to connect to (when
+configuring a connector) or to listen on (when configuring an acceptor). The
+default value for this property is <code>localhost</code>. When configuring acceptors,
+multiple hosts or IP addresses can be specified by separating them with commas.
+It is also possible to specify <code>0.0.0.0</code> to accept connection from all the
+host&apos;s network interfaces. It&apos;s not valid to specify multiple addresses when
+specifying the host for a connector; a connector makes a connection to one
+specific address.</p>
+<blockquote>
+<p><strong>Note:</strong></p>
+<p>Don&apos;t forget to specify a host name or IP address! If you want your server
+able to accept connections from other nodes you must specify a hostname or
+IP address at which the acceptor will bind and listen for incoming
+connections. The default is localhost which of course is not accessible
+from remote nodes!</p>
+</blockquote>
+</li>
+<li><p><code>port</code>. This specified the port to connect to (when configuring a connector)
+or to listen on (when configuring an acceptor). The default value for this
+property is <code>61616</code>.</p>
+</li>
+<li><p><code>tcpNoDelay</code>. If this is <code>true</code> then <a href="https://en.wikipedia.org/wiki/Nagle%27s_algorithm" target="_blank">Nagle&apos;s
+algorithm</a> will be
+disabled. This is a <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/net/socketOpt.html" target="_blank">Java (client) socket
+option</a>.
+The default value for this property is <code>true</code>.</p>
+</li>
+<li><p><code>tcpSendBufferSize</code>. This parameter determines the size of the TCP send
+buffer in bytes. The default value for this property is <code>32768</code> bytes
+(32KiB).</p>
+<p>TCP buffer sizes should be tuned according to the bandwidth and latency of
+your network. Here&apos;s a good link that explains the theory behind
+<a href="http://www-didc.lbl.gov/TCP-tuning/" target="_blank">this</a>.</p>
+<p>In summary TCP send/receive buffer sizes should be calculated as:</p>
+<pre><code>buffer_size = bandwidth * RTT.
+</code></pre><p>Where bandwidth is in <em>bytes per second</em> and network round trip time (RTT) is
+in seconds. RTT can be easily measured using the <code>ping</code> utility.</p>
+<p>For fast networks you may want to increase the buffer sizes from the
+defaults.</p>
+</li>
+<li><p><code>tcpReceiveBufferSize</code>. This parameter determines the size of the TCP receive
+buffer in bytes. The default value for this property is <code>32768</code> bytes
+(32KiB).</p>
+</li>
+<li><p><code>writeBufferLowWaterMark</code>. This parameter determines the low water mark of
+the Netty write buffer. Once the number of bytes queued in the write buffer
+exceeded the high water mark and then dropped down below this value, Netty&apos;s
+channel will start to be writable again. The default value for this property is
+<code>32768</code> bytes (32KiB).</p>
+</li>
+<li><p><code>writeBufferHighWaterMark</code>. This parameter determines the high water mark of
+the Netty write buffer. If the number of bytes queued in the write buffer
+exceeds this value, Netty&apos;s channel will start to be not writable. The default
+value for this property is <code>131072</code> bytes (128KiB).</p>
+</li>
+<li><p><code>batchDelay</code>. Before writing packets to the transport, Apache ActiveMQ
+Artemis can be configured to batch up writes for a maximum of <code>batchDelay</code>
+milliseconds. This can increase overall throughput for very small messages. It
+does so at the expense of an increase in average latency for message transfer.
+The default value for this property is <code>0</code> ms.</p>
+</li>
+<li><p><code>directDeliver</code>. When a message arrives on the server and is delivered to
+waiting consumers, by default, the delivery is done on the same thread as
+that on which the message arrived. This gives good latency in environments with
+relatively small messages and a small number of consumers, but at the cost of
+overall throughput and scalability - especially on multi-core machines. If you
+want the lowest latency and a possible reduction in throughput then you can use
+the default value for <code>directDeliver</code> (i.e. <code>true</code>). If you are willing to take
+some small extra hit on latency but want the highest throughput set
+<code>directDeliver</code> to <code>false</code>.</p>
+</li>
+<li><p><code>nioRemotingThreads</code> This is deprecated. It is replaced by <code>remotingThreads</code>,
+if you are using this please update your configuration</p>
+</li>
+<li><p><code>remotingThreads</code>. Apache ActiveMQ Artemis will, by default, use a number of
+threads equal to three times the number of cores (or hyper-threads) as
+reported by <code>Runtime.getRuntime().availableProcessors()</code> for processing
+incoming packets. If you want to override this value, you can set the number of
+threads by specifying this parameter. The default value for this parameter is
+<code>-1</code> which means use the value from
+<code>Runtime.getRuntime().availableProcessors()</code> * 3.</p>
+</li>
+<li><p><code>localAddress</code>. When configured a Netty Connector it is possible to specify
+which local address the client will use when connecting to the remote
+address. This is typically used in the Application Server or when running
+Embedded to control which address is used for outbound connections. If the
+local-address is not set then the connector will use any local address
+available</p>
+</li>
+<li><p><code>localPort</code>. When configured a Netty Connector it is possible to specify
+which local port the client will use when connecting to the remote address.
+This is typically used in the Application Server or when running Embedded to
+control which port is used for outbound connections. If the local-port default
+is used, which is 0, then the connector will let the system pick up an
+ephemeral port. valid ports are 0 to 65535</p>
+</li>
+<li><p><code>connectionsAllowed</code>. This is only valid for acceptors. It limits the number
+of connections which the acceptor will allow. When this limit is reached a
+DEBUG level message is issued to the log, and the connection is refused. The
+type of client in use will determine what happens when the connection is
+refused. In the case of a <code>core</code> client, it will result in a
+<code>org.apache.activemq.artemis.api.core.ActiveMQConnectionTimedOutException</code>.</p>
+</li>
+<li><p><code>handshake-timeout</code>. Prevents an unauthorised client opening a large number
+of connections and just keeping them open. As connections each require a file
+handle this consumes resources that are then unavailable to other clients. Once
+the connection is authenticated, the usual rules can be enforced regarding
+resource consumption. Default value is set to 10 seconds. Each integer is valid
+value. When set value to zero or negative integer this feature is turned off.
+Changing value needs to restart server to take effect.</p>
+</li>
+<li><p><code>autoStart</code>. Determines whether or not an acceptor will start automatically
+when the broker is started. Default value is <code>true</code>.</p>
+</li>
+</ul>
+<h3 id="configuring-netty-native-transport">Configuring Netty Native Transport</h3>
+<p>Netty Native Transport support exists for selected OS platforms.  This allows
+Apache ActiveMQ Artemis to use native sockets/io instead of Java NIO.</p>
+<p>These Native transports add features specific to a particular platform,
+generate less garbage, and generally improve performance when compared to Java
+NIO based transport.</p>
+<p>Both Clients and Server can benefit from this.</p>
+<p>Current Supported Platforms.</p>
+<ul>
+<li>Linux running 64bit JVM</li>
+<li>MacOS running 64bit JVM</li>
+</ul>
+<p>Apache ActiveMQ Artemis will by default enable the corresponding native
+transport if a supported platform is detected.</p>
+<p>If running on an unsupported platform or any issues loading native libs, Apache
+ActiveMQ Artemis will fallback onto Java NIO.</p>
+<h4 id="linux-native-transport">Linux Native Transport</h4>
+<p>On supported Linux platforms Epoll is used, @see
+<a href="https://en.wikipedia.org/wiki/Epoll" target="_blank">https://en.wikipedia.org/wiki/Epoll</a>. </p>
+<p>The following properties are specific to this native transport:</p>
+<ul>
+<li><code>useEpoll</code> enables the use of epoll if a supported linux platform is running
+a 64bit JVM is detected.  Setting this to <code>false</code> will force the use of Java
+NIO instead of epoll. Default is <code>true</code></li>
+</ul>
+<h4 id="macos-native-transport">MacOS Native Transport</h4>
+<p>On supported MacOS platforms KQueue is used, @see
+<a href="https://en.wikipedia.org/wiki/Kqueue" target="_blank">https://en.wikipedia.org/wiki/Kqueue</a>. </p>
+<p>The following properties are specific to this native transport:</p>
+<ul>
+<li><code>useKQueue</code> enables the use of kqueue if a supported MacOS platform running a
+64bit JVM is detected.  Setting this to <code>false</code> will force the use of Java
+NIO instead of kqueue. Default is <code>true</code></li>
+</ul>
+<h3 id="configuring-netty-ssl">Configuring Netty SSL</h3>
+<p>Netty SSL is similar to the Netty TCP transport but it provides additional
+security by encrypting TCP connections using the Secure Sockets Layer SSL</p>
+<p>Please see the examples for a full working example of using Netty SSL.</p>
+<p>Netty SSL uses all the same properties as Netty TCP but adds the following
+additional properties:</p>
+<ul>
+<li><p><code>sslContext</code></p>
+<p>An optional cache key only evaluated if <code>org.apache.activemq.artemis.core.remoting.impl.ssl.CachingSSLContextFactory</code>
+is active, to cache the initial created SSL context and reuse it. If not
+specified CachingSSLContextFactory will automatically calculate a cache key based on
+the given keystore/truststore parameters.
+See <a href="#Configuring%20an%20SSLContextFactory">Configuring an SSLContextFactory</a>
+for more details.</p>
+</li>
+<li><p><code>sslEnabled</code></p>
+<p>Must be <code>true</code> to enable SSL. Default is <code>false</code>.</p>
+</li>
+<li><p><code>keyStorePath</code></p>
+<p>When used on an <code>acceptor</code> this is the path to the SSL key store on the
+server which holds the server&apos;s certificates (whether self-signed or signed by
+an authority).</p>
+<p>When used on a <code>connector</code> this is the path to the client-side SSL key store
+which holds the client certificates. This is only relevant for a <code>connector</code> if
+you are using 2-way SSL (i.e. mutual authentication). Although this value is
+configured on the server, it is downloaded and used by the client. If the
+client needs to use a different path from that set on the server then it can
+override the server-side setting by either using the customary
+&quot;javax.net.ssl.keyStore&quot; system property or the ActiveMQ-specific
+&quot;org.apache.activemq.ssl.keyStore&quot; system property. The ActiveMQ-specific
+system property is useful if another component on the client is already making
+use of the standard Java system property.</p>
+</li>
+<li><p><code>keyStorePassword</code></p>
+<p>When used on an <code>acceptor</code> this is the password for the server-side keystore.</p>
+<p>When used on a <code>connector</code> this is the password for the client-side keystore.
+This is only relevant for a <code>connector</code> if you are using 2-way SSL (i.e. mutual
+authentication). Although this value can be configured on the server, it is
+downloaded and used by the client.  If the client needs to use a different
+password from that set on the server then it can override the server-side
+setting by either using the customary &quot;javax.net.ssl.keyStorePassword&quot; system
+property or the ActiveMQ-specific &quot;org.apache.activemq.ssl.keyStorePassword&quot;
+system property. The ActiveMQ-specific system property is useful if another
+component on the client is already making use of the standard Java system
+property.</p>
+</li>
+<li><p><code>keyStoreType</code></p>
+<p>The type of keystore being used. For example, <code>JKS</code>, <code>JCEKS</code>, <code>PKCS12</code>, etc.
+This value can also be set via the &quot;javax.net.ssl.keyStoreType&quot; system property
+or the ActiveMQ-specific &quot;org.apache.activemq.ssl.keyStoreType&quot; system property.
+The ActiveMQ-specific system property is useful if another component on the 
+client is already making use of the standard Java system property. Default is
+<code>JKS</code>.</p>
+</li>
+<li><p><code>keyStoreProvider</code></p>
+<p>The provider used for the keystore. For example, <code>SUN</code>, <code>SunJCE</code>, etc. This 
+value can also be set via the &quot;javax.net.ssl.keyStoreProvider&quot; system property
+or the ActiveMQ-specific &quot;org.apache.activemq.ssl.keyStoreProvider&quot; system
+property. The ActiveMQ-specific system property is useful if another component
+on the client is already making use of the standard Java system property.
+Default is <code>null</code>.</p>
+</li>
+<li><p><code>trustStorePath</code></p>
+<p>When used on an <code>acceptor</code> this is the path to the server-side SSL key store
+that holds the keys of all the clients that the server trusts. This is only
+relevant for an <code>acceptor</code> if you are using 2-way SSL (i.e. mutual
+authentication).</p>
+<p>When used on a <code>connector</code> this is the path to the client-side SSL key store
+which holds the public keys of all the servers that the client trusts. Although
+this value can be configured on the server, it is downloaded and used by the
+client. If the client needs to use a different path from that set on the server
+then it can override the server-side setting by either using the customary
+&quot;javax.net.ssl.trustStore&quot; system property or the ActiveMQ-specific
+&quot;org.apache.activemq.ssl.trustStore&quot; system property. The ActiveMQ-specific
+system property is useful if another component on the client is already making
+use of the standard Java system property.</p>
+</li>
+<li><p><code>trustStorePassword</code></p>
+<p>When used on an <code>acceptor</code> this is the password for the server-side trust
+store. This is only relevant for an <code>acceptor</code> if you are using 2-way SSL (i.e.
+mutual authentication).</p>
+<p>When used on a <code>connector</code> this is the password for the client-side
+truststore. Although this value can be configured on the server, it is
+downloaded and used by the client. If the client needs to use a different
+password from that set on the server then it can override the server-side
+setting by either using the customary &quot;javax.net.ssl.trustStorePassword&quot; system
+property or the ActiveMQ-specific &quot;org.apache.activemq.ssl.trustStorePassword&quot;
+system property. The ActiveMQ-specific system property is useful if another
+component on the client is already making use of the standard Java system
+property.</p>
+</li>
+<li><p><code>trustStoreType</code></p>
+<p>The type of truststore being used. For example, <code>JKS</code>, <code>JCEKS</code>, <code>PKCS12</code>, etc.
+This value can also be set via the &quot;javax.net.ssl.trustStoreType&quot; system property
+or the ActiveMQ-specific &quot;org.apache.activemq.ssl.trustStoreType&quot; system property.
+The ActiveMQ-specific system property is useful if another component on the client
+is already making use of the standard Java system property. Default is <code>JKS</code>.</p>
+</li>
+<li><p><code>trustStoreProvider</code></p>
+<p>The provider used for the truststore. For example, <code>SUN</code>, <code>SunJCE</code>, etc. This
+value can also be set via the &quot;javax.net.ssl.trustStoreProvider&quot; system property
+or the ActiveMQ-specific &quot;org.apache.activemq.ssl.trustStoreProvider&quot; system
+property. The ActiveMQ-specific system property is useful if another component
+on the client is already making use of the standard Java system property.
+Default is <code>null</code>.</p>
+</li>
+<li><p><code>enabledCipherSuites</code></p>
+<p>Whether used on an <code>acceptor</code> or <code>connector</code> this is a comma separated list
+of cipher suites used for SSL communication. The default value is <code>null</code> which
+means the JVM&apos;s default will be used.</p>
+</li>
+<li><p><code>enabledProtocols</code></p>
+<p>Whether used on an <code>acceptor</code> or <code>connector</code> this is a comma separated list
+of protocols used for SSL communication. The default value is <code>null</code> which
+means the JVM&apos;s default will be used.</p>
+</li>
+<li><p><code>needClientAuth</code></p>
+<p>This property is only for an <code>acceptor</code>. It tells a client connecting to this
+acceptor that 2-way SSL is required. Valid values are <code>true</code> or <code>false</code>.
+Default is <code>false</code>.</p>
+<p><strong>Note:</strong> This property takes precedence over <code>wantClientAuth</code> and if its
+value is set to true then <code>wantClientAuth</code> will be ignored.</p>
+</li>
+<li><p><code>wantClientAuth</code></p>
+<p>This property is only for an <code>acceptor</code>. It tells a client connecting to this
+acceptor that 2-way SSL is requested but not required.  Valid values are <code>true</code>
+or <code>false</code>. Default is <code>false</code>. </p>
+<p><strong>Note:</strong> If the property <code>needClientAuth</code> is set to <code>true</code> then that
+property will take precedence and this property will be ignored.</p>
+</li>
+<li><p><code>verifyHost</code></p>
+<p>When used on a <code>connector</code> the <code>CN</code> or Subject Alternative Name values
+of the server&apos;s SSL certificate will be compared with the hostname being
+connected to in order to verify a match. This is useful for both 1-way and 2-way SSL.</p>
+<p>When used on an <code>acceptor</code> the <code>CN</code> or Subject Alternative Name values
+of the connecting client&apos;s SSL certificate will be compared to its
+hostname to verify a match. This is useful only for 2-way SSL.</p>
+<p>Valid values are <code>true</code> or <code>false</code>. Default is <code>true</code> for connectors, and <code>false</code> for acceptors.</p>
+</li>
+<li><p><code>trustAll</code></p>
+<p>When used on a <code>connector</code> the client will trust the provided server
+certificate implicitly, regardless of any configured trust store.  <strong>Warning:</strong>
+This setting is primarily for testing purposes only and should not be used in
+production.</p>
+<p>Valid values are <code>true</code> or <code>false</code>. Default is <code>false</code>.</p>
+</li>
+<li><p><code>forceSSLParameters</code></p>
+<p>When used on a <code>connector</code> any SSL settings that are set as parameters on the
+connector will be used instead of JVM system properties including both
+javax.net.ssl and ActiveMQ system properties to configure the SSL context for
+this connector.</p>
+<p>Valid values are <code>true</code> or <code>false</code>. Default is <code>false</code>.</p>
+</li>
+<li><p><code>useDefaultSslContext</code></p>
+<p>Only valid on a <code>connector</code>. Allows the <code>connector</code> to use the &quot;default&quot; SSL
+context (via <code>SSLContext.getDefault()</code>) which can be set programmatically by
+the client (via <code>SSLContext.setDefault(SSLContext)</code>). If set to <code>true</code> all
+other SSL related parameters except for <code>sslEnabled</code> are ignored.</p>
+<p>Valid values are <code>true</code> or <code>false</code>. Default is <code>false</code>.</p>
+</li>
+<li><p><code>sslProvider</code></p>
+<p>Used to change the SSL Provider between <code>JDK</code> and <code>OPENSSL</code>. The default is
+<code>JDK</code>.  If used with <code>OPENSSL</code> you can add <code>netty-tcnative</code> to your classpath
+to use the native installed openssl. This can be useful if you want to use
+special ciphersuite - elliptic curve combinations which are support through
+openssl but not through the JDK provider. See
+<a href="https://en.wikipedia.org/wiki/Comparison_of_TLS_implementations" target="_blank">https://en.wikipedia.org/wiki/Comparison_of_TLS_implementations</a> for more
+information&apos;s.</p>
+</li>
+<li><p><code>sniHost</code></p>
+<p>When used on an <code>acceptor</code> the <code>sniHost</code> is a <em>regular expression</em> used to
+match the <a href="https://tools.ietf.org/html/rfc6066" target="_blank"><code>server_name</code></a> extension on
+incoming SSL connections. If the name doesn&apos;t match then the connection to
+the acceptor will be rejected. A WARN message will be logged if this happens.
+If the incoming connection doesn&apos;t include the <code>server_name</code> extension then
+the connection will be accepted.</p>
+<p>When used on a <code>connector</code> the <code>sniHost</code> value is used for the <code>server_name</code>
+extension on the SSL connection.</p>
+</li>
+<li><p><code>trustManagerFactoryPlugin</code></p>
+<p>This is valid on either an <code>acceptor</code> or <code>connector</code>. It defines the name
+of the class which implements <code>org.apache.activemq.artemis.api.core.TrustManagerFactoryPlugin</code>.
+This is a simple interface with a single method which returns a
+<code>javax.net.ssl.TrustManagerFactory</code>. The <code>TrustManagerFactory</code> will be used
+when the underlying <code>javax.net.ssl.SSLContext</code> is initialized. This allows
+fine-grained customization of who/what the broker &amp; client trusts.</p>
+<p>This value takes precedence of all other SSL parameters which apply to the
+trust manager (i.e. <code>trustAll</code>, <code>truststoreProvider</code>, <code>truststorePath</code>,
+<code>truststorePassword</code>, <code>crlPath</code>).</p>
+<p>Any plugin specified will need to be placed on the
+<a href="using-server.html#adding-runtime-dependencies">broker&apos;s classpath</a>.</p>
+</li>
+</ul>
+<h4 id="configuring-an-sslcontextfactory">Configuring an SSLContextFactory</h4>
+<p>If you use <code>JDK</code> as SSL provider (the default), you can configure which
+SSLContextFactory to use.
+Currently the following two implementations are provided:</p>
+<ul>
+<li><code>org.apache.activemq.artemis.core.remoting.impl.ssl.DefaultSSLContextFactory</code>
+(registered by the default)</li>
+<li><code>org.apache.activemq.artemis.core.remoting.impl.ssl.CachingSSLContextFactory</code></li>
+</ul>
+<p>You may also create your own implementation of 
+<code>org.apache.activemq.artemis.spi.core.remoting.ssl.SSLContextFactory</code>.</p>
+<p>The implementations are loaded by a <code>java.util.ServiceLoader</code>, thus you need to declare your implementation in
+a <code>META-INF/services/org.apache.activemq.artemis.spi.core.remoting.ssl.SSLContextFactory</code> file.
+If several implementations are available, the one with the highest <code>priority</code> will be selected.</p>
+<p>So for example, if you want to use <code>org.apache.activemq.artemis.core.remoting.impl.ssl.CachingSSLContextFactory</code>
+you need to add a <code>META-INF/services/org.apache.activemq.artemis.spi.core.remoting.ssl.SSLContextFactory</code> file
+to your classpath with the content <code>org.apache.activemq.artemis.core.remoting.impl.ssl.CachingSSLContextFactory</code>.</p>
+<p>A similar mechanism exists for the <code>OPENSSL</code> SSL provider in which case you can configure an OpenSSLContextFactory.
+Currently the following two implementations are provided:</p>
+<ul>
+<li><code>org.apache.activemq.artemis.core.remoting.impl.ssl.DefaultOpenSSLContextFactory</code>
+(registered by the default)</li>
+<li><code>org.apache.activemq.artemis.core.remoting.impl.ssl.CachingOpenSSLContextFactory</code></li>
+</ul>
+<p>You may also create your own implementation of 
+<code>org.apache.activemq.artemis.spi.core.remoting.ssl.OpenSSLContextFactory</code>.</p>
+<h3 id="configuring-netty-http">Configuring Netty HTTP</h3>
+<p>Netty HTTP tunnels packets over the HTTP protocol. It can be useful in
+scenarios where firewalls only allow HTTP traffic to pass.</p>
+<p>Please see the examples for a full working example of using Netty HTTP.</p>
+<p>Netty HTTP uses the same properties as Netty TCP but adds the following
+additional properties:</p>
+<ul>
+<li><p><code>httpEnabled</code>. This is now no longer needed. With single port support Apache
+ActiveMQ Artemis will now automatically detect if http is being used and
+configure itself.</p>
+</li>
+<li><p><code>httpClientIdleTime</code>. How long a client can be idle before sending an empty
+http request to keep the connection alive</p>
+</li>
+<li><p><code>httpClientIdleScanPeriod</code>. How often, in milliseconds, to scan for idle
+clients</p>
+</li>
+<li><p><code>httpResponseTime</code>. How long the server can wait before sending an empty http
+response to keep the connection alive</p>
+</li>
+<li><p><code>httpServerScanPeriod</code>. How often, in milliseconds, to scan for clients
+needing responses</p>
+</li>
+<li><p><code>httpRequiresSessionId</code>. If <code>true</code> the client will wait after the first call
+to receive a session id. Used the http connector is connecting to servlet
+acceptor (not recommended)</p>
+</li>
+</ul>
+<h3 id="configuring-netty-socks-proxy">Configuring Netty SOCKS Proxy</h3>
+<p>All these parameters are only applicable to a <code>connector</code> and/or client URL.</p>
+<p><strong>Note:</strong> Using a loop-back address (e.g. <code>localhost</code> or <code>127.0.0.1</code>) as the
+target of the <code>connector</code> or URL will circumvent the application of these
+configuration properties. In other words, no SOCKS proxy support will be
+configured even if these properties are set.</p>
+<ul>
+<li><p><code>socksEnabled</code>. Whether or not to enable SOCKS support on the <code>connector</code>.</p>
+</li>
+<li><p><code>socksHost</code>. The name of the SOCKS server to use.</p>
+</li>
+<li><p><code>socksPort</code>. The port of the SOCKS server to use.</p>
+</li>
+<li><p><code>socksVersion</code>. The version of SOCKS to use. Must be an integer. Default is
+<code>5</code>.</p>
+</li>
+<li><p><code>socksUsername</code>. The username to use when connecting to the <code>socksHost</code>.</p>
+</li>
+<li><p><code>socksPassword</code>. The password to use when connecting to the <code>socksHost</code>. Only
+applicable if the <code>socksVersion</code> is <code>5</code>.</p>
+</li>
+<li><p><code>socksRemoteDNS</code>. Whether or not to create remote destination socket
+unresolved and disable DNS resolution. Default is <code>false</code>.</p>
+</li>
+</ul>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="persistence.html" class="navigation navigation-prev " aria-label="Previous page: Persistence">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="config-reload.html" class="navigation navigation-next " aria-label="Next page: Configuration Reload">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Configuring Transports","level":"1.25","depth":1,"next":{"title":"Configuration Reload","level":"1.26","depth":1,"path":"config-reload.md","ref":"config-reload.md","articles":[]},"previous":{"title":"Persistence","level":"1.24","depth":1,"path":"persistence.md","ref":"persistence.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"styles":{"ebook":"styles/ebook.css","epub":"styles/epub.css","mobi":"styles/mobi.css","pdf":"styles/pdf.css","print":"styles/print.css","website":"styles/website.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"showLevel":false,"styles":{"ebook":"styles/ebook.css","epub":"styles/epub.css","mobi":"styles/mobi.css","pdf":"styles/pdf.css","print":"styles/print.css","website":"styles/website.css"}}},"github":"apache/activemq-artemis","theme":"default","githubHost":"https://github.com/","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"version":"2.23.1","title":"ActiveMQ Artemis Documentation","links":{"home":"http://activemq.apache.org/artemis","issues":"https://issues.apache.org/jira/browse/ARTEMIS","contribute":"http://activemq.apache.org/contributing.html"},"gitbook":"3.x.x","description":"ActiveMQ Artemis User Guide and Reference Documentation"},"file":{"path":"configuring-transports.md","mtime":"2022-06-14T19:55:22.255Z","type":"markdown"},"gitbook":{"version":"3.7.1","time":"2022-06-14T19:55:23.109Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

@@ -1,3 +1,4 @@
+import re
 from typing import Any, Callable, Dict
 from utils import PipeMetadata
 from bs4 import BeautifulSoup, Tag
@@ -9,6 +10,7 @@ from ArticleUtils.article_utils import (
     article_extract_transform,
     article_transform,
     author_extract_transform,
+    extract_category_from_url,
     extract_publication_date,
     head_extract_transform,
     headline_extract_transform,
@@ -26,7 +28,7 @@ def article_transform_fc(tag: Tag):
     if not isinstance(classes, list) or len(classes) != 1:
         return False
 
-    return classes[0].startswith("g_c")
+    return re.search("g_c[69]", classes[0]) is not None
 
 
 head_extract_dict: Dict[str, str] = {
@@ -83,8 +85,7 @@ class Extractor(ArticleExtractor):
 
         # merge dicts
         extracted_dict = {**extracted_head, **extracted_article}
-        category = metadata.url_parsed.path.split("/")[1]
-        extracted_dict["category"] = category
+        extracted_dict["category"] = extract_category_from_url(metadata.url_parsed)
         extracted_dict["comments_num"] = None
 
         return extracted_dict

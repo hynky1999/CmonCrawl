@@ -8,7 +8,6 @@ from types import TracebackType
 from aiohttp import ClientError, ClientSession
 from typing import Type
 from hashlib import md5, sha1
-from chardet import detect
 
 from Downloader.errors import PageDownloadException
 from Downloader.warc import PipeMetadata, parse_warc
@@ -48,6 +47,7 @@ class Downloader:
         }
         url = f"{self.BASE_URL}{domain_record.filename}"
         try:
+            response_bytes = bytes()
             async with self.client.get(url, headers=headers) as response:
                 if not response.ok:
                     raise PageDownloadException(
@@ -114,6 +114,7 @@ class Downloader:
             raise ValueError(f"Unknown hash type {hash_type}")
 
         if digest_decoded != hash_digest:
+            logging.warn("")
             return False
         return True
 

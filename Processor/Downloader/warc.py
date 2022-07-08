@@ -53,7 +53,6 @@ def parse_warc(warc_str: str, metadata: PipeMetadata):
     if len(splitted) == 2:
         # Old format without warc header
         http_h, html = splitted
-        html = html[:-1]
         # Strip last separator \n
     elif len(splitted) == 3:
         warc_h, http_h, html = splitted

@@ -57,7 +57,7 @@ async def aggregate(
                     conn.send(
                         f"/queue/articles.{url}",
                         json_str,
-                        headers={DUPL_ID_HEADER: domain_record.url},
+                        # headers={DUPL_ID_HEADER: domain_record.url},
                     )
                     logging.info(f"Sent url: {domain_record.url}")
                     i += 1
