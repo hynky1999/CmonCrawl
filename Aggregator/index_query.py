@@ -320,9 +320,10 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         async def __await_next_prefetch(self):
             # Wait for the next prefetch to finish
             # Don't prefetch if limit is set to avoid overfetching
-            while (self.__limit is None and len(self.prefetch_queue) == 0) or len(
-                self.prefetch_queue
-            ) <= self.__opt_prefetch_size:
+            while (len(self.prefetch_queue) == 0) or (
+                self.__limit is None
+                and len(self.prefetch_queue) <= self.__opt_prefetch_size
+            ):
                 pages_prefetched = await self.__prefetch_next_crawl()
                 if pages_prefetched == 0:
                     break
@@ -332,7 +333,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
                 try:
                     self.__domain_records = await task
                     logging.info(
-                        f"Suceeded to prefetch page {self.__domain_records.origin.page} of {self.__domain_records.origin.domain} from {self.__domain_records.origin.cdx_server}"
+                        f"Suceeded to prefetch page {self.__domain_records.origin.page} of {self.__domain_records.origin.domain} from {self.__domain_records.origin.cdx_server} found {len(self.__domain_records.records)} records"
                     )
                     return len(self.__domain_records.records)
 

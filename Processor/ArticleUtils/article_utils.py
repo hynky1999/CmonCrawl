@@ -1,4 +1,8 @@
+from datetime import datetime
+import logging
+import re
 from typing import Any, Callable, Dict
+from urllib.parse import ParseResult
 from xmlrpc.client import Boolean
 
 from bs4 import BeautifulSoup, NavigableString, Tag
@@ -108,6 +112,11 @@ def author_extract_transform(author: Tag | None | NavigableString):
     return text
 
 
+def headline_extract_transform(headline: str):
+    headline = re.split(r"[-–]", headline)[0]
+    return text_unification_transform(headline)
+
+
 def must_exist_filter(soup: BeautifulSoup, filter_dict: Dict[str, Any]):
     must_exist = [
         soup.select_one(css_selector) for css_selector in filter_dict.values()
@@ -126,3 +135,59 @@ def must_not_exist_filter(soup: BeautifulSoup, filter_dict: Dict[str, Any]):
         return False
 
     return True
+
+
+def extract_publication_date(format: str):
+    def inner(tag: Tag | NavigableString | None):
+        if tag is None:
+            return None
+        try:
+            return datetime.strptime(tag.text, format)
+        except ValueError:
+            pass
+        return None
+
+    return inner
+
+
+def extract_category_from_url(url: ParseResult):
+    category_split = str(url).split("/")
+    category = None
+    if len(category_split) > 1:
+        category = category_split[1]
+    return category
+
+
+def extract_date_cz(date_tag: Tag | None):
+    if date_tag is None:
+        return None
+    date_str = date_tag.text
+    try:
+        date_match = re.search(r"(\d{1,2})\.?\s+(\w+)\s+(\d{4})", date_str)
+        if date_match is None:
+            logging.error(f"Invalid CZ date: {date_str}")
+            return None
+        day, month, year = date_match.groups()
+
+        month = CZ_EN_MONTHS.index(month) + 1
+        date_iso = f"{year}-{month:02}-{int(day):02}"
+        return datetime.fromisoformat(date_iso)
+    except ValueError:
+        logging.error(f"Invalid CZ date: {date_str}")
+        return None
+
+
+CZ_EN_MONTHS = [
+    "ledna",
+    "února",
+    "března",
+    "dubna",
+    "května",
+    "června",
+    "července",
+    "srpna",
+    "září",
+    "října",
+    "listopadu",
+    "prosince",
+]

@@ -1,0 +1,1801 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <title>Model · ActiveMQ Artemis Documentation</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.7.1">
+        
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="address-settings.html" />
+    
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="notice.html">
+            
+                <a href="notice.html">
+            
+                    
+                    Legal Notice
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="preface.html">
+            
+                <a href="preface.html">
+            
+                    
+                    Preface
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="project-info.html">
+            
+                <a href="project-info.html">
+            
+                    
+                    Project Info
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="versions.html">
+            
+                <a href="versions.html">
+            
+                    
+                    Versions
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="messaging-concepts.html">
+            
+                <a href="messaging-concepts.html">
+            
+                    
+                    Messaging Concepts
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="architecture.html">
+            
+                <a href="architecture.html">
+            
+                    
+                    Architecture
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="using-server.html">
+            
+                <a href="using-server.html">
+            
+                    
+                    Using the Server
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="upgrading.html">
+            
+                <a href="upgrading.html">
+            
+                    
+                    Upgrading
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10" >
+            
+                <span>
+            
+                    
+                    Address
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter active" data-level="1.10.1" data-path="address-model.html">
+            
+                <a href="address-model.html">
+            
+                    
+                    Model
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2" data-path="address-settings.html">
+            
+                <a href="address-settings.html">
+            
+                    
+                    Settings
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11" data-path="protocols-interoperability.html">
+            
+                <a href="protocols-interoperability.html">
+            
+                    
+                    Protocols and Interoperability
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12" data-path="amqp.html">
+            
+                <a href="amqp.html">
+            
+                    
+                    AMQP
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.12.1" data-path="amqp-broker-connections.html">
+            
+                <a href="amqp-broker-connections.html">
+            
+                    
+                    Broker Connections
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.13" data-path="mqtt.html">
+            
+                <a href="mqtt.html">
+            
+                    
+                    MQTT
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.14" data-path="stomp.html">
+            
+                <a href="stomp.html">
+            
+                    
+                    STOMP
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.15" data-path="openwire.html">
+            
+                <a href="openwire.html">
+            
+                    
+                    OpenWire
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.16" data-path="core.html">
+            
+                <a href="core.html">
+            
+                    
+                    Core
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.17" data-path="jms-core-mapping.html">
+            
+                <a href="jms-core-mapping.html">
+            
+                    
+                    Mapping JMS Concepts to the Core API
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.18" data-path="using-jms.html">
+            
+                <a href="using-jms.html">
+            
+                    
+                    Using JMS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.19" data-path="client-classpath.html">
+            
+                <a href="client-classpath.html">
+            
+                    
+                    The Client Classpath
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.20" data-path="examples.html">
+            
+                <a href="examples.html">
+            
+                    
+                    Examples
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.21" data-path="wildcard-routing.html">
+            
+                <a href="wildcard-routing.html">
+            
+                    
+                    Routing Messages With Wild Cards
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.22" data-path="wildcard-syntax.html">
+            
+                <a href="wildcard-syntax.html">
+            
+                    
+                    Wildcard Syntax
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.23" data-path="filter-expressions.html">
+            
+                <a href="filter-expressions.html">
+            
+                    
+                    Filter Expressions
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.24" data-path="persistence.html">
+            
+                <a href="persistence.html">
+            
+                    
+                    Persistence
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.25" data-path="configuring-transports.html">
+            
+                <a href="configuring-transports.html">
+            
+                    
+                    Configuring Transports
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.26" data-path="config-reload.html">
+            
+                <a href="config-reload.html">
+            
+                    
+                    Configuration Reload
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.27" data-path="connection-ttl.html">
+            
+                <a href="connection-ttl.html">
+            
+                    
+                    Detecting Dead Connections
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.28" data-path="slow-consumers.html">
+            
+                <a href="slow-consumers.html">
+            
+                    
+                    Detecting Slow Consumers
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.29" data-path="network-isolation.html">
+            
+                <a href="network-isolation.html">
+            
+                    
+                    Avoiding Network Isolation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.30" data-path="critical-analysis.html">
+            
+                <a href="critical-analysis.html">
+            
+                    
+                    Detecting Broker Issues (Critical Analysis)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.31" data-path="transaction-config.html">
+            
+                <a href="transaction-config.html">
+            
+                    
+                    Resource Manager Configuration
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.32" data-path="flow-control.html">
+            
+                <a href="flow-control.html">
+            
+                    
+                    Flow Control
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.33" data-path="send-guarantees.html">
+            
+                <a href="send-guarantees.html">
+            
+                    
+                    Guarantees of sends and commits
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.34" data-path="undelivered-messages.html">
+            
+                <a href="undelivered-messages.html">
+            
+                    
+                    Message Redelivery and Undelivered Messages
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.35" data-path="message-expiry.html">
+            
+                <a href="message-expiry.html">
+            
+                    
+                    Message Expiry
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.36" data-path="large-messages.html">
+            
+                <a href="large-messages.html">
+            
+                    
+                    Large Messages
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.37" data-path="paging.html">
+            
+                <a href="paging.html">
+            
+                    
+                    Paging
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.38" data-path="scheduled-messages.html">
+            
+                <a href="scheduled-messages.html">
+            
+                    
+                    Scheduled Messages
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.39" data-path="last-value-queues.html">
+            
+                <a href="last-value-queues.html">
+            
+                    
+                    Last-Value Queues
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.40" data-path="non-destructive-queues.html">
+            
+                <a href="non-destructive-queues.html">
+            
+                    
+                    Non-Destructive Queues
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.41" data-path="ring-queues.html">
+            
+                <a href="ring-queues.html">
+            
+                    
+                    Ring Queues
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.42" data-path="retroactive-addresses.html">
+            
+                <a href="retroactive-addresses.html">
+            
+                    
+                    Retroactive Addresses
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.43" data-path="exclusive-queues.html">
+            
+                <a href="exclusive-queues.html">
+            
+                    
+                    Exclusive Queues
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.44" data-path="message-grouping.html">
+            
+                <a href="message-grouping.html">
+            
+                    
+                    Message Grouping
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.45" data-path="consumer-priority.html">
+            
+                <a href="consumer-priority.html">
+            
+                    
+                    Consumer Priority
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.46" data-path="pre-acknowledge.html">
+            
+                <a href="pre-acknowledge.html">
+            
+                    
+                    Extra Acknowledge Modes
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.47" data-path="management.html">
+            
+                <a href="management.html">
+            
+                    
+                    Management
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.48" data-path="management-console.html">
+            
+                <a href="management-console.html">
+            
+                    
+                    Management Console
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.49" data-path="metrics.html">
+            
+                <a href="metrics.html">
+            
+                    
+                    Metrics
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.50" data-path="security.html">
+            
+                <a href="security.html">
+            
+                    
+                    Security
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.51" data-path="masking-passwords.html">
+            
+                <a href="masking-passwords.html">
+            
+                    
+                    Masking Passwords
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.52" data-path="broker-plugins.html">
+            
+                <a href="broker-plugins.html">
+            
+                    
+                    Broker Plugins
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.53" data-path="resource-limits.html">
+            
+                <a href="resource-limits.html">
+            
+                    
+                    Resource Limits
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.54" data-path="jms-bridge.html">
+            
+                <a href="jms-bridge.html">
+            
+                    
+                    The JMS Bridge
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.55" data-path="client-reconnection.html">
+            
+                <a href="client-reconnection.html">
+            
+                    
+                    Client Reconnection and Session Reattachment
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.56" data-path="diverts.html">
+            
+                <a href="diverts.html">
+            
+                    
+                    Diverting and Splitting Message Flows
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.57" data-path="core-bridges.html">
+            
+                <a href="core-bridges.html">
+            
+                    
+                    Core Bridges
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.58" data-path="transformers.html">
+            
+                <a href="transformers.html">
+            
+                    
+                    Transformers
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.59" data-path="duplicate-detection.html">
+            
+                <a href="duplicate-detection.html">
+            
+                    
+                    Duplicate Message Detection
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.60" data-path="clusters.html">
+            
+                <a href="clusters.html">
+            
+                    
+                    Clusters
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.61" data-path="federation.html">
+            
+                <a href="federation.html">
+            
+                    
+                    Federation
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.61.1" data-path="federation-address.html">
+            
+                <a href="federation-address.html">
+            
+                    
+                    Address Federation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.61.2" data-path="federation-queue.html">
+            
+                <a href="federation-queue.html">
+            
+                    
+                    Queue Federation
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.62" data-path="ha.html">
+            
+                <a href="ha.html">
+            
+                    
+                    High Availability and Failover
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.63" data-path="connection-routers.html">
+            
+                <a href="connection-routers.html">
+            
+                    
+                    Connection Routers
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.64" data-path="graceful-shutdown.html">
+            
+                <a href="graceful-shutdown.html">
+            
+                    
+                    Graceful Server Shutdown
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.65" data-path="libaio.html">
+            
+                <a href="libaio.html">
+            
+                    
+                    Libaio Native Libraries
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.66" data-path="thread-pooling.html">
+            
+                <a href="thread-pooling.html">
+            
+                    
+                    Thread management
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.67" data-path="web-server.html">
+            
+                <a href="web-server.html">
+            
+                    
+                    Embedded Web Server
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.68" data-path="logging.html">
+            
+                <a href="logging.html">
+            
+                    
+                    Logging
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.69" data-path="rest.html">
+            
+                <a href="rest.html">
+            
+                    
+                    REST Interface
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.70" data-path="embedding-activemq.html">
+            
+                <a href="embedding-activemq.html">
+            
+                    
+                    Embedding the Broker
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.71" data-path="karaf.html">
+            
+                <a href="karaf.html">
+            
+                    
+                    Apache Karaf
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.72" data-path="tomcat.html">
+            
+                <a href="tomcat.html">
+            
+                    
+                    Apache Tomcat
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.73" data-path="spring-integration.html">
+            
+                <a href="spring-integration.html">
+            
+                    
+                    Spring Integration
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.74" data-path="cdi-integration.html">
+            
+                <a href="cdi-integration.html">
+            
+                    
+                    CDI Integration
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.75" data-path="intercepting-operations.html">
+            
+                <a href="intercepting-operations.html">
+            
+                    
+                    Intercepting Operations
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.76" data-path="data-tools.html">
+            
+                <a href="data-tools.html">
+            
+                    
+                    Data Tools
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.77" data-path="activation-tools.html">
+            
+                <a href="activation-tools.html">
+            
+                    
+                    Activation Tools
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.78" data-path="maven-plugin.html">
+            
+                <a href="maven-plugin.html">
+            
+                    
+                    Maven Plugin
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.79" data-path="unit-testing.html">
+            
+                <a href="unit-testing.html">
+            
+                    
+                    Unit Testing
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.80" data-path="perf-tuning.html">
+            
+                <a href="perf-tuning.html">
+            
+                    
+                    Troubleshooting and Performance Tuning
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.81" data-path="perf-tools.html">
+            
+                <a href="perf-tools.html">
+            
+                    
+                    Performance Tools
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.82" data-path="configuration-index.html">
+            
+                <a href="configuration-index.html">
+            
+                    
+                    Configuration Reference
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.83" data-path="restart-sequence.html">
+            
+                <a href="restart-sequence.html">
+            
+                    
+                    Restart Sequence
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >Model</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="address-model">Address Model</h1>
+<p>Every messaging protocol and API that Apache ActiveMQ Artemis supports defines
+a different set of messaging resources.</p>
+<ul>
+<li>JMS uses <em>queues</em> and <em>topics</em></li>
+<li>STOMP uses generic <em>destinations</em></li>
+<li>MQTT uses <em>topics</em></li>
+<li>AMQP uses generic <em>nodes</em></li>
+</ul>
+<p>In order to deal the the unique semantics and use-cases for each of these the
+broker has a flexible and powerful address model based on the following <em>core</em>
+set of resources:</p>
+<ul>
+<li><strong>address</strong></li>
+<li><strong>queue</strong></li>
+<li><strong>routing type</strong></li>
+</ul>
+<h3 id="address">Address</h3>
+<p>Messages are <em>sent</em> to an address. An address is given a unique name, a routing
+type, and zero or more queues.</p>
+<h3 id="queue">Queue</h3>
+<p>Messages are <em>consumed</em> from a queue. A queue is bound to an address. It is
+given a unique name and a routing type. There can be zero or more queues bound
+to one address. When a message is sent to an address it is routed to one or
+more of its queues based on the configured routing type.</p>
+<p>The name of the queue must be <em>globally</em> unique. For example, you can&apos;t have a
+queue named <code>q1</code> on address <code>a1</code> and also a queue named <code>q1</code> address <code>a2</code>.</p>
+<h3 id="routing-type">Routing Type</h3>
+<p>A routing type determines how messages are routed from an address to the
+queue(s) bound to that address. Two different routing types are supported,
+<strong>anycast</strong> and <strong>multicast</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>If you want your messages routed to...</th>
+<th>Use this routing type...</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>a single anycast queue on the address.</td>
+<td>anycast</td>
+</tr>
+<tr>
+<td>every multicast queue on the address.</td>
+<td>multicast</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Note:</strong></p>
+<p>It is possible to define queues with a different routing type for the same
+address, but this typically results in an anti-pattern and is therefore not
+recommended.</p>
+</blockquote>
+<h2 id="automatic-configuration">Automatic Configuration</h2>
+<p>By default Apache ActiveMQ Artemis will automatically create addresses and
+queues to support the semantics of whatever protocol you&apos;re using. The broker
+understands how to support each protocol&apos;s functionality with the core
+resources so that in most cases no manual configuration is required. This saves
+you from having to preconfigure each address and queue before a client can
+connect to it.</p>
+<p>The broker can optionally be configured to automatically delete addresses and
+queues when they are no longer in use.</p>
+<p>Automatic creation and deletion is configured on a per address basis and is
+controlled by the following <a href="address-settings.html"><code>address-setting</code></a> elements:</p>
+<ul>
+<li><code>auto-create-addresses</code></li>
+<li><code>auto-delete-addresses</code></li>
+<li><code>default-address-routing-type</code></li>
+<li><code>auto-create-queues</code></li>
+<li><code>auto-delete-queues</code></li>
+<li><code>default-queue-routing-type</code></li>
+</ul>
+<p>See <a href="address-settings.html">the documentation on address settings</a> for more
+details on these elements.</p>
+<p>Of course, automatic configuration can be disabled and everything can be
+configured manually. Read on for more details about manual configuration.</p>
+<h2 id="basic-manual-configuration">Basic Manual Configuration</h2>
+<p>The following examples show how to configure resources for basic anycast and 
+multicast use-cases.</p>
+<blockquote>
+<p><strong>Note:</strong></p>
+<p>Many of the details of these use-cases are protocol agnostic. The goal here
+is to demonstrate and explain the basic configuration elements and how the
+address model works fundamentally.</p>
+</blockquote>
+<h3 id="anycast">Anycast</h3>
+<p>The most common use-case for anycast semantics, sometimes referred to as 
+<a href="messaging-concepts.html#point-to-point">point-to-point</a>, involves applications
+following a &quot;competing consumer&quot; pattern to receive messages from a shared
+queue. The more consumers receiving messages the greater the overall message
+throughput. Multiple Java applications sharing a JMS queue is a classic example
+of this use-case.</p>
+<p>In this use-case the broker is configured, for example, with an address, 
+<code>anycast.foo</code> using the <code>anycast</code> routing type with just one queue, <code>q1</code>. When
+a producer sends a message to <code>address.foo</code> it is then routed to <code>q1</code> and
+finally dispatched to one of the consumers.</p>
+<p><img src="images/anycast.png" alt="Anycast">
+Figure 1. Anycast </p>
+<p>This is what the configuration for this use-case would look like in 
+<code>etc/broker.xml</code>:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">addresses</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">address</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;address.foo&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">anycast</span>&gt;</span>
+         <span class="hljs-tag">&lt;<span class="hljs-name">queue</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;q1&quot;</span>/&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">anycast</span>&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">address</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">addresses</span>&gt;</span>
+</code></pre>
+<p>For most protocols and APIs which support this kind of use-case (e.g. JMS, 
+AMQP, etc.) it is customary to use the <em>same name</em> when sending and consuming
+messages. In that case you&apos;d use a configuration like this:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">addresses</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">address</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;orderQueue&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">anycast</span>&gt;</span>
+         <span class="hljs-tag">&lt;<span class="hljs-name">queue</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;orderQueue&quot;</span>/&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">anycast</span>&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">address</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">addresses</span>&gt;</span>
+</code></pre>
+<h3 id="multicast">Multicast</h3>
+<p>The most common use-case for multicast semantics, sometimes referred to as 
+<a href="messaging-concepts.html#publish-subscribe">publish/subscribe</a> or &quot;pub/sub&quot;,
+involves each application receiving every message sent to an address. Multiple
+applications consuming from a JMS topic is a classic example of this use-case.
+MQTT subscriptions is another supported example of multicast semantics.</p>
+<p>In this use-case the broker is configured with an address, <code>address.foo</code> using
+the <code>multicast</code> routing type with two queues, <code>q1</code> &amp; <code>q2</code>. When a producer
+sends a message to <code>address.foo</code> it is then routed to <em>both</em> <code>q1</code> &amp; <code>q2</code> so
+that ultimately both consumers receive the same messages.</p>
+<p><img src="images/multicast.png" alt="Multicast">
+Figure 2. Multicast</p>
+<p>This is what the configuration for this use-case would look like in
+<code>etc/broker.xml</code>:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">addresses</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">address</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;address.foo&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">multicast</span>&gt;</span>
+         <span class="hljs-tag">&lt;<span class="hljs-name">queue</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;q1&quot;</span>/&gt;</span>
+         <span class="hljs-tag">&lt;<span class="hljs-name">queue</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;q2&quot;</span>/&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">multicast</span>&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">address</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">addresses</span>&gt;</span>
+</code></pre>
+<p>This basic configuration is simple and straight-forward, but there&apos;s a
+problem. In a normal pub/sub use-case like with a JMS topic or with MQTT the
+number of subscribers <em>isn&apos;t known ahead of time</em>. In that case, this is the
+recommended configuration:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">addresses</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">address</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;address.foo&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">multicast</span>/&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">address</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">addresses</span>&gt;</span>
+</code></pre>
+<p>Define <code>&lt;multicast/&gt;</code> with no queues and the broker will automatically create
+queues for each subscription when the consumers connect to <code>address.foo</code>. Then
+when a message is sent to <code>address.foo</code> it will be routed to each queue for
+each subscriber and therefore each subscriber will get every message. These
+queues are often referred to as <em>subscription queues</em> for obvious reasons.</p>
+<p>These subscription queues are typically named based on the semantics of the
+protocol used to create them. For example, JMS supports durable and non-durable
+subscriptions. The queue for a non-durable subscription is named with a UUID,
+but the queue used for a durable subscription is named according to the JMS
+&quot;client ID&quot; and &quot;subscription name.&quot; Similar conventions are used for AMQP,
+MQTT, STOMP, etc.</p>
+<h2 id="advanced-manual-configuration">Advanced Manual Configuration</h2>
+<h3 id="fully-qualified-queue-names">Fully Qualified Queue Names</h3>
+<p>In most cases it’s not necessary or desirable to statically configure the
+aforementioned subscription queues. However, there are scenarios where a user
+may want to statically configure a subscription queue and later connect to that
+queue directly using a <strong>Fully Qualified Queue Name</strong> (FQQN).</p>
+<p>An FQQN uses a special syntax to specify <em>both</em> the address and the queue so
+that applications using protocols and APIs which don&apos;t natively understand the
+address/queue separation (e.g. AMQP, JMS, etc.) can send messages or subscribe
+<em>directly</em> to a queue rather than being limited to the address. Applications
+simply need to use the address name and the queue name separated by <code>::</code> (e.g.
+<code>address::queue</code>).</p>
+<p>In this example, the address <code>a1</code> is configured with two queues: <code>q1</code>, <code>q2</code> as
+shown in the configuration below.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">addresses</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">address</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;a1&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">multicast</span>&gt;</span>
+         <span class="hljs-tag">&lt;<span class="hljs-name">queue</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;q1&quot;</span> /&gt;</span>
+         <span class="hljs-tag">&lt;<span class="hljs-name">queue</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;q2&quot;</span> /&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">multicast</span>&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">address</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">addresses</span>&gt;</span>
+</code></pre>
+<p>Here&apos;s a snippet of Java code using JMS which demonstrates the FQQN syntax:</p>
+<pre><code class="lang-java">Queue q1 session.createQueue(<span class="hljs-string">&quot;a1::q1&quot;</span>);
+MessageConsumer consumer = session.createConsumer(q1);
+</code></pre>
+<blockquote>
+<p><strong>Note</strong></p>
+<p>The string <code>::</code> should only be used for FQQN and not in any other context in
+address or queue names.</p>
+</blockquote>
+<p>The examples below show how to use broker side configuration to statically
+configure a queue with publish subscribe behavior for shared, non-shared,
+durable and non-durable subscription behavior.</p>
+<h4 id="shared-durable-subscription-queue-using-max-consumers">Shared, Durable Subscription Queue using <code>max-consumers</code></h4>
+<p>The default behavior for queues is to not limit the number connected queue
+consumers.  The <code>max-consumers</code> parameter of the queue element can be used to
+limit the number of connected consumers allowed at any one time.</p>
+<p>Open the file <code>etc/broker.xml</code> for editing.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">addresses</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">address</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;durable.foo&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">multicast</span>&gt;</span>
+         <span class="hljs-comment">&lt;!-- pre-configured shared durable subscription queue --&gt;</span>
+         <span class="hljs-tag">&lt;<span class="hljs-name">queue</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;q1&quot;</span> <span class="hljs-attr">max-consumers</span>=<span class="hljs-string">&quot;10&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">durable</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">durable</span>&gt;</span>
+         <span class="hljs-tag">&lt;/<span class="hljs-name">queue</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">multicast</span>&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">address</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">addresses</span>&gt;</span>
+</code></pre>
+<h4 id="non-shared-durable-subscription-queue">Non-shared, Durable Subscription Queue</h4>
+<p>The broker can be configured to prevent more than one consumer from connecting
+to a queue at any one time. The subscriptions to queues configured this way are
+therefore &quot;non-shared&quot;.  To do this simply set the <code>max-consumers</code> parameter to
+<code>1</code>:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">addresses</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">address</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;durable.foo&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">multicast</span>&gt;</span>
+         <span class="hljs-comment">&lt;!-- pre-configured non shared durable subscription queue --&gt;</span>
+         <span class="hljs-tag">&lt;<span class="hljs-name">queue</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;q1&quot;</span> <span class="hljs-attr">max-consumers</span>=<span class="hljs-string">&quot;1&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">durable</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">durable</span>&gt;</span>
+         <span class="hljs-tag">&lt;/<span class="hljs-name">queue</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">multicast</span>&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">address</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">addresses</span>&gt;</span>
+</code></pre>
+<h4 id="non-durable-subscription-queue">Non-durable Subscription Queue</h4>
+<p>Non-durable subscriptions are again usually managed by the relevant protocol
+manager, by creating and deleting temporary queues.</p>
+<p>If a user requires to pre-create a queue that behaves like a non-durable
+subscription queue the <code>purge-on-no-consumers</code> flag can be enabled on the
+queue.  When <code>purge-on-no-consumers</code> is set to <code>true</code>.  The queue will not
+start receiving messages until a consumer is attached.  When the last consumer
+is detached from the queue.  The queue is purged (its messages are removed)
+and will not receive any more messages until a new consumer is attached.</p>
+<p>Open the file <code>etc/broker.xml</code> for editing.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">addresses</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">address</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;non.shared.durable.foo&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">multicast</span>&gt;</span>
+         <span class="hljs-tag">&lt;<span class="hljs-name">queue</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;orders1&quot;</span> <span class="hljs-attr">purge-on-no-consumers</span>=<span class="hljs-string">&quot;true&quot;</span>/&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">multicast</span>&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">address</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">addresses</span>&gt;</span>
+</code></pre>
+<h3 id="disabled-queue">Disabled Queue</h3>
+<p>If a user requires to statically configure a queue and disable routing to it,
+for example where a queue needs to be defined so a consumer can bind, but you
+want to disable message routing to it for the time being.</p>
+<p>Or you need to stop message flow to the queue to allow investigation keeping
+the consumer bound, but don&apos;t wish to have further messages routed to the queue
+to avoid message build up.</p>
+<p>When <code>enabled</code> is set to <code>true</code> the queue will have messages routed to it.
+(default)</p>
+<p>When <code>enabled</code> is set to <code>false</code> the queue will NOT have messages routed to it.</p>
+<p>Open the file <code>etc/broker.xml</code> for editing.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">addresses</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">address</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;foo.bar&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">multicast</span>&gt;</span>
+         <span class="hljs-tag">&lt;<span class="hljs-name">queue</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;orders1&quot;</span> <span class="hljs-attr">enabled</span>=<span class="hljs-string">&quot;false&quot;</span>/&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">multicast</span>&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">address</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">addresses</span>&gt;</span>
+</code></pre>
+<blockquote>
+<p><strong>Warning:</strong></p>
+<p>Disabling all the queues on an address means that any message sent to that
+address will be silently dropped.</p>
+</blockquote>
+<h3 id="temporary-queues">Temporary Queues</h3>
+<p>For some protocols and APIs which only support monolithic &quot;destinations&quot;
+without the address/queue separation (e.g. AMQP, JMS, etc.) temporary queues
+are created by the broker using a UUID (i.e universally unique identifier) as
+the name for both the address and the queue. Because the name is a UUID it is
+impossible to create an <code>address-setting</code> for it whose <code>match</code> is anything but
+<code>#</code>.</p>
+<p>To solve this problem one can specify the <code>temporary-queue-namespace</code> in
+<code>broker.xml</code> and then create an <code>address-setting</code> whose <code>match</code> value
+corresponds to the configured <code>temporary-queue-namespace</code>. When the
+<code>temporary-queue-namespace</code> is set and a temporary queue is created then the
+broker will prepend the <code>temporary-queue-namespace</code> value along with the
+<code>delimiter</code> value configured in <code>wildcard-addresses</code> (defaults to <code>.</code>) to the
+address name and use that to lookup the associated <code>address-setting</code> values.</p>
+<p>Here&apos;s a simple example configuration:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">temporary-queue-namespace</span>&gt;</span>temp<span class="hljs-tag">&lt;/<span class="hljs-name">temporary-queue-namespace</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">address-settings</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">address-setting</span> <span class="hljs-attr">match</span>=<span class="hljs-string">&quot;temp.#&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">enable-metrics</span>&gt;</span>false<span class="hljs-tag">&lt;/<span class="hljs-name">enable-metrics</span>&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">address-setting</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">address-settings</span>&gt;</span>
+</code></pre>
+<p>Using this configuration any temporary queue will have metrics disabled.</p>
+<blockquote>
+<p><strong>Note:</strong></p>
+<p>This setting does <em>not</em> change the actual name of the temporary queue. It
+only changes the name used to <em>lookup</em> the address-settings.</p>
+</blockquote>
+<h3 id="other-advanced-configurations">Other Advanced Configurations</h3>
+<p>Each of the following advanced configurations have their own chapter so their
+details are not repeated here:</p>
+<ul>
+<li><a href="exclusive-queues.html">Exclusive queues</a></li>
+<li><a href="last-value-queues.html">Last Value queues</a></li>
+<li><a href="non-destructive-queues.html">Non-Destructive queues</a></li>
+<li><a href="ring-queues.html">Ring queues</a></li>
+<li><a href="retroactive-addresses.html">Retroactive addresses</a></li>
+</ul>
+<h2 id="how-to-filter-messages">How to filter messages</h2>
+<p>Apache ActiveMQ Artemis supports the ability to filter messages using <a href="filter-expressions.html">Filter
+Expressions</a>.</p>
+<p>Filters can be applied in two places - on a queue and on a consumer.</p>
+<p>Filtering messages on a queue increases performance vs. filtering on the
+consumer because the messages don&apos;t need to be scanned. However, a queue filter
+is often not as flexible.</p>
+<h3 id="queue-filter">Queue Filter</h3>
+<p>When a filter is applied to a queue, messages are filtered <em>before</em> they are
+routed to the queue. To add a filter use the <code>filter</code> element when configuring
+a queue, e.g.:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">addresses</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">address</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;filter&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">anycast</span>&gt;</span>
+         <span class="hljs-tag">&lt;<span class="hljs-name">queue</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;filter&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">filter</span> <span class="hljs-attr">string</span>=<span class="hljs-string">&quot;color=&apos;red&apos;&quot;</span>/&gt;</span>
+         <span class="hljs-tag">&lt;/<span class="hljs-name">queue</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">anycast</span>&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">address</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">addresses</span>&gt;</span>
+</code></pre>
+<p>The filter defined above ensures that only messages with an attribute
+<code>&quot;color=&apos;red&apos;&quot;</code> is sent to this queue.</p>
+<h3 id="consumer-filters">Consumer Filters</h3>
+<p>Consumer filters are applied <em>after</em> messages have routed to the queue and are
+defined using the appropriate client APIs. The following JMS example shows how
+consumer filters work.</p>
+<p>Define an address with a single queue, with no filter applied in
+<code>etc/broker.xml</code>.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">addresses</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">address</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;filter&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">anycast</span>&gt;</span>
+         <span class="hljs-tag">&lt;<span class="hljs-name">queue</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;filter&quot;</span>/&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">anycast</span>&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">address</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">addresses</span>&gt;</span>
+</code></pre>
+<p>Then send some messages to the queue.</p>
+<pre><code class="lang-java">...
+<span class="hljs-comment">// Send some messages</span>
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">3</span>; i ++) {
+  TextMessage redMessage = senderSession.createTextMessage(<span class="hljs-string">&quot;Red&quot;</span>);
+  redMessage.setStringProperty(<span class="hljs-string">&quot;color&quot;</span>, <span class="hljs-string">&quot;red&quot;</span>);
+  producer.send(redMessage)
+
+  TextMessage greenMessage = senderSession.createTextMessage(<span class="hljs-string">&quot;Green&quot;</span>);
+  greenMessage.setStringProperty(<span class="hljs-string">&quot;color&quot;</span>, <span class="hljs-string">&quot;green&quot;</span>);
+  producer.send(greenMessage)
+}
+</code></pre>
+<p>At this point the queue would have 6 messages: red, green, red, green, red,
+green.</p>
+<p>Create a consumer with the filter <code>color=&apos;red&apos;</code>.</p>
+<pre><code class="lang-java">MessageConsumer redConsumer = redSession.createConsumer(queue, <span class="hljs-string">&quot;color=&apos;red&apos;&quot;</span>);
+</code></pre>
+<p>The <code>redConsumer</code> has a filter that only matches &quot;red&quot; messages.  The
+<code>redConsumer</code> will receive 3 messages.</p>
+<pre><code>red, red, red
+</code></pre><p>The resulting queue would now be</p>
+<pre><code>green, green, green
+</code></pre><h2 id="alternate-ways-to-determine-routing-type">Alternate Ways to Determine Routing Type</h2>
+<p>Typically the routing type is determined either by the static XML configuration
+or by the <code>default-address-routing-type</code> and <code>default-queue-routing-type</code>
+<code>address-setting</code> elements used for <a href="#automatic-address-queue-management">automatic address and queue
+creation</a>. However, there are two other
+ways to specify routing type:</p>
+<ul>
+<li>a configurable prefix which client applications can use when sending
+messages or creating consumers</li>
+<li>a property client applications can set on the messages they send</li>
+</ul>
+<h3 id="using-a-prefix-to-determine-routing-type">Using a Prefix to Determine Routing Type</h3>
+<p>These prefixes are configured using the <code>anycastPrefix</code> and <code>multicastPrefix</code> 
+parameters within the URL of the <code>acceptor</code> which the client is using. When
+multiple values are needed, these can be separated by a comma.</p>
+<h4 id="configuring-an-anycast-prefix">Configuring an Anycast Prefix</h4>
+<p>In <code>etc/broker.xml</code>, add the <code>anycastPrefix</code> to the URL of the desired
+<code>acceptor</code>. In the example below, the acceptor is configured to use <code>queue/</code>
+for the <code>anycastPrefix</code>. Client code can specify <code>queue/foo/</code> if the client
+wants anycast routing.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">acceptor</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;artemis&quot;</span>&gt;</span>tcp://0.0.0.0:61616?protocols=AMQP;anycastPrefix=queue/<span class="hljs-tag">&lt;/<span class="hljs-name">acceptor</span>&gt;</span>
+</code></pre>
+<p>Consider, for example, a STOMP client that wants to send a message using 
+anycast semantics to a queue that doesn&apos;t exist. Consider also that the broker
+is configured to auto-create addresses and queues, but the
+<code>default-address-routing-type</code> and <code>default-queue-routing-type</code> are both
+<code>MULTICAST</code>. Since the <code>anycastPrefix</code> is <code>queue/</code> it can just send a message
+to <code>queue/foo</code> and the broker will automatically create an address named <code>foo</code>
+with an anycast queue also named <code>foo</code>.</p>
+<h4 id="configuring-a-multicast-prefix">Configuring a Multicast Prefix</h4>
+<p>In <code>etc/broker.xml</code>, add the <code>multicastPrefix</code> to the URL of the desired
+<code>acceptor</code>. In the example below, the acceptor is configured to use <code>topic/</code>
+for the <code>multicastPrefix</code>. Client code can specify <code>topic/foo/</code> if the client
+wants multicast routing.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">acceptor</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;artemis&quot;</span>&gt;</span>tcp://0.0.0.0:61616?protocols=AMQP;multicastPrefix=topic/<span class="hljs-tag">&lt;/<span class="hljs-name">acceptor</span>&gt;</span>
+</code></pre>
+<p>Consider, for example, a STOMP client that wants to create a subscription with
+multicast semantics on an address that doesn&apos;t exist. Consider also that the
+broker is configured to auto-create addresses and queues, but the
+<code>default-address-routing-type</code> and <code>default-queue-routing-type</code> are both
+<code>ANYCAST</code>. Since the <code>multicastPrefix</code> is <code>topic/</code> it can just subscribe to
+<code>topic/foo</code> and the broker will automatically create an address named <code>foo</code>
+with a multicast queue for the subscription. Any messages sent to <code>foo</code> will 
+then be routed to the subscription queue.</p>
+<h3 id="using-a-message-property-to-determine-routing-type">Using a Message Property to Determine Routing Type</h3>
+<p>The <code>_AMQ_ROUTING_TYPE</code> property represents a <code>byte</code> value which will be used
+by the broker to determine the routing type when a message is <em>sent</em>. Use <code>0</code>
+for anycast routing or <code>1</code> for multicast routing.</p>
+<blockquote>
+<p><strong>Note:</strong></p>
+<p>A message will <strong>only</strong> be routed to queues which match its
+<code>_AMQ_ROUTING_TYPE</code> property value (if any). For example, if a message with
+an <code>_AMQ_ROUTING_TYPE</code> value of <code>1</code> (i.e. multicast) is sent to an address
+that only has anycast queues then the message won&apos;t actually be routed to any
+of the queues since the routing types don&apos;t match. If no <code>_AMQ_ROUTING_TYPE</code>
+is set then the message will be routed to all the queues on the address
+according to the queues&apos; routing semantics.</p>
+</blockquote>
+<h2 id="configuring-addresses-and-queues-via-address-settings">Configuring Addresses and Queues via Address Settings</h2>
+<p>This content has been relocated to its <a href="address-settings.html">own chapter</a>.</p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                
+                <a href="address-settings.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Settings">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Model","level":"1.10.1","depth":2,"next":{"title":"Settings","level":"1.10.2","depth":2,"path":"address-settings.md","ref":"address-settings.md","articles":[]},"previous":{"title":"Address","level":"1.10","depth":1,"ref":"","articles":[{"title":"Model","level":"1.10.1","depth":2,"path":"address-model.md","ref":"address-model.md","articles":[]},{"title":"Settings","level":"1.10.2","depth":2,"path":"address-settings.md","ref":"address-settings.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":[],"styles":{"ebook":"styles/ebook.css","epub":"styles/epub.css","mobi":"styles/mobi.css","pdf":"styles/pdf.css","print":"styles/print.css","website":"styles/website.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"showLevel":false,"styles":{"ebook":"styles/ebook.css","epub":"styles/epub.css","mobi":"styles/mobi.css","pdf":"styles/pdf.css","print":"styles/print.css","website":"styles/website.css"}}},"github":"apache/activemq-artemis","theme":"default","githubHost":"https://github.com/","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"version":"2.23.1","title":"ActiveMQ Artemis Documentation","links":{"home":"http://activemq.apache.org/artemis","issues":"https://issues.apache.org/jira/browse/ARTEMIS","contribute":"http://activemq.apache.org/contributing.html"},"gitbook":"3.x.x","description":"ActiveMQ Artemis User Guide and Reference Documentation"},"file":{"path":"address-model.md","mtime":"2022-06-14T19:55:22.250Z","type":"markdown"},"gitbook":{"version":"3.7.1","time":"2022-06-14T19:55:23.109Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

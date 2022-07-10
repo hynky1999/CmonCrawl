@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Created-By: Maven Jar Plugin 3.2.0
+Build-Jdk-Spec: 11
+Specification-Title: ActiveMQ Artemis Web
+Specification-Version: 2.23
+Specification-Vendor: The Apache Software Foundation
+Implementation-Title: ActiveMQ Artemis Web
+Implementation-Version: 2.23.1
+Implementation-Vendor: The Apache Software Foundation
+

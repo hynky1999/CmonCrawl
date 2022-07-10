@@ -22,6 +22,7 @@ class DownloaderTests(unittest.IsolatedAsyncioTestCase):
             length=30698,
             offset=863866755,
             timestamp=datetime.today(),
+            encoding="latin-1",
         )
         metadata = PipeMetadata(domain_record=dr)
         res = await self.downloader.download(dr, metadata)
@@ -34,6 +35,7 @@ class DownloaderTests(unittest.IsolatedAsyncioTestCase):
             length=30698,
             offset=863866755,
             timestamp=datetime.today(),
+            encoding="latin-1",
         )
         metadata = PipeMetadata(domain_record=dr)
         res = await self.downloader.download(dr, metadata)

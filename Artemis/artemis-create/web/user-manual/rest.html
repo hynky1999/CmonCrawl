@@ -1,0 +1,2742 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <title>REST Interface · ActiveMQ Artemis Documentation</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.7.1">
+        
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="embedding-activemq.html" />
+    
+    
+    <link rel="prev" href="logging.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="notice.html">
+            
+                <a href="notice.html">
+            
+                    
+                    Legal Notice
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="preface.html">
+            
+                <a href="preface.html">
+            
+                    
+                    Preface
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="project-info.html">
+            
+                <a href="project-info.html">
+            
+                    
+                    Project Info
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="versions.html">
+            
+                <a href="versions.html">
+            
+                    
+                    Versions
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="messaging-concepts.html">
+            
+                <a href="messaging-concepts.html">
+            
+                    
+                    Messaging Concepts
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="architecture.html">
+            
+                <a href="architecture.html">
+            
+                    
+                    Architecture
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="using-server.html">
+            
+                <a href="using-server.html">
+            
+                    
+                    Using the Server
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="upgrading.html">
+            
+                <a href="upgrading.html">
+            
+                    
+                    Upgrading
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10" >
+            
+                <span>
+            
+                    
+                    Address
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.1" data-path="address-model.html">
+            
+                <a href="address-model.html">
+            
+                    
+                    Model
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2" data-path="address-settings.html">
+            
+                <a href="address-settings.html">
+            
+                    
+                    Settings
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11" data-path="protocols-interoperability.html">
+            
+                <a href="protocols-interoperability.html">
+            
+                    
+                    Protocols and Interoperability
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12" data-path="amqp.html">
+            
+                <a href="amqp.html">
+            
+                    
+                    AMQP
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.12.1" data-path="amqp-broker-connections.html">
+            
+                <a href="amqp-broker-connections.html">
+            
+                    
+                    Broker Connections
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.13" data-path="mqtt.html">
+            
+                <a href="mqtt.html">
+            
+                    
+                    MQTT
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.14" data-path="stomp.html">
+            
+                <a href="stomp.html">
+            
+                    
+                    STOMP
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.15" data-path="openwire.html">
+            
+                <a href="openwire.html">
+            
+                    
+                    OpenWire
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.16" data-path="core.html">
+            
+                <a href="core.html">
+            
+                    
+                    Core
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.17" data-path="jms-core-mapping.html">
+            
+                <a href="jms-core-mapping.html">
+            
+                    
+                    Mapping JMS Concepts to the Core API
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.18" data-path="using-jms.html">
+            
+                <a href="using-jms.html">
+            
+                    
+                    Using JMS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.19" data-path="client-classpath.html">
+            
+                <a href="client-classpath.html">
+            
+                    
+                    The Client Classpath
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.20" data-path="examples.html">
+            
+                <a href="examples.html">
+            
+                    
+                    Examples
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.21" data-path="wildcard-routing.html">
+            
+                <a href="wildcard-routing.html">
+            
+                    
+                    Routing Messages With Wild Cards
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.22" data-path="wildcard-syntax.html">
+            
+                <a href="wildcard-syntax.html">
+            
+                    
+                    Wildcard Syntax
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.23" data-path="filter-expressions.html">
+            
+                <a href="filter-expressions.html">
+            
+                    
+                    Filter Expressions
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.24" data-path="persistence.html">
+            
+                <a href="persistence.html">
+            
+                    
+                    Persistence
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.25" data-path="configuring-transports.html">
+            
+                <a href="configuring-transports.html">
+            
+                    
+                    Configuring Transports
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.26" data-path="config-reload.html">
+            
+                <a href="config-reload.html">
+            
+                    
+                    Configuration Reload
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.27" data-path="connection-ttl.html">
+            
+                <a href="connection-ttl.html">
+            
+                    
+                    Detecting Dead Connections
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.28" data-path="slow-consumers.html">
+            
+                <a href="slow-consumers.html">
+            
+                    
+                    Detecting Slow Consumers
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.29" data-path="network-isolation.html">
+            
+                <a href="network-isolation.html">
+            
+                    
+                    Avoiding Network Isolation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.30" data-path="critical-analysis.html">
+            
+                <a href="critical-analysis.html">
+            
+                    
+                    Detecting Broker Issues (Critical Analysis)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.31" data-path="transaction-config.html">
+            
+                <a href="transaction-config.html">
+            
+                    
+                    Resource Manager Configuration
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.32" data-path="flow-control.html">
+            
+                <a href="flow-control.html">
+            
+                    
+                    Flow Control
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.33" data-path="send-guarantees.html">
+            
+                <a href="send-guarantees.html">
+            
+                    
+                    Guarantees of sends and commits
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.34" data-path="undelivered-messages.html">
+            
+                <a href="undelivered-messages.html">
+            
+                    
+                    Message Redelivery and Undelivered Messages
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.35" data-path="message-expiry.html">
+            
+                <a href="message-expiry.html">
+            
+                    
+                    Message Expiry
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.36" data-path="large-messages.html">
+            
+                <a href="large-messages.html">
+            
+                    
+                    Large Messages
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.37" data-path="paging.html">
+            
+                <a href="paging.html">
+            
+                    
+                    Paging
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.38" data-path="scheduled-messages.html">
+            
+                <a href="scheduled-messages.html">
+            
+                    
+                    Scheduled Messages
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.39" data-path="last-value-queues.html">
+            
+                <a href="last-value-queues.html">
+            
+                    
+                    Last-Value Queues
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.40" data-path="non-destructive-queues.html">
+            
+                <a href="non-destructive-queues.html">
+            
+                    
+                    Non-Destructive Queues
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.41" data-path="ring-queues.html">
+            
+                <a href="ring-queues.html">
+            
+                    
+                    Ring Queues
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.42" data-path="retroactive-addresses.html">
+            
+                <a href="retroactive-addresses.html">
+            
+                    
+                    Retroactive Addresses
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.43" data-path="exclusive-queues.html">
+            
+                <a href="exclusive-queues.html">
+            
+                    
+                    Exclusive Queues
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.44" data-path="message-grouping.html">
+            
+                <a href="message-grouping.html">
+            
+                    
+                    Message Grouping
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.45" data-path="consumer-priority.html">
+            
+                <a href="consumer-priority.html">
+            
+                    
+                    Consumer Priority
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.46" data-path="pre-acknowledge.html">
+            
+                <a href="pre-acknowledge.html">
+            
+                    
+                    Extra Acknowledge Modes
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.47" data-path="management.html">
+            
+                <a href="management.html">
+            
+                    
+                    Management
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.48" data-path="management-console.html">
+            
+                <a href="management-console.html">
+            
+                    
+                    Management Console
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.49" data-path="metrics.html">
+            
+                <a href="metrics.html">
+            
+                    
+                    Metrics
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.50" data-path="security.html">
+            
+                <a href="security.html">
+            
+                    
+                    Security
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.51" data-path="masking-passwords.html">
+            
+                <a href="masking-passwords.html">
+            
+                    
+                    Masking Passwords
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.52" data-path="broker-plugins.html">
+            
+                <a href="broker-plugins.html">
+            
+                    
+                    Broker Plugins
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.53" data-path="resource-limits.html">
+            
+                <a href="resource-limits.html">
+            
+                    
+                    Resource Limits
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.54" data-path="jms-bridge.html">
+            
+                <a href="jms-bridge.html">
+            
+                    
+                    The JMS Bridge
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.55" data-path="client-reconnection.html">
+            
+                <a href="client-reconnection.html">
+            
+                    
+                    Client Reconnection and Session Reattachment
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.56" data-path="diverts.html">
+            
+                <a href="diverts.html">
+            
+                    
+                    Diverting and Splitting Message Flows
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.57" data-path="core-bridges.html">
+            
+                <a href="core-bridges.html">
+            
+                    
+                    Core Bridges
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.58" data-path="transformers.html">
+            
+                <a href="transformers.html">
+            
+                    
+                    Transformers
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.59" data-path="duplicate-detection.html">
+            
+                <a href="duplicate-detection.html">
+            
+                    
+                    Duplicate Message Detection
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.60" data-path="clusters.html">
+            
+                <a href="clusters.html">
+            
+                    
+                    Clusters
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.61" data-path="federation.html">
+            
+                <a href="federation.html">
+            
+                    
+                    Federation
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.61.1" data-path="federation-address.html">
+            
+                <a href="federation-address.html">
+            
+                    
+                    Address Federation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.61.2" data-path="federation-queue.html">
+            
+                <a href="federation-queue.html">
+            
+                    
+                    Queue Federation
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.62" data-path="ha.html">
+            
+                <a href="ha.html">
+            
+                    
+                    High Availability and Failover
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.63" data-path="connection-routers.html">
+            
+                <a href="connection-routers.html">
+            
+                    
+                    Connection Routers
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.64" data-path="graceful-shutdown.html">
+            
+                <a href="graceful-shutdown.html">
+            
+                    
+                    Graceful Server Shutdown
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.65" data-path="libaio.html">
+            
+                <a href="libaio.html">
+            
+                    
+                    Libaio Native Libraries
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.66" data-path="thread-pooling.html">
+            
+                <a href="thread-pooling.html">
+            
+                    
+                    Thread management
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.67" data-path="web-server.html">
+            
+                <a href="web-server.html">
+            
+                    
+                    Embedded Web Server
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.68" data-path="logging.html">
+            
+                <a href="logging.html">
+            
+                    
+                    Logging
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.69" data-path="rest.html">
+            
+                <a href="rest.html">
+            
+                    
+                    REST Interface
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.70" data-path="embedding-activemq.html">
+            
+                <a href="embedding-activemq.html">
+            
+                    
+                    Embedding the Broker
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.71" data-path="karaf.html">
+            
+                <a href="karaf.html">
+            
+                    
+                    Apache Karaf
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.72" data-path="tomcat.html">
+            
+                <a href="tomcat.html">
+            
+                    
+                    Apache Tomcat
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.73" data-path="spring-integration.html">
+            
+                <a href="spring-integration.html">
+            
+                    
+                    Spring Integration
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.74" data-path="cdi-integration.html">
+            
+                <a href="cdi-integration.html">
+            
+                    
+                    CDI Integration
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.75" data-path="intercepting-operations.html">
+            
+                <a href="intercepting-operations.html">
+            
+                    
+                    Intercepting Operations
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.76" data-path="data-tools.html">
+            
+                <a href="data-tools.html">
+            
+                    
+                    Data Tools
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.77" data-path="activation-tools.html">
+            
+                <a href="activation-tools.html">
+            
+                    
+                    Activation Tools
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.78" data-path="maven-plugin.html">
+            
+                <a href="maven-plugin.html">
+            
+                    
+                    Maven Plugin
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.79" data-path="unit-testing.html">
+            
+                <a href="unit-testing.html">
+            
+                    
+                    Unit Testing
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.80" data-path="perf-tuning.html">
+            
+                <a href="perf-tuning.html">
+            
+                    
+                    Troubleshooting and Performance Tuning
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.81" data-path="perf-tools.html">
+            
+                <a href="perf-tools.html">
+            
+                    
+                    Performance Tools
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.82" data-path="configuration-index.html">
+            
+                <a href="configuration-index.html">
+            
+                    
+                    Configuration Reference
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.83" data-path="restart-sequence.html">
+            
+                <a href="restart-sequence.html">
+            
+                    
+                    Restart Sequence
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >REST Interface</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="rest-interface">REST Interface</h1>
+<p>The Apache ActiveMQ Artemis REST interface allows you to leverage the reliability and
+scalability features of Apache ActiveMQ Artemis over a simple REST/HTTP interface.
+The REST Interface implementation sits on top of an Apache ActiveMQ Artemis JMS API and
+as such exposes JMS-like concepts via REST.</p>
+<p>Using the REST interface Messages can be produced and consumed by sending 
+and receiving simple HTTP messages that contain the content you want to push around. For instance,
+here&apos;s a simple example of posting an order to an order processing queue
+express as an HTTP message:</p>
+<pre><code>POST /queue/orders/create HTTP/1.1
+Host: example.com
+Content-Type: application/xml
+
+&lt;order&gt;
+   &lt;name&gt;Bill&lt;/name&gt;
+   &lt;item&gt;iPhone 4&lt;/item&gt;
+   &lt;cost&gt;$199.99&lt;/cost&gt;
+&lt;/order&gt;
+</code></pre><p>As you can see, we&apos;re just posting some arbitrary XML document to a URL.
+When the XML is received on the server is it processed within Apache ActiveMQ Artemis
+as a JMS message and distributed through core Apache ActiveMQ Artemis. Simple and easy.
+Consuming messages from a queue or topic looks very similar. We&apos;ll
+discuss the entire interface in detail later.</p>
+<h2 id="caveats-of-using-the-rest-interface">Caveats of Using the REST Interface</h2>
+<p>Before adopting the REST interface it&apos;s important to recognize the potential trade-offs.</p>
+<ul>
+<li><strong>There is no standard for REST messaging.</strong> Any application which integrates with the
+ActiveMQ Artemis REST messaging interface cannot then integrate with any other broker&apos;s
+REST messaging interface without significant effort because every REST messaging 
+interface is different. Even the ActiveMQ Classic broker has its own REST messaging 
+interface which is different from Artemis&apos;.</li>
+<li><strong>For most use-cases STOMP is better.</strong> In just about any environment where a simple
+HTTP client might be advantageous for messaging there usually also exists a STOMP client 
+implementation. STOMP is ubiquitous and <em>standardized</em> (i.e. it conforms to a public 
+specification) which means it can be used across various broker implementations with
+few, if any, client changes.</li>
+</ul>
+<p>Messaging is almost always leveraged for <em>integrating</em> disparate applications. Protocol 
+flexibility and interoperability are vital to such solutions. Consider these caveats
+carefully before committing to a solution.</p>
+<h2 id="goals-of-rest-interface">Goals of REST Interface</h2>
+<p>Why would you want to use Apache ActiveMQ Artemis&apos;s REST interface? What are the goals
+of the REST interface?</p>
+<ul>
+<li><p>Easily usable by machine-based (code) clients.</p>
+</li>
+<li><p>Zero client footprint. We want Apache ActiveMQ Artemis to be usable by any
+client/programming language that has an adequate HTTP client
+library. You shouldn&apos;t have to download, install, and configure a
+special library to interact with Apache ActiveMQ Artemis.</p>
+</li>
+<li><p>Lightweight interoperability. The HTTP protocol is strong enough to
+be our message exchange protocol. Since interactions are RESTful the
+HTTP uniform interface provides all the interoperability you need to
+communicate between different languages, platforms, and even
+messaging implementations that choose to implement the same RESTful
+interface as Apache ActiveMQ Artemis (i.e. the <a href="http://www.jboss.org/reststar" target="_blank">REST-*</a>
+effort.)</p>
+</li>
+<li><p>No envelope (e.g. SOAP) or feed (e.g. Atom) format requirements. You
+shouldn&apos;t have to learn, use, or parse a specific XML document
+format in order to send and receive messages through Apache ActiveMQ Artemis&apos;s REST
+interface.</p>
+</li>
+<li><p>Leverage the reliability, scalability, and clustering features of
+Apache ActiveMQ Artemis on the back end without sacrificing the simplicity of a
+REST interface.</p>
+</li>
+</ul>
+<h2 id="installation-and-configuration">Installation and Configuration</h2>
+<p>Apache ActiveMQ Artemis&apos;s REST interface is installed as a Web archive (WAR). It depends on the <a href="http://resteasy.jboss.org" target="_blank">RESTEasy</a> project and can currently only run within a servlet container. Installing the Apache ActiveMQ Artemis REST interface is a little bit different depending whether Apache ActiveMQ Artemis is already embedded (e.g. you&apos;re deploying within Wildfly) or configured on the network somewhere, or you want the ActiveMQ Artemis REST WAR itself to startup and manage the Apache ActiveMQ Artemis server.</p>
+<h3 id="installing-within-pre-configured-environment">Installing Within Pre-configured Environment</h3>
+<p>This section should be used when you want to use the Apache ActiveMQ Artemis REST interface in an environment that already has Apache ActiveMQ Artemis installed and running. You must create a Web archive (.WAR) file with the following web.xml settings:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">web-app</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">listener</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">listener-class</span>&gt;</span>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap<span class="hljs-tag">&lt;/<span class="hljs-name">listener-class</span>&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">listener</span>&gt;</span>
+
+   <span class="hljs-tag">&lt;<span class="hljs-name">listener</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">listener-class</span>&gt;</span>org.apache.activemq.artemis.rest.integration.RestMessagingBootstrapListener<span class="hljs-tag">&lt;/<span class="hljs-name">listener-class</span>&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">listener</span>&gt;</span>
+
+   <span class="hljs-tag">&lt;<span class="hljs-name">filter</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">filter-name</span>&gt;</span>Rest-Messaging<span class="hljs-tag">&lt;/<span class="hljs-name">filter-name</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">filter-class</span>&gt;</span>org.jboss.resteasy.plugins.server.servlet.FilterDispatcher<span class="hljs-tag">&lt;/<span class="hljs-name">filter-class</span>&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">filter</span>&gt;</span>
+
+   <span class="hljs-tag">&lt;<span class="hljs-name">filter-mapping</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">filter-name</span>&gt;</span>Rest-Messaging<span class="hljs-tag">&lt;/<span class="hljs-name">filter-name</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">url-pattern</span>&gt;</span>/*<span class="hljs-tag">&lt;/<span class="hljs-name">url-pattern</span>&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">filter-mapping</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">web-app</span>&gt;</span>
+</code></pre>
+<p>Within your WEB-INF/lib directory you must have the artemis-rest.jar file. If RESTEasy is not installed within your environment, you must add the RESTEasy jar files within the lib directory as well. Here&apos;s a sample Maven pom.xml that can build a WAR with the Apache ActiveMQ Artemis REST library.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">project</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">&quot;http://maven.apache.org/POM/4.0.0&quot;</span>
+   <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+   <span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd&quot;</span>&gt;</span>
+
+   <span class="hljs-tag">&lt;<span class="hljs-name">modelVersion</span>&gt;</span>4.0.0<span class="hljs-tag">&lt;/<span class="hljs-name">modelVersion</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.somebody<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>artemis-rest<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">packaging</span>&gt;</span>war<span class="hljs-tag">&lt;/<span class="hljs-name">packaging</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>My App<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.0-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+
+   <span class="hljs-tag">&lt;<span class="hljs-name">dependencies</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+         <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.apache.activemq.rest<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+         <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>artemis-rest<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+         <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>$VERSION<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+         <span class="hljs-tag">&lt;<span class="hljs-name">exclusions</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">exclusion</span>&gt;</span>
+               <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>*<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+               <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>*<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">exclusion</span>&gt;</span>
+         <span class="hljs-tag">&lt;/<span class="hljs-name">exclusions</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">dependencies</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">project</span>&gt;</span>
+</code></pre>
+<p>The project structure should look this like:</p>
+<pre><code>|-- pom.xml
+`-- src
+   `-- main
+       `-- webapp
+           `-- WEB-INF
+               `-- web.xml
+</code></pre><p>It is worth noting that when deploying a WAR in a Java EE application server like Wildfly the URL for the resulting application will include the name of the WAR by default. For example, if you&apos;ve constructed a WAR as described above named &quot;activemq-rest.war&quot; then clients will access it at, e.g. <a href="http://localhost:8080/activemq-rest/[queues|topics" target="_blank">http://localhost:8080/activemq-rest/[queues|topics</a>]. We&apos;ll see more about this later.</p>
+<h3 id="bootstrapping-activemq-artemis-along-with-rest">Bootstrapping ActiveMQ Artemis Along with REST</h3>
+<p>You can bootstrap Apache ActiveMQ Artemis within your WAR as well. To do this, you must have the Apache ActiveMQ Artemis core and JMS jars along with Netty, RESTEasy, and the Apache ActiveMQ Artemis REST jar within your WEB-INF/lib. You must also have a broker.xml config file within WEB-INF/classes. The examples that come with the Apache ActiveMQ Artemis REST distribution show how to do this. You must also add an additional listener to your web.xml file. Here&apos;s an example:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">web-app</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">listener</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">listener-class</span>&gt;</span>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap<span class="hljs-tag">&lt;/<span class="hljs-name">listener-class</span>&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">listener</span>&gt;</span>
+
+   <span class="hljs-tag">&lt;<span class="hljs-name">listener</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">listener-class</span>&gt;</span>org.apache.activemq.artemis.rest.integration.ActiveMQBootstrapListener<span class="hljs-tag">&lt;/<span class="hljs-name">listener-class</span>&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">listener</span>&gt;</span>
+
+   <span class="hljs-tag">&lt;<span class="hljs-name">listener</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">listener-class</span>&gt;</span>org.apache.activemq.artemis.rest.integration.RestMessagingBootstrapListener<span class="hljs-tag">&lt;/<span class="hljs-name">listener-class</span>&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">listener</span>&gt;</span>
+
+   <span class="hljs-tag">&lt;<span class="hljs-name">filter</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">filter-name</span>&gt;</span>Rest-Messaging<span class="hljs-tag">&lt;/<span class="hljs-name">filter-name</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">filter-class</span>&gt;</span>org.jboss.resteasy.plugins.server.servlet.FilterDispatcher<span class="hljs-tag">&lt;/<span class="hljs-name">filter-class</span>&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">filter</span>&gt;</span>
+
+   <span class="hljs-tag">&lt;<span class="hljs-name">filter-mapping</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">filter-name</span>&gt;</span>Rest-Messaging<span class="hljs-tag">&lt;/<span class="hljs-name">filter-name</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">url-pattern</span>&gt;</span>/*<span class="hljs-tag">&lt;/<span class="hljs-name">url-pattern</span>&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">filter-mapping</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">web-app</span>&gt;</span>
+</code></pre>
+<p>Here&apos;s a Maven pom.xml file for creating a WAR for this environment. Make sure your Apache ActiveMQ Artemis configuration file(s) are within the src/main/resources directory so that they are stuffed within the WAR&apos;s WEB-INF/classes directory!</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">project</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">&quot;http://maven.apache.org/POM/4.0.0&quot;</span>
+   <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+   <span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd&quot;</span>&gt;</span>
+
+   <span class="hljs-tag">&lt;<span class="hljs-name">modelVersion</span>&gt;</span>4.0.0<span class="hljs-tag">&lt;/<span class="hljs-name">modelVersion</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.somebody<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>artemis-rest<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">packaging</span>&gt;</span>war<span class="hljs-tag">&lt;/<span class="hljs-name">packaging</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span>My App<span class="hljs-tag">&lt;/<span class="hljs-name">name</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.0-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+
+   <span class="hljs-tag">&lt;<span class="hljs-name">dependencies</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+         <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.apache.activemq.rest<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+         <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>artemis-rest<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+         <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>$VERSION<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">dependencies</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">project</span>&gt;</span>
+</code></pre>
+<p>The project structure should look this like:</p>
+<pre><code>|-- pom.xml
+`-- src
+   `-- main
+       `-- resources
+           `-- broker.xml
+       `-- webapp
+           `-- WEB-INF
+               `-- web.xml
+</code></pre><h3 id="rest-configuration">REST Configuration</h3>
+<p>The Apache ActiveMQ Artemis REST implementation does have some configuration options.
+These are configured via XML configuration file that must be in your
+WEB-INF/classes directory. You must set the web.xml context-param
+<code>rest.messaging.config.file</code> to specify the name of the configuration
+file. Below is the format of the XML configuration file and the default
+values for each.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">rest-messaging</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">server-in-vm-id</span>&gt;</span>0<span class="hljs-tag">&lt;/<span class="hljs-name">server-in-vm-id</span>&gt;</span> <span class="hljs-comment">&lt;!-- deprecated, use &quot;url&quot; --&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">use-link-headers</span>&gt;</span>false<span class="hljs-tag">&lt;/<span class="hljs-name">use-link-headers</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">default-durable-send</span>&gt;</span>false<span class="hljs-tag">&lt;/<span class="hljs-name">default-durable-send</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">dups-ok</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">dups-ok</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">topic-push-store-dir</span>&gt;</span>topic-push-store<span class="hljs-tag">&lt;/<span class="hljs-name">topic-push-store-dir</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">queue-push-store-dir</span>&gt;</span>queue-push-store<span class="hljs-tag">&lt;/<span class="hljs-name">queue-push-store-dir</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">producer-time-to-live</span>&gt;</span>0<span class="hljs-tag">&lt;/<span class="hljs-name">producer-time-to-live</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">producer-session-pool-size</span>&gt;</span>10<span class="hljs-tag">&lt;/<span class="hljs-name">producer-session-pool-size</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">session-timeout-task-interval</span>&gt;</span>1<span class="hljs-tag">&lt;/<span class="hljs-name">session-timeout-task-interval</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">consumer-session-timeout-seconds</span>&gt;</span>300<span class="hljs-tag">&lt;/<span class="hljs-name">consumer-session-timeout-seconds</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">consumer-window-size</span>&gt;</span>-1<span class="hljs-tag">&lt;/<span class="hljs-name">consumer-window-size</span>&gt;</span> <span class="hljs-comment">&lt;!-- deprecated, use &quot;url&quot; --&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">url</span>&gt;</span>vm://0<span class="hljs-tag">&lt;/<span class="hljs-name">url</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">rest-messaging</span>&gt;</span>
+</code></pre>
+<p>Let&apos;s give an explanation of each config option.</p>
+<ul>
+<li><p><code>server-in-vm-id</code>. The Apache ActiveMQ Artemis REST implementation was formerly hard-coded
+to use the in-vm transport to communicate with the embedded Apache ActiveMQ Artemis instance.
+This is the id of the embedded instance. It is &quot;0&quot; by default. <strong>Note:</strong> this is deprecated in
+favor of <code>url</code> which can be used to connect to an arbitrary instance of Apache ActiveMQ
+Artemis (including one over the network).</p>
+</li>
+<li><p><code>use-link-headers</code>. By default, all links (URLs) are published using
+custom headers. You can instead have the Apache ActiveMQ Artemis REST
+implementation publish links using the <a href="https://tools.ietf.org/html/draft-nottingham-http-link-header-10" target="_blank">Link Header
+specification</a>
+instead if you desire.</p>
+</li>
+<li><p><code>default-durable-send</code>. Whether a posted message should be persisted
+by default if the user does not specify a durable query parameter.</p>
+</li>
+<li><p><code>dups-ok</code>. If this is true, no duplicate detection protocol will be
+enforced for message posting.</p>
+</li>
+<li><p><code>topic-push-store-dir</code>. This must be a relative or absolute file
+system path. This is a directory where push registrations for topics
+are stored. See <a href="#message-push">Pushing Messages</a>.</p>
+</li>
+<li><p><code>queue-push-store-dir</code>. This must be a relative or absolute file
+system path. This is a directory where push registrations for queues
+are stored. See <a href="#message-push">Pushing Messages</a>.</p>
+</li>
+<li><p><code>producer-session-pool-size</code>. The REST implementation pools Apache ActiveMQ Artemis
+sessions for sending messages. This is the size of the pool. That
+number of sessions will be created at startup time.</p>
+</li>
+<li><p><code>producer-time-to-live</code>. Default time to live for posted messages.
+Default is no ttl.</p>
+</li>
+<li><p><code>session-timeout-task-interval</code>. Pull consumers and pull
+subscriptions can time out. This is the interval the thread that
+checks for timed-out sessions will run at. A value of 1 means it
+will run every 1 second.</p>
+</li>
+<li><p><code>consumer-session-timeout-seconds</code>. Timeout in seconds for pull
+consumers/subscriptions that remain idle for that amount of time.</p>
+</li>
+<li><p><code>consumer-window-size</code>. For consumers, this config option is the
+same as the Apache ActiveMQ Artemis one of the same name. It will be used by
+sessions created by the Apache ActiveMQ Artemis REST implementation.
+This is deprecated in favor of <code>url</code> as it can be specified as a URL
+parameter.</p>
+</li>
+<li><p><code>url</code>. The URL the Apache ActiveMQ Artemis REST implementation should use
+to connect to the Apache ActiveMQ Artemis instance. Default to &quot;vm://0&quot;.</p>
+</li>
+</ul>
+<h3 id="broker-configuration">Broker Configuration</h3>
+<p>If you are <em>only</em> dealing with REST clients (i.e. no other remote messaging 
+clients using JMS, AMQP, STOMP, etc.) the simplest broker configuration
+involves a single in-vm acceptor, e.g.:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">acceptor</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;invm&quot;</span>&gt;</span>vm://0<span class="hljs-tag">&lt;/<span class="hljs-name">acceptor</span>&gt;</span>
+</code></pre>
+<p>Then set <code>&lt;security-enabled&gt;false&lt;/security-enabled&gt;</code>. Be sure to remove any
+other <code>acceptor</code> elements so no remote clients can connect insecurely.</p>
+<p>If you must support other remote clients then configure an in-vm <code>acceptor</code>
+with its own <code>securityDomain</code> that will allow unsecured access from the REST
+implementation&apos;s in-vm connector, e.g.:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">acceptor</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;invm&quot;</span>&gt;</span>vm://0?securityDomain=invm<span class="hljs-tag">&lt;/<span class="hljs-name">acceptor</span>&gt;</span>
+</code></pre>
+<p>Then configure a new entry in your <code>login.config</code> that will allow access with
+no credentials. The name of the entry should match the value of the <code>securityDomain</code>
+on your in-vm acceptor, e.g.:</p>
+<pre><code>invm {
+    org.apache.activemq.artemis.spi.core.security.jaas.GuestLoginModule required
+        debug=true
+        org.apache.activemq.jaas.guest.user=&quot;restUser&quot;
+        org.apache.activemq.jaas.guest.role=&quot;activemq&quot;;
+};
+</code></pre><p>See the <a href="security.html">security</a> chapter for more details on the <code>GuestLoginModule</code>.</p>
+<h2 id="apache-activemq-artemis-rest-interface-basics">Apache ActiveMQ Artemis REST Interface Basics</h2>
+<p>The Apache ActiveMQ Artemis REST interface publishes a variety of REST resources to
+perform various tasks on a queue or topic. Only the top-level queue and
+topic URI schemes are published to the outside world. You must discover
+all other resources to interact with by looking for and traversing links.
+You&apos;ll find published links within custom response headers and embedded
+in published XML representations. Let&apos;s look at how this works.</p>
+<h3 id="queue-and-topic-resources">Queue and Topic Resources</h3>
+<p>To interact with a queue or topic you do a HEAD or GET request on the
+following relative URI pattern:</p>
+<pre><code>/queues/{name}
+/topics/{name}
+</code></pre><p>The base of the URI is the base URL of the WAR you deployed the Apache ActiveMQ Artemis
+REST server within as defined in the <a href="#installation-and-configuration">Installation and
+Configuration</a> section of this document. Replace the <code>{name}</code>
+string within the above URI pattern with the name of the queue or topic
+you are interested in interacting with. Next, perform your HEAD or GET
+request on this URI. Here&apos;s what a request/response would look like.</p>
+<pre><code>HEAD /queues/bar HTTP/1.1
+Host: example.com
+
+--- Response ---
+HTTP/1.1 200 Ok
+msg-create: http://example.com/queues/bar/create
+msg-create-with-id: http://example.com/queues/bar/create/{id}
+msg-pull-consumers: http://example.com/queues/bar/pull-consumers
+msg-push-consumers: http://example.com/queues/bar/push-consumers
+</code></pre><blockquote>
+<p><strong>Note:</strong></p>
+<p>You can use the &quot;curl&quot; utility to test this easily. Simply execute a
+command like this:</p>
+<p>  curl --head <a href="http://example.com/queues/bar" target="_blank">http://example.com/queues/bar</a></p>
+</blockquote>
+<p>The HEAD or GET response contains a number of custom response headers
+that are URLs to additional REST resources that allow you to interact
+with the queue or topic in different ways. It is important not to rely
+on the scheme of the URLs returned within these headers as they are an
+implementation detail. Treat them as opaque and query for them each and
+every time you initially interact (at boot time) with the server. If you
+treat all URLs as opaque then you will be isolated from implementation
+changes as the Apache ActiveMQ Artemis REST interface evolves over time.</p>
+<h3 id="queue-resource-response-headers">Queue Resource Response Headers</h3>
+<p>Below is a list of response headers you should expect when interacting
+with a Queue resource.</p>
+<ul>
+<li><p><code>msg-create</code>. This is a URL you POST messages to. The semantics of
+this link are described in <a href="#posting-messages">Posting Messages</a>.</p>
+</li>
+<li><p><code>msg-create-with-id</code>. This is a URL <em>template</em> you can use to POST
+messages. The semantics of this link are described in <a href="#posting-messages">Posting
+Messages</a>.</p>
+</li>
+<li><p><code>msg-pull-consumers</code>. This is a URL for creating consumers that will
+pull from a queue. The semantics of this link are described in
+<a href="#consuming-messages-via-pull">Consuming Messages via Pull</a>.</p>
+</li>
+<li><p><code>msg-push-consumers</code>. This is a URL for registering other URLs you
+want the Apache ActiveMQ Artemis REST server to push messages to. The semantics of
+this link are described in <a href="#pushing-messages">Pushing Messages</a>.</p>
+</li>
+</ul>
+<h3 id="topic-resource-response-headers">Topic Resource Response Headers</h3>
+<p>Below is a list of response headers you should expect when interacting
+with a Topic resource.</p>
+<ul>
+<li><p><code>msg-create</code>. This is a URL you POST messages to. The semantics of
+this link are described in <a href="#posting-messages">Posting Messages</a>.</p>
+</li>
+<li><p><code>msg-create-with-id</code>. This is a URL <em>template</em> you can use to POST
+messages. The semantics of this link are described in <a href="#posting-messages">Posting
+Messages</a>.</p>
+</li>
+<li><p><code>msg-pull-subscriptions</code>. This is a URL for creating subscribers
+that will pull from a topic. The semantics of this link are
+described in <a href="#consuming-messages-via-pull">Consuming Messages via Pull</a>.</p>
+</li>
+<li><p><code>msg-push-subscriptions</code>. This is a URL for registering other URLs
+you want the Apache ActiveMQ Artemis REST server to push messages to. The semantics
+of this link are described in <a href="#pushing-messages">Pushing Messages</a>.</p>
+</li>
+</ul>
+<h2 id="posting-messages">Posting Messages</h2>
+<p>This chapter discusses the protocol for posting messages to a queue or a
+topic. In <a href="#apache-activemq-artemis-rest-interface-basics">Apache ActiveMQ Artemis REST Interface Basics</a>, you saw that a
+queue or topic resource publishes variable custom headers that are links
+to other RESTful resources. The <code>msg-create</code> header is a URL you can
+post a message to. Messages are published to a queue or topic by sending
+a simple HTTP message to the URL published by the <code>msg-create</code> header.
+The HTTP message contains whatever content you want to publish to the
+Apache ActiveMQ Artemis destination. Here&apos;s an example scenario:</p>
+<blockquote>
+<p><strong>Note:</strong></p>
+<p>You can also post messages to the URL template found in
+<code>msg-create-with-id</code>, but this is a more advanced use-case involving
+duplicate detection that we will discuss later in this section.</p>
+</blockquote>
+<ol>
+<li><p>Obtain the starting <code>msg-create</code> header from the queue or topic
+resource.</p>
+<pre><code>HEAD /queues/bar HTTP/1.1
+Host: example.com
+
+--- Response ---
+HTTP/1.1 200 Ok
+msg-create: http://example.com/queues/bar/create
+msg-create-with-id: http://example.com/queues/bar/create/{id}
+</code></pre></li>
+<li><p>Do a POST to the URL contained in the <code>msg-create</code> header.</p>
+<pre><code>POST /queues/bar/create
+Host: example.com
+Content-Type: application/xml
+
+&lt;order&gt;
+   &lt;name&gt;Bill&lt;/name&gt;
+   &lt;item&gt;iPhone4&lt;/name&gt;
+   &lt;cost&gt;$199.99&lt;/cost&gt;
+&lt;/order&gt;
+
+--- Response ---
+HTTP/1.1 201 Created
+msg-create-next: http://example.com/queues/bar/create
+</code></pre><blockquote>
+<p><strong>Note:</strong></p>
+<p>You can use the &quot;curl&quot; utility to test this easily. Simply execute
+a command like this:</p>
+<pre><code>curl --verbose --data &quot;123&quot; http://example.com/queues/bar/create
+</code></pre></blockquote>
+<p>A successful response will return a 201 response code. Also notice
+that a <code>msg-create-next</code> response header is sent as well. You must
+use this URL to POST your next message.</p>
+</li>
+<li><p>POST your next message to the queue using the URL returned in the
+<code>msg-create-next</code> header.</p>
+<pre><code>POST /queues/bar/create
+Host: example.com
+Content-Type: application/xml
+
+&lt;order&gt;
+   &lt;name&gt;Monica&lt;/name&gt;
+   &lt;item&gt;iPad&lt;/item&gt;
+   &lt;cost&gt;$499.99&lt;/cost&gt;
+&lt;/order&gt;
+
+--- Response --
+HTTP/1.1 201 Created
+msg-create-next: http://example.com/queues/bar/create
+</code></pre><p>Continue using the new <code>msg-create-next</code> header returned with each
+response.</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>Warning</strong></p>
+<p>It is <em>VERY IMPORTANT</em> that you never re-use returned
+<code>msg-create-next</code> headers to post new messages. If the <code>dups-ok</code>
+configuration property is set to <code>false</code> on the server then this URL
+will be uniquely generated for each message and used for duplicate
+detection. If you lose the URL within the <code>msg-create-next</code> header,
+then just go back to the queue or topic resource to get the
+<code>msg-create</code> URL again.</p>
+</blockquote>
+<h3 id="duplicate-detection">Duplicate Detection</h3>
+<p>Sometimes you might have network problems when posting new messages to a
+queue or topic. You may do a POST and never receive a response.
+Unfortunately, you don&apos;t know whether or not the server received the
+message and so a re-post of the message might cause duplicates to be
+posted to the queue or topic. By default, the Apache ActiveMQ Artemis REST interface is
+configured to accept and post duplicate messages. You can change this by
+turning on duplicate message detection by setting the <code>dups-ok</code> config
+option to <code>false</code> as described in <a href="#basics">Apache ActiveMQ Artemis REST Interface
+Basics</a>. When you do this, the initial POST to the <code>msg-create</code>
+URL will redirect you, using the standard HTTP 307 redirection mechanism
+to a unique URL to POST to. All other interactions remain the same as
+discussed earlier. Here&apos;s an example:</p>
+<ol>
+<li><p>Obtain the starting <code>msg-create</code> header from the queue or topic
+resource.</p>
+<pre><code>HEAD /queues/bar HTTP/1.1
+Host: example.com
+
+--- Response ---
+HTTP/1.1 200 Ok
+msg-create: http://example.com/queues/bar/create
+msg-create-with-id: http://example.com/queues/bar/create/{id}
+</code></pre></li>
+<li><p>Do a POST to the URL contained in the <code>msg-create</code> header.</p>
+<pre><code>POST /queues/bar/create
+Host: example.com
+Content-Type: application/xml
+
+&lt;order&gt;
+   &lt;name&gt;Bill&lt;/name&gt;
+   &lt;item&gt;iPhone4&lt;/name&gt;
+   &lt;cost&gt;$199.99&lt;/cost&gt;
+&lt;/order&gt;
+
+--- Response ---
+HTTP/1.1 307 Redirect
+Location: http://example.com/queues/bar/create/13582001787372
+</code></pre><p>A successful response will return a 307 response code. This is
+standard HTTP protocol. It is telling you that you must re-POST to
+the URL contained within the <code>Location</code> header.</p>
+</li>
+<li><p>re-POST your message to the URL provided within the <code>Location</code>
+header.</p>
+<pre><code>POST /queues/bar/create/13582001787372
+Host: example.com
+Content-Type: application/xml
+
+&lt;order&gt;
+   &lt;name&gt;Bill&lt;/name&gt;
+   &lt;item&gt;iPhone4&lt;/name&gt;
+   &lt;cost&gt;$199.99&lt;/cost&gt;
+&lt;/order&gt;
+
+--- Response --
+HTTP/1.1 201 Created
+msg-create-next: http://example.com/queues/bar/create/13582001787373
+</code></pre><p>You should receive a 201 Created response. If there is a network
+failure, just re-POST to the Location header. For new messages, use
+the returned <code>msg-create-next</code> header returned with each response.</p>
+</li>
+<li><p>POST any new message to the returned <code>msg-create-next</code> header.</p>
+<pre><code>POST /queues/bar/create/13582001787373
+Host: example.com
+Content-Type: application/xml
+
+&lt;order&gt;
+   &lt;name&gt;Monica&lt;/name&gt;
+   &lt;item&gt;iPad&lt;/name&gt;
+   &lt;cost&gt;$499.99&lt;/cost&gt;
+&lt;/order&gt;
+
+--- Response --
+HTTP/1.1 201 Created
+msg-create-next: http://example.com/queues/bar/create/13582001787374
+</code></pre><p>If there ever is a network problem, just repost to the URL provided
+in the <code>msg-create-next</code> header.</p>
+</li>
+</ol>
+<p>How can this work? As you can see, with each successful response, the
+Apache ActiveMQ Artemis REST server returns a uniquely generated URL within the
+msg-create-next header. This URL is dedicated to the next new message
+you want to post. Behind the scenes, the code extracts an identify from
+the URL and uses Apache ActiveMQ Artemis&apos;s duplicate detection mechanism by setting the
+<code>DUPLICATE_DETECTION_ID</code> property of the JMS message that is actually
+posted to the system.</p>
+<p>If you happen to use the same ID more than once you&apos;ll see a message
+like this on the server:</p>
+<pre><code>WARN  [org.apache.activemq.artemis.core.server] (Thread-3 (Apache ActiveMQ Artemis-remoting-threads-ActiveMQServerImpl::serverUUID=8d6be6f8-5e8b-11e2-80db-51bbde66f473-26319292-267207)) AMQ112098: Duplicate message detected - message will not be routed. Message information:
+ServerMessage[messageID=20,priority=4, bodySize=1500,expiration=0, durable=true, address=bar,properties=TypedProperties[{http_content$type=application/x-www-form-urlencoded, http_content$length=3, postedAsHttpMessage=true, _AMQ_DUPL_ID=42}]]@12835058
+</code></pre><p>An alternative to this approach is to use the <code>msg-create-with-id</code>
+header. This is not an invokable URL, but a URL template. The idea is
+that the client provides the <code>DUPLICATE_DETECTION_ID</code> and creates its
+own <code>create-next</code> URL. The <code>msg-create-with-id</code> header looks like this
+(you&apos;ve see it in previous examples, but we haven&apos;t used it):</p>
+<pre><code>msg-create-with-id: http://example.com/queues/bar/create/{id}
+</code></pre><p>You see that it is a regular URL appended with an <code>{id}</code>. This <code>{id}</code> is
+a pattern matching substring. A client would generate its
+<code>DUPLICATE_DETECTION_ID</code> and replace <code>{id}</code> with that generated id, then
+POST to the new URL. The URL the client creates works exactly like a
+<code>create-next</code> URL described earlier. The response of this POST would
+also return a new <code>msg-create-next</code> header. The client can continue to
+generate its own DUPLICATE_DETECTION_ID, or use the new URL returned
+via the <code>msg-create-nex</code>t header.</p>
+<p>The advantage of this approach is that the client does not have to
+repost the message. It also only has to come up with a unique
+<code>DUPLICATE_DETECTION_ID</code> once.</p>
+<h3 id="persistent-messages">Persistent Messages</h3>
+<p>By default, posted messages are not durable and will not be persisted in
+Apache ActiveMQ Artemis&apos;s journal. You can create durable messages by modifying the
+default configuration as expressed in Chapter 2 so that all messages are
+persisted when sent. Alternatively, you can set a URL query parameter
+called <code>durable</code> to true when you post your messages to the URLs
+returned in the <code>msg-create</code>, <code>msg-create-with-id</code>, or <code>msg-create-next</code>
+headers. here&apos;s an example of that.</p>
+<pre><code>POST /queues/bar/create?durable=true
+Host: example.com
+Content-Type: application/xml
+
+&lt;order&gt;
+   &lt;name&gt;Bill&lt;/name&gt;
+   &lt;item&gt;iPhone4&lt;/item&gt;
+   &lt;cost&gt;$199.99&lt;/cost&gt;
+&lt;/order&gt;
+</code></pre><h3 id="ttl-expiration-and-priority">TTL, Expiration and Priority</h3>
+<p>You can set the time to live, expiration, and/or the priority of the
+message in the queue or topic by setting an additional query parameter.
+The <code>expiration</code> query parameter is a long specifying the time in
+milliseconds since epoch (a long date). The <code>ttl</code> query parameter is a
+time in milliseconds you want the message active. The <code>priority</code> is
+another query parameter with an integer value between 0 and 9 expressing
+the priority of the message. i.e.:</p>
+<pre><code>POST /queues/bar/create?ttl=30000&amp;priority=3
+Host: example.com
+Content-Type: application/xml
+
+&lt;order&gt;
+   &lt;name&gt;Bill&lt;/name&gt;
+   &lt;item&gt;iPhone4&lt;/item&gt;
+   &lt;cost&gt;$199.99&lt;/cost&gt;
+&lt;/order&gt;
+</code></pre><h2 id="consuming-messages-via-pull">Consuming Messages via Pull</h2>
+<p>There are two different ways to consume messages from a topic or queue.
+You can wait and have the messaging server push them to you, or you can
+continuously poll the server yourself to see if messages are available.
+This chapter discusses the latter. Consuming messages via a pull works
+almost identically for queues and topics with some minor, but important
+caveats. To start consuming you must create a consumer resource on the
+server that is dedicated to your client. Now, this pretty much breaks
+the stateless principle of REST, but after much prototyping, this is the
+best way to work most effectively with Apache ActiveMQ Artemis through a REST
+interface.</p>
+<p>You create consumer resources by doing a simple POST to the URL
+published by the <code>msg-pull-consumers</code> response header if you are
+interacting with a queue, the <code>msg-pull-subscribers</code> response header if
+you&apos;re interacting with a topic. These headers are provided by the main
+queue or topic resource discussed in <a href="#basics">Apache ActiveMQ Artemis REST Interface
+Basics</a>. Doing an empty POST to one of these URLs will create a
+consumer resource that follows an auto-acknowledge protocol and, if you
+are interacting with a topic, creates a temporarily subscription to the
+topic. If you want to use the acknowledgement protocol and/or create a
+durable subscription (topics only), then you must use the form
+parameters (<code>application/x-www-form-urlencoded</code>) described below.</p>
+<ul>
+<li><p><code>autoAck</code>. A value of <code>true</code> or <code>false</code> can be given. This defaults
+to <code>true</code> if you do not pass this parameter.</p>
+</li>
+<li><p><code>durable</code>. A value of <code>true</code> or <code>false</code> can be given. This defaults
+to <code>false</code> if you do not pass this parameter. Only available on
+topics. This specifies whether you want a durable subscription or
+not. A durable subscription persists through server restart.</p>
+</li>
+<li><p><code>name</code>. This is the name of the durable subscription. If you do not
+provide this parameter, the name will be automatically generated by
+the server. Only usable on topics.</p>
+</li>
+<li><p><code>selector</code>. This is an optional JMS selector string. The Apache ActiveMQ Artemis
+REST interface adds HTTP headers to the JMS message for REST
+produced messages. HTTP headers are prefixed with &quot;http_&quot; and every
+&apos;-&apos; character is converted to a &apos;$&apos;.</p>
+</li>
+<li><p><code>idle-timeout</code>. For a topic subscription, idle time in milliseconds
+in which the consumer connections will be closed if idle.</p>
+</li>
+<li><p><code>delete-when-idle</code>. Boolean value, If true, a topic subscription
+will be deleted (even if it is durable) when the idle timeout is
+reached.</p>
+</li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong></p>
+<p>If you have multiple pull-consumers active at the same time on the
+same destination be aware that unless the <code>consumer-window-size</code> is 0
+then one consumer might buffer messages while the other consumer gets
+none.</p>
+</blockquote>
+<h3 id="auto-acknowledge">Auto-Acknowledge</h3>
+<p>This section focuses on the auto-acknowledge protocol for consuming
+messages via a pull. Here&apos;s a list of the response headers and URLs
+you&apos;ll be interested in.</p>
+<ul>
+<li><p><code>msg-pull-consumers</code>. The URL of a factory resource for creating
+queue consumer resources. You will pull from these created
+resources.</p>
+</li>
+<li><p><code>msg-pull-subscriptions</code>. The URL of a factory resource for creating
+topic subscription resources. You will pull from the created
+resources.</p>
+</li>
+<li><p><code>msg-consume-next</code>. The URL you will pull the next message from.
+This is returned with every response.</p>
+</li>
+<li><p><code>msg-consumer</code>. This is a URL pointing back to the consumer or
+subscription resource created for the client.</p>
+</li>
+</ul>
+<h4 id="creating-an-auto-ack-consumer-or-subscription">Creating an Auto-Ack Consumer or Subscription</h4>
+<p>Here is an example of creating an auto-acknowledged queue pull consumer.</p>
+<ol>
+<li><p>Find the pull-consumers URL by doing a HEAD or GET request to the
+base queue resource.</p>
+<pre><code>HEAD /queues/bar HTTP/1.1
+Host: example.com
+
+--- Response ---
+HTTP/1.1 200 Ok
+msg-create: http://example.com/queues/bar/create
+msg-pull-consumers: http://example.com/queues/bar/pull-consumers
+msg-push-consumers: http://example.com/queues/bar/push-consumers
+</code></pre></li>
+<li><p>Next do an empty POST to the URL returned in the
+<code>msg-pull-consumers</code> header.</p>
+<pre><code>POST /queues/bar/pull-consumers HTTP/1.1
+Host: example.com
+
+--- response ---
+HTTP/1.1 201 Created
+Location: http://example.com/queues/bar/pull-consumers/auto-ack/333
+msg-consume-next: http://example.com/queues/bar/pull-consumers/auto-ack/333/consume-next-1
+</code></pre><p>The <code>Location</code> header points to the JMS consumer resource that was
+created on the server. It is good to remember this URL, although, as
+you&apos;ll see later, it is transmitted with each response just to
+remind you.</p>
+</li>
+</ol>
+<p>Creating an auto-acknowledged consumer for a topic is pretty much the
+same. Here&apos;s an example of creating a durable auto-acknowledged topic
+pull subscription.</p>
+<ol>
+<li><p>Find the <code>pull-subscriptions</code> URL by doing a HEAD or GET request to
+the base topic resource</p>
+<pre><code>HEAD /topics/bar HTTP/1.1
+Host: example.com
+
+--- Response ---
+HTTP/1.1 200 Ok
+msg-create: http://example.com/topics/foo/create
+msg-pull-subscriptions: http://example.com/topics/foo/pull-subscriptions
+msg-push-subscriptions: http://example.com/topics/foo/push-subscriptions
+</code></pre></li>
+<li><p>Next do a POST to the URL returned in the <code>msg-pull-subscriptions</code>
+header passing in a <code>true</code> value for the <code>durable</code> form parameter.</p>
+<pre><code>POST /topics/foo/pull-subscriptions HTTP/1.1
+Host: example.com
+Content-Type: application/x-www-form-urlencoded
+
+durable=true
+
+--- Response ---
+HTTP/1.1 201 Created
+Location: http://example.com/topics/foo/pull-subscriptions/auto-ack/222
+msg-consume-next:
+http://example.com/topics/foo/pull-subscriptions/auto-ack/222/consume-next-1
+</code></pre><p>The <code>Location</code> header points to the JMS subscription resource that
+was created on the server. It is good to remember this URL,
+although, as you&apos;ll see later, it is transmitted with each response
+just to remind you.</p>
+</li>
+</ol>
+<h4 id="consuming-messages">Consuming Messages</h4>
+<p>After you have created a consumer resource, you are ready to start
+pulling messages from the server. Notice that when you created the
+consumer for either the queue or topic, the response contained a
+<code>msg-consume-next</code> response header. POST to the URL contained within
+this header to consume the next message in the queue or topic
+subscription. A successful POST causes the server to extract a message
+from the queue or topic subscription, acknowledge it, and return it to
+the consuming client. If there are no messages in the queue or topic
+subscription, a 503 (Service Unavailable) HTTP code is returned.</p>
+<blockquote>
+<p><strong>Warning</strong></p>
+<p>For both successful and unsuccessful posts to the msg-consume-next
+URL, the response will contain a new msg-consume-next header. You must
+ALWAYS use this new URL returned within the new msg-consume-next
+header to consume new messages.</p>
+</blockquote>
+<p>Here&apos;s an example of pulling multiple messages from the consumer
+resource.</p>
+<ol>
+<li><p>Do a POST on the msg-consume-next URL that was returned with the
+consumer or subscription resource discussed earlier.</p>
+<pre><code>POST /queues/bar/pull-consumers/consume-next-1
+Host: example.com
+
+--- Response ---
+HTTP/1.1 200 Ok
+Content-Type: application/xml
+msg-consume-next: http://example.com/queues/bar/pull-consumers/333/consume-next-2
+msg-consumer: http://example.com/queues/bar/pull-consumers/333
+
+&lt;order&gt;...&lt;/order&gt;
+</code></pre><p>The POST returns the message consumed from the queue. It also
+returns a new msg-consume-next link. Use this new link to get the
+next message. Notice also a msg-consumer response header is
+returned. This is a URL that points back to the consumer or
+subscription resource. You will need that to clean up your
+connection after you are finished using the queue or topic.</p>
+</li>
+<li><p>The POST returns the message consumed from the queue. It also
+returns a new msg-consume-next link. Use this new link to get the
+next message.</p>
+<pre><code>POST /queues/bar/pull-consumers/consume-next-2
+Host: example.com
+
+--- Response ---
+Http/1.1 503 Service Unavailable
+Retry-After: 5
+msg-consume-next: http://example.com/queues/bar/pull-consumers/333/consume-next-2
+</code></pre><p>In this case, there are no messages in the queue, so we get a 503
+response back. As per the HTTP 1.1 spec, a 503 response may return a
+Retry-After head specifying the time in seconds that you should
+retry a post. Also notice, that another new msg-consume-next URL is
+present. Although it probably is the same URL you used last post,
+get in the habit of using URLs returned in response headers as
+future versions of Apache ActiveMQ Artemis REST might be redirecting you or adding
+additional data to the URL after timeouts like this.</p>
+</li>
+<li><p>POST to the URL within the last <code>msg-consume-next</code> to get the next
+message.</p>
+<pre><code>POST /queues/bar/pull-consumers/consume-next-2
+Host: example.com
+
+--- Response ---
+HTTP/1.1 200 Ok
+Content-Type: application/xml
+msg-consume-next: http://example.com/queues/bar/pull-consumers/333/consume-next-3
+
+&lt;order&gt;...&lt;/order&gt;
+</code></pre></li>
+</ol>
+<h4 id="recovering-from-network-failures">Recovering From Network Failures</h4>
+<p>If you experience a network failure and do not know if your post to a
+msg-consume-next URL was successful or not, just re-do your POST. A POST
+to a msg-consume-next URL is idempotent, meaning that it will return the
+same result if you execute on any one msg-consume-next URL more than
+once. Behind the scenes, the consumer resource caches the last consumed
+message so that if there is a message failure and you do a re-post, the
+cached last message will be returned (along with a new msg-consume-next
+URL). This is the reason why the protocol always requires you to use the
+next new msg-consume-next URL returned with each response. Information
+about what state the client is in is embedded within the actual URL.</p>
+<h4 id="recovering-from-client-or-server-crashes">Recovering From Client or Server Crashes</h4>
+<p>If the server crashes and you do a POST to the msg-consume-next URL, the
+server will return a 412 (Preconditions Failed) response code. This is
+telling you that the URL you are using is out of sync with the server.
+The response will contain a new msg-consume-next header to invoke on.</p>
+<p>If the client crashes there are multiple ways you can recover. If you
+have remembered the last msg-consume-next link, you can just re-POST to
+it. If you have remembered the consumer resource URL, you can do a GET
+or HEAD request to obtain a new msg-consume-next URL. If you have
+created a topic subscription using the name parameter discussed earlier,
+you can re-create the consumer. Re-creation will return a
+msg-consume-next URL you can use. If you cannot do any of these things,
+you will have to create a new consumer.</p>
+<p>The problem with the auto-acknowledge protocol is that if the client or
+server crashes, it is possible for you to skip messages. The scenario
+would happen if the server crashes after auto-acknowledging a message
+and before the client receives the message. If you want more reliable
+messaging, then you must use the acknowledgement protocol.</p>
+<h3 id="manual-acknowledgement">Manual Acknowledgement</h3>
+<p>The manual acknowledgement protocol is similar to the auto-ack protocol
+except there is an additional round trip to the server to tell it that
+you have received the message and that the server can internally ack the
+message. Here is a list of the response headers you will be interested
+in.</p>
+<ul>
+<li><p><code>msg-pull-consumers</code>. The URL of a factory resource for creating
+queue consumer resources. You will pull from these created resources</p>
+</li>
+<li><p><code>msg-pull-subscriptions</code>. The URL of a factory resource for creating
+topic subscription resources. You will pull from the created
+resources.</p>
+</li>
+<li><p><code>msg-acknowledge-next</code>. URL used to obtain the next message in the
+queue or topic subscription. It does not acknowledge the message
+though.</p>
+</li>
+<li><p><code>msg-acknowledgement</code>. URL used to acknowledge a message.</p>
+</li>
+<li><p><code>msg-consumer</code>. This is a URL pointing back to the consumer or
+subscription resource created for the client.</p>
+</li>
+</ul>
+<h4 id="creating-manually-acknowledged-consumers-or-subscriptions">Creating manually-acknowledged consumers or subscriptions</h4>
+<p>Here is an example of creating an auto-acknowledged queue pull consumer.</p>
+<ol>
+<li><p>Find the pull-consumers URL by doing a HEAD or GET request to the
+base queue resource.</p>
+<pre><code>HEAD /queues/bar HTTP/1.1
+Host: example.com
+
+--- Response ---
+HTTP/1.1 200 Ok
+msg-create: http://example.com/queues/bar/create
+msg-pull-consumers: http://example.com/queues/bar/pull-consumers
+msg-push-consumers: http://example.com/queues/bar/push-consumers
+</code></pre></li>
+<li><p>Next do a POST to the URL returned in the <code>msg-pull-consumers</code>
+header passing in a <code>false</code> value to the <code>autoAck</code> form parameter .</p>
+<pre><code>POST /queues/bar/pull-consumers HTTP/1.1
+Host: example.com
+Content-Type: application/x-www-form-urlencoded
+
+autoAck=false
+
+--- response ---
+HTTP/1.1 201 Created
+Location: http://example.com/queues/bar/pull-consumers/acknowledged/333
+msg-acknowledge-next: http://example.com/queues/bar/pull-consumers/acknowledged/333/acknowledge-next-1
+</code></pre><p>The <code>Location</code> header points to the JMS consumer resource that was
+created on the server. It is good to remember this URL, although, as
+you&apos;ll see later, it is transmitted with each response just to
+remind you.</p>
+</li>
+</ol>
+<p>Creating a manually-acknowledged consumer for a topic is pretty much
+the same. Here&apos;s an example of creating a durable manually-acknowledged
+topic pull subscription.</p>
+<ol>
+<li><p>Find the <code>pull-subscriptions</code> URL by doing a HEAD or GET request to
+the base topic resource</p>
+<pre><code>HEAD /topics/bar HTTP/1.1
+Host: example.com
+
+--- Response ---
+HTTP/1.1 200 Ok
+msg-create: http://example.com/topics/foo/create
+msg-pull-subscriptions: http://example.com/topics/foo/pull-subscriptions
+msg-push-subscriptions: http://example.com/topics/foo/push-subscriptions
+</code></pre></li>
+<li><p>Next do a POST to the URL returned in the <code>msg-pull-subscriptions</code>
+header passing in a <code>true</code> value for the <code>durable</code> form parameter
+and a <code>false</code> value to the <code>autoAck</code> form parameter.</p>
+<pre><code>POST /topics/foo/pull-subscriptions HTTP/1.1
+Host: example.com
+Content-Type: application/x-www-form-urlencoded
+
+durable=true&amp;autoAck=false
+
+--- Response ---
+HTTP/1.1 201 Created
+Location: http://example.com/topics/foo/pull-subscriptions/acknowledged/222
+msg-acknowledge-next:
+http://example.com/topics/foo/pull-subscriptions/acknowledged/222/consume-next-1
+</code></pre><p>The <code>Location</code> header points to the JMS subscription resource that
+was created on the server. It is good to remember this URL,
+although, as you&apos;ll see later, it is transmitted with each response
+just to remind you.</p>
+</li>
+</ol>
+<h4 id="consuming-and-acknowledging-a-message">Consuming and Acknowledging a Message</h4>
+<p>After you have created a consumer resource, you are ready to start
+pulling messages from the server. Notice that when you created the
+consumer for either the queue or topic, the response contained a
+<code>msg-acknowledge-next</code> response header. POST to the URL contained within
+this header to consume the next message in the queue or topic
+subscription. If there are no messages in the queue or topic
+subscription, a 503 (Service Unavailable) HTTP code is returned. A
+successful POST causes the server to extract a message from the queue or
+topic subscription and return it to the consuming client. It does not
+acknowledge the message though. The response will contain the
+<code>acknowledgement</code> header which you will use to acknowledge the message.</p>
+<p>Here&apos;s an example of pulling multiple messages from the consumer
+resource.</p>
+<ol>
+<li><p>Do a POST on the msg-acknowledge-next URL that was returned with the
+consumer or subscription resource discussed earlier.</p>
+<pre><code>POST /queues/bar/pull-consumers/consume-next-1
+Host: example.com
+
+--- Response ---
+HTTP/1.1 200 Ok
+Content-Type: application/xml
+msg-acknowledgement:
+http://example.com/queues/bar/pull-consumers/333/acknowledgement/2
+msg-consumer: http://example.com/queues/bar/pull-consumers/333
+
+&lt;order&gt;...&lt;/order&gt;
+</code></pre><p>The POST returns the message consumed from the queue. It also
+returns a<code>msg-acknowledgemen</code>t link. You will use this new link to
+acknowledge the message. Notice also a <code>msg-consumer</code> response
+header is returned. This is a URL that points back to the consumer
+or subscription resource. You will need that to clean up your
+connection after you are finished using the queue or topic.</p>
+</li>
+<li><p>Acknowledge or unacknowledge the message by doing a POST to the URL
+contained in the <code>msg-acknowledgement</code> header. You must pass an
+<code>acknowledge</code> form parameter set to <code>true</code> or <code>false</code> depending on
+whether you want to acknowledge or unacknowledge the message on the
+server.</p>
+<pre><code>POST /queues/bar/pull-consumers/acknowledgement/2
+Host: example.com
+Content-Type: application/x-www-form-urlencoded
+
+acknowledge=true
+
+--- Response ---
+Http/1.1 204 Ok
+msg-acknowledge-next:
+http://example.com/queues/bar/pull-consumers/333/acknowledge-next-2
+</code></pre><p>Whether you acknowledge or unacknowledge the message, the response
+will contain a new msg-acknowledge-next header that you must use to
+obtain the next message.</p>
+</li>
+</ol>
+<h4 id="recovering-from-network-failures">Recovering From Network Failures</h4>
+<p>If you experience a network failure and do not know if your post to a
+<code>msg-acknowledge-next</code> or <code>msg-acknowledgement</code> URL was successful or
+not, just re-do your POST. A POST to one of these URLs is idempotent,
+meaning that it will return the same result if you re-post. Behind the
+scenes, the consumer resource keeps track of its current state. If the
+last action was a call to<code>msg-acknowledge-next</code>, it will have the last
+message cached, so that if a re-post is done, it will return the message
+again. Same goes with re-posting to <code>msg-acknowledgement</code>. The server
+remembers its last state and will return the same results. If you look
+at the URLs you&apos;ll see that they contain information about the expected
+current state of the server. This is how the server knows what the
+client is expecting.</p>
+<h4 id="recovering-from-client-or-server-crashes">Recovering From Client or Server Crashes</h4>
+<p>If the server crashes and while you are doing a POST to the
+<code>msg-acknowledge-next</code> URL, just re-post. Everything should reconnect
+all right. On the other hand, if the server crashes while you are doing
+a POST to<code>msg-acknowledgement</code>, the server will return a 412
+(Preconditions Failed) response code. This is telling you that the URL
+you are using is out of sync with the server and the message you are
+acknowledging was probably re-enqueued. The response will contain a new
+<code>msg-acknowledge-next</code> header to invoke on.</p>
+<p>As long as you have &quot;bookmarked&quot; the consumer resource URL (returned
+from <code>Location</code> header on a create, or the <code>msg-consumer</code> header), you
+can recover from client crashes by doing a GET or HEAD request on the
+consumer resource to obtain what state you are in. If the consumer
+resource is expecting you to acknowledge a message, it will return a
+<code>msg-acknowledgement</code> header in the response. If the consumer resource
+is expecting you to pull for the next message, the
+<code>msg-acknowledge-next</code> header will be in the response. With manual
+acknowledgement you are pretty much guaranteed to avoid skipped
+messages. For topic subscriptions that were created with a name
+parameter, you do not have to &quot;bookmark&quot; the returned URL. Instead, you
+can re-create the consumer resource with the same exact name. The
+response will contain the same information as if you did a GET or HEAD
+request on the consumer resource.</p>
+<h4 id="blocking-pulls-with-accept-wait">Blocking Pulls with Accept-Wait</h4>
+<p>Unless your queue or topic has a high rate of message flowing though it,
+if you use the pull protocol, you&apos;re going to be receiving a lot of 503
+responses as you continuously pull the server for new messages. To
+alleviate this problem, the Apache ActiveMQ Artemis REST interface provides the
+<code>Accept-Wait</code> header. This is a generic HTTP request header that is a
+hint to the server for how long the client is willing to wait for a
+response from the server. The value of this header is the time in
+seconds the client is willing to block for. You would send this request
+header with your pull requests. Here&apos;s an example:</p>
+<pre><code>POST /queues/bar/pull-consumers/consume-next-2
+Host: example.com
+Accept-Wait: 30
+
+--- Response ---
+HTTP/1.1 200 Ok
+Content-Type: application/xml
+msg-consume-next: http://example.com/queues/bar/pull-consumers/333/consume-next-3
+
+&lt;order&gt;...&lt;/order&gt;
+</code></pre><p>In this example, we&apos;re posting to a msg-consume-next URL and telling the
+server that we would be willing to block for 30 seconds.</p>
+<h3 id="clean-up-your-consumers">Clean Up Your Consumers!</h3>
+<p>When the client is done with its consumer or topic subscription it
+should do an HTTP DELETE call on the consumer URL passed back from the
+Location header or the msg-consumer response header. The server will
+time out a consumer with the value of <code>consumer-session-timeout-seconds</code>
+configured from <a href="#configuration">REST configuration</a>, so you don&apos;t have
+to clean up if you don&apos;t want to, but if you are a good kid, you will
+clean up your messes. A consumer timeout for durable subscriptions will
+not delete the underlying durable JMS subscription though, only the
+server-side consumer resource (and underlying JMS session).</p>
+<h2 id="pushing-messages">Pushing Messages</h2>
+<p>You can configure the Apache ActiveMQ Artemis REST server to push messages to a
+registered URL either remotely through the REST interface, or by
+creating a pre-configured XML file for the Apache ActiveMQ Artemis REST server to load
+at boot time.</p>
+<h3 id="the-queue-push-subscription-xml">The Queue Push Subscription XML</h3>
+<p>Creating a push consumer for a queue first involves creating a very
+simple XML document. This document tells the server if the push
+subscription should survive server reboots (is it durable). It must
+provide a URL to ship the forwarded message to. Finally, you have to
+provide authentication information if the final endpoint requires
+authentication. Here&apos;s a simple example:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">push-registration</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">durable</span>&gt;</span>false<span class="hljs-tag">&lt;/<span class="hljs-name">durable</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">selector</span>&gt;</span>&lt;![CDATA[
+   SomeAttribute &gt; 1
+   ]]&gt;
+   <span class="hljs-tag">&lt;/<span class="hljs-name">selector</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">&quot;push&quot;</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;http://somewhere.com&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;application/json&quot;</span> <span class="hljs-attr">method</span>=<span class="hljs-string">&quot;PUT&quot;</span>/&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">maxRetries</span>&gt;</span>5<span class="hljs-tag">&lt;/<span class="hljs-name">maxRetries</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">retryWaitMillis</span>&gt;</span>1000<span class="hljs-tag">&lt;/<span class="hljs-name">retryWaitMillis</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">disableOnFailure</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">disableOnFailure</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">push-registration</span>&gt;</span>
+</code></pre>
+<p>The <code>durable</code> element specifies whether the registration should be saved
+to disk so that if there is a server restart, the push subscription will
+still work. This element is not required. If left out it defaults
+to<code>false</code>. If durable is set to true, an XML file for the push
+subscription will be created within the directory specified by the
+<code>queue-push-store-dir</code> config variable defined in Chapter 2
+(<code>topic-push-store-dir</code> for topics).</p>
+<p>The <code>selector</code> element is optional and defines a JMS message selector.
+You should enclose it within CDATA blocks as some of the selector
+characters are illegal XML.</p>
+<p>The <code>maxRetries</code> element specifies how many times a the server will try
+to push a message to a URL if there is a connection failure.</p>
+<p>The <code>retryWaitMillis</code> element specifies how long to wait before
+performing a retry.</p>
+<p>The <code>disableOnFailure</code> element, if set to true, will disable the
+registration if all retries have failed. It will not disable the
+connection on non-connection-failure issues (like a bad request for
+instance). In these cases, the dead letter queue logic of Apache ActiveMQ Artemis will
+take over.</p>
+<p>The <code>link</code> element specifies the basis of the interaction. The <code>href</code>
+attribute contains the URL you want to interact with. It is the only
+required attribute. The <code>type</code> attribute specifies the content-type of
+what the push URL is expecting. The <code>method</code> attribute defines what HTTP
+method the server will use when it sends the message to the server. If
+it is not provided it defaults to POST. The <code>rel</code> attribute is very
+important and the value of it triggers different behavior. Here&apos;s the
+values a rel attribute can have:</p>
+<ul>
+<li><p><code>destination</code>. The href URL is assumed to be a queue or topic
+resource of another Apache ActiveMQ Artemis REST server. The push registration will
+initially do a HEAD request to this URL to obtain a
+msg-create-with-id header. It will use this header to push new
+messages to the Apache ActiveMQ Artemis REST endpoint reliably. Here&apos;s an example:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">push-registration</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">&quot;destination&quot;</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;http://somewhere.com/queues/foo&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">push-registration</span>&gt;</span>
+</code></pre>
+</li>
+<li><p><code>template</code>. In this case, the server is expecting the link element&apos;s
+href attribute to be a URL expression. The URL expression must have
+one and only one URL parameter within it. The server will use a
+unique value to create the endpoint URL. Here&apos;s an example:</p>
+<pre><code>&lt;push-registration&gt;
+   &lt;link rel=&quot;template&quot; href=&quot;http://somewhere.com/resources/{id}/messages&quot; method=&quot;PUT&quot;/&gt;
+&lt;/push-registration&gt;
+</code></pre><p>In this example, the {id} sub-string is the one and only one URL
+parameter.</p>
+</li>
+<li><p><code>user defined</code>. If the rel attributes is not destination or template
+(or is empty or missing), then the server will send an HTTP message
+to the href URL using the HTTP method defined in the method
+attribute. Here&apos;s an example:</p>
+<pre><code>&lt;push-registration&gt;
+   &lt;link href=&quot;http://somewhere.com&quot; type=&quot;application/json&quot; method=&quot;PUT&quot;/&gt;
+&lt;/push-registration&gt;
+</code></pre></li>
+</ul>
+<h3 id="the-topic-push-subscription-xml">The Topic Push Subscription XML</h3>
+<p>The push XML for a topic is the same except the root element is
+push-topic-registration. (Also remember the <code>selector</code> element is
+optional). The rest of the document is the same. Here&apos;s an example of a
+template registration:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">push-topic-registration</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">durable</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">durable</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">selector</span>&gt;</span>&lt;![CDATA[
+   SomeAttribute &gt; 1
+   ]]&gt;
+   <span class="hljs-tag">&lt;/<span class="hljs-name">selector</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">&quot;template&quot;</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;http://somewhere.com/resources/{id}/messages&quot;</span> <span class="hljs-attr">method</span>=<span class="hljs-string">&quot;POST&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">push-topic</span> <span class="hljs-attr">registration</span>&gt;</span>
+</code></pre>
+<h3 id="creating-a-push-subscription-at-runtime">Creating a Push Subscription at Runtime</h3>
+<p>Creating a push subscription at runtime involves getting the factory
+resource URL from the msg-push-consumers header, if the destination is a
+queue, or msg-push-subscriptions header, if the destination is a topic.
+Here&apos;s an example of creating a push registration for a queue:</p>
+<ol>
+<li><p>First do a HEAD request to the queue resource:</p>
+<pre><code>HEAD /queues/bar HTTP/1.1
+Host: example.com
+
+--- Response ---
+HTTP/1.1 200 Ok
+msg-create: http://example.com/queues/bar/create
+msg-pull-consumers: http://example.com/queues/bar/pull-consumers
+msg-push-consumers: http://example.com/queues/bar/push-consumers
+</code></pre></li>
+<li><p>Next POST your subscription XML to the URL returned from
+msg-push-consumers header</p>
+<pre><code>POST /queues/bar/push-consumers
+Host: example.com
+Content-Type: application/xml
+
+&lt;push-registration&gt;
+   &lt;link rel=&quot;destination&quot; href=&quot;http://somewhere.com/queues/foo&quot;/&gt;
+&lt;/push-registration&gt;
+
+--- Response ---
+HTTP/1.1 201 Created
+Location: http://example.com/queues/bar/push-consumers/1-333-1212
+</code></pre><p>The Location header contains the URL for the created resource. If
+you want to unregister this, then do a HTTP DELETE on this URL.</p>
+</li>
+</ol>
+<p>Here&apos;s an example of creating a push registration for a topic:</p>
+<ol>
+<li><p>First do a HEAD request to the topic resource:</p>
+<pre><code>HEAD /topics/bar HTTP/1.1
+Host: example.com
+
+--- Response ---
+HTTP/1.1 200 Ok
+msg-create: http://example.com/topics/bar/create
+msg-pull-subscriptions: http://example.com/topics/bar/pull-subscriptions
+msg-push-subscriptions: http://example.com/topics/bar/push-subscriptions
+</code></pre></li>
+<li><p>Next POST your subscription XML to the URL returned from
+msg-push-subscriptions header</p>
+<pre><code>POST /topics/bar/push-subscriptions
+Host: example.com
+Content-Type: application/xml
+
+&lt;push-registration&gt;
+   &lt;link rel=&quot;template&quot; href=&quot;http://somewhere.com/resources/{id}&quot;/&gt;
+&lt;/push-registration&gt;
+
+--- Response ---
+HTTP/1.1 201 Created
+Location: http://example.com/topics/bar/push-subscriptions/1-333-1212
+</code></pre><p>The Location header contains the URL for the created resource. If
+you want to unregister this, then do a HTTP DELETE on this URL.</p>
+</li>
+</ol>
+<h3 id="creating-a-push-subscription-by-hand">Creating a Push Subscription by Hand</h3>
+<p>You can create a push XML file yourself if you do not want to go through
+the REST interface to create a push subscription. There is some
+additional information you need to provide though. First, in the root
+element, you must define a unique id attribute. You must also define a
+destination element to specify the queue you should register a consumer
+with. For a topic, the destination element is the name of the
+subscription that will be created. For a topic, you must also specify
+the topic name within the topic element.</p>
+<p>Here&apos;s an example of a hand-created queue registration. This file must
+go in the directory specified by the queue-push-store-dir config
+variable defined in Chapter 2:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">push-registration</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;111&quot;</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">destination</span>&gt;</span>bar<span class="hljs-tag">&lt;/<span class="hljs-name">destination</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">durable</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">durable</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">&quot;template&quot;</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;http://somewhere.com/resources/{id}/messages&quot;</span> <span class="hljs-attr">method</span>=<span class="hljs-string">&quot;PUT&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">push-registration</span>&gt;</span>
+</code></pre>
+<p>Here&apos;s an example of a hand-created topic registration. This file must
+go in the directory specified by the topic-push-store-dir config
+variable defined in Chapter 2:</p>
+<pre><code class="lang-xml">&lt;push-topic-registration id=&quot;112&quot;&gt;
+   &lt;destination&gt;my-subscription-1&lt;/destination
+   &lt;durable&gt;true&lt;/durable&gt;
+   &lt;link rel=&quot;template&quot; href=&quot;http://somewhere.com/resources/{id}/messages&quot; method=&quot;PUT&quot;/&gt;
+   &lt;topic&gt;foo&lt;/topic&gt;
+&lt;/push-topic-registration&gt;
+</code></pre>
+<h3 id="pushing-to-authenticated-servers">Pushing to Authenticated Servers</h3>
+<p>Push subscriptions only support BASIC and DIGEST authentication out of
+the box. Here is an example of adding BASIC authentication:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">push-topic-registration</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">durable</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">durable</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">&quot;template&quot;</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;http://somewhere.com/resources/{id}/messages&quot;</span> <span class="hljs-attr">method</span>=<span class="hljs-string">&quot;POST&quot;</span>/&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">authentication</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">basic-auth</span>&gt;</span>
+         <span class="hljs-tag">&lt;<span class="hljs-name">username</span>&gt;</span>guest<span class="hljs-tag">&lt;/<span class="hljs-name">username</span>&gt;</span>
+         <span class="hljs-tag">&lt;<span class="hljs-name">password</span>&gt;</span>geheim<span class="hljs-tag">&lt;/<span class="hljs-name">password</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">basic-auth</span>&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">authentication</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">push-topic-registration</span>&gt;</span>
+</code></pre>
+<p>For DIGEST, just replace basic-auth with digest-auth.</p>
+<p>For other authentication mechanisms, you can register headers you want
+transmitted with each request. Use the header element with the name
+attribute representing the name of the header. Here&apos;s what custom
+headers might look like:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">push-topic-registration</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">durable</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">durable</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">&quot;template&quot;</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;http://somewhere.com/resources/{id}/messages&quot;</span> <span class="hljs-attr">method</span>=<span class="hljs-string">&quot;POST&quot;</span>/&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">header</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;secret-header&quot;</span>&gt;</span>jfdiwe3321<span class="hljs-tag">&lt;/<span class="hljs-name">header</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">push-topic-registration</span>&gt;</span>
+</code></pre>
+<h2 id="creating-destinations">Creating Destinations</h2>
+<p>You can create a durable queue or topic through the REST interface.
+Currently you cannot create a temporary queue or topic. To create a
+queue you do a POST to the relative URL /queues with an XML
+representation of the queue. For example:</p>
+<pre><code>POST /queues
+Host: example.com
+Content-Type: application/activemq.xml
+
+&lt;queue name=&quot;testQueue&quot;&gt;
+   &lt;durable&gt;true&lt;/durable&gt;
+&lt;/queue&gt;
+
+--- Response ---
+HTTP/1.1 201 Created
+Location: http://example.com/queues/testQueue
+</code></pre><p>Notice that the Content-Type is application/activemq.xml.</p>
+<p>Here&apos;s what creating a topic would look like:</p>
+<pre><code>POST /topics
+Host: example.com
+Content-Type: application/activemq.xml
+
+&lt;topic name=&quot;testTopic&quot;&gt;
+&lt;/topic&gt;
+
+--- Response ---
+HTTP/1.1 201 Created
+Location: http://example.com/topics/testTopic
+</code></pre><h2 id="securing-the-apache-activemq-artemis-rest-interface">Securing the Apache ActiveMQ Artemis REST Interface</h2>
+<h3 id="within-wildfly-application-server">Within Wildfly Application server</h3>
+<p>Securing the Apache ActiveMQ Artemis REST interface is very simple with the Wildfly
+Application Server. You turn on authentication for all URLs within your
+WAR&apos;s web.xml, and let the user Principal to propagate to Apache ActiveMQ Artemis. This
+only works if you are using the JAASSecurityManager with Apache ActiveMQ Artemis. See
+the Apache ActiveMQ Artemis documentation for more details.</p>
+<h3 id="security-in-other-environments">Security in other environments</h3>
+<p>To secure the Apache ActiveMQ Artemis REST interface in other environments you must
+role your own security by specifying security constraints with your
+web.xml for every path of every queue and topic you have deployed. Here
+is a list of URI patterns:</p>
+<table>
+<thead>
+<tr>
+<th>Post</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>/queues</td>
+<td>secure the POST operation to secure queue creation</td>
+</tr>
+<tr>
+<td>/queues/{queue-name}/create/</td>
+<td>secure this URL pattern for producing messages.</td>
+</tr>
+<tr>
+<td>/queues/{queue-name}/pull-consumers/</td>
+<td>secure this URL pattern for pushing messages.</td>
+</tr>
+<tr>
+<td>/queues/{queue-name}/push-consumers/</td>
+<td>secure the POST operation to secure topic creation</td>
+</tr>
+<tr>
+<td>/topics</td>
+<td>secure the POST operation to secure topic creation</td>
+</tr>
+<tr>
+<td>/topics/{topic-name}</td>
+<td>secure the GET HEAD operation to getting information about the topic.</td>
+</tr>
+<tr>
+<td>/topics/{topic-name}/create/</td>
+<td>secure this URL pattern for producing messages</td>
+</tr>
+<tr>
+<td>/topics/{topic-name}/pull-subscriptions/</td>
+<td>secure this URL pattern for pulling messages</td>
+</tr>
+<tr>
+<td>/topics/{topic-name}/push-subscriptions/</td>
+<td>secure this URL pattern for pushing messages</td>
+</tr>
+</tbody>
+</table>
+<h2 id="mixing-jms-and-rest">Mixing JMS and REST</h2>
+<p>The Apache ActiveMQ Artemis REST interface supports mixing JMS and REST producers and
+consumers. You can send an ObjectMessage through a JMS Producer, and
+have a REST client consume it. You can have a REST client POST a message
+to a topic and have a JMS Consumer receive it. Some simple
+transformations are supported if you have the correct RESTEasy providers
+installed.</p>
+<h3 id="jms-producers---rest-consumers">JMS Producers - REST Consumers</h3>
+<p>If you have a JMS producer, the Apache ActiveMQ Artemis REST interface only supports
+ObjectMessage type. If the JMS producer is aware that there may be REST
+consumers, it should set a JMS property to specify what Content-Type the
+Java object should be translated into by REST clients. The Apache ActiveMQ Artemis REST
+server will use RESTEasy content handlers (MessageBodyReader/Writers) to
+transform the Java object to the type desired. Here&apos;s an example of a
+JMS producer setting the content type of the message.</p>
+<pre><code class="lang-java">ObjectMessage message = session.createObjectMessage();
+message.setStringProperty(org.apache.activemq.rest.HttpHeaderProperty.CONTENT_TYPE, <span class="hljs-string">&quot;application/xml&quot;</span>);
+</code></pre>
+<p>If the JMS producer does not set the content-type, then this information
+must be obtained from the REST consumer. If it is a pull consumer, then
+the REST client should send an Accept header with the desired media
+types it wants to convert the Java object into. If the REST client is a
+push registration, then the type attribute of the link element of the
+push registration should be set to the desired type.</p>
+<h3 id="rest-producers---jms-consumers">REST Producers - JMS Consumers</h3>
+<p>If you have a REST client producing messages and a JMS consumer,
+Apache ActiveMQ Artemis REST has a simple helper class for you to transform the HTTP
+body to a Java object. Here&apos;s some example code:</p>
+<pre><code class="lang-java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onMessage</span><span class="hljs-params">(Message message)</span> </span>{
+   MyType obj = org.apache.activemq.rest.Jms.getEntity(message, MyType.class);
+}
+</code></pre>
+<p>The way the <code>getEntity()</code> method works is that if the message is an
+ObjectMessage, it will try to extract the desired type from it like any
+other JMS message. If a REST producer sent the message, then the method
+uses RESTEasy to convert the HTTP body to the Java object you want. See
+the Javadoc of this class for more helper methods.</p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="logging.html" class="navigation navigation-prev " aria-label="Previous page: Logging">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="embedding-activemq.html" class="navigation navigation-next " aria-label="Next page: Embedding the Broker">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"REST Interface","level":"1.69","depth":1,"next":{"title":"Embedding the Broker","level":"1.70","depth":1,"path":"embedding-activemq.md","ref":"embedding-activemq.md","articles":[]},"previous":{"title":"Logging","level":"1.68","depth":1,"path":"logging.md","ref":"logging.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"styles":{"ebook":"styles/ebook.css","epub":"styles/epub.css","mobi":"styles/mobi.css","pdf":"styles/pdf.css","print":"styles/print.css","website":"styles/website.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"showLevel":false,"styles":{"ebook":"styles/ebook.css","epub":"styles/epub.css","mobi":"styles/mobi.css","pdf":"styles/pdf.css","print":"styles/print.css","website":"styles/website.css"}}},"github":"apache/activemq-artemis","theme":"default","githubHost":"https://github.com/","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"version":"2.23.1","title":"ActiveMQ Artemis Documentation","links":{"home":"http://activemq.apache.org/artemis","issues":"https://issues.apache.org/jira/browse/ARTEMIS","contribute":"http://activemq.apache.org/contributing.html"},"gitbook":"3.x.x","description":"ActiveMQ Artemis User Guide and Reference Documentation"},"file":{"path":"rest.md","mtime":"2022-06-14T19:55:22.313Z","type":"markdown"},"gitbook":{"version":"3.7.1","time":"2022-06-14T19:55:23.109Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

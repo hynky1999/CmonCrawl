@@ -1,33 +1,60 @@
 import argparse
+from datetime import datetime
+import logging
 from pathlib import Path
 import re
-from utils import DomainRecord, PipeMetadata
+
+import bs4
 import asyncio
 from OutStreamer.stream_to_file import (
     OutStreamerFileJSON,
 )
 
 from Router.router import Router
+from utils import DomainRecord, PipeMetadata
 
 FOLDER = "articles_processed"
+
+logging.basicConfig(level=logging.INFO)
 
 
 def parse_article(article_path: Path):
     with open(article_path, "r") as f:
         article = f.read()
 
-    url = re.search(r'og:url" content="([^\s]+)"', article)
+    bs4_article = bs4.BeautifulSoup(article, "html.parser")
+    url = None
+    url_match = bs4_article.select_one("meta[property='og:url']")
+    # This is terrible but works
     if url is None:
-        url = ""
+        if url_match:
+            url = url_match.get("content")
+    if url is None:
+        url_match = bs4_article.select_one("link[rel='home']")
+        if url_match:
+            url = url_match.get("href")
+            url += "/category/"
+    if url is None:
+        url_match = bs4_article.select_one("link[title='RSS']")
+        if url_match:
+            url = url_match.get("href")
+            url += "/category/"
+
+    year = re.search(r"\d{4}", article_path.name)
+    if year is None:
+        year = 2020
     else:
-        url = url.group(1)
+        year = int(year.group(0))
+    logging.info("Found url: %s", url)
+
     metadata = PipeMetadata(
         DomainRecord(
             filename=article_path.name,
             url=url,
             offset=0,
             length=100,
-        ),
+            timestamp=datetime(year, 1, 1),
+        )
     )
     return article, metadata
 
@@ -57,4 +84,5 @@ if __name__ == "__main__":
     router.register_route("idnes_cz", [r".*idnes\.cz.*"])
     router.register_route("seznamzpravy_cz", [r".*seznamzpravy\.cz.*"])
     router.register_route("irozhlas_cz", [r".*irozhlas\.cz.*"])
+    router.register_route("novinky_cz", [r".*novinky\.cz.*"])
     asyncio.run(article_process(**vars(args), router=router))

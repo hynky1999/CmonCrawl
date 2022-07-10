@@ -1,5 +1,3 @@
-from datetime import datetime
-import logging
 from typing import Any, Callable, Dict
 from utils import PipeMetadata
 from bs4 import BeautifulSoup, Tag
@@ -10,9 +8,10 @@ from ArticleUtils.article_utils import (
     article_extract_transform,
     article_transform,
     author_extract_transform,
+    extract_date_cz,
     head_extract_transform,
+    headline_extract_transform,
     must_exist_filter,
-    must_not_exist_filter,
 )
 
 head_extract_dict: Dict[str, str] = {
@@ -21,7 +20,7 @@ head_extract_dict: Dict[str, str] = {
 
 
 head_extract_transform_dict: Dict[str, Callable[[str], Any]] = {
-    "headline": lambda x: x.replace(r" - iDNES.cz", "").strip(),
+    "headline": headline_extract_transform
 }
 
 
@@ -38,7 +37,7 @@ article_extract_transform_dict: Dict[str, Callable[[Tag], Any]] = {
     ),
     "brief": lambda x: x.text if x else None,
     "author": author_extract_transform,
-    "publication_date": lambda x: irozhlas_extract_date(x),
+    "publication_date": extract_date_cz
 }
 
 
@@ -84,33 +83,3 @@ class Extractor(ArticleExtractor):
             return False
 
         return True
-
-
-CZ_EN_MONTHS = [
-    "ledna",
-    "února",
-    "března",
-    "dubna",
-    "května",
-    "června",
-    "července",
-    "srpna",
-    "září",
-    "října",
-    "listopadu",
-    "prosince",
-]
-
-
-def irozhlas_extract_date(date_tag: Tag | None):
-    if date_tag is None:
-        return None
-    date_str = date_tag.text
-    try:
-        _, day, month, year = list(map(lambda x: x.strip(". \n"), date_str.split()))
-        month = CZ_EN_MONTHS.index(month) + 1
-        date_iso = f"{year}-{month:02}-{int(day):02}"
-        return datetime.fromisoformat(date_iso)
-    except ValueError:
-        logging.error(f"IROZHLAS Invalid date: {date_str}")
-        return None

@@ -48,7 +48,8 @@ filter_head_extract_dict: Dict[str, Any] = {
 
 filter_must_not_exist: Dict[str, str] = {
     # Prevents Premium "articles"
-    "idnes_plus": "div[id='paywall-unlock']",
+    "idnes_plus": "div#paywall-unlock",
+    "idnes_plus_2": "div#paywall",
     "brisk": "div.art-info > span[class='brisk']",
 }
 

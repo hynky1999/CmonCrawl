@@ -1,10 +1,6 @@
-from datetime import datetime
 from typing import Any, Callable, Dict
-from Extractor.extractor_utils import (
-    get_tag_transform,
-)
 from utils import PipeMetadata
-from bs4 import BeautifulSoup, NavigableString, Tag
+from bs4 import BeautifulSoup, Tag
 from ArticleUtils.article_extractor import ArticleExtractor
 
 from ArticleUtils.article_utils import (
@@ -12,18 +8,9 @@ from ArticleUtils.article_utils import (
     article_extract_transform,
     article_transform,
     author_extract_transform,
+    extract_publication_date,
     head_extract_transform,
 )
-
-
-def seznamzpravy_extract_publication_date(tag: Tag | NavigableString | None):
-    if tag is None:
-        return None
-    try:
-        return datetime.strptime(tag.text, "%d. %m. %Y %H:%M")
-    except ValueError:
-        pass
-    return None
 
 
 head_extract_dict: Dict[str, str] = {
@@ -53,7 +40,7 @@ article_extract_transform_dict: Dict[str, Callable[[Tag], Any]] = {
     ),
     "brief": lambda x: x.text if x else None,
     "author": author_extract_transform,
-    "publication_date": seznamzpravy_extract_publication_date,
+    "publication_date": extract_publication_date("%d. %m. %Y %H:%M"),
 }
 
 

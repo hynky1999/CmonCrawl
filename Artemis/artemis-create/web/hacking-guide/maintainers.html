@@ -1,0 +1,482 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <title>Notes for Maintainers · ActiveMQ Artemis Documentation</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.7.1">
+        
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="history.html" />
+    
+    
+    <link rel="prev" href="validating-releases.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="notice.html">
+            
+                <a href="notice.html">
+            
+                    
+                    Legal Notice
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="code.html">
+            
+                <a href="code.html">
+            
+                    
+                    Working with the Code
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="ide.html">
+            
+                <a href="ide.html">
+            
+                    
+                    IDE Integration
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="building.html">
+            
+                <a href="building.html">
+            
+                    
+                    Building
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="tests.html">
+            
+                <a href="tests.html">
+            
+                    
+                    Tests
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="code-coverage-report.html">
+            
+                <a href="code-coverage-report.html">
+            
+                    
+                    Code coverage report
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="formatting.html">
+            
+                <a href="formatting.html">
+            
+                    
+                    Code Formatting
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="validating-releases.html">
+            
+                <a href="validating-releases.html">
+            
+                    
+                    Validating releases
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.10" data-path="maintainers.html">
+            
+                <a href="maintainers.html">
+            
+                    
+                    Notes for Maintainers
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11" data-path="history.html">
+            
+                <a href="history.html">
+            
+                    
+                    History
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >Notes for Maintainers</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="notes-for-maintainers">Notes for Maintainers</h1>
+<p>Core ActiveMQ Artemis members have write access to the Apache ActiveMQ Artemis repositories and will be responsible for
+acknowledging and pushing commits contributed via pull requests on GitHub.</p>
+<p>Core ActiveMQ Artemis members are also able to push their own commits directly to the canonical Apache repository.
+However, the expectation here is that the developer has made a good effort to test their changes and is reasonably
+confident that the changes that are being committed will not break the build.</p>
+<p>What does it mean to be reasonably confident? If the developer has run the same maven commands that the pull-request
+builds are running they can be reasonably confident. Currently the <a href="https://builds.apache.org/job/ActiveMQ-Artemis-PR-Build/" target="_blank">PR build</a>
+runs this command:</p>
+<pre><code>mvn -Pfast-tests -Pextra-tests install
+</code></pre><p>However, if the changes are significant, touches a wide area of code, or even if the developer just wants a second
+opinion they are encouraged to engage other members of the community to obtain an additional review prior to pushing.
+This can easily be done via a pull request on GitHub, a patch file attached to an email or JIRA, commit to a branch
+in the Apache git repo, etc. Having additional eyes looking at significant changes prior to committing to the main
+development branches is definitely encouraged if it helps obtain the &quot;reasonable confidence&quot; that the build is not
+broken and code quality has not decreased.</p>
+<p>If the build does break then developer is expected to make their best effort to get the builds fixed in a reasonable
+amount of time. If it cannot be fixed in a reasonable amount of time the commit can be reverted and re-reviewed.</p>
+<h1 id="using-the-dev-profile">Using the dev profile.</h1>
+<p>Developers are encouraged also to use the Dev profile, which will activate checkstyle during the build:</p>
+<pre><code>mvn -Pdev install
+</code></pre><h2 id="commit-messages">Commit Messages</h2>
+<p>Please ensure the commit messages follow the 50/72 format as described <a href="code.html#commitMessageDetails">here</a>. This
+format follows the recommendation from the <a href="https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project" target="_blank">official Git book</a>.</p>
+<h2 id="configuring-git-repositories">Configuring git repositories</h2>
+<p>Aside from the traditional <code>origin</code> and <code>upstream</code> repositories committers will need an additional reference for the
+canonical Apache git repository where they will be merging and pushing pull-requests. For the purposes of this document,
+let&apos;s assume these ref/repo associations already exist as described in the <a href="code.html">Working with the Code</a> section:</p>
+<ul>
+<li><code>origin</code> : <a href="https://github.com/(your-user-name)/activemq-artemis.git" target="_blank">https://github.com/(your-user-name)/activemq-artemis.git</a></li>
+<li><p><code>upstream</code> : <a href="https://github.com/apache/activemq-artemis" target="_blank">https://github.com/apache/activemq-artemis</a></p>
+</li>
+<li><p>Add the canonical Apache repository as a remote. Here we call it <code>apache</code>.</p>
+<pre><code> $ git remote add apache https://gitbox.apache.org/repos/asf/activemq-artemis.git
+</code></pre></li>
+<li><p>Add the following section to your <artemis-repo>/.git/config statement to fetch all pull requests sent to the GitHub
+mirror.  We are using <code>upstream</code> as the remote repo name (as noted above), but the remote repo name may be different
+if you choose. Just be sure to edit all references to the remote repo name so it&apos;s consistent.</artemis-repo></p>
+<pre><code> [remote &quot;upstream&quot;]
+     url = git@github.com:apache/activemq-artemis.git
+     fetch = +refs/heads/*:refs/remotes/upstream/*
+     fetch = +refs/pull/*/head:refs/remotes/upstream/pr/*
+</code></pre></li>
+</ul>
+<h2 id="merging-and-pushing-pull-requests">Merging and pushing pull requests</h2>
+<p>Here are the basic commands to retrieve pull requests, merge, and push them to the canonical Apache repository:</p>
+<ol>
+<li><p>Download all the remote branches etc... including all the pull requests.</p>
+<pre><code> $ git fetch --all
+ Fetching origin
+ Fetching upstream
+ remote: Counting objects: 566, done.
+ remote: Compressing objects: 100% (188/188), done.
+ remote: Total 566 (delta 64), reused 17 (delta 17), pack-reused 351
+ Receiving objects: 100% (566/566), 300.67 KiB | 0 bytes/s, done.
+ Resolving deltas: 100% (78/78), done.
+ From github.com:apache/activemq-artemis
+  * [new ref]         refs/pull/105/head -&gt; upstream/pr/105
+</code></pre></li>
+<li><p>Checkout the pull request you wish to review</p>
+<pre><code> $ git checkout pr/105 -B 105
+</code></pre></li>
+<li><p>Rebase the branch against master, so the merge would happen at the top of the current master</p>
+<pre><code> $ git pull --rebase apache master
+</code></pre></li>
+<li><p>Once you&apos;ve reviewed the change and are ready to merge checkout <code>master</code>.</p>
+<pre><code> $ git checkout master
+</code></pre></li>
+<li><p>Ensure you are up to date on your master also.</p>
+<pre><code> $ git pull --rebase apache master
+</code></pre></li>
+<li><p>We actually recommend checking out master again, to make sure you wouldn&apos;t add any extra commits by accident:</p>
+<pre><code> $ git fetch apache
+ $ git checkout apache/master -B master
+</code></pre></li>
+<li><p>Create a new merge commit from the pull-request. IMPORTANT: The commit message here should be something like: &quot;This
+closes #105&quot; where &quot;105&quot; is the pull request ID.  The &quot;#105&quot; shows up as a link in the GitHub UI for navigating to
+the PR from the commit message. This will ensure the github pull request is closed even if the commit ID changed due
+to eventual rebases.</p>
+<pre><code> $ git merge --no-ff 105 -m &quot;This closes #105&quot;
+</code></pre></li>
+<li><p>Push to the canonical Apache repo.</p>
+<pre><code> $ git push apache master
+</code></pre></li>
+</ol>
+<h2 id="using-the-automated-script">Using the automated script</h2>
+<p>If you followed the naming conventions described here you can use the <code>scripts/rebase-PR.sh</code> script to automate
+the merging process. This will execute the exact steps described on this previous section.</p>
+<ul>
+<li>Simply use:</li>
+</ul>
+<pre><code>$ &lt;checkout-directory&gt;/scripts/merge-pr.sh &lt;PR number&gt; Message on the PR
+</code></pre><p>Example:</p>
+<pre><code>$  pwd
+/checkouts/apache-activemq-artemis
+
+$  ./scripts/merge-PR.sh 175 ARTEMIS-229 address on Security Interface
+</code></pre><p>The previous example was taken from a real case that generated this <a href="https://github.com/apache/activemq-artemis/commit/e85bb3ca4a75b0f1dfbe717ff90b34309e2de794" target="_blank">merge commit on #175</a>.</p>
+<ul>
+<li>After this you can push to the canonical Apache repo.<pre><code>$ git push apache master
+</code></pre></li>
+</ul>
+<h2 id="use-a-separate-branch-for-your-changes">Use a separate branch for your changes</h2>
+<p>It is recommended that you work away from master for two reasons:</p>
+<ol>
+<li><p>When you send a PR, your PR branch could be rebased during the process and your commit ID changed. You might
+get unexpected conflicts while rebasing your old branch.</p>
+</li>
+<li><p>You could end up pushing things upstream that you didn&apos;t intend to. Minimize your risks by working on a branch
+away from master.</p>
+</li>
+</ol>
+<h2 id="notes">Notes:</h2>
+<p>The GitHub mirror repository (i.e. <code>upstream</code>) is cloning the canonical Apache repository.  Because of this there may be
+a slight delay between when a commit is pushed to the Apache repo and when that commit is reflected in the GitHub mirror.
+This may cause some difficulty when trying to push a PR to <code>apache</code> that has been merged on the out-of-date GitHub mirror.
+You can wait for the mirror to update before performing the steps above or you can change your local master branch to
+track the master branch on the canonical Apache repository rather than the master branch on the GitHub mirror:</p>
+<pre><code>$ git branch master -u apache/master
+</code></pre><p>Where <code>apache</code> points to the canonical Apache repository.</p>
+<p>If you&apos;d like your local master branch to always track <code>upstream/master</code> (i.e. the GitHub mirror) then another way to
+achieve this is to add another branch that tracks <code>apache/master</code> and push from that branch e.g.</p>
+<pre><code>$ git checkout master
+$ git branch apache_master --track apache/master
+$ git pull
+$ git merge --no-ff pr/105
+$ git push
+</code></pre>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="validating-releases.html" class="navigation navigation-prev " aria-label="Previous page: Validating releases">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="history.html" class="navigation navigation-next " aria-label="Next page: History">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Notes for Maintainers","level":"1.10","depth":1,"next":{"title":"History","level":"1.11","depth":1,"path":"history.md","ref":"history.md","articles":[]},"previous":{"title":"Validating releases","level":"1.9","depth":1,"path":"validating-releases.md","ref":"validating-releases.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"styles":{"ebook":"styles/ebook.css","epub":"styles/epub.css","mobi":"styles/mobi.css","pdf":"styles/pdf.css","print":"styles/print.css","website":"styles/website.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"showLevel":false,"styles":{"ebook":"styles/ebook.css","epub":"styles/epub.css","mobi":"styles/mobi.css","pdf":"styles/pdf.css","print":"styles/print.css","website":"styles/website.css"}}},"github":"apache/activemq-artemis","theme":"default","githubHost":"https://github.com/","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"ActiveMQ Artemis Documentation","links":{"home":"http://activemq.apache.org/artemis","issues":"https://issues.apache.org/jira/browse/ARTEMIS","contribute":"http://activemq.apache.org/contributing.html"},"gitbook":"3.x.x","description":"ActiveMQ Artemis Hacking Guide"},"file":{"path":"maintainers.md","mtime":"2022-06-14T19:42:45.221Z","type":"markdown"},"gitbook":{"version":"3.7.1","time":"2022-06-14T19:55:35.207Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

@@ -1,0 +1,1829 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <title>Data Tools · ActiveMQ Artemis Documentation</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.7.1">
+        
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="activation-tools.html" />
+    
+    
+    <link rel="prev" href="intercepting-operations.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="notice.html">
+            
+                <a href="notice.html">
+            
+                    
+                    Legal Notice
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="preface.html">
+            
+                <a href="preface.html">
+            
+                    
+                    Preface
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="project-info.html">
+            
+                <a href="project-info.html">
+            
+                    
+                    Project Info
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="versions.html">
+            
+                <a href="versions.html">
+            
+                    
+                    Versions
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="messaging-concepts.html">
+            
+                <a href="messaging-concepts.html">
+            
+                    
+                    Messaging Concepts
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="architecture.html">
+            
+                <a href="architecture.html">
+            
+                    
+                    Architecture
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="using-server.html">
+            
+                <a href="using-server.html">
+            
+                    
+                    Using the Server
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="upgrading.html">
+            
+                <a href="upgrading.html">
+            
+                    
+                    Upgrading
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10" >
+            
+                <span>
+            
+                    
+                    Address
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.1" data-path="address-model.html">
+            
+                <a href="address-model.html">
+            
+                    
+                    Model
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2" data-path="address-settings.html">
+            
+                <a href="address-settings.html">
+            
+                    
+                    Settings
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11" data-path="protocols-interoperability.html">
+            
+                <a href="protocols-interoperability.html">
+            
+                    
+                    Protocols and Interoperability
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12" data-path="amqp.html">
+            
+                <a href="amqp.html">
+            
+                    
+                    AMQP
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.12.1" data-path="amqp-broker-connections.html">
+            
+                <a href="amqp-broker-connections.html">
+            
+                    
+                    Broker Connections
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.13" data-path="mqtt.html">
+            
+                <a href="mqtt.html">
+            
+                    
+                    MQTT
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.14" data-path="stomp.html">
+            
+                <a href="stomp.html">
+            
+                    
+                    STOMP
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.15" data-path="openwire.html">
+            
+                <a href="openwire.html">
+            
+                    
+                    OpenWire
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.16" data-path="core.html">
+            
+                <a href="core.html">
+            
+                    
+                    Core
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.17" data-path="jms-core-mapping.html">
+            
+                <a href="jms-core-mapping.html">
+            
+                    
+                    Mapping JMS Concepts to the Core API
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.18" data-path="using-jms.html">
+            
+                <a href="using-jms.html">
+            
+                    
+                    Using JMS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.19" data-path="client-classpath.html">
+            
+                <a href="client-classpath.html">
+            
+                    
+                    The Client Classpath
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.20" data-path="examples.html">
+            
+                <a href="examples.html">
+            
+                    
+                    Examples
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.21" data-path="wildcard-routing.html">
+            
+                <a href="wildcard-routing.html">
+            
+                    
+                    Routing Messages With Wild Cards
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.22" data-path="wildcard-syntax.html">
+            
+                <a href="wildcard-syntax.html">
+            
+                    
+                    Wildcard Syntax
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.23" data-path="filter-expressions.html">
+            
+                <a href="filter-expressions.html">
+            
+                    
+                    Filter Expressions
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.24" data-path="persistence.html">
+            
+                <a href="persistence.html">
+            
+                    
+                    Persistence
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.25" data-path="configuring-transports.html">
+            
+                <a href="configuring-transports.html">
+            
+                    
+                    Configuring Transports
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.26" data-path="config-reload.html">
+            
+                <a href="config-reload.html">
+            
+                    
+                    Configuration Reload
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.27" data-path="connection-ttl.html">
+            
+                <a href="connection-ttl.html">
+            
+                    
+                    Detecting Dead Connections
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.28" data-path="slow-consumers.html">
+            
+                <a href="slow-consumers.html">
+            
+                    
+                    Detecting Slow Consumers
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.29" data-path="network-isolation.html">
+            
+                <a href="network-isolation.html">
+            
+                    
+                    Avoiding Network Isolation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.30" data-path="critical-analysis.html">
+            
+                <a href="critical-analysis.html">
+            
+                    
+                    Detecting Broker Issues (Critical Analysis)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.31" data-path="transaction-config.html">
+            
+                <a href="transaction-config.html">
+            
+                    
+                    Resource Manager Configuration
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.32" data-path="flow-control.html">
+            
+                <a href="flow-control.html">
+            
+                    
+                    Flow Control
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.33" data-path="send-guarantees.html">
+            
+                <a href="send-guarantees.html">
+            
+                    
+                    Guarantees of sends and commits
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.34" data-path="undelivered-messages.html">
+            
+                <a href="undelivered-messages.html">
+            
+                    
+                    Message Redelivery and Undelivered Messages
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.35" data-path="message-expiry.html">
+            
+                <a href="message-expiry.html">
+            
+                    
+                    Message Expiry
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.36" data-path="large-messages.html">
+            
+                <a href="large-messages.html">
+            
+                    
+                    Large Messages
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.37" data-path="paging.html">
+            
+                <a href="paging.html">
+            
+                    
+                    Paging
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.38" data-path="scheduled-messages.html">
+            
+                <a href="scheduled-messages.html">
+            
+                    
+                    Scheduled Messages
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.39" data-path="last-value-queues.html">
+            
+                <a href="last-value-queues.html">
+            
+                    
+                    Last-Value Queues
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.40" data-path="non-destructive-queues.html">
+            
+                <a href="non-destructive-queues.html">
+            
+                    
+                    Non-Destructive Queues
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.41" data-path="ring-queues.html">
+            
+                <a href="ring-queues.html">
+            
+                    
+                    Ring Queues
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.42" data-path="retroactive-addresses.html">
+            
+                <a href="retroactive-addresses.html">
+            
+                    
+                    Retroactive Addresses
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.43" data-path="exclusive-queues.html">
+            
+                <a href="exclusive-queues.html">
+            
+                    
+                    Exclusive Queues
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.44" data-path="message-grouping.html">
+            
+                <a href="message-grouping.html">
+            
+                    
+                    Message Grouping
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.45" data-path="consumer-priority.html">
+            
+                <a href="consumer-priority.html">
+            
+                    
+                    Consumer Priority
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.46" data-path="pre-acknowledge.html">
+            
+                <a href="pre-acknowledge.html">
+            
+                    
+                    Extra Acknowledge Modes
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.47" data-path="management.html">
+            
+                <a href="management.html">
+            
+                    
+                    Management
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.48" data-path="management-console.html">
+            
+                <a href="management-console.html">
+            
+                    
+                    Management Console
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.49" data-path="metrics.html">
+            
+                <a href="metrics.html">
+            
+                    
+                    Metrics
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.50" data-path="security.html">
+            
+                <a href="security.html">
+            
+                    
+                    Security
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.51" data-path="masking-passwords.html">
+            
+                <a href="masking-passwords.html">
+            
+                    
+                    Masking Passwords
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.52" data-path="broker-plugins.html">
+            
+                <a href="broker-plugins.html">
+            
+                    
+                    Broker Plugins
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.53" data-path="resource-limits.html">
+            
+                <a href="resource-limits.html">
+            
+                    
+                    Resource Limits
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.54" data-path="jms-bridge.html">
+            
+                <a href="jms-bridge.html">
+            
+                    
+                    The JMS Bridge
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.55" data-path="client-reconnection.html">
+            
+                <a href="client-reconnection.html">
+            
+                    
+                    Client Reconnection and Session Reattachment
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.56" data-path="diverts.html">
+            
+                <a href="diverts.html">
+            
+                    
+                    Diverting and Splitting Message Flows
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.57" data-path="core-bridges.html">
+            
+                <a href="core-bridges.html">
+            
+                    
+                    Core Bridges
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.58" data-path="transformers.html">
+            
+                <a href="transformers.html">
+            
+                    
+                    Transformers
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.59" data-path="duplicate-detection.html">
+            
+                <a href="duplicate-detection.html">
+            
+                    
+                    Duplicate Message Detection
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.60" data-path="clusters.html">
+            
+                <a href="clusters.html">
+            
+                    
+                    Clusters
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.61" data-path="federation.html">
+            
+                <a href="federation.html">
+            
+                    
+                    Federation
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.61.1" data-path="federation-address.html">
+            
+                <a href="federation-address.html">
+            
+                    
+                    Address Federation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.61.2" data-path="federation-queue.html">
+            
+                <a href="federation-queue.html">
+            
+                    
+                    Queue Federation
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.62" data-path="ha.html">
+            
+                <a href="ha.html">
+            
+                    
+                    High Availability and Failover
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.63" data-path="connection-routers.html">
+            
+                <a href="connection-routers.html">
+            
+                    
+                    Connection Routers
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.64" data-path="graceful-shutdown.html">
+            
+                <a href="graceful-shutdown.html">
+            
+                    
+                    Graceful Server Shutdown
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.65" data-path="libaio.html">
+            
+                <a href="libaio.html">
+            
+                    
+                    Libaio Native Libraries
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.66" data-path="thread-pooling.html">
+            
+                <a href="thread-pooling.html">
+            
+                    
+                    Thread management
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.67" data-path="web-server.html">
+            
+                <a href="web-server.html">
+            
+                    
+                    Embedded Web Server
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.68" data-path="logging.html">
+            
+                <a href="logging.html">
+            
+                    
+                    Logging
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.69" data-path="rest.html">
+            
+                <a href="rest.html">
+            
+                    
+                    REST Interface
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.70" data-path="embedding-activemq.html">
+            
+                <a href="embedding-activemq.html">
+            
+                    
+                    Embedding the Broker
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.71" data-path="karaf.html">
+            
+                <a href="karaf.html">
+            
+                    
+                    Apache Karaf
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.72" data-path="tomcat.html">
+            
+                <a href="tomcat.html">
+            
+                    
+                    Apache Tomcat
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.73" data-path="spring-integration.html">
+            
+                <a href="spring-integration.html">
+            
+                    
+                    Spring Integration
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.74" data-path="cdi-integration.html">
+            
+                <a href="cdi-integration.html">
+            
+                    
+                    CDI Integration
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.75" data-path="intercepting-operations.html">
+            
+                <a href="intercepting-operations.html">
+            
+                    
+                    Intercepting Operations
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.76" data-path="data-tools.html">
+            
+                <a href="data-tools.html">
+            
+                    
+                    Data Tools
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.77" data-path="activation-tools.html">
+            
+                <a href="activation-tools.html">
+            
+                    
+                    Activation Tools
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.78" data-path="maven-plugin.html">
+            
+                <a href="maven-plugin.html">
+            
+                    
+                    Maven Plugin
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.79" data-path="unit-testing.html">
+            
+                <a href="unit-testing.html">
+            
+                    
+                    Unit Testing
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.80" data-path="perf-tuning.html">
+            
+                <a href="perf-tuning.html">
+            
+                    
+                    Troubleshooting and Performance Tuning
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.81" data-path="perf-tools.html">
+            
+                <a href="perf-tools.html">
+            
+                    
+                    Performance Tools
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.82" data-path="configuration-index.html">
+            
+                <a href="configuration-index.html">
+            
+                    
+                    Configuration Reference
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.83" data-path="restart-sequence.html">
+            
+                <a href="restart-sequence.html">
+            
+                    
+                    Restart Sequence
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >Data Tools</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="data-tools">Data Tools</h1>
+<p>You can use the Artemis CLI to execute data maintenance tools:</p>
+<p>The following sub-commands are available when running the CLI data
+command from a particular broker instance that has already been
+installed using the create command:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>print</td>
+<td>Prints a report about journal records of a non-running server</td>
+</tr>
+<tr>
+<td>exp</td>
+<td>Export the message data using a special and independent XML format</td>
+</tr>
+<tr>
+<td>imp</td>
+<td>Imports the journal to a running broker using the output from expt</td>
+</tr>
+<tr>
+<td>encode</td>
+<td>shows an internal format of the journal encoded to String</td>
+</tr>
+<tr>
+<td>decode</td>
+<td>imports the internal journal format from encode</td>
+</tr>
+<tr>
+<td>compact</td>
+<td>Compacts the journal of a non running server</td>
+</tr>
+<tr>
+<td>recover</td>
+<td>Recover (undelete) messages from an existing journal and create a new one.</td>
+</tr>
+</tbody>
+</table>
+<p>You can use the CLI help for more information on how to execute each of the tools. For example:</p>
+<pre><code>$ ./artemis help data print
+NAME
+        artemis data print - Print data records information (WARNING: don&apos;t use
+        while a production server is running)
+
+SYNOPSIS
+        artemis data print [--bindings &lt;binding&gt;] [--broker &lt;brokerConfig&gt;]
+                [--f] [--jdbc] [--jdbc-bindings-table-name &lt;jdbcBindings&gt;]
+                [--jdbc-connection-url &lt;jdbcURL&gt;]
+                [--jdbc-driver-class-name &lt;jdbcClassName&gt;]
+                [--jdbc-large-message-table-name &lt;jdbcLargeMessages&gt;]
+                [--jdbc-message-table-name &lt;jdbcMessages&gt;]
+                [--jdbc-node-manager-table-name &lt;jdbcNodeManager&gt;]
+                [--jdbc-page-store-table-name &lt;jdbcPageStore&gt;] [--journal &lt;journal&gt;]
+                [--large-messages &lt;largeMessges&gt;] [--output &lt;output&gt;]
+                [--paging &lt;paging&gt;] [--reclaimed] [--safe] [--verbose] [--]
+                [&lt;configuration&gt;]
+
+OPTIONS
+        --bindings &lt;binding&gt;
+            The folder used for bindings (default from broker.xml)
+
+        --broker &lt;brokerConfig&gt;
+            This would override the broker configuration from the bootstrap
+
+        --f
+            This will allow certain tools like print-data to be performed
+            ignoring any running servers. WARNING: Changing data concurrently
+            with a running broker may damage your data. Be careful with this
+            option.
+
+        --jdbc
+            It will activate jdbc
+
+        --jdbc-bindings-table-name &lt;jdbcBindings&gt;
+            Name of the jdbc bindigns table
+
+        --jdbc-connection-url &lt;jdbcURL&gt;
+            The connection used for the database
+
+        --jdbc-driver-class-name &lt;jdbcClassName&gt;
+            JDBC driver classname
+
+        --jdbc-large-message-table-name &lt;jdbcLargeMessages&gt;
+            Name of the large messages table
+
+        --jdbc-message-table-name &lt;jdbcMessages&gt;
+            Name of the jdbc messages table
+
+        --jdbc-node-manager-table-name &lt;jdbcNodeManager&gt;
+            Name of the jdbc node manager table
+
+        --jdbc-page-store-table-name &lt;jdbcPageStore&gt;
+            Name of the page store messages table
+
+        --journal &lt;journal&gt;
+            The folder used for messages journal (default from broker.xml)
+
+        --large-messages &lt;largeMessges&gt;
+            The folder used for large-messages (default from broker.xml)
+
+        --output &lt;output&gt;
+            Output name for the file
+
+        --paging &lt;paging&gt;
+            The folder used for paging (default from broker.xml)
+
+        --reclaimed
+            This option will try to print as many records as possible from
+            reclaimed files
+
+        --safe
+            It will print your data structure without showing your data
+
+        --verbose
+            Adds more information on the execution
+
+        --
+            This option can be used to separate command-line options from the
+            list of argument, (useful when arguments might be mistaken for
+            command-line options
+
+        &lt;configuration&gt;
+            Broker Configuration URI, default
+            &apos;xml:${ARTEMIS_INSTANCE}/etc/bootstrap.xml&apos;
+</code></pre><p>For a full list of data tools commands available use:</p>
+<pre><code>$ ./artemis help data
+NAME
+        artemis data - data tools group
+        (print|imp|exp|encode|decode|compact|recover) (example ./artemis data
+        print)
+
+SYNOPSIS
+        artemis data
+        artemis data compact [--journal &lt;journal&gt;]
+                [--large-messages &lt;largeMessges&gt;] [--paging &lt;paging&gt;]
+                [--broker &lt;brokerConfig&gt;] [--bindings &lt;binding&gt;] [--verbose]
+        artemis data decode [--journal &lt;journal&gt;]
+                [--large-messages &lt;largeMessges&gt;] [--file-size &lt;size&gt;]
+                [--paging &lt;paging&gt;] [--prefix &lt;prefix&gt;] [--suffix &lt;suffix&gt;]
+                [--broker &lt;brokerConfig&gt;] [--directory &lt;directory&gt;]
+                [--bindings &lt;binding&gt;] [--verbose] --input &lt;input&gt;
+        artemis data encode [--journal &lt;journal&gt;]
+                [--large-messages &lt;largeMessges&gt;] [--file-size &lt;size&gt;]
+                [--paging &lt;paging&gt;] [--prefix &lt;prefix&gt;] [--suffix &lt;suffix&gt;]
+                [--broker &lt;brokerConfig&gt;] [--bindings &lt;binding&gt;] [--verbose]
+                [--directory &lt;directory&gt;]
+        artemis data exp [--jdbc-driver-class-name &lt;jdbcClassName&gt;]
+                [--journal &lt;journal&gt;] [--jdbc-connection-url &lt;jdbcURL&gt;]
+                [--large-messages &lt;largeMessges&gt;]
+                [--jdbc-bindings-table-name &lt;jdbcBindings&gt;] [--paging &lt;paging&gt;] [--f]
+                [--jdbc-large-message-table-name &lt;jdbcLargeMessages&gt;]
+                [--broker &lt;brokerConfig&gt;] [--jdbc-page-store-table-name &lt;jdbcPageStore&gt;]
+                [--bindings &lt;binding&gt;] [--jdbc] [--verbose]
+                [--jdbc-message-table-name &lt;jdbcMessages&gt;]
+                [--jdbc-node-manager-table-name &lt;jdbcNodeManager&gt;] [--output &lt;output&gt;]
+        artemis data imp [--legacy-prefixes] [--password &lt;password&gt;]
+                [--transaction] [--verbose] [--port &lt;port&gt;] [--user &lt;user&gt;] [--sort]
+                --input &lt;input&gt; [--host &lt;host&gt;]
+        artemis data print [--reclaimed]
+                [--jdbc-driver-class-name &lt;jdbcClassName&gt;] [--journal &lt;journal&gt;]
+                [--jdbc-connection-url &lt;jdbcURL&gt;] [--large-messages &lt;largeMessges&gt;]
+                [--jdbc-bindings-table-name &lt;jdbcBindings&gt;] [--paging &lt;paging&gt;] [--f]
+                [--jdbc-large-message-table-name &lt;jdbcLargeMessages&gt;] [--safe]
+                [--broker &lt;brokerConfig&gt;] [--jdbc-page-store-table-name &lt;jdbcPageStore&gt;]
+                [--bindings &lt;binding&gt;] [--jdbc] [--verbose]
+                [--jdbc-message-table-name &lt;jdbcMessages&gt;]
+                [--jdbc-node-manager-table-name &lt;jdbcNodeManager&gt;] [--output &lt;output&gt;]
+        artemis data recover [--jdbc-driver-class-name &lt;jdbcClassName&gt;]
+                [--journal &lt;journal&gt;] [--jdbc-connection-url &lt;jdbcURL&gt;]
+                [--large-messages &lt;largeMessges&gt;] [--reclaimed] --target &lt;outputJournal&gt;
+                [--jdbc-bindings-table-name &lt;jdbcBindings&gt;] [--paging &lt;paging&gt;] [--f]
+                [--jdbc-large-message-table-name &lt;jdbcLargeMessages&gt;]
+                [--broker &lt;brokerConfig&gt;] [--jdbc-page-store-table-name &lt;jdbcPageStore&gt;]
+                [--bindings &lt;binding&gt;] [--jdbc] [--verbose]
+                [--jdbc-message-table-name &lt;jdbcMessages&gt;]
+                [--jdbc-node-manager-table-name &lt;jdbcNodeManager&gt;] [--output &lt;output&gt;]
+
+COMMANDS
+        With no arguments, Display help information
+
+        recover
+            Recover (undelete) every message on the journal by creating a new
+            output journal. Rolled backed and acked messages will be sent out to
+            the output as much as possible.
+
+            With --jdbc-driver-class-name option, JDBC driver classname
+
+            With --journal option, The folder used for messages journal (default
+            from broker.xml)
+
+            With --jdbc-connection-url option, The connection used for the
+            database
+
+            With --large-messages option, The folder used for large-messages
+            (default from broker.xml)
+
+            With --reclaimed option, This option will try to recover as many
+            records as possible from reclaimed files
+
+            With --target option, Output folder container the new journal with
+            all the generated messages
+
+            With --jdbc-bindings-table-name option, Name of the jdbc bindigns
+            table
+
+            With --paging option, The folder used for paging (default from
+            broker.xml)
+
+            With --f option, This will allow certain tools like print-data to be
+            performed ignoring any running servers. WARNING: Changing data
+            concurrently with a running broker may damage your data. Be careful
+            with this option.
+
+            With --jdbc-large-message-table-name option, Name of the large
+            messages table
+
+            With --broker option, This would override the broker configuration
+            from the bootstrap
+
+            With --jdbc-page-store-table-name option, Name of the page store
+            messages table
+
+            With --bindings option, The folder used for bindings (default from
+            broker.xml)
+
+            With --jdbc option, It will activate jdbc
+
+            With --verbose option, Adds more information on the execution
+
+            With --jdbc-message-table-name option, Name of the jdbc messages
+            table
+
+            With --jdbc-node-manager-table-name option, Name of the jdbc node
+            manager table
+
+            With --output option, Output name for the file
+
+        print
+            Print data records information (WARNING: don&apos;t use while a
+            production server is running)
+
+            With --reclaimed option, This option will try to print as many
+            records as possible from reclaimed files
+
+            With --jdbc-driver-class-name option, JDBC driver classname
+
+            With --journal option, The folder used for messages journal (default
+            from broker.xml)
+
+            With --jdbc-connection-url option, The connection used for the
+            database
+
+            With --large-messages option, The folder used for large-messages
+            (default from broker.xml)
+
+            With --jdbc-bindings-table-name option, Name of the jdbc bindigns
+            table
+
+            With --paging option, The folder used for paging (default from
+            broker.xml)
+
+            With --f option, This will allow certain tools like print-data to be
+            performed ignoring any running servers. WARNING: Changing data
+            concurrently with a running broker may damage your data. Be careful
+            with this option.
+
+            With --jdbc-large-message-table-name option, Name of the large
+            messages table
+
+            With --safe option, It will print your data structure without
+            showing your data
+
+            With --broker option, This would override the broker configuration
+            from the bootstrap
+
+            With --jdbc-page-store-table-name option, Name of the page store
+            messages table
+
+            With --bindings option, The folder used for bindings (default from
+            broker.xml)
+
+            With --jdbc option, It will activate jdbc
+
+            With --verbose option, Adds more information on the execution
+
+            With --jdbc-message-table-name option, Name of the jdbc messages
+            table
+
+            With --jdbc-node-manager-table-name option, Name of the jdbc node
+            manager table
+
+            With --output option, Output name for the file
+
+        exp
+            Export all message-data using an XML that could be interpreted by
+            any system.
+
+            With --jdbc-driver-class-name option, JDBC driver classname
+
+            With --journal option, The folder used for messages journal (default
+            from broker.xml)
+
+            With --jdbc-connection-url option, The connection used for the
+            database
+
+            With --large-messages option, The folder used for large-messages
+            (default from broker.xml)
+
+            With --jdbc-bindings-table-name option, Name of the jdbc bindigns
+            table
+
+            With --paging option, The folder used for paging (default from
+            broker.xml)
+
+            With --f option, This will allow certain tools like print-data to be
+            performed ignoring any running servers. WARNING: Changing data
+            concurrently with a running broker may damage your data. Be careful
+            with this option.
+
+            With --jdbc-large-message-table-name option, Name of the large
+            messages table
+
+            With --broker option, This would override the broker configuration
+            from the bootstrap
+
+            With --jdbc-page-store-table-name option, Name of the page store
+            messages table
+
+            With --bindings option, The folder used for bindings (default from
+            broker.xml)
+
+            With --jdbc option, It will activate jdbc
+
+            With --verbose option, Adds more information on the execution
+
+            With --jdbc-message-table-name option, Name of the jdbc messages
+            table
+
+            With --jdbc-node-manager-table-name option, Name of the jdbc node
+            manager table
+
+            With --output option, Output name for the file
+
+        imp
+            Import all message-data using an XML that could be interpreted by
+            any system.
+
+            With --legacy-prefixes option, Do not remove prefixes from legacy
+            imports
+
+            With --password option, User name used to import the data. (default
+            null)
+
+            With --transaction option, If this is set to true you will need a
+            whole transaction to commit at the end. (default false)
+
+            With --verbose option, Adds more information on the execution
+
+            With --port option, The port used to import the data (default 61616)
+
+            With --user option, User name used to import the data. (default
+            null)
+
+            With --sort option, Sort the messages from the input (used for older
+            versions that won&apos;t sort messages)
+
+            With --input option, The input file name (default=exp.dmp)
+
+            With --host option, The host used to import the data (default
+            localhost)
+
+        decode
+            Decode a journal&apos;s internal format into a new journal set of files
+
+            With --journal option, The folder used for messages journal (default
+            from broker.xml)
+
+            With --large-messages option, The folder used for large-messages
+            (default from broker.xml)
+
+            With --file-size option, The journal size (default 10485760)
+
+            With --paging option, The folder used for paging (default from
+            broker.xml)
+
+            With --prefix option, The journal prefix (default activemq-data)
+
+            With --suffix option, The journal suffix (default amq)
+
+            With --broker option, This would override the broker configuration
+            from the bootstrap
+
+            With --directory option, The journal folder (default journal folder
+            from broker.xml)
+
+            With --bindings option, The folder used for bindings (default from
+            broker.xml)
+
+            With --verbose option, Adds more information on the execution
+
+            With --input option, The input file name (default=exp.dmp)
+
+        encode
+            Encode a set of journal files into an internal encoded data format
+
+            With --journal option, The folder used for messages journal (default
+            from broker.xml)
+
+            With --large-messages option, The folder used for large-messages
+            (default from broker.xml)
+
+            With --file-size option, The journal size (default 10485760)
+
+            With --paging option, The folder used for paging (default from
+            broker.xml)
+
+            With --prefix option, The journal prefix (default activemq-data)
+
+            With --suffix option, The journal suffix (default amq)
+
+            With --broker option, This would override the broker configuration
+            from the bootstrap
+
+            With --bindings option, The folder used for bindings (default from
+            broker.xml)
+
+            With --verbose option, Adds more information on the execution
+
+            With --directory option, The journal folder (default the journal
+            folder from broker.xml)
+
+        compact
+            Compacts the journal of a non running server
+
+            With --journal option, The folder used for messages journal (default
+            from broker.xml)
+
+            With --large-messages option, The folder used for large-messages
+            (default from broker.xml)
+
+            With --paging option, The folder used for paging (default from
+            broker.xml)
+
+            With --broker option, This would override the broker configuration
+            from the bootstrap
+
+            With --bindings option, The folder used for bindings (default from
+            broker.xml)
+
+            With --verbose option, Adds more information on the execution
+</code></pre>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="intercepting-operations.html" class="navigation navigation-prev " aria-label="Previous page: Intercepting Operations">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="activation-tools.html" class="navigation navigation-next " aria-label="Next page: Activation Tools">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Data Tools","level":"1.76","depth":1,"next":{"title":"Activation Tools","level":"1.77","depth":1,"path":"activation-tools.md","ref":"activation-tools.md","articles":[]},"previous":{"title":"Intercepting Operations","level":"1.75","depth":1,"path":"intercepting-operations.md","ref":"intercepting-operations.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"styles":{"ebook":"styles/ebook.css","epub":"styles/epub.css","mobi":"styles/mobi.css","pdf":"styles/pdf.css","print":"styles/print.css","website":"styles/website.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"showLevel":false,"styles":{"ebook":"styles/ebook.css","epub":"styles/epub.css","mobi":"styles/mobi.css","pdf":"styles/pdf.css","print":"styles/print.css","website":"styles/website.css"}}},"github":"apache/activemq-artemis","theme":"default","githubHost":"https://github.com/","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"version":"2.23.1","title":"ActiveMQ Artemis Documentation","links":{"home":"http://activemq.apache.org/artemis","issues":"https://issues.apache.org/jira/browse/ARTEMIS","contribute":"http://activemq.apache.org/contributing.html"},"gitbook":"3.x.x","description":"ActiveMQ Artemis User Guide and Reference Documentation"},"file":{"path":"data-tools.md","mtime":"2022-06-14T19:55:22.258Z","type":"markdown"},"gitbook":{"version":"3.7.1","time":"2022-06-14T19:55:23.109Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

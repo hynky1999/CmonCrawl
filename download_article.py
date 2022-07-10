@@ -15,20 +15,18 @@ from Processor.Downloader.download import Downloader
 from Aggregator.index_query import DomainRecord, IndexAggregator
 import asyncio
 from Processor.OutStreamer.stream_to_file import (
-    OutStreamerFileJSON,
     OutStreamerFileHTMLContent,
 )
 from Processor.Pipeline.pipeline import ProcessorPipeline
 
 from Processor.Router.router import Router
 
-FOLDER = "articles_downloaded"
-
 logging.basicConfig(level="INFO")
 
 
 async def article_download(
     url: str,
+    output: Path,
     cc_server: List[str] = [],
     since: datetime = datetime.min,
     to: datetime = datetime.max,
@@ -41,7 +39,7 @@ async def article_download(
     router = Router()
     router.load_modules(str(Path("Processor/UserDefinedExtractors").absolute()))
     router.register_route("DummyExtractor", [r".*"])
-    outstreamer = OutStreamerFileHTMLContent(origin=Path("./articles_downloaded_html"))
+    outstreamer = OutStreamerFileHTMLContent(origin=output)
 
     aggregator = await IndexAggregator(
         [url], cc_servers=cc_server, since=since, to=to, limit=limit
@@ -51,21 +49,20 @@ async def article_download(
     await aggregator.aclose(None, None, None)
 
     print(f"Downloaded {len(records)} articles")
-    async with Downloader(digest_verification=True) as downloader:
-        pipeline = ProcessorPipeline(
-            router=router, downloader=downloader, outstreamer=outstreamer
-        )
-        for dr in records:
-            try:
-                await pipeline.process_domain_record(dr)
-            except Exception as e:
-                print(e)
+    downloader = await Downloader(digest_verification=True).aopen()
+    pipeline = ProcessorPipeline(
+        router=router, downloader=downloader, outstreamer=outstreamer
+    )
+    for dr in records:
+        await pipeline.process_domain_record(dr)
+    await downloader.aclose(None, None, None)
     print("Finished pipeline")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Download articles")
     parser.add_argument("url")
+    parser.add_argument("output", type=Path)
     parser.add_argument("--limit", type=int, default=5)
     parser.add_argument("--since", type=str, default=datetime.min)
     parser.add_argument("--to", type=str, default=datetime.max)
