@@ -21,7 +21,6 @@ class ArticleExtractor(BaseExtractor):
         assert "headline" in REQUIRED_FIELDS
 
         metadata.name = metadata.domain_record.url.replace("/", "_")[:30]
-
         metadata.article_data = extracted_dict
         return extracted_dict
 

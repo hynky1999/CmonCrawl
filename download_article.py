@@ -15,7 +15,6 @@ from Processor.Downloader.download import Downloader
 from Aggregator.index_query import DomainRecord, IndexAggregator
 import asyncio
 from Processor.OutStreamer.stream_to_file import (
-    OutStreamerFileJSON,
     OutStreamerFileHTMLContent,
 )
 from Processor.Pipeline.pipeline import ProcessorPipeline
