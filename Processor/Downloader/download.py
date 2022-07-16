@@ -56,7 +56,7 @@ class Downloader:
                 # will be unziped
                 response_bytes = await response.content.read()
             content = parse_warc(
-                self.unwrap(response_bytes, metadata.domain_record.encoding),
+                self.unwrap(response_bytes, metadata.encoding),
                 metadata,
             )
         except (ClientError, TimeoutError) as e:
@@ -89,12 +89,7 @@ class Downloader:
             if digest is not None and digest != hash:
                 raise ValueError(f'Digest mismatch: "{digest}" != "{hash}"')
 
-            if (
-                self.verify_digest(
-                    hash_type, hash, content, metadata.domain_record.encoding
-                )
-                == False
-            ):
+            if self.verify_digest(hash_type, hash, content, metadata.encoding) == False:
                 raise ValueError("Digest verification failed")
 
             return content

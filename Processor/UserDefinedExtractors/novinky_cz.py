@@ -1,98 +1,98 @@
-import re
-from typing import Any, Callable, Dict
-from utils import PipeMetadata
-from bs4 import BeautifulSoup, Tag
-from ArticleUtils.article_extractor import ArticleExtractor
-from UserDefinedExtractors.novinky_cz_old import Extractor as OldExtractor
+# import re
+# from typing import Any, Callable, Dict
+# from utils import PipeMetadata
+# from bs4 import BeautifulSoup, Tag
+# from ArticleUtils.article_extractor import ArticleExtractor
+# from UserDefinedExtractors.novinky_cz_old import Extractor as OldExtractor
 
-from ArticleUtils.article_utils import (
-    ALLOWED_H,
-    article_extract_transform,
-    article_transform,
-    author_extract_transform,
-    extract_category_from_url,
-    extract_publication_date,
-    head_extract_transform,
-    headline_extract_transform,
-)
-
-
-def article_transform_fc(tag: Tag):
-    if tag.name in ALLOWED_H:
-        return True
-
-    if tag.get("data-dot", None) is not None:
-        return False
-
-    classes = tag.get("class", [])
-    if not isinstance(classes, list) or len(classes) != 1:
-        return False
-
-    return re.search("g_c[69]", classes[0]) is not None
+# from ArticleUtils.article_utils import (
+#     ALLOWED_H,
+#     article_extract_transform,
+#     article_transform,
+#     author_extract_transform,
+#     extract_category_from_url,
+#     extract_publication_date,
+#     head_extract_transform,
+#     headline_extract_transform,
+# )
 
 
-head_extract_dict: Dict[str, str] = {
-    "headline": "meta[property='og:title']",
-    "keywords": "meta[name='keywords']",
-    "brief": "meta[property='og:description']",
-}
+# def article_transform_fc(tag: Tag):
+#     if tag.name in ALLOWED_H:
+#         return True
+
+#     if tag.get("data-dot", None) is not None:
+#         return False
+
+#     classes = tag.get("class", [])
+#     if not isinstance(classes, list) or len(classes) != 1:
+#         return False
+
+#     return re.search("g_c[69]", classes[0]) is not None
 
 
-head_extract_transform_dict: Dict[str, Callable[[str], Any]] = {
-    "headline": headline_extract_transform,
-    "keywords": lambda x: x.split(","),
-}
+# head_extract_dict: Dict[str, str] = {
+#     "headline": "meta[property='og:title']",
+#     "keywords": "meta[name='keywords']",
+#     "brief": "meta[property='og:description']",
+# }
 
 
-article_extract_dict: Dict[str, Any] = {
-    "content": 'article > div[data-dot-data=\'{"component":"article-content"}\'] > div',
-    "author": "div.ogm-article-author__texts > div:nth-child(2)",
-    "publication_date": "div.ogm-article-author__date > span",
-}
-
-article_extract_transform_dict: Dict[str, Callable[[Tag], Any]] = {
-    "content": lambda x: article_transform(
-        x,
-        fc_eval=article_transform_fc,
-    ),
-    "author": author_extract_transform,
-    "publication_date": extract_publication_date("%d. %m. %Y, %H:%M"),
-}
+# head_extract_transform_dict: Dict[str, Callable[[str], Any]] = {
+#     "headline": headline_extract_transform,
+#     "keywords": lambda x: x.split(","),
+# }
 
 
-filter_head_extract_dict: Dict[str, Any] = {
-    "type": "meta[property='og:type']",
-}
+# article_extract_dict: Dict[str, Any] = {
+#     "content": 'article > div[data-dot-data=\'{"component":"article-content"}\'] > div',
+#     "author": "div.ogm-article-author__texts > div:nth-child(2)",
+#     "publication_date": "div.ogm-article-author__date > span",
+# }
+
+# article_extract_transform_dict: Dict[str, Callable[[Tag], Any]] = {
+#     "content": lambda x: article_transform(
+#         x,
+#         fc_eval=article_transform_fc,
+#     ),
+#     "author": author_extract_transform,
+#     "publication_date": extract_publication_date("%d. %m. %Y, %H:%M"),
+# }
 
 
-class Extractor(ArticleExtractor):
-    def __init__(self):
-        self.old_extractor = OldExtractor()
+# filter_head_extract_dict: Dict[str, Any] = {
+#     "type": "meta[property='og:type']",
+# }
 
-    def article_extract(self, soup: BeautifulSoup, metadata: PipeMetadata):
-        if metadata.domain_record.timestamp <= self.old_extractor.UNTIL_DATE:
-            return self.old_extractor.article_extract(soup, metadata)
 
-        extracted_head = head_extract_transform(
-            soup, head_extract_dict, head_extract_transform_dict
-        )
+# class Extractor(ArticleExtractor):
+#     def __init__(self):
+#         self.old_extractor = OldExtractor()
 
-        extracted_article = article_extract_transform(
-            soup.select_one("main[role='main']"),
-            article_extract_dict,
-            article_extract_transform_dict,
-        )
+#     def article_extract(self, soup: BeautifulSoup, metadata: PipeMetadata):
+#         if metadata.domain_record.timestamp <= self.old_extractor.UNTIL_DATE:
+#             return self.old_extractor.article_extract(soup, metadata)
 
-        # merge dicts
-        extracted_dict = {**extracted_head, **extracted_article}
-        extracted_dict["category"] = extract_category_from_url(metadata.url_parsed)
-        extracted_dict["comments_num"] = None
+#         extracted_head = head_extract_transform(
+#             soup, head_extract_dict, head_extract_transform_dict
+#         )
 
-        return extracted_dict
+#         extracted_article = article_extract_transform(
+#             soup.select_one("main[role='main']"),
+#             article_extract_dict,
+#             article_extract_transform_dict,
+#         )
 
-    def filter(self, response: str, metadata: PipeMetadata):
-        if metadata.domain_record.timestamp <= OldExtractor.UNTIL_DATE:
-            return self.old_extractor.filter(response, metadata)
+#         # merge dicts
+#         extracted_dict = {**extracted_head, **extracted_article}
+#         extracted_dict["category"] = extract_category_from_url(metadata.url_parsed)
+#         extracted_dict["comments_num"] = None
 
-        soup = BeautifulSoup(response, "html.parser")
-        return True
+#         return extracted_dict
+
+#     def filter(self, response: str, metadata: PipeMetadata):
+#         if metadata.domain_record.timestamp <= OldExtractor.UNTIL_DATE:
+#             return self.old_extractor.filter(response, metadata)
+
+#         soup = BeautifulSoup(response, "html.parser")
+#         return True

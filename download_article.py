@@ -37,7 +37,7 @@ async def article_download(
 
     # At start so we can fail faster
     router = Router()
-    router.load_modules(str(Path("Processor/UserDefinedExtractors").absolute()))
+    router.load_modules(str(Path("Processor/DoneExtractors").absolute()))
     router.register_route("DummyExtractor", [r".*"])
     outstreamer = OutStreamerFileHTMLContent(origin=output)
 
