@@ -8,6 +8,8 @@ from bs4 import BeautifulSoup, Tag
 LINE_SEPARATOR = "\n"
 
 ALLOWED_H = [f"h{i}" for i in range(1, 7)]
+TABLE_TAGS = ["table", "tbody", "td", "tr", "th"]
+LIST_TAGS = ["ul", "li"]
 
 
 def text_unifications_transform(text: List[str]):
@@ -15,17 +17,34 @@ def text_unifications_transform(text: List[str]):
     return [x for x in unified if x != ""]
 
 
+multiple_new_line = re.compile(r"\n\s*\n+")
+
+
 def text_unification_transform(text: str):
+    text = multiple_new_line.sub("\n", text)
     return text.strip().replace("\xa0", " ")
 
 
-def article_content_transform(fc_eval: Callable[[Tag], bool] | None = None):
+def article_content_transform(
+    fc_eval: Callable[[Tag], bool] | None = None, expand_tables_divs: bool = True
+):
     def transform(article: Tag):
         if fc_eval is None:
-            ps = article.find_all(["p", *ALLOWED_H], recursive=False)
+            ps = article.find_all(
+                ["p", "table", "span", *ALLOWED_H, *TABLE_TAGS, *LIST_TAGS],
+                recursive=False,
+            )
         else:
             ps = article.find_all(fc_eval, recursive=False)
-        texts = LINE_SEPARATOR.join([text_unification_transform(p.text) for p in ps])
+        texts = LINE_SEPARATOR.join(
+            [
+                text_unification_transform(transform(p))
+                if p.name in ["div", "table", "figcaption", *TABLE_TAGS, *LIST_TAGS]
+                and expand_tables_divs
+                else text_unification_transform(p.text)
+                for p in ps
+            ]
+        )
         return text_unification_transform(texts)
 
     return transform
@@ -63,7 +82,7 @@ def must_not_exist_filter(soup: BeautifulSoup, filter_list: List[str]):
     return True
 
 
-date_bloat = re.compile("DNES|AKTUALIZOVÁNO", re.IGNORECASE)
+date_bloat = re.compile("DNES|(AKTUALIZOVÁNO .*)", re.IGNORECASE)
 
 
 def format_date_transform(format: str):

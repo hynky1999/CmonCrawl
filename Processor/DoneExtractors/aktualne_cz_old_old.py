@@ -3,6 +3,8 @@ import re
 from typing import Any, Dict
 from ArticleUtils.article_utils import (
     ALLOWED_H,
+    LIST_TAGS,
+    TABLE_TAGS,
     article_content_transform,
     author_transform,
     brief_transform,
@@ -22,20 +24,14 @@ from bs4 import BeautifulSoup, Tag
 from ArticleUtils.article_extractor import ArticleExtractor
 
 
-allowed_classes_div = {
-    # text
-    "box-clanek",
-}
-
-
 def article_fc(tag: Tag):
-    if tag.name in ["p", *ALLOWED_H] and tag.get("class") is None:
+    if tag.name in [*LIST_TAGS, "figure", *TABLE_TAGS]:
         return True
 
     classes = tag.get("class", [])
     if isinstance(classes, str):
         classes = [classes]
-    if tag.name == "div" and len(allowed_classes_div.intersection(classes)) > 0:
+    if tag.name in ["p", *ALLOWED_H] and len(classes) == 0:
         return True
 
     return False

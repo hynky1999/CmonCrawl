@@ -51,7 +51,7 @@ class BaseExtractor(ABC):
         if "charset" in metadata.http_header:
             encodings[metadata.http_header["charset"]] = 1
 
-        # Fallback utf-8
+        # Fallbacks
         encodings["utf-8"] = 1
 
         encoded = linux.encode(metadata.encoding)

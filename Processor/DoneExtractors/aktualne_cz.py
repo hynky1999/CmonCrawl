@@ -2,6 +2,8 @@ from datetime import datetime
 from typing import Any, Dict
 from ArticleUtils.article_utils import (
     ALLOWED_H,
+    LIST_TAGS,
+    TABLE_TAGS,
     article_content_transform,
     author_transform,
     brief_transform,
@@ -29,6 +31,9 @@ allowed_classes_div = {
 
 
 def article_fc(tag: Tag):
+    if tag.name in [*LIST_TAGS, "figure", *TABLE_TAGS]:
+        return True
+
     if tag.name in ["p", *ALLOWED_H]:
         return True
 

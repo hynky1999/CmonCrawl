@@ -5,6 +5,8 @@ from typing import Any, Dict
 from ArticleUtils.article_extractor import ArticleExtractor
 from ArticleUtils.article_utils import (
     ALLOWED_H,
+    LIST_TAGS,
+    TABLE_TAGS,
     article_content_transform,
     author_transform,
     brief_transform,
@@ -34,7 +36,7 @@ date_bloat_re = re.compile(r"DNES")
 
 
 def article_transform_fc(tag: Tag):
-    if tag.name in ALLOWED_H:
+    if tag.name in ["p", "span", "figcaption", *ALLOWED_H, *TABLE_TAGS, *LIST_TAGS]:
         return True
 
     classes = tag.get("class", [])
@@ -52,8 +54,7 @@ def date_transform_fallback(fallback: datetime):
         if date is not None:
             return date
 
-        text_debloated = text.replace("DNES", "")
-        date = format_date_transform("%H:%M")(text_debloated)
+        date = format_date_transform("%H:%M")(text)
         if date is not None:
             return fallback.replace(hour=date.hour, minute=date.minute)
         return None

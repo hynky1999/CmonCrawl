@@ -12,6 +12,8 @@ from ArticleUtils.article_extractor import ArticleExtractor
 
 from ArticleUtils.article_utils import (
     ALLOWED_H,
+    LIST_TAGS,
+    TABLE_TAGS,
     article_content_transform,
     author_transform,
     brief_transform,
@@ -40,7 +42,7 @@ allowed_classes_figure = {
 
 
 def article_fc(tag: Tag):
-    if tag.name in [*ALLOWED_H]:
+    if tag.name in [*ALLOWED_H, "span", "p", *TABLE_TAGS, *LIST_TAGS]:
         return True
 
     classes = tag.get("class", [])

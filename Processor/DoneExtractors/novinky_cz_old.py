@@ -4,7 +4,6 @@ from typing import Any, Dict
 from bs4 import BeautifulSoup
 from Extractor.extractor_utils import (
     get_attribute_transform,
-    get_tag_transform,
     get_tags_transform,
     get_text_list_transform,
     get_text_transform,
@@ -50,9 +49,7 @@ class NovinkyCZOldExtractor(ArticleExtractor):
                 "brief": "p.perex",
             },
             {
-                "content": article_content_transform(
-                    lambda x: x.name in ["p", *ALLOWED_H, "ul"]
-                ),
+                "content": article_content_transform(),
                 "author": [get_text_transform, author_transform],
                 "publication_date": [
                     get_text_transform,

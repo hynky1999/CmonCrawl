@@ -1,5 +1,7 @@
 from ArticleUtils.article_utils import (
     ALLOWED_H,
+    LIST_TAGS,
+    TABLE_TAGS,
     article_content_transform,
     author_transform,
     brief_transform,
@@ -43,7 +45,7 @@ class IrozhlasExtractor(ArticleExtractor):
                         or (
                             # image
                             x.name
-                            == "figure"
+                            in [*LIST_TAGS, "figure", *TABLE_TAGS]
                         )
                     )
                 ),
