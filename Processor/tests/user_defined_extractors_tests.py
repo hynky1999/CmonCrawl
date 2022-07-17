@@ -4,8 +4,8 @@ from pathlib import Path
 import unittest
 from UserDefinedExtractors.aktualne_cz import Extractor as AktualneExtractor
 from UserDefinedExtractors.idnes_cz import Extractor as IdnesExtractor
-from UserDefinedExtractors.seznamzpravy_cz import Extractor as SeznamzpravyExtractor
-from UserDefinedExtractors.irozhlas_cz import Extractor as IrozhlasExtractor
+from DoneExtractors.seznamzpravy_cz import Extractor as SeznamzpravyExtractor
+from DoneExtractors.irozhlas_cz import Extractor as IrozhlasExtractor
 from UserDefinedExtractors.novinky_cz import Extractor as NovinkyExtractor
 
 

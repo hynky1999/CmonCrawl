@@ -73,3 +73,16 @@ def extract_transform(
     extracted_data = transform(extracted_tags, extract_transform_dict)
 
     return extracted_data
+
+
+def combine_dicts(dicts: List[Dict[str, Any]]):
+    def recursive_get(key: str, dicts: List[Dict[str, Any]], i: int) -> Any:
+        if i >= len(dicts):
+            return None
+        val = dicts[i].get(key, None)
+        if val is None:
+            return recursive_get(key, dicts, i + 1)
+        return val
+
+    keys = [key for d in dicts for key in d.keys()]
+    return {key: recursive_get(key, dicts, 0) for key in keys}

@@ -107,7 +107,7 @@ class OutStreamerFileDefault(OutStreamer):
         retries: int,
     ) -> Path:
         if retries > self.max_retries:
-            raise OSError("Failed to write file", extracted_data)
+            raise OSError(f"Failed to write to {file_path}")
         logging.debug(f"Writing to {file_path}")
         try:
             async with asyncOpen(file_path, "w") as f:

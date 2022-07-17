@@ -7,7 +7,7 @@ from utils import PipeMetadata
 
 class Extractor(BaseExtractor):
     def extract_soup(self, soup: BeautifulSoup, metadata: PipeMetadata):
-        metadata.name = metadata.domain_record.url.replace("/", "_")
+        metadata.name = metadata.domain_record.url.replace("/", "_")[:100]
         return {"html": str(soup)}
 
     def filter_raw(self, response: str, metadata: PipeMetadata):

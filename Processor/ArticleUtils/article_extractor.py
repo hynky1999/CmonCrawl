@@ -5,7 +5,7 @@ from typing import Any, Callable, Dict, List
 from bs4 import BeautifulSoup
 from ArticleUtils.article_utils import must_exist_filter, must_not_exist_filter
 from Extractor.extractor import BaseExtractor
-from Extractor.extractor_utils import extract_transform
+from Extractor.extractor_utils import combine_dicts, extract_transform
 
 from utils import PipeMetadata
 
@@ -104,11 +104,10 @@ class ArticleExtractor(BaseExtractor):
         custom_extract = self.custom_extract(soup, metadata)
 
         # merge dicts
-        extracted_dict = {**extracted_head, **extracted_article, **custom_extract}
+        extracted_dict = combine_dicts([extracted_head, extracted_article, custom_extract])
         return extracted_dict
 
-    @abstractmethod
     def custom_extract(
         self, soup: BeautifulSoup, metadata: PipeMetadata
     ) -> Dict[str, Any]:
-        raise NotImplementedError()
+        return {}
