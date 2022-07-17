@@ -1,180 +1,122 @@
 from datetime import datetime
-import logging
 import re
-from typing import Any, Callable, Dict
+from typing import Any, Callable, Dict, List
 from urllib.parse import ParseResult
-from xmlrpc.client import Boolean
 
-from bs4 import BeautifulSoup, NavigableString, Tag
-
-from Extractor.extractor_utils import (
-    all_same_transform,
-    get_attribute_transform,
-    get_tag_transform,
-    transform,
-)
+from bs4 import BeautifulSoup, Tag
 
 LINE_SEPARATOR = "\n"
 
-
-# All keys are required if value if true then the extracted value must be non None
-REQUIRED_FIELDS = {
-    "content": True,
-    "headline": True,
-    "author": True,
-    "brief": False,
-    "publication_date": False,
-    "keywords": False,
-    "category": False,
-    "comments_num": False,
-}
-
 ALLOWED_H = [f"h{i}" for i in range(1, 7)]
+TABLE_TAGS = ["table", "tbody", "td", "tr", "th"]
+LIST_TAGS = ["ul", "li"]
 
 
-def article_transform(article: Tag, fc_eval: Callable[[Tag], Boolean] | None = None):
-    if article is None:
-        return None
-
-    if fc_eval is None:
-        ps = article.find_all(["p", *ALLOWED_H], recursive=False)
-    else:
-        ps = article.find_all(fc_eval, recursive=False)
-    texts = LINE_SEPARATOR.join([p.text for p in ps])
-    return texts
+def text_unifications_transform(text: List[str]):
+    unified = list(map(text_unification_transform, text))
+    return [x for x in unified if x != ""]
 
 
-def text_unification_transform(text: Any):
-
-    if isinstance(text, str):
-        text = text.strip().replace("\xa0", " ")
-    elif isinstance(text, list):
-        text = list(map(text_unification_transform, text))
-
-    return text
+multiple_new_line = re.compile(r"\n\s*\n+")
 
 
-def head_extract_transform(
-    soup: BeautifulSoup,
-    head_extract_dict: Dict[str, str],
-    head_extract_transform_dict: Dict[str, Callable[[str], Any]],
-) -> Dict[str, Any]:
-    head = soup.select_one("head")
-    if head is None or isinstance(head, NavigableString):
-        return dict()
-
-    extracted_metadata: Dict[str, Any] = transform(
-        transform(
-            transform(
-                transform(
-                    head_extract_dict,
-                    all_same_transform(head_extract_dict, get_tag_transform(head)),
-                ),
-                all_same_transform(
-                    head_extract_dict, get_attribute_transform("content")
-                ),
-            ),
-            head_extract_transform_dict,
-        ),
-        all_same_transform(head_extract_dict, text_unification_transform),
-    )
-
-    return extracted_metadata
+def text_unification_transform(text: str):
+    text = multiple_new_line.sub("\n", text)
+    return text.strip().replace("\xa0", " ")
 
 
-def article_extract_transform(
-    soup: BeautifulSoup | Tag | NavigableString | None,
-    article_extract_dict: Dict[str, str],
-    article_extract_transform_dict: Dict[str, Callable[[Tag], Any]],
-) -> Dict[str, Any]:
-    if soup is None:
-        return dict()
+def article_content_transform(
+    fc_eval: Callable[[Tag], bool] | None = None, expand_tables_divs: bool = True
+):
+    def transform(article: Tag):
+        if fc_eval is None:
+            ps = article.find_all(
+                ["p", "table", "span", *ALLOWED_H, *TABLE_TAGS, *LIST_TAGS],
+                recursive=False,
+            )
+        else:
+            ps = article.find_all(fc_eval, recursive=False)
+        texts = LINE_SEPARATOR.join(
+            [
+                text_unification_transform(transform(p))
+                if p.name in ["div", "table", "figcaption", *TABLE_TAGS, *LIST_TAGS]
+                and expand_tables_divs
+                else text_unification_transform(p.text)
+                for p in ps
+            ]
+        )
+        return text_unification_transform(texts)
 
-    article_data = transform(
-        transform(
-            transform(
-                article_extract_dict,
-                all_same_transform(article_extract_dict, get_tag_transform(soup)),
-            ),
-            article_extract_transform_dict,
-        ),
-        all_same_transform(article_extract_dict, text_unification_transform),
-    )
-    return article_data
-
-
-def author_extract_transform(author: Tag | None | NavigableString):
-    if author is None:
-        return None
-
-    text = author.text.strip()
-
-    return text
+    return transform
 
 
-def headline_extract_transform(headline: str):
+def author_transform(author: str):
+    authors = author.split(",")
+    authors = text_unifications_transform(authors)
+    return authors
+
+
+headline_sub = re.compile(r"ONLINE:")
+
+
+def headline_transform(headline: str):
     headline = re.split(r"[-–]", headline)[0]
+    headline = re.split(r"[|]", headline)[0]
+    headline = headline_sub.sub("", headline)
     return text_unification_transform(headline)
 
 
-def must_exist_filter(soup: BeautifulSoup, filter_dict: Dict[str, Any]):
-    must_exist = [
-        soup.select_one(css_selector) for css_selector in filter_dict.values()
-    ]
+def must_exist_filter(soup: BeautifulSoup, filter_list: List[str]):
+    must_exist = [soup.select_one(css_selector) for css_selector in filter_list]
     if any(map(lambda x: x is None, must_exist)):
         return False
 
     return True
 
 
-def must_not_exist_filter(soup: BeautifulSoup, filter_dict: Dict[str, Any]):
-    must_not_exist = [
-        soup.select_one(css_selector) for css_selector in filter_dict.values()
-    ]
+def must_not_exist_filter(soup: BeautifulSoup, filter_list: List[str]):
+    must_not_exist = [soup.select_one(css_selector) for css_selector in filter_list]
     if any(map(lambda x: x is not None, must_not_exist)):
         return False
 
     return True
 
 
-def extract_publication_date(format: str):
-    def inner(tag: Tag | NavigableString | None):
-        if tag is None:
-            return None
+date_bloat = re.compile("DNES|(AKTUALIZOVÁNO .*)", re.IGNORECASE)
+
+
+def format_date_transform(format: str):
+    def inner(text: str):
+        date = None
+        date_subed = date_bloat.sub("", text)
         try:
-            return datetime.strptime(tag.text, format)
+            text_unif = text_unification_transform(date_subed)
+            date = datetime.strptime(text_unif, format)
         except ValueError:
             pass
-        return None
+        return date
 
     return inner
 
 
-def extract_category_from_url(url: ParseResult):
+def iso_date_transform(text: str):
+    text_unif = text_unification_transform(text)
+    date = None
+    try:
+        date = datetime.fromisoformat(text_unif)
+    except ValueError:
+        pass
+    return date
+
+
+def url_category_transform(url: ParseResult):
     category_split = str(url).split("/")
     category = None
     if len(category_split) > 1:
         category = category_split[1]
-    return category
-
-
-def extract_date_cz(date_tag: Tag | None):
-    if date_tag is None:
+    else:
         return None
-    date_str = date_tag.text
-    try:
-        date_match = re.search(r"(\d{1,2})\.?\s+(\w+)\s+(\d{4})", date_str)
-        if date_match is None:
-            logging.error(f"Invalid CZ date: {date_str}")
-            return None
-        day, month, year = date_match.groups()
-
-        month = CZ_EN_MONTHS.index(month) + 1
-        date_iso = f"{year}-{month:02}-{int(day):02}"
-        return datetime.fromisoformat(date_iso)
-    except ValueError:
-        logging.error(f"Invalid CZ date: {date_str}")
-        return None
+    return text_unification_transform(category)
 
 
 CZ_EN_MONTHS = [
@@ -191,3 +133,42 @@ CZ_EN_MONTHS = [
     "listopadu",
     "prosince",
 ]
+CZ_month_sub = re.compile("|".join(CZ_EN_MONTHS))
+
+
+def cz_date_transform(date_str: str):
+    return CZ_month_sub.sub(
+        lambda x: f"{CZ_EN_MONTHS.index(x.group(0)) + 1}.", date_str
+    )
+
+
+DAYS = ["pondělí", "úterý", "středa", "čtvrtek", "pátek", "sobota", "neděle"]
+DAYS_SUB = re.compile("|".join(DAYS))
+
+
+def remove_day_transform(date_str: str):
+    return DAYS_SUB.sub("", date_str)
+
+
+def keywords_transform(text: str):
+    keywords_splitted = text.split(",")
+    return text_unifications_transform(keywords_splitted)
+
+
+brief_sub = re.compile(r"EXKLUZIVNĚ\.")
+
+
+def brief_transform(text: str):
+    brief_text = brief_sub.sub("", text)
+    return text_unification_transform(brief_text)
+
+
+def comments_num_transform(text: str):
+    comments_num = re.search(r"\d+", text)
+    if comments_num is None:
+        return None
+    return comments_num.group(0)
+
+
+def category_transform(category: str):
+    return text_unification_transform(category)

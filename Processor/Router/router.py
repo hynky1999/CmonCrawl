@@ -1,3 +1,4 @@
+from datetime import datetime
 import importlib.util
 import logging
 import os
@@ -5,7 +6,7 @@ import sys
 import re
 from dataclasses import dataclass
 from types import ModuleType
-from typing import Dict, List, Type, Union
+from typing import Dict, List, Union
 
 from Extractor.extractor import BaseExtractor
 
@@ -14,6 +15,8 @@ from Extractor.extractor import BaseExtractor
 class Route:
     name: str
     regexes: List[re.Pattern[str]]
+    since: datetime
+    to: datetime
 
 
 class Router:
@@ -35,10 +38,10 @@ class Router:
         spec.loader.exec_module(module)
 
         name: str = getattr(module, "NAME", module_name)
-        extractor: Type[BaseExtractor] | None = getattr(module, "Extractor", None)
+        extractor: BaseExtractor | None = getattr(module, "extractor", None)
         if extractor is None:
-            raise Exception("Missing Extractor class in module: " + module_name)
-        self.modules[name] = extractor()
+            raise ValueError("Missing extractor variable in module: " + module_name)
+        self.modules[name] = extractor
 
     def load_modules(self, folder: str):
         for path in os.listdir(folder):
@@ -47,16 +50,32 @@ class Router:
 
             self.load_module(os.path.join(folder, path))
 
-    def register_route(self, name: str, regex: Union[str, List[str]]):
+    def register_route(
+        self,
+        name: str,
+        regex: Union[str, List[str]],
+        since: datetime | None = None,
+        to: datetime | None = None,
+    ):
         if isinstance(regex, str):
             regex = [regex]
         regex_compiled = [re.compile(regex) for regex in regex]
-        self.registered_routes.append(Route(name, regex_compiled))
 
-    def route(self, url: str) -> BaseExtractor:
+        extractor = self.modules.get(name)
+        if extractor is None:
+            raise ValueError(f"No extractor found for route: {name}")
+
+        if since is None:
+            since = extractor.SINCE if extractor.SINCE is not None else datetime.min
+        if to is None:
+            to = extractor.TO if extractor.TO is not None else datetime.max
+
+        self.registered_routes.append(Route(name, regex_compiled, since, to))
+
+    def route(self, url: str, time: datetime) -> BaseExtractor:
         for route in self.registered_routes:
             for regex in route.regexes:
-                if regex.match(url):
+                if regex.match(url) and route.since <= time and time < route.to:
                     logging.debug(f"Routed {url} to {route.name}")
                     return self.modules[route.name]
         raise ValueError("No route found for url: " + url)

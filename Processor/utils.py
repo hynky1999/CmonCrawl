@@ -2,7 +2,6 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any, Dict
 from urllib.parse import urlparse
-DEFAULT_ENCODING = "utf-8"
 
 
 @dataclass
@@ -12,7 +11,7 @@ class DomainRecord:
     offset: int
     length: int
     digest: str | None = None
-    encoding: str = DEFAULT_ENCODING
+    encoding: str | None = None
     timestamp: datetime = datetime.now()
 
 
@@ -26,6 +25,7 @@ class PipeMetadata:
     article_data: Dict[Any, Any] = field(default_factory=dict)
     warc_header: Dict[str, Any] = field(default_factory=dict)
     http_header: Dict[str, Any] = field(default_factory=dict)
+    encoding: str = "latin-1"
     name: str | None = None
 
     def __post_init__(self):

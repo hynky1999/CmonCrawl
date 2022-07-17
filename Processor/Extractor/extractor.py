@@ -1,36 +1,71 @@
 from abc import ABC, abstractmethod
-from email import charset
+from datetime import datetime
 import logging
-import re
 from typing import Any, Dict
+
+from bs4 import BeautifulSoup
 from utils import PipeMetadata
 
 
 class BaseExtractor(ABC):
+    ENCODING: str | None = None
+    SINCE: datetime | None = None
+    TO: datetime | None = None
+
     def __init__(self):
         pass
 
-    @abstractmethod
-    def filter(self, response: str, metadata: PipeMetadata) -> bool:
-        raise NotImplementedError()
+    def filter_raw(self, response: str, metadata: PipeMetadata) -> bool:
+        return True
+
+    def filter_soup(self, soup: BeautifulSoup, metadata: PipeMetadata) -> bool:
+        return True
 
     def extract(self, response: str, metadata: PipeMetadata) -> Dict[Any, Any] | None:
-        if self.filter(response, metadata) is False:
-            logging.info(f"{metadata.domain_record.url}: Filter failed")
+        if self.filter_raw(response, metadata) is False:
+            logging.warn("Failed to filter raw", extra={"metadata": metadata})
             return None
 
         article = self.preprocess(response, metadata)
-        result = self.extract_no_preprocess(article, metadata)
-        if result is None:
-            logging.info(f"{metadata.domain_record.url}: Extract failed")
-        return result
+        soup = BeautifulSoup(article, "html.parser")
+        if self.filter_soup(soup, metadata) is False:
+            logging.warn("Failed to filter soup", extra={"metadata": metadata})
+            return None
+
+        return self.extract_soup(soup, metadata)
 
     @abstractmethod
-    def extract_no_preprocess(
-        self, response: str, metadata: PipeMetadata
+    def extract_soup(
+        self, soup: BeautifulSoup, metadata: PipeMetadata
     ) -> Dict[Any, Any] | None:
         raise NotImplementedError()
 
     def preprocess(self, response: str, metadata: PipeMetadata) -> str:
         linux = response.replace("\r\n", "\n")
-        return linux
+        # Sorted set
+        encodings: Dict[str, int] = {}
+        if self.ENCODING is not None:
+            encodings[self.ENCODING] = 1
+        if metadata.domain_record.encoding is not None:
+            encodings[metadata.domain_record.encoding] = 1
+        if "charset" in metadata.http_header:
+            encodings[metadata.http_header["charset"]] = 1
+
+        # Fallbacks
+        encodings["utf-8"] = 1
+
+        encoded = linux.encode(metadata.encoding)
+        for encoding in encodings:
+            try:
+                decoded = encoded.decode(encoding)
+                metadata.encoding = encoding
+                break
+            except ValueError:
+                logging.warn(
+                    f"Failed to decode with {encoding}",
+                    extra={"metadata": metadata},
+                )
+        else:
+            raise ValueError("Failed to decode")
+
+        return decoded

@@ -6,6 +6,9 @@ from datetime import datetime
 from utils import PipeMetadata
 
 
+warc_re = re.compile("^WARC/[0-9.]+")
+
+
 def parse_warc_header(warc: str):
     # Default preprocess WIN -> UNIX
     warc = warc.replace("\r\n", "\n")
@@ -48,14 +51,14 @@ def parse_http_header(http: str):
 
 
 def parse_warc(warc_str: str, metadata: PipeMetadata):
-    splitted = warc_str.split("\r\n\r\n", maxsplit=2)
-    warc_h, http_h, html = "", "", ""
-    if len(splitted) == 2:
-        # Old format without warc header
-        http_h, html = splitted
-        # Strip last separator \n
-    elif len(splitted) == 3:
-        warc_h, http_h, html = splitted
+    if warc_re.search(warc_str) is None:
+        # Old format
+        http_h, html = warc_str.split("\r\n\r\n", maxsplit=1)
+        # Stripl last /n
+        html = html[:-1]
+        warc_h = ""
+    else:
+        warc_h, http_h, html = warc_str.split("\r\n\r\n", maxsplit=2)
         html = html[:-4]
         # Strip last separator \r\n\r\n
     metadata.warc_header = parse_warc_header(warc_h)

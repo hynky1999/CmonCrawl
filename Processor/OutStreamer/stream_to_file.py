@@ -1,6 +1,7 @@
 import asyncio
 import json
 import logging
+from math import log
 from pathlib import Path
 import random
 from typing import Any, Dict, List
@@ -19,6 +20,7 @@ class OutStreamerFileDefault(OutStreamer):
         extension: str = ".out",
         directory_prefix: str = "directory_",
         max_directory_size: int = 500,
+        order_num: bool = True,
         max_retries: int = 3,
     ):
         # To create new folder
@@ -29,6 +31,8 @@ class OutStreamerFileDefault(OutStreamer):
         self.directories: List[Path] = []
         self.extension = extension
         self.max_retries = max_retries
+        self.order_num = order_num
+        self.size_padding = int(log(self.max_directory_size, 10)) + 1
 
     def __get_folder_path(self) -> Path:
         return self.origin / Path(f"{self.diretory_prefix}{len(self.directories)-1}")
@@ -65,8 +69,13 @@ class OutStreamerFileDefault(OutStreamer):
         name = metadata.name
         if name is None:
             name = f"{metadata.url_parsed.hostname}"
+        name = f"{name}{self.extension}"
+        order_num = None
+        if self.order_num:
+            order_num = f"{self.directory_size:0{self.size_padding}}"
 
-        return f"{name}_{self.directory_size}{self.extension}"
+        name_parts_list = [x for x in [order_num, name] if x is not None]
+        return "_".join(name_parts_list)
 
     def metadata_to_string(self, extracted_data: Dict[Any, Any]) -> str:
         output = "\r\n\r\n".join(
@@ -98,7 +107,7 @@ class OutStreamerFileDefault(OutStreamer):
         retries: int,
     ) -> Path:
         if retries > self.max_retries:
-            raise OSError("Failed to write file", extracted_data)
+            raise OSError(f"Failed to write to {file_path}")
         logging.debug(f"Writing to {file_path}")
         try:
             async with asyncOpen(file_path, "w") as f:

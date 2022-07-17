@@ -37,7 +37,7 @@ async def article_download(
 
     # At start so we can fail faster
     router = Router()
-    router.load_modules(str(Path("Processor/UserDefinedExtractors").absolute()))
+    router.load_module(str(Path("Processor/Extractor/DummyExtractor.py").absolute()))
     router.register_route("DummyExtractor", [r".*"])
     outstreamer = OutStreamerFileHTMLContent(origin=output)
 
@@ -54,7 +54,10 @@ async def article_download(
         router=router, downloader=downloader, outstreamer=outstreamer
     )
     for dr in records:
-        await pipeline.process_domain_record(dr)
+        try:
+            await pipeline.process_domain_record(dr)
+        except Exception:
+            pass
     await downloader.aclose(None, None, None)
     print("Finished pipeline")
 

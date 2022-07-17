@@ -14,9 +14,6 @@ from aiohttp import ClientError, ClientSession, ContentTypeError
 import asyncio
 import random
 
-DEFAULT_ENCODING = "utf-8"
-
-
 ALLOWED_ERR_FOR_RETRIES = [500, 502, 503]
 
 
@@ -40,7 +37,7 @@ class DomainRecord:
     offset: int
     length: int
     digest: str | None = None
-    encoding: str = DEFAULT_ENCODING
+    encoding: str | None = None
     timestamp: datetime = datetime.now()
 
 
@@ -211,7 +208,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
                 offset=int(js.get("offset", 0)),
                 length=int(js.get("length", 0)),
                 url=js.get("url", ""),
-                encoding=js.get("encoding", DEFAULT_ENCODING),
+                encoding=js.get("encoding"),
                 digest=js.get("digest", None),
                 timestamp=timestamp_to_datetime(js["timestamp"]),
             )

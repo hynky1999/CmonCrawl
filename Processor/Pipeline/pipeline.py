@@ -17,7 +17,9 @@ class ProcessorPipeline:
         metadata = PipeMetadata(domain_record=domain_record)
         try:
             downloaded_article = await self.downloader.download(domain_record, metadata)
-            extractor = self.router.route(metadata.domain_record.url)
+            extractor = self.router.route(
+                metadata.domain_record.url, metadata.domain_record.timestamp
+            )
         except ValueError as e:
             logging.error(f"{domain_record.url}: {e}")
             return None
