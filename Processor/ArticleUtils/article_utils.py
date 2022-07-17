@@ -37,43 +37,57 @@ def author_transform(author: str):
     return authors
 
 
+headline_sub = re.compile(r"ONLINE:")
+
+
 def headline_transform(headline: str):
     headline = re.split(r"[-–]", headline)[0]
     headline = re.split(r"[|]", headline)[0]
+    headline = headline_sub.sub("", headline)
     return text_unification_transform(headline)
 
 
-def must_exist_filter(soup: BeautifulSoup, filter_dict: Dict[str, Any]):
-    must_exist = [
-        soup.select_one(css_selector) for css_selector in filter_dict.values()
-    ]
+def must_exist_filter(soup: BeautifulSoup, filter_list: List[str]):
+    must_exist = [soup.select_one(css_selector) for css_selector in filter_list]
     if any(map(lambda x: x is None, must_exist)):
         return False
 
     return True
 
 
-def must_not_exist_filter(soup: BeautifulSoup, filter_dict: Dict[str, Any]):
-    must_not_exist = [
-        soup.select_one(css_selector) for css_selector in filter_dict.values()
-    ]
+def must_not_exist_filter(soup: BeautifulSoup, filter_list: List[str]):
+    must_not_exist = [soup.select_one(css_selector) for css_selector in filter_list]
     if any(map(lambda x: x is not None, must_not_exist)):
         return False
 
     return True
 
 
+date_bloat = re.compile("DNES|AKTUALIZOVÁNO", re.IGNORECASE)
+
+
 def format_date_transform(format: str):
     def inner(text: str):
         date = None
+        date_subed = date_bloat.sub("", text)
         try:
-            text_unif = text_unification_transform(text)
+            text_unif = text_unification_transform(date_subed)
             date = datetime.strptime(text_unif, format)
         except ValueError:
             pass
         return date
 
     return inner
+
+
+def iso_date_transform(text: str):
+    text_unif = text_unification_transform(text)
+    date = None
+    try:
+        date = datetime.fromisoformat(text_unif)
+    except ValueError:
+        pass
+    return date
 
 
 def url_category_transform(url: ParseResult):

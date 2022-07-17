@@ -29,7 +29,7 @@ class BaseExtractor(ABC):
         article = self.preprocess(response, metadata)
         soup = BeautifulSoup(article, "html.parser")
         if self.filter_soup(soup, metadata) is False:
-            logging.warn("Failed to filter raw", extra={"metadata": metadata})
+            logging.warn("Failed to filter soup", extra={"metadata": metadata})
             return None
 
         return self.extract_soup(soup, metadata)

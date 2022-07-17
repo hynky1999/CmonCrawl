@@ -2,7 +2,7 @@ from datetime import datetime
 import json
 from pathlib import Path
 import unittest
-from UserDefinedExtractors.aktualne_cz import Extractor as AktualneExtractor
+from DoneExtractors.aktualne_cz import Extractor as AktualneExtractor
 from UserDefinedExtractors.idnes_cz import Extractor as IdnesExtractor
 from DoneExtractors.seznamzpravy_cz import Extractor as SeznamzpravyExtractor
 from DoneExtractors.irozhlas_cz import Extractor as IrozhlasExtractor

@@ -1,4 +1,3 @@
-from abc import abstractmethod
 import logging
 from typing import Any, Callable, Dict, List
 
@@ -14,7 +13,7 @@ REQUIRED_FIELDS = {
     "content": True,
     "headline": True,
     "author": True,
-    "brief": False,
+    "brief": True,
     "publication_date": False,
     "keywords": False,
     "category": False,
@@ -34,8 +33,9 @@ class ArticleExtractor(BaseExtractor):
             str, List[Callable[[Any], Any]] | Callable[[Any], Any]
         ],
         article_css_selector: str,
-        filter_must_exist: Dict[str, str] = {},
-        filter_must_not_exist: Dict[str, str] = {},
+        filter_must_exist: List[str] = [],
+        filter_must_not_exist: List[str] = [],
+        filter_allowed_domain_prefixes: List[str] | None = None,
     ):
         self.header_css_dict = header_css_dict
         self.header_extract_dict = header_extract_dict
@@ -44,6 +44,7 @@ class ArticleExtractor(BaseExtractor):
         self.article_css_selector = article_css_selector
         self.filter_must_exist = filter_must_exist
         self.filter_must_not_exist = filter_must_not_exist
+        self.filter_allowed_domain_prefixes = filter_allowed_domain_prefixes
 
     def extract(self, response: str, metadata: PipeMetadata) -> Dict[Any, Any] | None:
         return super().extract(response, metadata)
@@ -56,9 +57,18 @@ class ArticleExtractor(BaseExtractor):
         metadata.name = metadata.domain_record.url.replace("/", "_")
         return extracted_dict
 
+    def custom_filter_raw(self, response: str, metadata: PipeMetadata) -> bool:
+        return True
+
+    def custom_filter_soup(self, soup: BeautifulSoup, metadata: PipeMetadata) -> bool:
+        return True
+
     def filter_raw(self, response: str, metadata: PipeMetadata) -> bool:
         if metadata.http_header.get("http_response_code", 200) != 200:
             logging.warn(f"Status: {metadata.http_header.get('http_response_code', 0)}")
+            return False
+
+        if self.custom_filter_raw(response, metadata) is False:
             return False
         return True
 
@@ -67,6 +77,17 @@ class ArticleExtractor(BaseExtractor):
             return False
 
         if not must_not_exist_filter(soup, self.filter_must_not_exist):
+            return False
+
+        if (
+            self.filter_allowed_domain_prefixes is not None
+            and metadata.url_parsed is not None
+            and metadata.url_parsed.netloc.split(".")[0]
+            not in self.filter_allowed_domain_prefixes
+        ):
+            return False
+
+        if self.custom_filter_soup(soup, metadata) is False:
             return False
 
         return True
@@ -104,7 +125,9 @@ class ArticleExtractor(BaseExtractor):
         custom_extract = self.custom_extract(soup, metadata)
 
         # merge dicts
-        extracted_dict = combine_dicts([extracted_head, extracted_article, custom_extract])
+        extracted_dict = combine_dicts(
+            [extracted_head, extracted_article, custom_extract]
+        )
         return extracted_dict
 
     def custom_extract(

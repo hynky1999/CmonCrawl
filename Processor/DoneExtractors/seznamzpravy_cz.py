@@ -54,9 +54,6 @@ def article_fc(tag: Tag):
     return False
 
 
-date_bloat_re = re.compile(r"DNES")
-
-
 def date_transform_no_script(fallback: datetime):
     def transform(text: str):
         date = format_date_transform("%d. %m. %Y %H:%M")(text)
@@ -68,8 +65,7 @@ def date_transform_no_script(fallback: datetime):
             # so that we know that year is not correct
             return date.replace(year=1)
 
-        text_debloated = date_bloat_re.sub("", text)
-        date = format_date_transform("%H:%M")(text_debloated)
+        date = format_date_transform("%H:%M")(text)
         if date is not None:
             return fallback.replace(hour=date.hour, minute=date.minute)
 

@@ -85,10 +85,12 @@ if __name__ == "__main__":
     # Router
     router = Router()
     router.load_modules(str(Path("DoneExtractors").absolute()))
-    # router.register_route("aktualne_cz", [r".*aktualne\.cz.*"])
     # router.register_route("idnes_cz", [r".*idnes\.cz.*"])
     router.register_route("seznamzpravy_cz", [r".*seznamzpravy\.cz.*"])
     router.register_route("irozhlas_cz", [r".*irozhlas\.cz.*"])
     router.register_route("novinky_cz", [r".*novinky\.cz.*"])
     router.register_route("novinky_cz_old", [r".*novinky\.cz.*"])
+    router.register_route("aktualne_cz", [r".*aktualne\.cz.*"])
+    router.register_route("aktualne_cz_old", [r".*aktualne\.cz.*"])
+    router.register_route("aktualne_cz_old_old", [r".*aktualne\.cz.*"])
     asyncio.run(article_process(**vars(args), router=router))

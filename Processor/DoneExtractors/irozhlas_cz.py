@@ -1,4 +1,3 @@
-from typing import Any, Callable, Dict
 from ArticleUtils.article_utils import (
     ALLOWED_H,
     article_content_transform,
@@ -25,11 +24,9 @@ class IrozhlasExtractor(ArticleExtractor):
         super().__init__(
             {
                 "headline": "meta[property='og:title']",
-                "brief": "meta[property='og:description']",
             },
             {
                 "headline": [get_attribute_transform("content"), headline_transform],
-                "brief": [get_attribute_transform("content"), brief_transform],
             },
             {
                 "content": "div.b-detail",
@@ -37,6 +34,7 @@ class IrozhlasExtractor(ArticleExtractor):
                 "publication_date": "header.b-detail__head > p.meta time",
                 "keywords": "nav.m-breadcrumb",
                 "category": "nav.m-breadcrumb > a:nth-child(3)",
+                "brief": ".b-detail > header > p ",
             },
             {
                 "content": article_content_transform(
@@ -63,11 +61,12 @@ class IrozhlasExtractor(ArticleExtractor):
                     keywords_transform,
                 ],
                 "category": [get_text_transform, brief_transform],
+                "brief": [get_text_transform, brief_transform],
             },
             "main#main",
-            filter_must_exist={  # Prevents Premium "articles"
-                "menu": "#menu-main",
-            },
+            filter_must_exist=[  # Prevents Premium "articles"
+                "#menu-main",
+            ],
         )
 
     def custom_extract(self, soup: BeautifulSoup, metadata: PipeMetadata):
