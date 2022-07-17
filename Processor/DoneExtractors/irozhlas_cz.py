@@ -16,21 +16,8 @@ from Extractor.extractor_utils import (
     get_text_transform,
 )
 from utils import PipeMetadata
-from bs4 import BeautifulSoup, Tag
+from bs4 import BeautifulSoup
 from ArticleUtils.article_extractor import ArticleExtractor
-
-
-article_extract_transform_dict: Dict[str, Callable[[Tag], Any]] = {}
-
-
-filter_head_extract_dict: Dict[str, Any] = {
-    "type": "meta[property='og:type']",
-}
-
-filter_must_exist: Dict[str, str] = {
-    # Prevents Premium "articles"
-    "menu": "#menu-main",
-}
 
 
 class IrozhlasExtractor(ArticleExtractor):
@@ -52,9 +39,15 @@ class IrozhlasExtractor(ArticleExtractor):
                 "category": "nav.m-breadcrumb > a:nth-child(3)",
             },
             {
-                "content": lambda x: article_content_transform(
-                    x,
-                    fc_eval=lambda x: x.name in [*ALLOWED_H, "p"] and len(x.attrs) == 0,
+                "content": article_content_transform(
+                    fc_eval=(
+                        lambda x: (x.name in [*ALLOWED_H, "p"] and len(x.attrs) == 0)
+                        or (
+                            # image
+                            x.name
+                            == "figure"
+                        )
+                    )
                 ),
                 "author": [get_text_transform, author_transform],
                 "publication_date": [
@@ -72,6 +65,9 @@ class IrozhlasExtractor(ArticleExtractor):
                 "category": [get_text_transform, brief_transform],
             },
             "main#main",
+            filter_must_exist={  # Prevents Premium "articles"
+                "menu": "#menu-main",
+            },
         )
 
     def custom_extract(self, soup: BeautifulSoup, metadata: PipeMetadata):

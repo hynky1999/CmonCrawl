@@ -72,10 +72,10 @@ class Router:
 
         self.registered_routes.append(Route(name, regex_compiled, since, to))
 
-    def route(self, url: str) -> BaseExtractor:
+    def route(self, url: str, time: datetime) -> BaseExtractor:
         for route in self.registered_routes:
             for regex in route.regexes:
-                if regex.match(url):
+                if regex.match(url) and route.since <= time and time < route.to:
                     logging.debug(f"Routed {url} to {route.name}")
                     return self.modules[route.name]
         raise ValueError("No route found for url: " + url)

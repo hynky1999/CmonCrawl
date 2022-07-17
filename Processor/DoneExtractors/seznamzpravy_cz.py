@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 import re
 from typing import Any, Dict
@@ -21,7 +22,21 @@ from ArticleUtils.article_utils import (
 )
 from utils import PipeMetadata
 
-allowed_classes = {"g_aa", "d_ch", "g_V"}
+allowed_classes_div = {
+    # text
+    "g_aa",
+    "d_ch",
+    "g_V",
+    "f_c5",
+    "f_c6",
+}
+
+allowed_classes_figure = {
+    # image
+    "g_bu",
+    "f_cN",
+    "d_bD",
+}
 
 
 def article_fc(tag: Tag):
@@ -31,22 +46,36 @@ def article_fc(tag: Tag):
     classes = tag.get("class", [])
     if isinstance(classes, str):
         classes = [classes]
-    if tag.name == "div" and len(allowed_classes.intersection(classes)) > 0:
+    if tag.name == "div" and len(allowed_classes_div.intersection(classes)) > 0:
         return True
 
+    if tag.name == "figure" and len(allowed_classes_figure.intersection(classes)) > 0:
+        return True
     return False
 
 
-def date_transform_no_script(text: str):
-    date = format_date_transform("%d. %m. %Y %H:%M")(text)
-    if date is not None:
-        return date
+date_bloat_re = re.compile(r"DNES")
 
-    date = format_date_transform("%d. %m. %H:%M")(text)
-    if date is not None:
-        # so that we know that year is not correct
-        return date.replace(year=1)
-    return None
+
+def date_transform_no_script(fallback: datetime):
+    def transform(text: str):
+        date = format_date_transform("%d. %m. %Y %H:%M")(text)
+        if date is not None:
+            return date
+
+        date = format_date_transform("%d. %m. %H:%M")(text)
+        if date is not None:
+            # so that we know that year is not correct
+            return date.replace(year=1)
+
+        text_debloated = date_bloat_re.sub("", text)
+        date = format_date_transform("%H:%M")(text_debloated)
+        if date is not None:
+            return fallback.replace(hour=date.hour, minute=date.minute)
+
+        return None
+
+    return transform
 
 
 def date_transform_script(text: str):
@@ -90,7 +119,12 @@ class SeznamZpravyExtractor(ArticleExtractor):
                 "category": "div[data-dot='ogm-breadcrumb-navigation'] > a:nth-child(2) > span",
             },
             {
-                "content": lambda x: article_content_transform(x, fc_eval=article_fc),
+                "content": [
+                    article_content_transform(fc_eval=article_fc),
+                    lambda x: x.replace(
+                        "Článek si také můžete poslechnout v audioverzi.\n", ""
+                    ),
+                ],
                 "author": [get_text_transform, author_transform],
                 "category": [get_text_transform, category_transform],
             },
@@ -120,7 +154,10 @@ class SeznamZpravyExtractor(ArticleExtractor):
                 "copyright_year": ".main-footer footer",
             },
             {
-                "date_1": [get_text_transform, date_transform_no_script],
+                "date_1": [
+                    get_text_transform,
+                    date_transform_no_script(metadata.domain_record.timestamp),
+                ],
                 "date_2": [get_text_transform, format_date_transform("%d. %m. %Y")],
                 "date_script": [get_text_transform, date_transform_script],
                 "copyright_year": [get_text_transform, year_transform],
@@ -130,7 +167,10 @@ class SeznamZpravyExtractor(ArticleExtractor):
         if e_dict is None:
             return None
 
-        if e_dict["date_1"] is not None:
+        if e_dict["date_script"] is not None:
+            date = e_dict["date_script"]
+
+        elif e_dict["date_1"] is not None:
             date = e_dict["date_1"]
             if date.year == 1:
                 year = (
@@ -141,10 +181,6 @@ class SeznamZpravyExtractor(ArticleExtractor):
                 date = date.replace(year=year)
         elif e_dict["date_2"] is not None:
             date = e_dict["date_2"]
-        elif e_dict["date_script"] is not None:
-            date = e_dict["date_script"]
-        elif soup.select_one("div[data-dot='ogm-date-of-publication']") is not None:
-            date = metadata.domain_record.timestamp
         return date
 
 

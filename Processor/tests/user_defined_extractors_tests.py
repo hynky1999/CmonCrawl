@@ -6,7 +6,7 @@ from UserDefinedExtractors.aktualne_cz import Extractor as AktualneExtractor
 from UserDefinedExtractors.idnes_cz import Extractor as IdnesExtractor
 from DoneExtractors.seznamzpravy_cz import Extractor as SeznamzpravyExtractor
 from DoneExtractors.irozhlas_cz import Extractor as IrozhlasExtractor
-from UserDefinedExtractors.novinky_cz import Extractor as NovinkyExtractor
+from DoneExtractors.novinky_cz import Extractor as NovinkyExtractor
 
 
 from process_article import parse_article

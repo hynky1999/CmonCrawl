@@ -66,7 +66,9 @@ async def article_process(article_path: List[Path], output_path: Path, router: R
     for article in article_path:
         article, metadata = parse_article(article)
 
-        extractor = router.route(metadata.domain_record.url)
+        extractor = router.route(
+            metadata.domain_record.url, metadata.domain_record.timestamp
+        )
         output = extractor.extract(article, metadata)
         if output is None:
             continue
@@ -87,5 +89,6 @@ if __name__ == "__main__":
     # router.register_route("idnes_cz", [r".*idnes\.cz.*"])
     router.register_route("seznamzpravy_cz", [r".*seznamzpravy\.cz.*"])
     router.register_route("irozhlas_cz", [r".*irozhlas\.cz.*"])
-    # router.register_route("novinky_cz", [r".*novinky\.cz.*"])
+    router.register_route("novinky_cz", [r".*novinky\.cz.*"])
+    router.register_route("novinky_cz_old", [r".*novinky\.cz.*"])
     asyncio.run(article_process(**vars(args), router=router))

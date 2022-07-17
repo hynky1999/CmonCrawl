@@ -19,15 +19,16 @@ def text_unification_transform(text: str):
     return text.strip().replace("\xa0", " ")
 
 
-def article_content_transform(
-    article: Tag, fc_eval: Callable[[Tag], bool] | None = None
-):
-    if fc_eval is None:
-        ps = article.find_all(["p", *ALLOWED_H], recursive=False)
-    else:
-        ps = article.find_all(fc_eval, recursive=False)
-    texts = LINE_SEPARATOR.join([text_unification_transform(p.text) for p in ps])
-    return text_unification_transform(texts)
+def article_content_transform(fc_eval: Callable[[Tag], bool] | None = None):
+    def transform(article: Tag):
+        if fc_eval is None:
+            ps = article.find_all(["p", *ALLOWED_H], recursive=False)
+        else:
+            ps = article.find_all(fc_eval, recursive=False)
+        texts = LINE_SEPARATOR.join([text_unification_transform(p.text) for p in ps])
+        return text_unification_transform(texts)
+
+    return transform
 
 
 def author_transform(author: str):
