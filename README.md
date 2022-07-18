@@ -21,7 +21,6 @@ The program will support these websites.
 - www.seznamzpravy.cz (2018-Today)
 - www.denik.cz (2013-Today)
 - www.irozhlas.cz (2017-Today)
-- www.ceskenoviny.cz (2016-Today)
 - www.lidovky.cz (2013-Today)
 
 The project will be written in Python 3.10 with usage of type annotations(typing).

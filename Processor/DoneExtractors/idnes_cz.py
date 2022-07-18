@@ -21,7 +21,7 @@ from Extractor.extractor_utils import (
 
 
 class IdnesCZExtractor(ArticleExtractor):
-    ENCODING = "utf-8"
+    ENCODING = "windows-1250"
     SINCE = datetime(2011, 8, 9)
 
     def __init__(self):

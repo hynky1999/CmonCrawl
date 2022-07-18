@@ -54,10 +54,7 @@ async def article_download(
         router=router, downloader=downloader, outstreamer=outstreamer
     )
     for dr in records:
-        try:
-            await pipeline.process_domain_record(dr)
-        except Exception:
-            pass
+        await pipeline.process_domain_record(dr)
     await downloader.aclose(None, None, None)
     print("Finished pipeline")
 

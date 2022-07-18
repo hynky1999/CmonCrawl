@@ -28,13 +28,13 @@ class Message:
     headers: Dict[str, str]
 
 
-def init_pipeline(downloader: Downloader):
+def init_pipeline(downloader: Downloader, output_path: Path):
     router = Router()
     router.load_modules(str(Path("UserDefinedExtractors").absolute()))
     router.register_route("aktualne_cz", [r".*aktualne\.cz.*"])
     router.register_route("idnes_cz", [r".*idnes\.cz.*"])
     router.register_route("seznamzpravy_cz", [r".*seznamzpravy\.cz.*"])
-    outstreamer = OutStreamerFileJSON(Path("output/"))
+    outstreamer = OutStreamerFileJSON(Path(output_path))
     pipeline = ProcessorPipeline(router, downloader, outstreamer)
     return pipeline
 
@@ -77,7 +77,7 @@ async def call_pipeline_with_ack(
 
 
 async def processor(
-    queue_host: str, queue_port: int, pills_to_die: int, queue_size: int
+    output_path: Path, queue_host: str, queue_port: int, pills_to_die: int, queue_size: int
 ):
     pending_extracts: Set[asyncio.Task[Tuple[Message, Path] | None]] = set()
     conn = Connection(
@@ -86,7 +86,7 @@ async def processor(
     listener = Listener(asyncio.Queue(0))
     async with Downloader() as downloader:
         try:
-            pipeline = init_pipeline(downloader)
+            pipeline = init_pipeline(downloader, output_path)
             while not listener.messages.empty() or listener.pills < pills_to_die:
                 try:
                     # Auto reconnect if queue disconnects
@@ -130,4 +130,5 @@ if __name__ == "__main__":
     parser.add_argument("--queue_port", type=int, default=61613)
     parser.add_argument("--queue_size", type=int, default=80)
     parser.add_argument("--pills_to_die", type=int, default=1)
+    parser.add_argument("output_path", type=Path)
     asyncio.run(processor(**vars(parser.parse_args())))
