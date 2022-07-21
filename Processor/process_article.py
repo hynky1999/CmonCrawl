@@ -106,4 +106,5 @@ if __name__ == "__main__":
     router.register_route("denik_cz_v3", [r".*denik\.cz.*"])
     router.register_route("ihned_cz_v1", [r".*ihned\.cz.*"])
     router.register_route("ihned_cz_v2", [r".*ihned\.cz.*"])
+    router.register_route("ihned_cz_v3", [r".*ihned\.cz.*"])
     asyncio.run(article_process(**vars(args), router=router))

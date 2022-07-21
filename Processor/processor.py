@@ -25,9 +25,28 @@ class Message:
 def init_pipeline(downloader: Downloader, output_path: Path):
     router = Router()
     router.load_modules(str(Path("UserDefinedExtractors").absolute()))
-    router.register_route("aktualne_cz", [r".*aktualne\.cz.*"])
-    router.register_route("idnes_cz", [r".*idnes\.cz.*"])
+    # idnes
+    router.register_route("idnes_cz_v1", [r".*idnes\.cz.*"])
+    router.register_route("idnes_cz_v2", [r".*idnes\.cz.*"])
+    # seznam
     router.register_route("seznamzpravy_cz", [r".*seznamzpravy\.cz.*"])
+    # rozhlas
+    router.register_route("irozhlas_cz", [r".*irozhlas\.cz.*"])
+    # novinky
+    router.register_route("novinky_cz_v1", [r".*novinky\.cz.*"])
+    router.register_route("novinky_cz_v2", [r".*novinky\.cz.*"])
+    # aktualne
+    router.register_route("aktualne_cz_v1", [r".*aktualne\.cz.*"])
+    router.register_route("aktualne_cz_v2", [r".*aktualne\.cz.*"])
+    router.register_route("aktualne_cz_v3", [r".*aktualne\.cz.*"])
+    # denik
+    router.register_route("denik_cz_v1", [r".*denik\.cz.*"])
+    router.register_route("denik_cz_v2", [r".*denik\.cz.*"])
+    router.register_route("denik_cz_v3", [r".*denik\.cz.*"])
+    # ihned
+    router.register_route("ihned_cz_v1", [r".*ihned\.cz.*"])
+    router.register_route("ihned_cz_v2", [r".*ihned\.cz.*"])
+    router.register_route("ihned_cz_v3", [r".*ihned\.cz.*"])
     outstreamer = OutStreamerFileJSON(Path(output_path))
     pipeline = ProcessorPipeline(router, downloader, outstreamer)
     return pipeline

@@ -10,11 +10,6 @@ from stomp.exception import StompException
 
 from index_query import IndexAggregator
 
-logging.basicConfig(
-    format="%(asctime)s - %(filename)s:%(lineno)d - " "%(levelname)s - %(message)s",
-    level="INFO",
-)
-
 DUPL_ID_HEADER = "_AMQ_DUPL_ID"
 
 

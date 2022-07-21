@@ -14,7 +14,12 @@ from aiohttp import ClientError, ClientSession, ContentTypeError
 import asyncio
 import random
 
-ALLOWED_ERR_FOR_RETRIES = [500, 502, 503]
+ALLOWED_ERR_FOR_RETRIES = [500, 502, 503, 504]
+
+logging.basicConfig(
+    format="%(asctime)s - %(filename)s:%(lineno)d - " "%(levelname)s - %(message)s",
+    level="INFO",
+)
 
 
 @dataclass

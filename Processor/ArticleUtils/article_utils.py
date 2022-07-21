@@ -56,12 +56,14 @@ authors_sub = re.compile(
     r"(autor\/ři|autoři|autori|autor|authors|author):?", re.IGNORECASE
 )
 
+author_not_match = re.compile(r"foto:?", re.IGNORECASE)
+
 
 def author_transform(author: str):
     author = authors_sub.sub("", author)
     authors = author.split(",")
     authors = text_unifications_transform(authors)
-    authors = list(filter(lambda x: not x.startswith("Foto:"), authors))
+    authors = list(filter(lambda x: not author_not_match.search(x), authors))
     return authors
 
 

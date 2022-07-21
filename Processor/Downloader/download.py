@@ -12,7 +12,7 @@ from Downloader.errors import PageDownloadException
 from Downloader.warc import PipeMetadata, parse_warc
 from utils import DomainRecord, metadata_logger
 
-ALLOWED_ERR_FOR_RETRIES = [500, 502, 503]
+ALLOWED_ERR_FOR_RETRIES = [500, 502, 503, 504]
 
 
 class Downloader:
