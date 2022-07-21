@@ -23,8 +23,14 @@ def get_attribute_transform(attr_name: str):
     return transform
 
 
-def get_text_transform(tag: Tag):
-    return tag.text
+def get_text_transform(tag: Tag, recursive: bool = True):
+    if recursive:
+        return tag.text
+    tag_text = tag.find(text=True, recursive=False)
+    if tag_text:
+        return tag_text.text
+    
+    return tag_text.text
 
 
 def get_text_list_transform(sep: str = ""):

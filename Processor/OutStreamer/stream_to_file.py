@@ -1,6 +1,5 @@
 import asyncio
 import json
-import logging
 from math import log
 from pathlib import Path
 import random
@@ -8,6 +7,7 @@ from typing import Any, Dict, List
 from xmlrpc.client import Boolean
 from Downloader.warc import PipeMetadata
 from OutStreamer.outstreamer import OutStreamer
+from utils import all_purpose_logger, metadata_logger
 from aiofiles import open as asyncOpen
 
 import os
@@ -44,8 +44,8 @@ class OutStreamerFileDefault(OutStreamer):
         os.makedirs(folder_path, exist_ok=True)
         self.directory_size = len(os.listdir(folder_path))
         self.directories.append(folder_path)
-        logging.debug(
-            f"Create new folder {folder_path} with capacity {self.directory_size}/{self.max_directory_size}"
+        all_purpose_logger.debug(
+            f"Created new folder {folder_path} with capacity {self.directory_size}/{self.max_directory_size}"
         )
 
     async def clean_up(self) -> None:
@@ -53,17 +53,17 @@ class OutStreamerFileDefault(OutStreamer):
             for directory in self.directories:
                 for root, dirs, files in os.walk(directory, topdown=False):
                     for name in files:
-                        logging.debug(f"Removing {root}/{name}")
+                        all_purpose_logger.debug(f"Removing {root}/{name}")
                         os.remove(Path(root) / name)
                     for name in dirs:
-                        logging.debug(f"Removing {root}/{name}")
+                        all_purpose_logger.debug(f"Removing {root}/{name}")
                         os.rmdir(Path(root) / name)
-                logging.debug(f"Removing {directory}")
+                all_purpose_logger.debug(f"Removing {directory}")
                 os.rmdir(directory)
-            logging.debug(f"Removing {self.origin}")
+            all_purpose_logger.debug(f"Removing {self.origin}")
             os.rmdir(self.origin)
         except OSError as e:
-            logging.error(f"{e}")
+            all_purpose_logger.error(f"{e}")
 
     def get_file_name(self, metadata: PipeMetadata):
         name = metadata.name
@@ -87,7 +87,7 @@ class OutStreamerFileDefault(OutStreamer):
         self, extracted_data: Dict[Any, Any], metadata: PipeMetadata
     ) -> Path:
         while self.directory_size >= self.max_directory_size:
-            logging.debug(
+            all_purpose_logger.debug(
                 f"Reached capacity of folder {self.__get_folder_path()} {self.directory_size}/{self.max_directory_size}"
             )
             self.__create_new_folder(self.__get_new_folder_path())
@@ -96,27 +96,36 @@ class OutStreamerFileDefault(OutStreamer):
         directory_size = self.directory_size
 
         file_path = Path(self.__get_folder_path()) / self.get_file_name(metadata)
-        path = await self.__stream(file_path, extracted_data, 0)
-        logging.debug(f"Wrote {file_path} {directory_size}/{self.max_directory_size}")
+        path = await self.__stream(file_path, extracted_data, metadata, 0)
+        metadata_logger.debug(
+            f"Wrote {file_path} {directory_size}/{self.max_directory_size}",
+            extra={"domain_record": metadata.domain_record},
+        )
         return path
 
     async def __stream(
         self,
         file_path: Path,
         extracted_data: Dict[Any, Any],
+        metadata: PipeMetadata,
         retries: int,
     ) -> Path:
         if retries > self.max_retries:
             raise OSError(f"Failed to write to {file_path}")
-        logging.debug(f"Writing to {file_path}")
+        metadata_logger.debug(
+            f"Writing to {file_path}", extra={"domain_record": metadata.domain_record}
+        )
         try:
             async with asyncOpen(file_path, "w") as f:
                 out = self.metadata_to_string(extracted_data)
                 await f.write(out)
         except OSError as e:
-            logging.error(f"{e}\n retrying {retries}/{self.max_retries}")
+            metadata_logger.error(
+                f"{e}\n retrying {retries}/{self.max_retries}",
+                extra={"domain_record": metadata.domain_record},
+            )
             await asyncio.sleep(random.randint(1, 2))
-            return await self.__stream(file_path, extracted_data, retries + 1)
+            return await self.__stream(file_path, extracted_data, metadata, retries + 1)
         return file_path
 
 

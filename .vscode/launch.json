@@ -7,7 +7,7 @@
             "request": "launch",
             "program": "${workspaceRoot}/download_article.py",
             "console": "integratedTerminal",
-            "args": ["--limit=100", "--to=2010-12-31", "ihned.cz", "hned"]
+            "args": ["--limit=100", "--to=2011-12-12", "ihned.cz", "ihned2011"]
         },
         {
             "name": "Process",

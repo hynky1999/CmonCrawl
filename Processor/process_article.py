@@ -1,6 +1,5 @@
 import argparse
 from datetime import datetime
-import logging
 from pathlib import Path
 import re
 from typing import List
@@ -12,11 +11,9 @@ from OutStreamer.stream_to_file import (
 )
 
 from Router.router import Router
-from utils import DomainRecord, PipeMetadata
+from utils import DomainRecord, PipeMetadata, all_purpose_logger, metadata_logger
 
 FOLDER = "articles_processed"
-
-logging.basicConfig(level=logging.INFO)
 
 
 def parse_article(article_path: Path):
@@ -40,13 +37,18 @@ def parse_article(article_path: Path):
         if url_match:
             url = url_match.get("href")
             url += "/category/"
+    if url is None:
+        url_match = bs4_article.select_one("link[media*='handheld']")
+        if url_match:
+            url = url_match.get("href")
+            url += "/category/"
 
     year = re.search(r"\d{4}", article_path.name)
     if year is None:
         year = 2020
     else:
         year = int(year.group(0))
-    logging.info("Found url: %s", url)
+    all_purpose_logger.info(f"Found url: {url}")
 
     metadata = PipeMetadata(
         DomainRecord(
@@ -66,14 +68,19 @@ async def article_process(article_path: List[Path], output_path: Path, router: R
     for article in article_path:
         article, metadata = parse_article(article)
 
-        extractor = router.route(
-            metadata.domain_record.url, metadata.domain_record.timestamp
-        )
-        output = extractor.extract(article, metadata)
-        if output is None:
-            continue
-        metadata.name = metadata.domain_record.filename
-        path = await outstreamer.stream(output, metadata)
+        try:
+            extractor = router.route(
+                metadata.domain_record.url, metadata.domain_record.timestamp, metadata
+            )
+            output = extractor.extract(article, metadata)
+            if output is None:
+                continue
+            metadata.name = metadata.domain_record.filename
+            await outstreamer.stream(output, metadata)
+        except Exception as e:
+            metadata_logger.error(
+                e, exc_info=True, extra={"domain_record": metadata.domain_record}
+            )
 
 
 if __name__ == "__main__":
@@ -85,13 +92,18 @@ if __name__ == "__main__":
     # Router
     router = Router()
     router.load_modules(str(Path("DoneExtractors").absolute()))
-    router.register_route("idnes_cz", [r".*idnes\.cz.*"])
-    router.register_route("idnes_cz_old", [r".*idnes\.cz.*"])
+    router.register_route("idnes_cz_v1", [r".*idnes\.cz.*"])
+    router.register_route("idnes_cz_v2", [r".*idnes\.cz.*"])
     router.register_route("seznamzpravy_cz", [r".*seznamzpravy\.cz.*"])
     router.register_route("irozhlas_cz", [r".*irozhlas\.cz.*"])
-    router.register_route("novinky_cz", [r".*novinky\.cz.*"])
-    router.register_route("novinky_cz_old", [r".*novinky\.cz.*"])
-    router.register_route("aktualne_cz", [r".*aktualne\.cz.*"])
-    router.register_route("aktualne_cz_old", [r".*aktualne\.cz.*"])
-    router.register_route("aktualne_cz_old_old", [r".*aktualne\.cz.*"])
+    router.register_route("novinky_cz_v1", [r".*novinky\.cz.*"])
+    router.register_route("novinky_cz_v2", [r".*novinky\.cz.*"])
+    router.register_route("aktualne_cz_v1", [r".*aktualne\.cz.*"])
+    router.register_route("aktualne_cz_v2", [r".*aktualne\.cz.*"])
+    router.register_route("aktualne_cz_v3", [r".*aktualne\.cz.*"])
+    router.register_route("denik_cz_v1", [r".*denik\.cz.*"])
+    router.register_route("denik_cz_v2", [r".*denik\.cz.*"])
+    router.register_route("denik_cz_v3", [r".*denik\.cz.*"])
+    router.register_route("ihned_cz_v1", [r".*ihned\.cz.*"])
+    router.register_route("ihned_cz_v2", [r".*ihned\.cz.*"])
     asyncio.run(article_process(**vars(args), router=router))

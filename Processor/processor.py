@@ -3,7 +3,6 @@ import asyncio
 from dataclasses import dataclass
 from datetime import datetime
 import json
-import logging
 from pathlib import Path
 from typing import Dict, Set, Tuple
 
@@ -13,13 +12,8 @@ from stomp.exception import StompException
 from Downloader.download import Downloader
 from OutStreamer.stream_to_file import OutStreamerFileJSON
 from Pipeline.pipeline import ProcessorPipeline
-from utils import DomainRecord
+from utils import DomainRecord, all_purpose_logger
 from Router.router import Router
-
-logging.basicConfig(
-    format="%(asctime)s - %(filename)s:%(lineno)d - " "%(levelname)s - %(message)s",
-    level="INFO",
-)
 
 
 @dataclass
@@ -77,7 +71,11 @@ async def call_pipeline_with_ack(
 
 
 async def processor(
-    output_path: Path, queue_host: str, queue_port: int, pills_to_die: int, queue_size: int
+    output_path: Path,
+    queue_host: str,
+    queue_port: int,
+    pills_to_die: int,
+    queue_size: int,
 ):
     pending_extracts: Set[asyncio.Task[Tuple[Message, Path] | None]] = set()
     conn = Connection(
@@ -100,7 +98,9 @@ async def processor(
                         for task in done:
                             message, path = task.result()
                             if path is not None:
-                                logging.info(f"Downloaded {message.dr.url} to {path}")
+                                all_purpose_logger.info(
+                                    f"Downloaded {message.dr.url} to {path}"
+                                )
 
                     while (
                         len(pending_extracts) < queue_size
@@ -114,11 +114,11 @@ async def processor(
                             )
                         )
                 except (KeyboardInterrupt, StompException, Exception) as e:
-                    logging.error(e)
+                    all_purpose_logger.error(e)
                     break
         except Exception as e:
             # Needed because async with would implicitly catch it and doesn't say anything about it
-            logging.error(e)
+            all_purpose_logger.error(e)
 
     await asyncio.gather(*pending_extracts)
     conn.disconnect()

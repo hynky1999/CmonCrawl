@@ -1,4 +1,5 @@
 from datetime import datetime
+from importlib.metadata import metadata
 import json
 from pathlib import Path
 import unittest
@@ -34,7 +35,9 @@ class IrozhlasTests(unittest.TestCase):
         for article_path in (SITES_PATH / self.name / TEST_ARTICLES).iterdir():
             article_test, metadata_test = parse_article(article_path)
             extractor = self.router.route(
-                metadata_test.domain_record.url, metadata_test.domain_record.timestamp
+                metadata_test.domain_record.url,
+                metadata_test.domain_record.timestamp,
+                metadata_test,
             )
             extracted_test = extractor.extract(article_test, metadata_test)
             extracted_truth = parse_extracted_json(
@@ -50,7 +53,7 @@ class IrozhlasTests(unittest.TestCase):
         for article_f in (SITES_PATH / self.name / FILTER_ARTICLES).iterdir():
             article, metadata = parse_article(article_f)
             extractor = self.router.route(
-                metadata.domain_record.url, metadata.domain_record.timestamp
+                metadata.domain_record.url, metadata.domain_record.timestamp, metadata
             )
             extracted_test = extractor.extract(article, metadata)
             self.assertIsNone(extracted_test)
@@ -68,7 +71,9 @@ class SeznamZpravyCZ(unittest.TestCase):
         for article_path in (SITES_PATH / self.name / TEST_ARTICLES).iterdir():
             article_test, metadata_test = parse_article(article_path)
             extractor = self.router.route(
-                metadata_test.domain_record.url, metadata_test.domain_record.timestamp
+                metadata_test.domain_record.url,
+                metadata_test.domain_record.timestamp,
+                metadata_test,
             )
             extracted_test = extractor.extract(article_test, metadata_test)
             extracted_truth = parse_extracted_json(
@@ -84,7 +89,7 @@ class SeznamZpravyCZ(unittest.TestCase):
         for article_f in (SITES_PATH / self.name / FILTER_ARTICLES).iterdir():
             article, metadata = parse_article(article_f)
             extractor = self.router.route(
-                metadata.domain_record.url, metadata.domain_record.timestamp
+                metadata.domain_record.url, metadata.domain_record.timestamp, metadata
             )
             extracted_test = extractor.extract(article, metadata)
             self.assertIsNone(extracted_test)
@@ -94,15 +99,17 @@ class NovinkyCZTests(unittest.TestCase):
     def setUp(self) -> None:
         self.router = Router()
         self.router.load_modules(str(Path("DoneExtractors").absolute()))
-        self.router.register_route("novinky_cz", [r".*novinky\.cz.*"])
-        self.router.register_route("novinky_cz_old", [r".*novinky\.cz.*"])
+        self.router.register_route("novinky_cz_v2", [r".*novinky\.cz.*"])
+        self.router.register_route("novinky_cz_v1", [r".*novinky\.cz.*"])
         self.name = "novinkyCZ"
 
     def test_extract_articles(self):
         for article_path in (SITES_PATH / self.name / TEST_ARTICLES).iterdir():
             article_test, metadata_test = parse_article(article_path)
             extractor = self.router.route(
-                metadata_test.domain_record.url, metadata_test.domain_record.timestamp
+                metadata_test.domain_record.url,
+                metadata_test.domain_record.timestamp,
+                metadata_test,
             )
             extracted_test = extractor.extract(article_test, metadata_test)
             extracted_truth = parse_extracted_json(
@@ -118,7 +125,7 @@ class NovinkyCZTests(unittest.TestCase):
         for article_f in (SITES_PATH / self.name / FILTER_ARTICLES).iterdir():
             article, metadata = parse_article(article_f)
             extractor = self.router.route(
-                "novinky.cz", metadata.domain_record.timestamp
+                "novinky.cz", metadata.domain_record.timestamp, metadata
             )
             extracted_test = extractor.extract(article, metadata)
             self.assertIsNone(extracted_test)
@@ -128,16 +135,18 @@ class AktualneCZTests(unittest.TestCase):
     def setUp(self) -> None:
         self.router = Router()
         self.router.load_modules(str(Path("DoneExtractors").absolute()))
-        self.router.register_route("aktualne_cz", [r".*aktualne\.cz.*"])
-        self.router.register_route("aktualne_cz_old", [r".*aktualne\.cz.*"])
-        self.router.register_route("aktualne_cz_old_old", [r".*aktualne\.cz.*"])
+        self.router.register_route("aktualne_cz_v3", [r".*aktualne\.cz.*"])
+        self.router.register_route("aktualne_cz_v2", [r".*aktualne\.cz.*"])
+        self.router.register_route("aktualne_cz_v1", [r".*aktualne\.cz.*"])
         self.name = "aktualneCZ"
 
     def test_extract_articles(self):
         for article_path in (SITES_PATH / self.name / TEST_ARTICLES).iterdir():
             article_test, metadata_test = parse_article(article_path)
             extractor = self.router.route(
-                metadata_test.domain_record.url, metadata_test.domain_record.timestamp
+                metadata_test.domain_record.url,
+                metadata_test.domain_record.timestamp,
+                metadata_test,
             )
             extracted_test = extractor.extract(article_test, metadata_test)
             extracted_truth = parse_extracted_json(
@@ -153,7 +162,7 @@ class AktualneCZTests(unittest.TestCase):
         for article_f in (SITES_PATH / self.name / FILTER_ARTICLES).iterdir():
             article, metadata = parse_article(article_f)
             extractor = self.router.route(
-                "aktualne.cz", metadata.domain_record.timestamp
+                "aktualne.cz", metadata.domain_record.timestamp, metadata
             )
             extracted_test = extractor.extract(article, metadata)
             self.assertIsNone(extracted_test)
@@ -163,16 +172,17 @@ class IdnesCZ(unittest.TestCase):
     def setUp(self) -> None:
         self.router = Router()
         self.router.load_modules(str(Path("DoneExtractors").absolute()))
-        self.router.register_route("idnes_cz", [r".*aktualne\.cz.*"])
-        self.router.register_route("idnes_cz", [r".*idnes\.cz.*"])
-        self.router.register_route("idnes_cz_old", [r".*idnes\.cz.*"])
+        self.router.register_route("idnes_cz_v2", [r".*idnes\.cz.*"])
+        self.router.register_route("idnes_cz_v1", [r".*idnes\.cz.*"])
         self.name = "idnesCZ"
 
     def test_extract_articles(self):
         for article_path in (SITES_PATH / self.name / TEST_ARTICLES).iterdir():
             article_test, metadata_test = parse_article(article_path)
             extractor = self.router.route(
-                metadata_test.domain_record.url, metadata_test.domain_record.timestamp
+                metadata_test.domain_record.url,
+                metadata_test.domain_record.timestamp,
+                metadata_test,
             )
             extracted_test = extractor.extract(article_test, metadata_test)
             extracted_truth = parse_extracted_json(
@@ -187,6 +197,45 @@ class IdnesCZ(unittest.TestCase):
     def test_filter_articles(self):
         for article_f in (SITES_PATH / self.name / FILTER_ARTICLES).iterdir():
             article, metadata = parse_article(article_f)
-            extractor = self.router.route("idnes.cz", metadata.domain_record.timestamp)
+            extractor = self.router.route(
+                metadata.domain_record.url, metadata.domain_record.timestamp, metadata
+            )
+            extracted_test = extractor.extract(article, metadata)
+            self.assertIsNone(extracted_test)
+
+
+class DenikCZ(unittest.TestCase):
+    def setUp(self) -> None:
+        self.router = Router()
+        self.router.load_modules(str(Path("DoneExtractors").absolute()))
+        self.router.register_route("denik_cz_v1", [r".*denik\.cz.*"])
+        self.router.register_route("denik_cz_v2", [r".*denik\.cz.*"])
+        self.router.register_route("denik_cz_v3", [r".*denik\.cz.*"])
+        self.name = "denikCZ"
+
+    def test_extract_articles(self):
+        for article_path in (SITES_PATH / self.name / TEST_ARTICLES).iterdir():
+            article_test, metadata_test = parse_article(article_path)
+            extractor = self.router.route(
+                metadata_test.domain_record.url,
+                metadata_test.domain_record.timestamp,
+                metadata_test,
+            )
+            extracted_test = extractor.extract(article_test, metadata_test)
+            extracted_truth = parse_extracted_json(
+                article_path.parent.parent / TRUTH_JSONS / (article_path.stem + ".json")
+            )
+            print(metadata_test.domain_record.url, metadata_test.domain_record.filename)
+            self.assertIsNotNone(extracted_test)
+            # Test all attributes
+            for key in extracted_truth:
+                self.assertEqual(extracted_test.get(key), extracted_truth.get(key))
+
+    def test_filter_articles(self):
+        for article_f in (SITES_PATH / self.name / FILTER_ARTICLES).iterdir():
+            article, metadata = parse_article(article_f)
+            extractor = self.router.route(
+                metadata.domain_record.url, metadata.domain_record.timestamp, metadata
+            )
             extracted_test = extractor.extract(article, metadata)
             self.assertIsNone(extracted_test)

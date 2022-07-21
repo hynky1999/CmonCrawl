@@ -1,8 +1,6 @@
-import logging
-
 from bs4 import BeautifulSoup
 from Extractor.extractor import BaseExtractor
-from utils import PipeMetadata
+from utils import PipeMetadata, metadata_logger
 
 
 class Extractor(BaseExtractor):
@@ -14,8 +12,9 @@ class Extractor(BaseExtractor):
 
     def filter_raw(self, response: str, metadata: PipeMetadata):
         if metadata.http_header.get("http_response_code", 200) != 200:
-            logging.warning(
-                f"Status: {metadata.http_header.get('http_response_code', 0)}"
+            metadata_logger.warning(
+                f"Status: {metadata.http_header.get('http_response_code', 0)}",
+                extra={"domain_record": metadata.domain_record},
             )
             return False
         return True

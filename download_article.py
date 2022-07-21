@@ -1,4 +1,3 @@
-import logging
 import sys
 from pathlib import Path
 
@@ -8,7 +7,6 @@ sys.path.append(Path("Aggregator").absolute().as_posix())
 
 import argparse
 from datetime import datetime
-from os import path
 from pathlib import Path
 from typing import List
 from Processor.Downloader.download import Downloader
@@ -20,8 +18,6 @@ from Processor.OutStreamer.stream_to_file import (
 from Processor.Pipeline.pipeline import ProcessorPipeline
 
 from Processor.Router.router import Router
-
-logging.basicConfig(level="INFO")
 
 
 async def article_download(
@@ -37,12 +33,12 @@ async def article_download(
 
     # At start so we can fail faster
     router = Router()
-    router.load_module(str(Path("Processor/Extractor/DummyExtractor.py").absolute()))
+    router.load_module(Path("Processor/Extractor/DummyExtractor.py").absolute())
     router.register_route("DummyExtractor", [r".*"])
     outstreamer = OutStreamerFileHTMLContent(origin=output)
 
     aggregator = await IndexAggregator(
-        [url], cc_servers=cc_server, since=since, to=to, limit=limit
+        [url], cc_servers=cc_server, since=since, to=to, limit=limit, max_retry=15, sleep_step=10
     ).aopen()
     async for domain_record in aggregator:
         records.append(domain_record)
