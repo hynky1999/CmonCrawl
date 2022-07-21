@@ -1,15 +1,14 @@
 from datetime import datetime
-import logging
 import re
 from typing import Any, Dict
 from datetime import datetime
-from utils import PipeMetadata
+from utils import PipeMetadata, metadata_logger
 
 
 warc_re = re.compile("^WARC/[0-9.]+")
 
 
-def parse_warc_header(warc: str):
+def parse_warc_header(warc: str, metadata: PipeMetadata):
     # Default preprocess WIN -> UNIX
     warc = warc.replace("\r\n", "\n")
     warc_header: Dict[str, Any] = {}
@@ -18,7 +17,10 @@ def parse_warc_header(warc: str):
         content_type is None
         or content_type.group(0) != "application/http; msgtype=response"
     ):
-        logging.warn("Not html content-type or WARC header not found")
+        metadata_logger.warn(
+            "Not html content-type or WARC header not found",
+            extra={"domain_record": metadata.domain_record},
+        )
 
     payload_digest = re.search("(?<=WARC-Payload-Digest: )(.*)", warc)
     if payload_digest is not None:
@@ -27,10 +29,11 @@ def parse_warc_header(warc: str):
     if block_digest is not None:
         warc_header["block_digest"] = block_digest.group(0).strip()
 
+    metadata.warc_header = warc_header
     return warc_header
 
 
-def parse_http_header(http: str):
+def parse_http_header(http: str, metadata: PipeMetadata):
     # Not ideal parsing, but we don't really need all the headers
     http = http.replace("\r\n", "\n")
     http_header: Dict[str, Any] = {}
@@ -47,6 +50,7 @@ def parse_http_header(http: str):
     if http_charset is not None:
         http_header["charset"] = http_charset.group(0).strip().lower()
 
+    metadata.http_header = http_header
     return http_header
 
 
@@ -61,6 +65,6 @@ def parse_warc(warc_str: str, metadata: PipeMetadata):
         warc_h, http_h, html = warc_str.split("\r\n\r\n", maxsplit=2)
         html = html[:-4]
         # Strip last separator \r\n\r\n
-    metadata.warc_header = parse_warc_header(warc_h)
-    metadata.http_header = parse_http_header(http_h)
+    parse_warc_header(warc_h, metadata)
+    parse_http_header(http_h, metadata)
     return html

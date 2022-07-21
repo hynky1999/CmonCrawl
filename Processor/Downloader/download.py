@@ -2,7 +2,6 @@ from __future__ import annotations
 import asyncio
 from base64 import b32decode
 import gzip
-import logging
 import random
 from types import TracebackType
 from aiohttp import ClientError, ClientSession
@@ -11,7 +10,9 @@ from hashlib import md5, sha1
 
 from Downloader.errors import PageDownloadException
 from Downloader.warc import PipeMetadata, parse_warc
-from utils import DomainRecord
+from utils import DomainRecord, metadata_logger
+
+ALLOWED_ERR_FOR_RETRIES = [500, 502, 503, 504]
 
 
 class Downloader:
@@ -19,12 +20,12 @@ class Downloader:
         self,
         base_url: str = "https://data.commoncrawl.org/",
         digest_verification: bool = True,
-        max_retries: int = 3,
-        sleep_step: int = 1,
+        max_retry: int = 5,
+        sleep_step: int = 3,
     ):
         self.digest_verification = digest_verification
         self.BASE_URL = base_url
-        self.max_retries = max_retries
+        self.max_retry = max_retry
         self.__sleep_step = sleep_step
 
     async def aopen(self) -> Downloader:
@@ -36,7 +37,7 @@ class Downloader:
         return await self.aopen()
 
     async def download(
-        self, domain_record: DomainRecord, metadata: PipeMetadata, retries: int = 0
+        self, domain_record: DomainRecord, metadata: PipeMetadata, retry: int = 0
     ) -> str:
         # Because someone thought having non c-like range is good idea
         # Both end/start are inclusive
@@ -59,13 +60,21 @@ class Downloader:
                 self.unwrap(response_bytes, metadata.encoding),
                 metadata,
             )
-        except (ClientError, TimeoutError) as e:
-            logging.error(e)
-            if retries < self.max_retries:
-                await asyncio.sleep(
-                    random.randint(0, (retries + 1) * self.__sleep_step)
-                )
-                return await self.download(domain_record, metadata, retries + 1)
+        except (ClientError, TimeoutError, PageDownloadException) as e:
+            max_retry = self.max_retry
+            if (
+                isinstance(e, PageDownloadException)
+                and e.status not in ALLOWED_ERR_FOR_RETRIES
+            ):
+                max_retry = 0
+
+            metadata_logger.error(
+                f"Failed to retrieve from page retry: {retry}/{max_retry}",
+                extra={"domain_record": metadata.domain_record},
+            )
+            if retry < self.max_retry:
+                await asyncio.sleep(random.randint(0, (retry + 1) * self.__sleep_step))
+                return await self.download(domain_record, metadata, retry + 1)
             else:
                 raise ValueError(f"Failed to download {domain_record.url}")
 
@@ -77,8 +86,9 @@ class Downloader:
 
             digest = metadata.warc_header.get("payload_digest")
             if digest is None:
-                logging.warn(
-                    "Warc header has no digest, using digest from domain record"
+                metadata_logger.warn(
+                    "Warc header has no digest, using digest from domain record",
+                    extra={"domain_record": metadata.domain_record},
                 )
                 if metadata.domain_record.digest is None:
                     raise ValueError("Digest is missing in domain record")
@@ -109,7 +119,6 @@ class Downloader:
             raise ValueError(f"Unknown hash type {hash_type}")
 
         if digest_decoded != hash_digest:
-            logging.warn("")
             return False
         return True
 

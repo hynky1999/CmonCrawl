@@ -3,7 +3,6 @@ import asyncio
 from dataclasses import dataclass
 from datetime import datetime
 import json
-import logging
 from pathlib import Path
 from typing import Dict, Set, Tuple
 
@@ -13,13 +12,8 @@ from stomp.exception import StompException
 from Downloader.download import Downloader
 from OutStreamer.stream_to_file import OutStreamerFileJSON
 from Pipeline.pipeline import ProcessorPipeline
-from utils import DomainRecord
+from utils import DomainRecord, all_purpose_logger
 from Router.router import Router
-
-logging.basicConfig(
-    format="%(asctime)s - %(filename)s:%(lineno)d - " "%(levelname)s - %(message)s",
-    level="INFO",
-)
 
 
 @dataclass
@@ -28,13 +22,32 @@ class Message:
     headers: Dict[str, str]
 
 
-def init_pipeline(downloader: Downloader):
+def init_pipeline(downloader: Downloader, output_path: Path):
     router = Router()
     router.load_modules(str(Path("UserDefinedExtractors").absolute()))
-    router.register_route("aktualne_cz", [r".*aktualne\.cz.*"])
-    router.register_route("idnes_cz", [r".*idnes\.cz.*"])
+    # idnes
+    router.register_route("idnes_cz_v1", [r".*idnes\.cz.*"])
+    router.register_route("idnes_cz_v2", [r".*idnes\.cz.*"])
+    # seznam
     router.register_route("seznamzpravy_cz", [r".*seznamzpravy\.cz.*"])
-    outstreamer = OutStreamerFileJSON(Path("output/"))
+    # rozhlas
+    router.register_route("irozhlas_cz", [r".*irozhlas\.cz.*"])
+    # novinky
+    router.register_route("novinky_cz_v1", [r".*novinky\.cz.*"])
+    router.register_route("novinky_cz_v2", [r".*novinky\.cz.*"])
+    # aktualne
+    router.register_route("aktualne_cz_v1", [r".*aktualne\.cz.*"])
+    router.register_route("aktualne_cz_v2", [r".*aktualne\.cz.*"])
+    router.register_route("aktualne_cz_v3", [r".*aktualne\.cz.*"])
+    # denik
+    router.register_route("denik_cz_v1", [r".*denik\.cz.*"])
+    router.register_route("denik_cz_v2", [r".*denik\.cz.*"])
+    router.register_route("denik_cz_v3", [r".*denik\.cz.*"])
+    # ihned
+    router.register_route("ihned_cz_v1", [r".*ihned\.cz.*"])
+    router.register_route("ihned_cz_v2", [r".*ihned\.cz.*"])
+    router.register_route("ihned_cz_v3", [r".*ihned\.cz.*"])
+    outstreamer = OutStreamerFileJSON(Path(output_path))
     pipeline = ProcessorPipeline(router, downloader, outstreamer)
     return pipeline
 
@@ -77,7 +90,11 @@ async def call_pipeline_with_ack(
 
 
 async def processor(
-    queue_host: str, queue_port: int, pills_to_die: int, queue_size: int
+    output_path: Path,
+    queue_host: str,
+    queue_port: int,
+    pills_to_die: int,
+    queue_size: int,
 ):
     pending_extracts: Set[asyncio.Task[Tuple[Message, Path] | None]] = set()
     conn = Connection(
@@ -86,7 +103,7 @@ async def processor(
     listener = Listener(asyncio.Queue(0))
     async with Downloader() as downloader:
         try:
-            pipeline = init_pipeline(downloader)
+            pipeline = init_pipeline(downloader, output_path)
             while not listener.messages.empty() or listener.pills < pills_to_die:
                 try:
                     # Auto reconnect if queue disconnects
@@ -100,7 +117,9 @@ async def processor(
                         for task in done:
                             message, path = task.result()
                             if path is not None:
-                                logging.info(f"Downloaded {message.dr.url} to {path}")
+                                all_purpose_logger.info(
+                                    f"Downloaded {message.dr.url} to {path}"
+                                )
 
                     while (
                         len(pending_extracts) < queue_size
@@ -114,11 +133,11 @@ async def processor(
                             )
                         )
                 except (KeyboardInterrupt, StompException, Exception) as e:
-                    logging.error(e)
+                    all_purpose_logger.error(e)
                     break
         except Exception as e:
             # Needed because async with would implicitly catch it and doesn't say anything about it
-            logging.error(e)
+            all_purpose_logger.error(e)
 
     await asyncio.gather(*pending_extracts)
     conn.disconnect()
@@ -130,4 +149,5 @@ if __name__ == "__main__":
     parser.add_argument("--queue_port", type=int, default=61613)
     parser.add_argument("--queue_size", type=int, default=80)
     parser.add_argument("--pills_to_die", type=int, default=1)
+    parser.add_argument("output_path", type=Path)
     asyncio.run(processor(**vars(parser.parse_args())))

@@ -62,13 +62,22 @@ class RouterTests(unittest.TestCase):
         self.router.register_route("BBB", r"seznam.cz")
 
     def test_router_route_by_name(self):
-        c1 = self.router.route("www.idnes.cz")
+        metadata = PipeMetadata(
+            domain_record=DomainRecord(
+                url="www.idnes.cz",
+                timestamp=datetime.today(),
+                filename="c",
+                offset=0,
+                length=0,
+            )
+        )
+        c1 = self.router.route("www.idnes.cz", datetime.today(), metadata)
         try:
-            self.router.route("www.i.cz")
+            self.router.route("www.i.cz", datetime.today(), metadata)
         except ValueError:
             pass
 
-        c3 = self.router.route("seznam.cz")
+        c3 = self.router.route("seznam.cz", datetime.today(), metadata)
         self.assertEqual(c1, self.router.modules["AAA"])
         self.assertEqual(c3, self.router.modules["BBB"])
 

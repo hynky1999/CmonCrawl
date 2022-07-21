@@ -1,9 +1,11 @@
 from datetime import datetime
 import re
-from typing import Any, Callable, Dict, List
+from typing import Callable, List, Pattern
 from urllib.parse import ParseResult
 
 from bs4 import BeautifulSoup, Tag
+
+from Extractor.extractor_utils import get_tag_transform, get_text_transform
 
 LINE_SEPARATOR = "\n"
 
@@ -50,9 +52,18 @@ def article_content_transform(
     return transform
 
 
+authors_sub = re.compile(
+    r"(autor\/ři|autoři|autori|autor|authors|author):?", re.IGNORECASE
+)
+
+author_not_match = re.compile(r"foto:?", re.IGNORECASE)
+
+
 def author_transform(author: str):
+    author = authors_sub.sub("", author)
     authors = author.split(",")
     authors = text_unifications_transform(authors)
+    authors = list(filter(lambda x: not author_not_match.search(x), authors))
     return authors
 
 
@@ -82,7 +93,7 @@ def must_not_exist_filter(soup: BeautifulSoup, filter_list: List[str]):
     return True
 
 
-date_bloat = re.compile("DNES|(AKTUALIZOVÁNO .*)", re.IGNORECASE)
+date_bloat = re.compile(r"DNES|(\(?AKTUALIZOVÁNO)", re.IGNORECASE)
 
 
 def format_date_transform(format: str):
@@ -172,3 +183,79 @@ def comments_num_transform(text: str):
 
 def category_transform(category: str):
     return text_unification_transform(category)
+
+
+hours_minutes = re.compile(r"(\d+):(\d+)")
+
+
+def date_complex_extract(
+    soup: BeautifulSoup,
+    date_css: str | List[str],
+    full_date_format: str | List[str],
+    year_css: str | None = None,
+    year_regex: Pattern[str] | None = None,
+    no_year_date_format: str | None = None,
+    hours_minutes_with_fallback: bool = False,
+    fallback: datetime | None = None,
+    remove_day: bool = False,
+    cz_month: bool = False,
+    remove_additional_info: bool = False,
+    custom_cleaner: Callable[[str], str] | None = None,
+) -> datetime | None:
+    if isinstance(date_css, str):
+        date_css = [date_css]
+    date_tag = None
+    for date_selectors in date_css:
+        date_tag = get_tag_transform(date_selectors)(soup)
+        if date_tag is not None:
+            break
+
+    if date_tag is None:
+        return None
+    date_str = get_text_transform(date_tag)
+    if remove_additional_info:
+        date_str = date_str.split("-")[0]
+    if remove_day:
+        date_str = remove_day_transform(date_str)
+
+    if custom_cleaner is not None:
+        date_str = custom_cleaner(date_str)
+
+    if cz_month:
+        date_str = cz_date_transform(date_str)
+
+    if isinstance(full_date_format, str):
+        full_date_format = [full_date_format]
+
+    date = None
+    for date_format in full_date_format:
+        date = format_date_transform(date_format)(date_str)
+        if date is not None:
+            return date
+
+    year = None
+    if (
+        no_year_date_format is not None
+        and year_css is not None
+        and year_regex is not None
+    ):
+        date = format_date_transform(no_year_date_format)(date_str)
+        year_tag = get_tag_transform(year_css)(soup)
+        if year_tag is not None:
+            year_match = year_regex.search(get_text_transform(year_tag))
+            if year_match is not None:
+                try:
+                    year = int(year_match.group("year"))
+                except ValueError:
+                    pass
+
+    if date is not None and year is not None:
+        return date.replace(year=year)
+
+    if hours_minutes_with_fallback and fallback:
+        hours_date = hours_minutes.search(date_str)
+        if hours_date is not None:
+            date = datetime.strptime(hours_date.group(0), "%H:%M")
+            return fallback.replace(hour=date.hour, minute=date.minute)
+
+    return fallback

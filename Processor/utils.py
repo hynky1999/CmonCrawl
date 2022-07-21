@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 from datetime import datetime
+import logging
 from typing import Any, Dict
 from urllib.parse import urlparse
 
@@ -30,3 +31,24 @@ class PipeMetadata:
 
     def __post_init__(self):
         self.url_parsed = urlparse(self.domain_record.url)
+
+
+metadata_logger = logging.getLogger("metadata_logger")
+metadata_logger.setLevel(logging.INFO)
+handler = logging.StreamHandler()
+handler.setFormatter(
+    logging.Formatter(
+        "%(asctime)s - %(filename)s:%(lineno)d : %(levelname)s - %(message)s -> ADD_INFO: %(domain_record)s"
+    )
+)
+metadata_logger.addHandler(handler)
+
+all_purpose_logger = logging.getLogger("all_purpose_logger")
+metadata_logger.setLevel(logging.INFO)
+handler = logging.StreamHandler()
+handler.setFormatter(
+    logging.Formatter(
+        "%(asctime)s - %(filename)s:%(lineno)d - %(levelname)s - %(message)s"
+    )
+)
+all_purpose_logger.addHandler(handler)

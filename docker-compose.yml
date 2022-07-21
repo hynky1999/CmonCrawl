@@ -12,23 +12,23 @@ services:
 
   producer-seznamzpravy.cz:
     build: ./Aggregator
-    container_name: "seznamzpravy"
     command: "seznamzpravy.cz"
     depends_on:
       - consumer
 
   producer-idnes.cz:
     build: ./Aggregator
-    container_name: "idnescz"
     command: "idnes.cz"
     depends_on:
       - consumer
 
   consumer:
     build: ./Processor
-    container_name: "consumer"
+    args: 
     volumes:
       - ./output:/app/output:z
+    deploy:
+      replicas: 1
     depends_on:
       - artemis
 

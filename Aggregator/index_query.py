@@ -14,7 +14,12 @@ from aiohttp import ClientError, ClientSession, ContentTypeError
 import asyncio
 import random
 
-ALLOWED_ERR_FOR_RETRIES = [500, 502, 503]
+ALLOWED_ERR_FOR_RETRIES = [500, 502, 503, 504]
+
+logging.basicConfig(
+    format="%(asctime)s - %(filename)s:%(lineno)d - " "%(levelname)s - %(message)s",
+    level="INFO",
+)
 
 
 @dataclass
@@ -110,7 +115,6 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         exc_val: BaseException | None,
         exc_tb: TracebackType | None = None,
     ) -> IndexAggregator:
-        print("CLOSING")
         return await self.aclose(exc_type=exc_type, exc_val=exc_val, exc_tb=exc_tb)
 
     @staticmethod
@@ -160,6 +164,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         cdx_server: str,
         domain: str,
         page_size: int | None = None,
+        retry: int = 0,
     ) -> Tuple[int, int]:
         params: Dict[str, str | int] = {
             "showNumPages": "true",
@@ -171,7 +176,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         if page_size is not None:
             params["page_size"] = page_size
         r_json = await IndexAggregator.__retrieve(
-            client, domain, cdx_server, params, "text/x-ndjson"
+            client, domain, cdx_server, params, "text/x-ndjson", retry=retry
         )
         return r_json[0].get("pages", 0), r_json[0].get("pageSize", 0)
 
@@ -274,7 +279,10 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
                 for i in range(self.__max_retry):
                     try:
                         pages, _ = await IndexAggregator.get_number_of_pages(
-                            self.__client, next_crawl.cdx_server, next_crawl.domain
+                            self.__client,
+                            next_crawl.cdx_server,
+                            next_crawl.domain,
+                            retry=i,
                         )
                         logging.info(
                             f"Succeeded to get number of pages = {pages} of {next_crawl.domain} from {next_crawl.cdx_server}"

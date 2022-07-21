@@ -1,4 +1,3 @@
-import logging
 from typing import Any, Callable, Dict, List
 
 from bs4 import BeautifulSoup
@@ -6,14 +5,14 @@ from ArticleUtils.article_utils import must_exist_filter, must_not_exist_filter
 from Extractor.extractor import BaseExtractor
 from Extractor.extractor_utils import combine_dicts, extract_transform
 
-from utils import PipeMetadata
+from utils import PipeMetadata, metadata_logger
 
 # All keys are required if value if true then the extracted value must be non None
 REQUIRED_FIELDS = {
     "content": True,
     "headline": True,
     "author": True,
-    "brief": True,
+    "brief": False,
     "publication_date": False,
     "keywords": False,
     "category": False,
@@ -51,7 +50,14 @@ class ArticleExtractor(BaseExtractor):
 
     def extract_soup(self, soup: BeautifulSoup, metadata: PipeMetadata):
         extracted_dict = self.article_extract(soup, metadata)
-        if not self.check_required(extracted_dict, metadata):
+        if not self.check_required(extracted_dict, metadata, non_empty=True):
+            return None
+
+        author = extracted_dict.get("author", [])
+        if not isinstance(author, List) or len(author) == 0:
+            metadata_logger.warn(
+                "Empty author list", extra={"domain_record": metadata.domain_record}
+            )
             return None
 
         metadata.name = metadata.domain_record.url.replace("/", "_")
@@ -65,7 +71,10 @@ class ArticleExtractor(BaseExtractor):
 
     def filter_raw(self, response: str, metadata: PipeMetadata) -> bool:
         if metadata.http_header.get("http_response_code", 200) != 200:
-            logging.warn(f"Status: {metadata.http_header.get('http_response_code', 0)}")
+            metadata_logger.warn(
+                f"Invalid Status: {metadata.http_header.get('http_response_code', 0)}",
+                extra={"domain_record": metadata.domain_record},
+            )
             return False
 
         if self.custom_filter_raw(response, metadata) is False:
@@ -92,21 +101,38 @@ class ArticleExtractor(BaseExtractor):
 
         return True
 
-    def check_required(self, extracted_dict: Dict[Any, Any], metadata: PipeMetadata):
+    def check_required(
+        self, extracted_dict: Dict[Any, Any], metadata: PipeMetadata, non_empty=False
+    ):
         for key, value in REQUIRED_FIELDS.items():
             if key not in extracted_dict:
-                logging.warn(
+                metadata_logger.warn(
                     f"{self.__class__.__name__}: failed to extract {key}",
-                    extra={"metadata": metadata},
+                    extra={"domain_record": metadata.domain_record},
                 )
                 return False
+            extracted_val = extracted_dict[key]
+            if value:
+                if extracted_val is None:
+                    metadata_logger.warn(
+                        f"{self.__class__.__name__}: None for key: {key} is not allowed",
+                        extra={"domain_record": metadata.domain_record},
+                    )
+                    return False
 
-            if value and extracted_dict[key] is None:
-                logging.warn(
-                    f"{self.__class__.__name__}: None for key: {key} is not allowed",
-                    extra={"metadata": metadata},
-                )
-                return False
+                if non_empty:
+                    if isinstance(extracted_val, str) and extracted_val == "":
+                        metadata_logger.warn(
+                            f"{self.__class__.__name__}: empty string for key: {key} is not allowed",
+                            extra={"domain_record": metadata.domain_record},
+                        )
+                        return False
+                    if isinstance(extracted_val, list) and len(extracted_val) == 0:
+                        metadata_logger.warn(
+                            f"{self.__class__.__name__}: empty list for key: {key} is not allowed",
+                            extra={"domain_record": metadata.domain_record},
+                        )
+                        return False
         return True
 
     def article_extract(

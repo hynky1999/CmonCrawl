@@ -1,7 +1,7 @@
 from datetime import datetime
 import importlib.util
-import logging
 import os
+from pathlib import Path
 import sys
 import re
 from dataclasses import dataclass
@@ -9,6 +9,7 @@ from types import ModuleType
 from typing import Dict, List, Union
 
 from Extractor.extractor import BaseExtractor
+from utils import PipeMetadata, metadata_logger
 
 
 @dataclass
@@ -24,7 +25,7 @@ class Router:
         self.registered_routes: List[Route] = []
         self.modules: Dict[str, BaseExtractor] = {}
 
-    def load_module(self, module_path: str):
+    def load_module(self, module_path: Path):
         module_name = os.path.splitext(os.path.basename(module_path))[0]
         spec = importlib.util.spec_from_file_location(module_name, module_path)
         if spec is None:
@@ -44,11 +45,12 @@ class Router:
         self.modules[name] = extractor
 
     def load_modules(self, folder: str):
-        for path in os.listdir(folder):
-            if not path.endswith(".py"):
-                continue
+        for root, _, files in os.walk(folder):
+            for file in files:
+                if not file.endswith(".py"):
+                    continue
 
-            self.load_module(os.path.join(folder, path))
+                self.load_module(Path(root) / file)
 
     def register_route(
         self,
@@ -72,10 +74,13 @@ class Router:
 
         self.registered_routes.append(Route(name, regex_compiled, since, to))
 
-    def route(self, url: str, time: datetime) -> BaseExtractor:
+    def route(self, url: str, time: datetime, metadata: PipeMetadata) -> BaseExtractor:
         for route in self.registered_routes:
             for regex in route.regexes:
                 if regex.match(url) and route.since <= time and time < route.to:
-                    logging.debug(f"Routed {url} to {route.name}")
+                    metadata_logger.debug(
+                        f"Routed {url} to {route.name}",
+                        extra={"domain_record": metadata.domain_record},
+                    )
                     return self.modules[route.name]
         raise ValueError("No route found for url: " + url)

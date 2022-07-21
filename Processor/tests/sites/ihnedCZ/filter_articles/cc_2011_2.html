@@ -1,0 +1,885 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html xmlns:fb="http://www.facebook.com/2008/fbml">
+<head>
+<!-- developed by NTV AGE, s.r.o., http://www.ntvage.cz -->
+<!-- fe3, 0.0194 -->
+<title>iHNed.cz : Zpravodajský server Hospodářských novin</title>
+<meta content="text/html; charset=utf-8" http-equiv="content-type"/>
+<meta content="cs" http-equiv="content-language"/>
+<meta content="0" http-equiv="expires"/>
+<meta content="no-cache" http-equiv="pragma"/>
+<meta content="text/css" http-equiv="content-style-type"/>
+<meta content="text/javascript" http-equiv="content-script-type"/>
+<meta content="iHNed.cz - Zpravodajský server Hospodářských novin, vydavatelství ECONOMIA a.s." name="description"/>
+<meta content="iHNed, Hospodářské, noviny, zpravodajství, zprávy, články, domácí, česko, zahraniční, zahraničí, ekonomika, finance, počítače, věda, technika, kultura, sport, proč ne, komentáře, rozhovory, téma, obrazem, video, kurzy, blogy, cestování, reality, kariéra, počasí, TV program, Ekonom, M&amp;M, Marketing &amp; Media, Obchodní věstník, odborné tituly, investice, aktuálně, diskuze, online, předplatné, deník, týdeník, měsíčník, mobilní zpravodajství" name="keywords"/>
+<meta content="all: Economia, a.s." name="author"/>
+<meta content="© 2010 Economia, a.s." name="copyright"/>
+<link href="/css/09/000000.css" rel="stylesheet" type="text/css"/>
+<link href="/css/09/000000_hh.css" media="handheld" rel="stylesheet" type="text/css"/>
+<link href="http://ihned.cz/?p=000000_rss" rel="alternate" title="RSS.iHNed.cz" type="application/rss+xml"/>
+<link href="http://ihned.cz/img/_allwebs/favicon.ico" rel="shortcut icon"/>
+<link media="handheld" rel="alternate" xhref="http://m.ihned.cz"/>
+</head>
+<body bgcolor="white">
+<script src="http://ihned.cz/public/javascripts/jquery/jquery.js" type="text/javascript"></script>
+<script src="http://ihned.cz/adverredir/allwebs.js" type="text/javascript"></script>
+<div id="mereni"><div class="reklama"><!-- (C)2000-2008 Gemius SA - gemiusAudience / ihned.cz / HP iHNed -->
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+var pp_gemius_identifier = new String('cjWan88dt3.XqdvSlIYnpOV1DordAdu6ndYbZ_aP_m..Q7');
+//--><!]]>
+</script>
+<script src="http://ihned.cz/adverredir/xgemius.js" type="text/javascript"></script></div></div>
+<div id="r-leader"><span id="r-leader-ozn">reklama</span><div class="reklama"><!-- BBmedia one2many Pozice: ihned.cz(2059) / Homepage(1) / Leaderboard 1000x100(2) / (7) -->
+<div id="bmone2n-2059.1.2.7">
+<noscript><div style="display:inline"><a href="http://ad2.bbmedia.cz/please/redirect/2059/1/2/7/"><img alt="" height="0" src="http://ad2.bbmedia.cz/please/showit/2059/1/2/7/?typkodu=img" style="border-width:0" width="0"/></a></div></noscript>
+</div></div></div>
+<div id="ihned">
+<div id="logo"><h1><a href="http://iHNed.cz/" title="iHNed.cz"><span></span>iHNed.cz</a> ONLINE ZPRÁVY HOSPODÁŘSKÝCH NOVIN</h1></div>
+<div id="hmenu0">
+<a href="http://prihlaseni.ihned.cz/" id="hm0-l" onclick='$("#login").slideToggle(); this.blur(); return false;' rel="nofollow"><span id="hm0-lb"></span><span id="hm0-li">přihlášení </span><span id="hm0-lo">odhlášení </span></a>
+<a href="http://eol.ihned.cz/online-inzerce/" id="hm0-oi" rel="nofollow" target="_blank">online inzerce</a>
+<a href="http://m.ihned.cz/" rel="nofollow">mobilní verze</a> | <a href="http://os.ihned.cz/" rel="nofollow">obsahový servis</a> | <a href="http://ihned.cz/archivy" rel="nofollow">online archivy</a> | <a href="http://economia.ihned.cz/8/obsah-sekce/predplatne/" rel="nofollow" target="_blank" title="předplatné titulů economia">předplatné titulů economia</a> | <a href="http://benefitklub.ihned.cz/" rel="nofollow" target="_blank" title="economia benefitklub">benefitklub</a>
+		        <span><a href="http://rss.ihned.cz/" rel="nofollow">rss</a> | <a href="http://eol.ihned.cz/mobilni-zpravodajstvi/" rel="nofollow">mms</a> | <a href="http://eol.ihned.cz/mobilni-zpravodajstvi/" rel="nofollow">sms</a></span>
+</div>
+<div id="top1">
+<div id="login">
+<div id="logininfo" onclick="clearTimeout(liTimer); $(this).slideUp();"></div>
+<script language="JavaScript">
+				<!--
+					var intop_jlogin_cookiestring = document.cookie;
+					var intop_jlogin_cookieset = intop_jlogin_cookiestring.split(';');
+					var intop_jlogin_setsize = intop_jlogin_cookieset.length;
+					var intop_jlogin_login = '';
+					var intop_jlogin_credit = '';
+					var intop_jlogin_cookiepieces;
+					var intop_jlogin_login_exists = false;
+					var intop_jlogin_x = 0;
+
+					for (intop_jlogin_x = 1; (intop_jlogin_x < intop_jlogin_setsize); intop_jlogin_x++) {
+						intop_jlogin_cookiepieces = intop_jlogin_cookieset[intop_jlogin_x].split ('=');
+						if (intop_jlogin_cookiepieces[0].substring (0,1) == ' ') {
+				      intop_jlogin_cookiepieces[0] = intop_jlogin_cookiepieces[0].substring (1, intop_jlogin_cookiepieces[0].length);
+				    }
+						if(intop_jlogin_cookiepieces[0] == 'user_info[login]'){
+							intop_jlogin_login_exists = true;
+							intop_jlogin_login = intop_jlogin_cookiepieces[1];
+						}
+						if(intop_jlogin_cookiepieces[0] == 'user_info[credit]'){
+							intop_jlogin_credit = intop_jlogin_cookiepieces[1];
+						}
+						
+					}
+					if(intop_jlogin_login_exists == true) {
+						document.write('<style type="text/css">#toploginform,#hm0-li{display: none;} #hm0-lo{display: inline;}</style><div>Jste přihlášen jako:<br><br><a href="http://prihlaseni.ihned.cz/"><b>' + intop_jlogin_login + '</b></a><br><br>Máte: <a href="http://os.ihned.cz/index.php?p=o00000&shp[action]=overview&shp[group_id]=410" id="ik-nfo">' + intop_jlogin_credit + ' iKreditů</a><br><br><br class="s8"><a href="http://prihlaseni.ihned.cz/index.php?p=0R0000&login[logout]=1" class="l-sm">ODHLÁSIT SE</a></div>');
+					}else{
+						document.write('');
+						}
+				//-->
+			</script>
+<form action="http://prihlaseni.ihned.cz/" id="toploginform" method="post" name="login" onsubmit="toplogin();">
+					Nejste-li dosud registrován, pokračujte <a href="http://registrace.ihned.cz/" rel="nofollow">zde</a><br/>
+<span>Uživatelské jméno: <input id="l-nm" name="login[nick]" type="text" value=""/></span><br/>
+<span>Heslo: <input id="l-pw" name="login[pass]" type="password" value=""/></span><br/>
+<input class="l-sm" rel="nofollow" type="submit" value="PŘIHLÁSIT"/>
+<input name="login[login]" type="hidden" value="1"/>
+</form>
+</div> <div id="setHP"><a href="http://ihned.cz/" id="setHP-a" onclick="setAsHP(); return false;">Nastavit jako domovskou stránku</a></div>
+</div>
+<div id="top2">
+<a href="http://blog.ihned.cz/" id="top-bl" title="Blogy">blogy</a>
+<a href="http://video.ihned.cz/" id="top-vi" title="Video">video</a>
+<a href="http://animace.ihned.cz/" id="top-an" title="Animace">animace</a>
+<a href="http://obrazem.ihned.cz/" id="top-ob" title="Obrazem">obrazem</a>
+<a href="http://tv.ihned.cz/" id="top-tv" title="TV program">program</a>
+<a href="http://pocasi.ihned.cz/" id="top-po" title="Počasí">počasí</a>
+<div id="search-bg">
+<form action="http://www.iHNed.cz/index.php" id="cse-search-box" style="margin: 0; padding: 0">
+<input class="search-input-bg" name="q" onfocus="if(this.value=='Vyhledat...'){this.value=''}" size="20" type="text" value="Vyhledat...">
+<input alt="Hledat" class="search-submit-bg" name="sa" src="http://iHNed.cz/img/0/0_hp09/search-submit.gif" type="image" value="Hledat"/>
+<input name="cof" type="hidden" value="FORID:11">
+<input name="ie" type="hidden" value="win-1250">
+<div class="radio">
+<input name="p" type="hidden" value="000000_searchg"/>
+<input checked="checked" name="cx" type="radio" value="007717710776052573340:fsxkjo1hvxe"/><label for="hn"> ve zpravodajství</label>
+			
+			  <input name="cx" type="radio" value="partner-pub-7565130797885437:a131k5-vsj2"><label for="ihned"> na iHNed.cz    <a class="nah" href="http://vyhledavani.ihned.cz/" rel="nofollow">rozšířené vyhledávání</a></label>
+</input></div>
+</input></input></input></form>
+</div>
+</div>
+<div id="hmenu1">
+<a href="http://ihned.cz/" id="hm1-hp" title="iHNed.cz">Úvodní stránka</a>
+<a href="http://ihned.cz/" id="hm1-ih" title="iHNed.cz">iHNed.cz</a>
+<a href="http://hn.ihned.cz/" id="hm1-hn" title="Hospodářské noviny">Hospodářské noviny</a>
+<a href="http://respekt.ihned.cz/" id="hm1-rs" title="Respekt">Respekt</a>
+<a href="http://ekonom.ihned.cz/" id="hm1-ek" title="Ekonom">Ekonom</a>
+<a href="http://mam.ihned.cz/" id="hm1-mm" title="Marketing&amp;Media">M<span>arketing</span>&amp;M<span>edia</span></a>
+<a href="http://ov.ihned.cz/" id="hm1-ov" title="Obchodní věstník">Obchodní věstník</a>
+<a href="http://investice.ihned.cz/" id="hm1-iv" title="Investice">Investice</a>
+<a href="http://finweb.ihned.cz/" id="hm1-fw" title="Finance">FinWeb</a>
+<a href="http://kariera.ihned.cz/" id="hm1-kw" title="Kariéra">KarieraWeb</a>
+<a href="http://reality.ihned.cz/" id="hm1-rl" title="Reality">Reality</a>
+<a href="http://odbornemesicniky.ihned.cz/" id="hm1-om" title="Odborné měsíčníky">Odborné měsíčníky</a>
+</div>
+<div id="hmenu2">
+<a href="http://domaci.ihned.cz/" id="hm2-do" title="Domácí zpravodajství">Domácí</a>
+<a href="http://zahranicni.ihned.cz/" id="hm2-za" title="Zahrniční zpravodajství">Zahraniční</a>
+<a href="http://ekonomika.ihned.cz/" id="hm2-ek" title="Ekonomika">Ekonomika</a>
+<a href="http://finance.ihned.cz/" id="hm2-fi" title="Finance">Finance</a>
+<a href="http://digiweb.ihned.cz/" id="hm2-dw" title="Počítače, věda, technika">Digi a věda</a>
+<a href="http://kultura.ihned.cz/" id="hm2-ku" title="Kultura">Kultura</a>
+<a href="http://sport.ihned.cz/" id="hm2-sp" title="Sport">Sport</a>
+<a href="http://komentare.ihned.cz/" id="hm2-ko" title="Komentáře">Komentáře</a>
+<a href="http://rozhovory.ihned.cz/" id="hm2-ro" title="Rozhovory">Rozhovory</a>
+<a href="http://cestovani.ihned.cz/" id="hm2-ce" title="Cestování">Cestování</a>
+<a href="http://auto.ihned.cz/" id="hm2-am" title="Auto">Auto</a>
+<a href="http://jidlo.ihned.cz/" id="hm2-ji" title="Jídlo">Jídlo</a>
+<a href="http://ihned.cz/ankety/" id="hm2-ak" rel="nofollow">Ankety</a>
+</div>
+<div id="main">
+<div class="col12">
+<div class="otv">
+<div class="title"><a href="http://Domaci.iHNed.cz/c1-45344440-pitr-se-poprve-ozval-bal-se-o-zivot-proto-se-pry-ukryl-ve-svycarsku">Pitr se poprvé ozval. Bál se o život, proto se prý ukryl ve Švýcarsku</a></div>
+<div class="img"><a href="http://Domaci.iHNed.cz/c1-45344440-pitr-se-poprve-ozval-bal-se-o-zivot-proto-se-pry-ukryl-ve-svycarsku"><img alt="Tomáš Pitr" height="195" src="http://img.ihned.cz/attachment.php/240/26648240/OnA29UWuC1MfxRrcj8EJmKB0QSyp6Vew/Tom___Pitr_295x195.jpg" title="Tomáš Pitr" width="295"/></a></div>
+<div class="txt">
+					Zatčený podnikatel vzkázal, že české úřady zajímá jeho majetek a důvěrné informace. <a class="m" href="http://Domaci.iHNed.cz/c1-45344440-pitr-se-poprve-ozval-bal-se-o-zivot-proto-se-pry-ukryl-ve-svycarsku">»»»</a><br/><br/>
+<ul><li><a href="http://HN.IHNED.CZ/c1-45330740-pitr-jako-politicke-sousto-pro-johna-i-paroubka">Pitr jako politické sousto. Pro Johna i Paroubka,</a></li><li><a href="http://HN.IHNED.CZ/c1-45310270-pitr-jako-mura-politiku">Jiří Leschtina: Pitr jako můra politiků</a></li><li><a href="http://Obrazem.iHNed.cz/c1-45314260-pitr-byl-na-uteku-v-zahranici-presto-si-za-prahou-budoval-luxusni-sidlo">Pitr byl na útěku v zahraničí, přesto si za Prahou budoval luxusní sídlo</a></li><li><a href="http://HN.IHNED.CZ/c1-45330730-vydani-svycarsko-byva-nedobytna-pevnost">Vydání: Švýcarsko bývá nedobytná pevnost</a></li></ul>
+</div>
+<p class="nfo">Domaci.iHNed.cz</p>
+</div>
+<div class="akt-nej-dis">
+<div class="zalozky">
+<a class="active" href="#" id="actual-a" onclick='box_show2("actual"); box_hide_now("readed"); box_hide_now("commented"); set_style("actual-a", "active"); set_style("readed-a", "unact-l"); set_style("commented-a", "unact-r"); this.blur(); return false;'>Aktuálně</a>
+<a class="unact-l" href="#" id="readed-a" onclick='box_show2("readed"); box_hide_now("actual"); box_hide_now("commented"); set_style("actual-a", "unact-l"); set_style("readed-a", "active"); set_style("commented-a", "unact-r"); this.blur(); return false;'>Nejčtenější</a>
+<a class="unact-r" href="#" id="commented-a" onclick='box_show2("commented"); box_hide_now("actual"); box_hide_now("readed"); set_style("actual-a", "unact-l"); set_style("readed-a", "unact-r"); set_style("commented-a", "active"); this.blur(); return false;'>Diskutované</a>
+</div>
+<div id="actual"><div><div>
+<p><span class="time">16:35</span><br/><a href="http://Obrazem.iHNed.cz/c1-45343520-ve-studiu-miramax-se-natacely-nezapomenutelne-filmy-presvedcte-se">Ve studiu Miramax se natáčely nezapomenutelné filmy. Přesvědčte se</a></p>
+<p><span class="time">16:31</span><br/><a href="http://Sport.iHNed.cz/c1-45344420-oba-patecni-treninky-na-vc-madarska-ovladl-nemec-vettel">Oba páteční tréninky na VC Maďarska ovládl Němec Vettel</a></p>
+<p><span class="time">16:30</span><br/><a href="http://Domaci.iHNed.cz/c1-45344440-pitr-se-poprve-ozval-bal-se-o-zivot-proto-se-pry-ukryl-ve-svycarsku">Pitr se poprvé ozval. Bál se o život, proto se prý ukryl ve Švýcarsku</a></p>
+<p><span class="time">16:24</span><br/><a href="http://Ekonomika.iHNed.cz/c1-45343700-nova-hleda-noveho-generalniho-reditele-dvorak-uz-v-cele-stanice-neni">Nova hledá nového generálního ředitele, Dvořák už  v čele stanice není</a></p>
+</div></div>
+<div class="arc-next"><a class="m" href="/index.php?p=00000A">více »</a></div>
+</div>
+<div id="readed"><div><div>
+<ul>
+<li><a href="http://EKONOM.IHNED.CZ/c1-45099380-par-kliknuti-k-luxusu">Pár kliknutí k luxusu. Aneb jak vyzrát na předražené značkové zboží v Česku</a><br/><span>(37921x)</span></li> <li><a href="http://EKONOM.IHNED.CZ/c1-45099310-sokolik-babis-z-pruhonic">Vítejte v Babišicích. Aneb jak král českých zemědělců mění obec u Prahy</a><br/><span>(28245x)</span></li> <li><a href="http://Domaci.iHNed.cz/c1-45313630-tomas-pitr-symbol-propojeni-politiky-byznysu-a-podsveti">Kruh se uzavírá. Osudné chyby se Pitr dopustil už před 16 lety</a><br/><span>(19232x)</span></li> <li><a href="http://Animace.iHNed.cz/c1-45292190-kolik-snesete-piti-a-kdy-muzete-zase-ridit-navstivte-virtualni-bar">Kolik snesete pití a kdy můžete zase řídit? Navštivte virtuální bar</a><br/><span>(18999x)</span></li>
+</ul></div></div>
+<div class="arc-next"><a class="m" href="/index.php?p=00000C">více »</a></div>
+</div>
+<div id="commented"><div><div>
+<ul>
+<li><a href="http://Domaci.iHNed.cz/c1-45131620-zemrel-ten-treti-milan-paumer-bojoval-s-masiny-proti-komunistum">Zemřel ten třetí - Milan Paumer. Bojoval s Mašíny proti komunistům</a><br/><span>(774)</span></li> <li><a href="http://HN.IHNED.CZ/c1-45257710-potrat-jdete-jinam-rikaji-slovenkam">Potrat na Slovensku? Jděte jinam, říkají mnozí lékaři</a><br/><span>(574)</span></li> <li><a href="http://Zahranicni.iHNed.cz/c1-45172830-zacneme-proti-vam-svatou-jadernou-valku-varovala-severni-korea-usa">Začneme proti vám svatou jadernou válku, varovala Severní Korea USA</a><br/><span>(513)</span></li> <li><a href="http://Domaci.iHNed.cz/c1-45268020-josef-masin-se-rozmysli-zda-nakonec-prijede-na-paumeruv-pohreb">Josef Mašín se rozmýšlí, zda nakonec přijede na Paumerův pohřeb</a><br/><span>(331)</span></li>
+</ul></div></div>
+<div class="arc-next"><a class="m" href="/index.php?p=00000D">více »</a></div>
+</div>
+</div>
+<div class="col12a" style="font-size: 1px; height: 1px; overflow: hidden"> </div>
+<div class="top-news">
+<div id="l-7d"><a href="http://www.ihned.cz/index.php?p=00Z000" title="7 dní ve zprávách"><span></span>7 dní ve zprávách</a></div>
+<div id="top-news" onmouseout="topnews.on();" onmouseover="topnews.off();">
+<div class="prevnext"><img alt="&lt;" height="11" onclick="topnews.prev();" src="/img/_allwebs/arrows/arrow_l_06x11_gray.gif" title="Předchozí" width="6"/><img alt="&gt;" height="11" onclick="topnews.next();" src="/img/_allwebs/arrows/arrow_r_06x11_gray.gif" title="Další" width="6"/></div>
+<div class="zprava" id="zprava0">
+<a href="http://Ekonomika.iHNed.cz/c1-45341050-filmove-studio-kde-vzniklo-pulp-fiction-nebo-chicago-meni-majitele">Filmové studio, kde vzniklo Pulp Fiction nebo Chicago, mění majitele</a>
+</div>
+<div class="zprava" id="zprava1">
+<a href="http://Ekonomika.iHNed.cz/c1-45339740-cina-se-chlubi-jsme-pred-japonskem-nase-ekonomika-je-uz-druha-na-svete">Čína se chlubí: Jsme před Japonskem, naše ekonomika je už druhá na světě</a>
+</div>
+<div class="zprava" id="zprava2">
+<a href="http://Zahranicni.iHNed.cz/c1-45338290-clintonovi-vdavaji-dceru-na-miliony-vyjdou-kvetiny-vino-i-mobilni-wc">Clintonovi vdávají dceru: Na miliony vyjdou květiny, víno i mobilní WC</a>
+</div>
+<div class="zprava" id="zprava3">
+<a href="http://FinWeb.iHNed.cz/c1-45338560-domacnosti-dluzi-pres-bilion-korun-presto-si-berou-dalsi-uvery">Domácnosti dluží přes bilion korun, přesto si berou další úvěry</a>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+			<!--
+				topnews = new Rotator("topnews",500,20,"up",1,20,4,50,5000,"zprava");
+			//-->
+			</script>
+<div class="otv2345">
+<div class="otv2-5">
+<div class="img"><a href="http://Zahranicni.iHNed.cz/c1-45343230-stovky-domu-ve-strednim-rusku-lehly-popelem-moskva-se-dusi-smogem"><img alt="Centrální Rusko trápí požáry" height="122" src="http://img.ihned.cz/attachment.php/10/26647010/ob47CWg16u2lqhO3nFHdPmABvGe9zNTR/putin-pozary_185x122.jpg" title="Centrální Rusko trápí požáry" width="185"/></a></div>
+<a class="tit2" href="http://Zahranicni.iHNed.cz/c1-45343230-stovky-domu-ve-strednim-rusku-lehly-popelem-moskva-se-dusi-smogem">Stovky domů ve středním Rusku lehly popelem, Moskva se dusí smogem</a>
+<span>Ruská vláda počítá škody po ničívých požárech. Některé vesnice po nich zmizely z mapy. <a class="m" href="http://Zahranicni.iHNed.cz/c1-45343230-stovky-domu-ve-strednim-rusku-lehly-popelem-moskva-se-dusi-smogem">»»»</a></span>
+<p class="nfo">Zahranicni.iHNed.cz</p>
+</div>
+<div class="otv2-5">
+<div class="img"><a href="http://Domaci.iHNed.cz/c1-45340220-kalousek-pro-hn-urednici-vysilaji-ministry-do-boje-za-sve-vlastni-zajmy"><img alt="Miroslav Kalousek " height="122" src="http://img.ihned.cz/attachment.php/620/26646620/FWMKOsHqdmnAgeSDVTwuty47bkoB0U95/Miroslav_Kalousek_185x122.jpg" title="Miroslav Kalousek " width="185"/></a></div>
+<a class="tit2" href="http://Domaci.iHNed.cz/c1-45340220-kalousek-pro-hn-urednici-vysilaji-ministry-do-boje-za-sve-vlastni-zajmy">Kalousek pro HN: Úředníci vysílají ministry do boje za své vlastní zájmy</a>
+<span>Šéf státní kasy hovoří o praxi při vyjednávání o škrtech. Podobá se scénáři známého... <a class="m" href="http://Domaci.iHNed.cz/c1-45340220-kalousek-pro-hn-urednici-vysilaji-ministry-do-boje-za-sve-vlastni-zajmy">»»»</a></span>
+<p class="nfo">Domaci.iHNed.cz</p>
+</div>
+<div class="otv2-5">
+<div class="img"><a href="http://Ekonomika.iHNed.cz/c1-45343700-nova-hleda-noveho-generalniho-reditele-dvorak-uz-v-cele-stanice-neni"><img alt="Ředitel TV Nova Petr Dvořák" height="122" src="http://img.ihned.cz/attachment.php/0/25644000/atv3458BCDEFIJLNOjk6Qdghpqr1S2Am/dvorak_185x122.jpg" title="Ředitel TV Nova Petr Dvořák" width="185"/></a></div>
+<a class="tit2" href="http://Ekonomika.iHNed.cz/c1-45343700-nova-hleda-noveho-generalniho-reditele-dvorak-uz-v-cele-stanice-neni">Nova hledá nového generálního ředitele, Dvořák už  v čele stanice není</a>
+<span>Personální zemětřesení v Nově pokračuje. Stanice hledá nového generálního ředitele.... <a class="m" href="http://Ekonomika.iHNed.cz/c1-45343700-nova-hleda-noveho-generalniho-reditele-dvorak-uz-v-cele-stanice-neni">»»»</a></span>
+<p class="nfo">Ekonomika.iHNed.cz</p>
+</div>
+<div class="otv2-5">
+<div class="img"><a href="http://Obrazem.iHNed.cz/c1-45338460-jak-by-mohla-vypadat-praha-kdyby-se-architektum-dala-volna-ruka"><img alt="Návrh na úpravu prostranství před Národním divadlem" height="122" src="http://img.ihned.cz/attachment.php/420/26645420/atuv3458BIKLOjk6PQWdfhpqrxz1Sw2A/navrh_ND_185x122.jpg" title="Návrh na úpravu prostranství před Národním divadlem" width="185"/></a></div>
+<a class="tit2" href="http://Obrazem.iHNed.cz/c1-45338460-jak-by-mohla-vypadat-praha-kdyby-se-architektum-dala-volna-ruka">Jak by mohla vypadat Praha, kdyby se architektům dala volná ruka</a>
+<span>Na 60 předních českých autorů, designerů nebo umělců dostalo jednoduché zadání úkolu:... <a class="m" href="http://Obrazem.iHNed.cz/c1-45338460-jak-by-mohla-vypadat-praha-kdyby-se-architektum-dala-volna-ruka">»»»</a></span>
+<p class="nfo">Obrazem.iHNed.cz</p>
+</div>
+</div>
+<div class="col12a"> </div>
+<div id="r-sfull">
+<span id="r-sfull-ozn">reklama</span><br/>
+<div class="reklama"><!-- BBelements one2many Pozice: ihned.cz(2059) / Homepage(1) / Rectangle 480x300(5) / PRčlánek(7) -->
+<div id="bmone2n-2059.1.5.7">
+<noscript><div style="display:inline"><a href="http://go.cz.bbelements.com/please/redirect/2059/1/5/7/"><img alt="" height="0" src="http://go.cz.bbelements.com/please/showit/2059/1/5/7/?typkodu=img" style="border-width:0" width="0"/></a></div></noscript>
+</div></div>
+</div>
+<div class="col12a" id="n1-2">
+<div class="mbox-l-label" id="n1"><a href="http://domaci.ihned.cz/">Domácí</a><span class="label-sp">  </span></div>
+<div class="mbox-r-label" id="n2"><a href="http://ekonomika.ihned.cz/">Ekonomika</a><span class="label-sp">  </span></div>
+</div>
+<div class="col12b">
+<div class="mbox-l">
+<div class="i"><a href="http://Domaci.iHNed.cz/c1-45340890-ministr-heger-kdo-pujde-ke-specialistovi-se-zranenim-ten-200-korun-platit-nebude"><img alt="lékař - vyšetření" height="48" src="http://img.ihned.cz/attachment.php/980/25255980/itu3458BCEGHIMOjcdfgrxyz01TU9AVm/doctor_examination_48x48.jpg" title="" width="48"/></a></div>
+<div>
+<a class="tit2" href="http://Domaci.iHNed.cz/c1-45340890-ministr-heger-kdo-pujde-ke-specialistovi-se-zranenim-ten-200-korun-platit-nebude">Ministr Heger: Kdo půjde ke specialistovi se zraněním, ten 200 korun platit nebude</a><br/>
+						ODS varuje, že další výjimky v poplatcích zatíží zdravotníky a systém bude nepřehledný.  <a class="m" href="http://Domaci.iHNed.cz/c1-45340890-ministr-heger-kdo-pujde-ke-specialistovi-se-zranenim-ten-200-korun-platit-nebude">»»»</a>
+</div>
+</div>
+<div class="mbox-r">
+<div class="i"><a href="http://HN.IHNED.CZ/c1-45330340-vyborne-lec-ukradene-reformy"><img alt="Vlastimil Tlustý po hlasování rakovnického místního sdružení o jeho zrušení členství v ODS." height="48" src="http://img.ihned.cz/attachment.php/740/21152740/MLRFd0OhnvAye7VUtEsGbuPHBr289xkD/Vlastimil_Tlusty_48x48.jpg" title="Vlastimil Tlustý po hlasování rakovnického místního sdružení o jeho zrušení členství v ODS." width="48"/></a></div>
+<div>
+<a class="tit2" href="http://HN.IHNED.CZ/c1-45330340-vyborne-lec-ukradene-reformy">Vlastimil Tlustý: Výborné, leč ukradené reformy. TOP 09 opisovala</a><br/>
+						Dnešní slavné reformy TOP 09 jsou ve skutečnosti okopírovaným ekonomickým programem ODS z let 2004 až 2006, tvrdí v... <a class="m" href="http://HN.IHNED.CZ/c1-45330340-vyborne-lec-ukradene-reformy">»»»</a>
+</div>
+</div>
+</div>
+<div class="col12c">
+<div class="mbox-l">
+<ul>
+<li><a href="http://HN.IHNED.CZ/c1-45330740-pitr-jako-politicke-sousto-pro-johna-i-paroubka">Pitr jako politické sousto, pro Johna i Paroubka. Nečas mírnil vášně</a></li>
+<li><a href="http://Domaci.iHNed.cz/c1-45337160-tajemnik-jakl-az-vaclav-klaus-opusti-funkci-bude-den-jako-kazdy-jiny">Tajemník Jakl: Až Václav Klaus opustí funkci? Bude den jako každý jiný</a></li>
+<li><a href="http://Domaci.iHNed.cz/c1-45339730-usa-vybuduji-v-cesku-centrum-pro-detekci-raket-meli-by-ho-obsluhovat-cesi">USA vybudují v Česku centrum pro detekci raket. Měli by ho obsluhovat Češi</a></li>
+<li><a href="http://Domaci.iHNed.cz/c1-45320560-on-line-vyssi-poplatek-u-specialistu-nebudou-muset-platit-vsichni">ON-LINE: Vyšší poplatek u specialistů nebudou muset platit všichni</a></li>
+</ul>
+</div>
+<div class="mbox-r">
+<ul>
+<li><a href="http://Ekonomika.iHNed.cz/c1-45341050-filmove-studio-kde-vzniklo-pulp-fiction-nebo-chicago-meni-majitele">Filmové studio, kde vzniklo Pulp Fiction nebo Chicago, mění majitele</a></li>
+<li><a href="http://Ekonomika.iHNed.cz/c1-45343420-americka-ekonomika-se-rozjizdi-pomaleji-nez-potrebuje">Americká ekonomika se rozjíždí pomaleji, než potřebuje</a></li>
+<li><a href="http://Ekonom.iHNed.cz/c1-45298970-ptali-jste-se-na-konec-evropy">On-line: Čeká Evropu krach, zkáza a zmar? Odpovídal ekonom Aleš Michl</a></li>
+<li><a href="http://HN.IHNED.CZ/c1-45329930-cez-i-eph-maji-sanci-ziskat-nemecky-steag">ČEZ i EPH mají šanci získat německý Steag</a></li>
+</ul>
+</div>
+</div>
+<div class="col12a" id="n3-4">
+<div class="mbox-l-label" id="n3"><a href="http://zahranicni.ihned.cz/">Zahraniční</a><span class="label-sp">  </span></div>
+<div class="mbox-r-label" id="n4"><a href="http://finweb.ihned.cz/">Finance</a><span class="label-sp">  </span></div>
+</div>
+<div class="col12b">
+<div class="mbox-l">
+<div class="i"><a href="http://Zahranicni.iHNed.cz/c1-45343510-greenpeace-cina-zkreslila-zpravy-o-uniku-ropy-do-more-ji-uniklo-sedesatkrat-vic"><img alt="" height="48" src="http://img.ihned.cz/attachment.php/30/26648030/aisv8CE7GHJMjl6PQfhprxyz0U29ARVm/pozar-ropa-cina_48x48.jpg" title="" width="48"/></a></div>
+<div>
+<a class="tit2" href="http://Zahranicni.iHNed.cz/c1-45343510-greenpeace-cina-zkreslila-zpravy-o-uniku-ropy-do-more-ji-uniklo-sedesatkrat-vic">Greenpeace: Čína zkreslila zprávy o úniku ropy. Do moře ji uniklo šedesátkrát víc</a><br/>
+						Ekologové kritizují Peking, že výrazně podhodnotil množství uniklé ropy. Greenpeace jej odvodili z počtu člunů... <a class="m" href="http://Zahranicni.iHNed.cz/c1-45343510-greenpeace-cina-zkreslila-zpravy-o-uniku-ropy-do-more-ji-uniklo-sedesatkrat-vic">»»»</a>
+</div>
+</div>
+<div class="mbox-r">
+<div class="i"><a href="http://FinWeb.iHNed.cz/c1-45338560-domacnosti-dluzi-pres-bilion-korun-presto-si-berou-dalsi-uvery"><img alt="" height="48" src="http://img.ihned.cz/attachment.php/920/26643920/aost345BDFHMNjPQWbhprxyz0TUw29Vm/dluhy-dluh-rodina-domacnost_48x48.jpg" title="" width="48"/></a></div>
+<div>
+<a class="tit2" href="http://FinWeb.iHNed.cz/c1-45338560-domacnosti-dluzi-pres-bilion-korun-presto-si-berou-dalsi-uvery">Domácnosti dluží přes bilion korun, přesto si berou další úvěry</a><br/>
+						Za poslední rok domácnosti zvýšily své zadlužení o 77,9 miliardy korun. Podniky jsou opatrnější.
+ <a class="m" href="http://FinWeb.iHNed.cz/c1-45338560-domacnosti-dluzi-pres-bilion-korun-presto-si-berou-dalsi-uvery">»»»</a>
+</div>
+</div>
+</div>
+<div class="col12c">
+<div class="mbox-l">
+<ul>
+<li><a href="http://Zahranicni.iHNed.cz/c1-45338290-clintonovi-vdavaji-dceru-na-miliony-vyjdou-kvetiny-vino-i-mobilni-wc">Clintonovi vdávají dceru: Na miliony vyjdou květiny, víno i mobilní WC</a></li>
+<li><a href="http://Zahranicni.iHNed.cz/c1-45324240-recko-kvuli-stavce-kolabuje-u-pump-chybi-benzin-v-obchodech-zbozi">Řecko kvůli stávce kolabuje. U pump chybí benzin, v obchodech zboží</a></li>
+<li><a href="http://Zahranicni.iHNed.cz/c1-45333620-drogova-valka-v-mexiku-ve-meste-velkem-jako-praha-se-za-rok-a-pul-postrilelo-4000-lidi">Drogová válka v Mexiku: Ve městě velkém jako Praha se za rok a půl postřílelo 4000 lidí</a></li>
+<li><a href="http://Zahranicni.iHNed.cz/c1-45320510-do-indie-se-vrati-gepardi-ekologove-je-privezou-z-afriky-a-iranu">Do Indie se vrátí gepardi. Ekologové je přivezou z Afriky a Íránu</a></li>
+</ul>
+</div>
+<div class="mbox-r">
+<ul>
+<li><a href="http://Ekonomika.iHNed.cz/c1-45339740-cina-se-chlubi-jsme-pred-japonskem-nase-ekonomika-je-uz-druha-na-svete">Čína se chlubí: Jsme před Japonskem, naše ekonomika je už druhá na světě</a></li>
+<li><a href="http://FinWeb.iHNed.cz/c1-45335890-ceske-sporitelne-klesl-v-pololeti-cisty-zisk-o-6-8-procenta">České spořitelně klesl v pololetí čistý zisk o 6,8 procenta</a></li>
+<li><a href="http://FinWeb.iHNed.cz/c1-45337660-honda-nahodila-turbo-zisk-po-krizi-vyletl-do-rekordnich-vysin">Honda nahodila turbo. Zisk po krizi vylétl do rekordních výšin</a></li>
+<li><a href="http://FinWeb.iHNed.cz/c1-45335630-erste-v-prvni-puli-roku-hlasi-slabsi-cisty-zisk-ale-vyssi-urokove-vynosy">Erste v první půli roku hlásí slabší čistý zisk, ale vyšší úrokové výnosy</a></li>
+</ul>
+</div>
+</div>
+<div class="col12a" id="n5-6">
+<div class="mbox-l-label" id="n5"><a href="http://blog.ihned.cz/">Blogy a debaty</a><span class="label-sp">  </span></div>
+<div class="mbox-r-label" id="n6"><a href="http://digiweb.ihned.cz/">Digi a věda</a><span class="label-sp">  </span></div>
+</div>
+<div class="col12b">
+<div class="mbox-l">
+<div class="i"><a href="http://Blog.iHNed.cz/economakou/c1-45319840-utikame-z-krize-to-sotva" style="background-image: url('http://Blog.iHNed.cz/img/Y/blogeri/EcoKa_48x48.jpg'); width: 48px; height: 48px; display:block;"></a></div>
+<div>
+<a class="tit2" href="http://Blog.iHNed.cz/economakou/c1-45319840-utikame-z-krize-to-sotva">Katerina Economakou: Utíkáme z krize? To sotva.</a><br/>
+						Každou minutu někdo v Athénách zvažuje, že je opustí. Životní náklady v hlavním městě jsou daleko vyšší než kdekoliv... <a class="m" href="http://Blog.iHNed.cz/economakou/c1-45319840-utikame-z-krize-to-sotva">»»»</a>
+</div>
+</div>
+<div class="mbox-r">
+<div class="i"><a href="http://DigiWeb.iHNed.cz/c1-45343450-tablety-vapniku-zvysuji-podle-vedcu-riziko-srdecniho-infarktu"><img alt="tableta kalcia" height="48" src="http://img.ihned.cz/attachment.php/630/26647630/stuv3458EF7HLOjkPWcefpqr1STw2ARV/calcium-supplements_48x48.jpg" title="" width="48"/></a></div>
+<div>
+<a class="tit2" href="http://DigiWeb.iHNed.cz/c1-45343450-tablety-vapniku-zvysuji-podle-vedcu-riziko-srdecniho-infarktu">Tablety vápníku zvyšují podle vědců riziko srdečního infarktu</a><br/>
+						Nejnovější výzkum ukázal, že tablety vápníku, které mnoho starších lidí užívá jako prevenci proti zlomeninám při léčbě... <a class="m" href="http://DigiWeb.iHNed.cz/c1-45343450-tablety-vapniku-zvysuji-podle-vedcu-riziko-srdecniho-infarktu">»»»</a>
+</div>
+</div>
+</div>
+<div class="col12c">
+<div class="mbox-l">
+<ul>
+<li><a href="http://Blog.iHNed.cz/brychta/c1-45320120-o-jakem-oziveni-se-presne-bavime">Jaroslav Brychta: O jakém oživení se přesně bavíme?</a></li>
+<li><a href="http://Blog.iHNed.cz/zemanova/c1-45319370-bude-radek-john-svedcit-na-kajinkove-svatbe">Irena Zemanová: Bude Radek John svědčit na Kajínkově svatbě?</a></li>
+<li><a href="http://Blog.iHNed.cz/machacek/c1-45318260-pitr-kajinek-showbyznys-a-justice">Jan Macháček: Pitr, Kajínek - showbyznys a justice</a></li>
+<li><a href="http://Blog.iHNed.cz/semin/c1-45301230-selhani-bratri-masinu-aneb-vzdy-je-treba-mirit-do-spravneho-terce">Michal Semín: Selhání bratří Mašínů aneb vždy je třeba mířit do správného terče</a></li>
+</ul>
+</div>
+<div class="mbox-r">
+<ul>
+<li><a href="http://DigiWeb.iHNed.cz/c1-45339480-firmy-roche-a-ibm-spolupracuji-na-vyvoji-technologie-rychlejsiho-a-levnejsiho-cteni-lidske-dna">Firmy Roche a IBM spolupracují na vývoji technologie rychlejšího a levnějšího čtení lidské DNA</a></li>
+<li><a href="http://DigiWeb.iHNed.cz/c1-45338190-googlu-nefungovalo-vyhledavani-v-cine-nemohly-za-to-ale-tamni-urady-jen-technika">Googlu nefungovalo vyhledávání v Číně. Nemohly za to ale tamní úřady, jen technika</a></li>
+<li><a href="http://DigiWeb.iHNed.cz/c1-45337090-na-marsu-by-mohly-byt-fosilie-dokumentujici-pritomnost-zivota-v-rane-fazi-vyvoje-planety">Na Marsu by mohly být fosílie dokumentující přítomnost života v rané fázi vývoje planety</a></li>
+<li><a href="http://DigiWeb.iHNed.cz/c1-45318390-facebook-ma-problem-udaje-o-100-milionech-uzivatelu-jsou-volne-ke-stazeni">Facebook má problém: Údaje o 100 milionech uživatelů jsou volně ke stažení</a></li>
+</ul>
+</div>
+</div>
+<div class="col12a" id="n7-8">
+<div class="mbox-l-label" id="n7"><a href="http://kultura.ihned.cz/">Kultura</a><span class="label-sp">  </span></div>
+<div class="mbox-r-label" id="n8"><a href="http://sport.ihned.cz/">Sport</a><span class="label-sp">  </span></div>
+</div>
+<div class="col12b">
+<div class="mbox-l">
+<div class="i"><a href="http://Obrazem.iHNed.cz/c1-45343520-ve-studiu-miramax-se-natacely-nezapomenutelne-filmy-presvedcte-se"><img alt="" height="48" src="http://img.ihned.cz/attachment.php/590/26647590/osuv5EFGHIKLNjkcdfgprxzSTUw2AVmn/letec_hn_48x48.jpg" title="" width="48"/></a></div>
+<div>
+<a class="tit2" href="http://Obrazem.iHNed.cz/c1-45343520-ve-studiu-miramax-se-natacely-nezapomenutelne-filmy-presvedcte-se">Ve studiu Miramax se natáčely nezapomenutelné filmy. Přesvědčte se</a><br/>
+						Přestože filmové studio Miramax už delší dobu nemělo komerční hit, v jeho studiích vznikaly filmy, které jdou jen těžko... <a class="m" href="http://Obrazem.iHNed.cz/c1-45343520-ve-studiu-miramax-se-natacely-nezapomenutelne-filmy-presvedcte-se">»»»</a>
+</div>
+</div>
+<div class="mbox-r">
+<div class="i"><a href="http://Sport.iHNed.cz/c1-45344420-oba-patecni-treninky-na-vc-madarska-ovladl-nemec-vettel"><img alt="Vettel" height="48" src="http://img.ihned.cz/attachment.php/180/24745180/osv345DE7JKLO6PWcdfghqxyz1SU9AVm/vettel_48x48.jpg" title="Vettel" width="48"/></a></div>
+<div>
+<a class="tit2" href="http://Sport.iHNed.cz/c1-45344420-oba-patecni-treninky-na-vc-madarska-ovladl-nemec-vettel">Oba páteční tréninky na VC Maďarska ovládl Němec Vettel</a><br/>
+						Němec Sebastian Vettel zajel nejlepší čas v obou pátečních trénincích na Velkou cenu Maďarska formule 1. <a class="m" href="http://Sport.iHNed.cz/c1-45344420-oba-patecni-treninky-na-vc-madarska-ovladl-nemec-vettel">»»»</a>
+</div>
+</div>
+</div>
+<div class="col12c">
+<div class="mbox-l">
+<ul>
+<li><a href="http://Kultura.iHNed.cz/c1-45339460-cameron-a-del-toro-budou-spolupracovat-na-3d-filmu-podle-hororove-klasiky">Cameron a del Toro budou spolupracovat na 3D filmu podle hororové klasiky</a></li>
+<li><a href="http://Kultura.iHNed.cz/c1-45319890-anketa-serial-promeny-prahy-konci-vyberte-ty-nejzajimavejsi">ANKETA: Seriál Proměny Prahy končí, vyberte ty nejzajímavější</a></li>
+<li><a href="http://Kultura.iHNed.cz/c1-45335660-cruise-a-diazova-v-kine-serviruji-prekvapive-lahodne-akcni-menu">Cruise a Diazová v kině servírují překvapivě lahodné akční menu</a></li>
+<li><a href="http://Obrazem.iHNed.cz/c1-45321040-umelci-nahledli-do-budoucnosti-jejich-prorocka-dila-vystavuji-v-doxu">Umělci nahlédli do budoucnosti. Jejich prorocká díla vystavují v DOXu</a></li>
+</ul>
+</div>
+<div class="mbox-r">
+<ul>
+<li><a href="http://Sport.iHNed.cz/c1-45342240-francouzsky-utocnik-anelka-se-bude-soudit-s-listem-l-equipe">Francouzský útočník Anelka se bude soudit s listem L'Equipe</a></li>
+<li><a href="http://Sport.iHNed.cz/c1-45343710-ceskeho-tenistu-hajka-smetl-na-turnaji-v-umagu-rakusan-melzer">Českého tenistu Hájka smetl na turnaji v Umagu Rakušan Melzer</a></li>
+<li><a href="http://Sport.iHNed.cz/c1-45340920-nemecky-fotbalista-khedira-prestoupil-do-realu-za-14-milionu-eur">Německý fotbalista Khedira přestoupil do Realu za 14 milionů eur</a></li>
+<li><a href="http://Sport.iHNed.cz/c1-45339630-ostepari-frydrych-a-vesely-postoupili-do-finale-dal-jdou-i-skrobakova-a-zalsky">Oštěpaři Frydrych a Veselý postoupili do finále, dál jdou i Škrobáková a Žalský</a></li>
+</ul>
+</div>
+</div>
+<div class="col12a"> </div>
+<div id="r-full">
+<div class="reklama"><!-- BBelements one2many Pozice: ihned.cz(2059) / Homepage(1) / Banner 468x60(6) / PRčlánek(7) -->
+<div id="bmone2n-2059.1.6.7">
+<noscript><div style="display:inline"><a href="http://go.cz.bbelements.com/please/redirect/2059/1/6/7/"><img alt="" height="0" src="http://go.cz.bbelements.com/please/showit/2059/1/6/7/?typkodu=img" style="border-width:0" width="0"/></a></div></noscript>
+</div></div>
+<span id="r-full-ozn">reklama</span>
+</div>
+<div class="mbox2-label" id="n9"><span class="label-sp">Nepřehlédněte  </span></div>
+<div class="mbox2"><div class="mbox2-in">
+<div class="mbox-l">
+<div class="i"><a href="http://Domaci.iHNed.cz/c1-45313630-tomas-pitr-symbol-propojeni-politiky-byznysu-a-podsveti"><img alt="" height="72" src="http://img.ihned.cz/attachment.php/30/13458030/Pl93Si6efnmsuE1NzGB2j4dpDKLqbF8o/pitr_tomas_117x72.jpg" title="" width="117"/></a></div>
+<div>
+<a class="tit2" href="http://Domaci.iHNed.cz/c1-45313630-tomas-pitr-symbol-propojeni-politiky-byznysu-a-podsveti">Kruh se uzavírá. Osudné chyby se Pitr dopustil už před 16 lety</a><br/>
+						Tříletý útěk miliardáře tento týden skončil, byl zatčen ve Švýcarsku. Není jasné, zda bude vydán do... <a class="m" href="http://Domaci.iHNed.cz/c1-45313630-tomas-pitr-symbol-propojeni-politiky-byznysu-a-podsveti">»»»</a>
+</div>
+</div>
+<div class="mbox-r">
+<ul>
+<li><a href="http://Domaci.iHNed.cz/c1-45299500-svycari-dopadli-pitra-na-druhy-pokus-poprve-prisli-pozde">Švýcaři dopadli Pitra na druhý pokus. Poprvé přišli pozdě</a></li>
+<li><a href="http://Zahranicni.iHNed.cz/c1-45289020-u-islamabadu-spadlo-letadlo-se-152-lidmi-zrejme-nikdo-neprezil">U Islámábádu spadlo letadlo se 152 lidmi, zřejmě nikdo nepřežil</a></li>
+<li><a href="http://Domaci.iHNed.cz/c1-45271890-necas-vzkazal-vv-kdo-neumi-setrit-nema-v-me-vlade-co-delat">Nečas vzkázal VV: Kdo neumí šetřit, nemá v mé vládě co dělat</a></li>
+<li><a href="http://HN.IHNED.CZ/c1-45216300-sefy-obrich-firem-ceka-horky-podzim">Úklid ve státních firmách: Šéfy obřích podniků čeká horký podzim</a></li>
+<li><a href="http://Domaci.iHNed.cz/c1-45223430-moravsky-krumlov-si-pripsal-prvni-bod-zakazal-stehovat-muchovu-epopej">Moravský Krumlov si připsal první bod. Zakázal stěhovat Muchovu epopej</a></li>
+</ul>
+</div>
+</div></div>
+<div class="pn-123"><div class="pn-in">
+<div class="pn">
+<div class="mbox2-label"><a href="http://cestovani.ihned.cz/">Cestování</a><span class="label-sp">  </span></div>
+<div class="ow">
+<div class="img"><a href="http://Cestovani.iHNed.cz/c1-45316810-cesi-uz-nemusi-vyplnovat-imigracni-formulare-v-letadlech-pri-ceste-do-usa"><img alt="Socha_Svobody__New_York_185x122.jpg" height="122" src="http://img.ihned.cz/attachment.php/220/26626220/av348CDEF7HKLMlPcdepqy01STUw9Amn/Socha_Svobody__New_York_185x122.jpg" title="Socha Svobody" width="185"/></a></div>
+<a class="tit2" href="http://Cestovani.iHNed.cz/c1-45316810-cesi-uz-nemusi-vyplnovat-imigracni-formulare-v-letadlech-pri-ceste-do-usa">Češi už nemusí vyplňovat imigrační formuláře v letadlech při cestě do USA</a>
+<span>Anglicky psané imigrační formuláře, s jejichž... <a class="m" href="http://Cestovani.iHNed.cz/c1-45316810-cesi-uz-nemusi-vyplnovat-imigracni-formulare-v-letadlech-pri-ceste-do-usa">»»»</a></span>
+<p class="nfo">Cestovani.iHNed.cz</p>
+</div>
+<ul>
+<li><a href="http://Cestovani.iHNed.cz/c1-45298910-mala-morska-vila-je-ted-v-kodani-jen-virtualne-turiste-ji-vidi-na-obrazovce">Malá mořská víla je teď v Kodani jen virtuálně. Turisté ji vidí na obrazovce</a></li>
+<li><a href="http://Cestovani.iHNed.cz/c1-45272790-marek-audy-objevil-nejdelsi-jeskyne-ve-venezuele-uz-dlouho-je-i-mistrovsky-foti">Marek Audy objevil nejdelší jeskyně ve Venezuele. Už dlouho je i mistrovsky fotí</a></li>
+<li><a href="http://Cestovani.iHNed.cz/c1-45236230-prvni-pruvodce-lonely-planet-radil-kde-v-kabulu-sehnat-hasisove-kolacky">První průvodce Lonely Planet radil, kde v Kábulu sehnat hašišové koláčky</a></li>
+<li><a href="http://Cestovani.iHNed.cz/c1-45160030-cesi-maji-nejradeji-sumavu-vychodni-moravu-ceskolipsko-a-jizerske-hory">Češi mají nejraději Šumavu, východní Moravu, Českolipsko a Jizerské hory</a></li>
+<li><a href="http://Cestovani.iHNed.cz/c1-45117330-nejlepsim-mestem-sveta-pro-cestovani-je-bangkok">Nejlepším městem světa pro cestování je Bangkok</a></li>
+</ul>
+</div>
+<div class="pn">
+<div class="mbox2-label"><a href="http://auto.ihned.cz/">Auto</a><span class="label-sp">  </span></div>
+<div class="ow">
+<div class="img"><a href="http://Auto.iHNed.cz/c1-45205380-jak-jezdi-nejuspornejsi-sedan-z-ingolstadtu-audi-a4-2-0-tdie-v-testu"><img alt="Audi A4 2.0 TDIe" height="122" src="http://img.ihned.cz/attachment.php/620/26557620/34GNWndMiopRPaj2HFAeQLm8xb5kztJy/audi_a4_06_185x122.jpg" title="Audi A4 2.0 TDIe" width="185"/></a></div>
+<a class="tit2" href="http://Auto.iHNed.cz/c1-45205380-jak-jezdi-nejuspornejsi-sedan-z-ingolstadtu-audi-a4-2-0-tdie-v-testu">Jak jezdí nejúspornější sedan z Ingolstadtu? Audi A4 2.0 TDIe v testu</a>
+<span>Vyzkoušeli js ekologické provedení modelu A4,... <a class="m" href="http://Auto.iHNed.cz/c1-45205380-jak-jezdi-nejuspornejsi-sedan-z-ingolstadtu-audi-a4-2-0-tdie-v-testu">»»»</a></span>
+<p class="nfo">Auto.iHNed.cz</p>
+</div>
+<ul>
+<li><a href="http://Ekonomika.iHNed.cz/c1-45299630-neni-to-vtip-nezname-auto-z-male-zeme-tatra-t-87-je-veteranem-roku-v-usa">Není to vtip. "Neznámé auto z malé země" Tatra T 87 je veteránem roku v USA</a></li>
+<li><a href="http://Auto.iHNed.cz/c1-45205070-kral-dodavek-v-testu-opel-movano-l2h2-100k-fwd">Král dodávek v testu: Opel Movano L2H2 100k FWD</a></li>
+<li><a href="http://Auto.iHNed.cz/c1-45204980-lexus-is-250-f-sport-v-testu-paket-ve-jmenu-sportu">Lexus IS 250 F-Sport v testu: paket ve jménu sportu</a></li>
+<li><a href="http://Auto.iHNed.cz/c1-45057620-range-rover-4-4tdv8-do-terenu-v-maximalnim-luxusu">Range Rover 4.4TDV8: do terénu v maximálním luxusu</a></li>
+<li><a href="http://Auto.iHNed.cz/c1-45055860-test-auta-ktere-jezdi-za-5-litru-ford-focus-econetic">Test auta, které jezdí za 5 litrů: Ford Focus ECOnetic</a></li>
+</ul>
+</div>
+<div class="pn">
+<div class="mbox2-label"><a href="http://jidlo.ihned.cz/">Jídlo</a><span class="label-sp">  </span></div>
+<div class="ow">
+<div class="img"><a href="http://Jidlo.iHNed.cz/c1-45297060-co-se-deje"><img alt="" height="122" src="http://img.ihned.cz/attachment.php/620/26610620/aistu34BCDEF7GJKLjklPQWcdxz1Sw2m/bedynky_185x122.jpg" title="" width="185"/></a></div>
+<a class="tit2" href="http://Jidlo.iHNed.cz/c1-45297060-co-se-deje">Bedýnky od farmářů se šíří Českem</a>
+<span>Co se děje. <a class="m" href="http://Jidlo.iHNed.cz/c1-45297060-co-se-deje">»»»</a></span>
+<p class="nfo">Jidlo.iHNed.cz</p>
+</div>
+<ul>
+<li><a href="http://EKONOM.IHNED.CZ/c1-45304390-frantiskanska-zvonkohra">Ubití františkánští bratři i dlouhá historie točení piva činí z pražské zahrádky U Pinkasů jedinečný podnik</a></li>
+<li><a href="http://HN.IHNED.CZ/c1-45137090-nez-se-uklidi-ze-stolu">Než se uklidí ze stolu</a></li>
+<li><a href="http://HN.IHNED.CZ/c1-45137080-zazracna-houba">Zázračná houba</a></li>
+<li><a href="http://EKONOM.IHNED.CZ/c1-45099050-pohodove-podloubi">Pohodové podloubí</a></li>
+<li><a href="http://Jidlo.iHNed.cz/c1-45047680-50-vynikajicich-receptu-napadita-jidla-ktera-pro-hn-uvarili-spickovi-cesti-sefkuchari">50 vynikajících receptů: Nápaditá jídla, která pro HN uvařili špičkoví čeští šéfkuchaři</a></li>
+</ul>
+</div>
+</div></div>
+<div class="col12a"> </div>
+</div>
+<div class="col3">
+<div id="r-big">
+<div class="reklama"><!-- BBmedia one2many Pozice: ihned.cz(2059) / Homepage(1) / Big square 250x250(3) / (7) -->
+<div id="bmone2n-2059.1.3.7">
+<noscript><div style="display:inline"><a href="http://ad2.bbmedia.cz/please/redirect/2059/1/3/7/"><img alt="" height="0" src="http://ad2.bbmedia.cz/please/showit/2059/1/3/7/?typkodu=img" style="border-width:0" width="0"/></a></div></noscript>
+</div></div>
+<span id="r-big-ozn">reklama</span>
+</div>
+<div id="r-ht1">
+<span id="r-ht1-ozn">reklama</span>
+<div class="reklama"><!-- BBmedia one2many Pozice: ihned.cz(2059) / Homepage(1) / Hypertext horni 250x100(7) / (7) -->
+<div id="bmone2n-2059.1.7.7">
+<noscript><div style="display:inline"><a href="http://ad2.bbmedia.cz/please/redirect/2059/1/7/7/"><img alt="" height="0" src="http://ad2.bbmedia.cz/please/showit/2059/1/7/7/?typkodu=img" style="border-width:0" width="0"/></a></div></noscript>
+</div></div>
+</div>
+<div id="r-ht2">
+<span id="r-ht2-ozn">reklama</span>
+<div class="reklama"><!-- BBmedia one2many Pozice: ihned.cz(2059) / Homepage(1) / Hypertext dolni 250x100(8) / (7) -->
+<div id="bmone2n-2059.1.8.7">
+<noscript><div style="display:inline"><a href="http://ad2.bbmedia.cz/please/redirect/2059/1/8/7/"><img alt="" height="0" src="http://ad2.bbmedia.cz/please/showit/2059/1/8/7/?typkodu=img" style="border-width:0" width="0"/></a></div></noscript>
+</div></div>
+</div>
+<div style="display: none; width: 300px; clear: both; float: left; margin: 15px 0;"><a href="http://finweb.ihned.cz/c1-39185090-doktor-zkaza-marc-faber-prijizdi-do-cech-bude-zive-na-ihned-cz" title="Exkluzivní videopřenos: Marc Faber na Fóru HN">
+<img alt="" border="0" height="80" src="http://img.ihned.cz/attachment.php/510/23010510/Ebhc7SGCFuMJK5V219zUqtnTIksOW08m/banner-marc-faber-videoprenos.jpg" title="" width="300"/>
+</a></div>
+<div class="rbox-label-video"><a href="http://Video.iHNed.cz/" id="hprva">Video</a><a href="http://animace.ihned.cz/" id="hpraa">Animace</a></div>
+<div id="hprvb">
+<div class="rbox-video" style="border-bottom: 0;">
+<div class="v-p">
+<a class="tit2" href="http://Video.iHNed.cz/c1-45166380-pro-zbozi-si-k-nam-chodi-i-vyznavaci-netradicniho-sexu" title="Pro zboží si k nám chodí i vyznavači netradičního sexu">Pro zboží si k nám chodí i vyznavači netradičního sexu</a>
+<p style="text-align: center"><a href="http://Video.iHNed.cz/c1-45166380-pro-zbozi-si-k-nam-chodi-i-vyznavaci-netradicniho-sexu" title="Pro zboží si k nám chodí i vyznavači netradičního sexu"><img alt="ohlávka na koně" src="http://img.ihned.cz/attachment.php/0/26540000/osv348CD7GHIJLMNk6WbehqryzST9Vmn/ohlavka_295x195.jpg" title="ohlávka na koně"/></a></p>
+</div>
+</div>
+<div class="rbox-video">
+<div>
+<div class="v-o">
+<div class="v-i"><a href="http://Video.iHNed.cz/c1-45320230-muz-s-cervenym-nosem-poznejte-americana-ktery-meni-ceske-zdravotnictvi" title="Muž s červeným nosem: Poznejte Američana, který mění české zdravotnictví"><img alt="Gary Edwards - zdravotní klaun" height="72" src="http://img.ihned.cz/attachment.php/820/26631820/iotuv345DFIKMklPWbdehpqrxz01TU9V/zdravotni-klaun_110x72.jpg" title="Gary Edwards - zdravotní klaun" width="110"/></a></div>
+<a class="tit2" href="http://Video.iHNed.cz/c1-45320230-muz-s-cervenym-nosem-poznejte-americana-ktery-meni-ceske-zdravotnictvi" title="Muž s červeným nosem: Poznejte Američana, který mění české zdravotnictví">Muž s červeným nosem: Poznejte Američana, který mění české zdravotnictví</a>
+<div class="r-c">čteno: 1635x   názorů: 2</div>
+</div>
+</div>
+<div class="rbox-next1"><a href="http://Video.iHNed.cz/">další videa</a></div>
+</div>
+</div><div id="hprab">
+<div class="rbox-video" style="border-bottom: 0;">
+<div class="v-p">
+<a class="tit2" href="http://Animace.iHNed.cz/c1-45292190-kolik-snesete-piti-a-kdy-muzete-zase-ridit-navstivte-virtualni-bar" title="Kolik snesete pití a kdy můžete zase řídit? Navštivte virtuální bar">Kolik snesete pití a kdy můžete zase řídit? Navštivte virtuální bar</a>
+<p style="text-align: center"><a href="http://Animace.iHNed.cz/c1-45292190-kolik-snesete-piti-a-kdy-muzete-zase-ridit-navstivte-virtualni-bar" title="Kolik snesete pití a kdy můžete zase řídit? Navštivte virtuální bar"><img alt="Alkohol" src="http://img.ihned.cz/attachment.php/810/26604810/otv345BEGIJKNOjkl6PQcefghx1SUw2A/alkohol-bar_295x195.jpg" title="Alkohol"/></a></p>
+</div>
+</div>
+<div class="rbox-video">
+<div>
+<div class="v-o">
+<div class="v-i"><a href="http://Animace.iHNed.cz/c1-45038300-pilot-jen-staci-rict-pripravte-se-na-nouzove-pristani-co-delat-jak-prezit" title="Pilot jen stačí říct: Připravte se na nouzové přistání. Co dělat? Jak přežít?"><img alt="Jak přežít pád letadla" height="72" src="http://img.ihned.cz/attachment.php/180/26480180/atv3458BD7HKMNjk6PWdfrxyz01TU9AR/letadloJakPrezitnehoduFotoWeb_110x72.jpg" title="Jak přežít pád letadla" width="110"/></a></div>
+<a class="tit2" href="http://Animace.iHNed.cz/c1-45038300-pilot-jen-staci-rict-pripravte-se-na-nouzove-pristani-co-delat-jak-prezit" title="Pilot jen stačí říct: Připravte se na nouzové přistání. Co dělat? Jak přežít?">Pilot jen stačí říct: Připravte se na nouzové přistání. Co dělat? Jak přežít?</a>
+<div class="r-c">čteno: 13344x   názorů: 2</div>
+</div>
+</div>
+<div class="rbox-next1"><a href="http://animace.ihned.cz/">další animace</a></div>
+</div>
+</div>
+<!-- template>0/000000/box_spec_akce</template -->
+<script type="text/javascript">
+			<!--
+				rbannery = new Rotator("rbannery",300,50,"up",1,50,6,50,8000,"rbanner");
+
+				$("DIV.otv2-5:contains('Obrazem.iHNed') SPAN").prepend('OBRAZEM: ');
+				$("DIV.otv2-5:contains('Video.iHNed') SPAN").prepend('VIDEO: ');
+				
+				var hprvflag = 1;
+				var hprvatim;
+				
+				var hprvl = (7+10)+''+(30+10)+'10:03';
+			
+				
+				var hpral = (7+10)+''+(28+10)+'17:21';
+			
+				
+				function hprv(){
+					$("#hpraa").css("background-image","url('/img/0/0_hp09/label-anim-unactive.gif')").css("color","#909090");
+					$("#hprva").css("background-image","url('/img/0/0_hp09/label-video.gif')").css("color","white");
+					$("#hprab").css("display","none");
+					$("#hprvb").css("display","inline");
+					hprvflag = 1;
+				}
+				
+				function hpra() {
+					$("#hprva").css("background-image","url('/img/0/0_hp09/label-video-unactive.gif')").css("color","#909090");
+					$("#hpraa").css("background-image","url('/img/0/0_hp09/label-anim.gif')").css("color","white");
+					$("#hprvb").css("display","none");
+					$("#hprab").css("display","inline");
+					hprvflag = 0;
+				}
+				function hprva() {
+					if (hprvflag) { hpra(); } else { hprv(); }
+					hprvatim = setTimeout("hprva()", 20000);
+				}
+				
+				if (hpral > hprvl){
+					hpra();
+				}
+				$("#hprva").mouseover(function(){ clearTimeout(hprvatim); hprv(); }).mouseout(function(){ hprvatim = setTimeout("hprva()", 20000); });
+				$("#hpraa").mouseover(function(){ clearTimeout(hprvatim); hpra(); }).mouseout(function(){ hprvatim = setTimeout("hprva()", 20000); });
+				
+				hprvatim = setTimeout("hprva()", 20000);
+			//-->
+			</script>
+<div id="r-nes" style="border-top: 15px solid white;">
+<div class="reklama"><!-- StartKód: go.ihned.bbelements.com 3.1 Ihned NESTANDARD(2069) / Kurzy(20) / banner 300x30(10) / PRčlánek(7) -->
+<script charset="windows-1250" type="text/javascript">
+/* <![CDATA[ */
+var bbs=screen,bbn=navigator,bbh;bbh='&ubl='+bbn.browserLanguage+'&ucc='+bbn.cpuClass+'&ucd='+bbs.colorDepth+'&uce='+bbn.cookieEnabled+'&udx='+bbs.deviceXDPI+'&udy='+bbs.deviceYDPI+'&usl='+bbn.systemLanguage+'&uje='+bbn.javaEnabled()+'&uah='+bbs.availHeight+'&uaw='+bbs.availWidth+'&ubd='+bbs.bufferDepth+'&uhe='+bbs.height+'&ulx='+bbs.logicalXDPI+'&uly='+bbs.logicalYDPI+'&use='+bbs.fontSmoothingEnabled+'&uto='+(new Date()).getTimezoneOffset()+'&uti='+(new Date()).getTime()+'&uui='+bbs.updateInterval+'&uul='+bbn.userLanguage+'&uwi='+bbs.width;
+if(typeof(bburlparam)=='string') { bbh+='&'+bburlparam; }
+if(typeof(bbkeywords)=='string') { bbh+='&keywords='+escape(bbkeywords); }
+document.write("<scr"+"ipt  charset='windows-1250' type='text/javascript' src='http://go.ihned.bbelements.com/please/showit/2069/20/10/7/?typkodu=js"+bbh+"&alttext=0&border=0&bust="+Math.random()+"&target=_blank'><"+"\/scr"+"ipt>");
+/* ]]> */
+</script>
+<noscript>
+<a href="http://go.ihned.bbelements.com/please/redirect/2069/20/10/7/" target="_blank"><img alt="" border="0" src="http://go.ihned.bbelements.com/please/showit/2069/20/10/7/?typkodu=img"/></a>
+</noscript>
+<!-- KonecKód: go.ihned.bbelements.com 3.1 -->
+</div>
+<span id="r-big-ozn">reklama</span>
+</div>
+<div class="t-k-s" title="Kurzovní lístek 30.07.2010 "> <div class="ksb-title"><a href="/index.php?p=006G00">Kurzy měn</a><div class="zavri"><img height="12" id="kurzy-obr" onclick='if (ktic==1) {this.src="/img/0/000000/close.gif"; ktic=0; kurzy.on(); box_show_hide("kurzy-in"); setCookie("ktic", "0", 365); } else { this.src="/img/0/000000/close_non.gif"; kurzy.off(); ktic=1; setCookie("ktic", "1", 365); box_hide_now("kurzy-in"); }' src="/img/0/000000/close.gif" width="12"/></div></div> <div class="ksb-in" id="kurzy-in"><div id="ticker-kurzy" onmouseout="kurzy.on()" onmouseover="kurzy.off()"> <table cellpadding="0" cellspacing="0">
+<tr id="kurz0" style="top: 0px">
+<td class="tc1"><span style='background: url("http://ihned.cz/img/finweb/vlajky/EUR.gif") 100% 50% no-repeat;'><a href="/index.php?p=006G00">EUR</a></span></td>
+<td class="tc2">24,790 Kč</td>
+<td class="tc3"><span class="change-up">0,162 %</span></td>
+</tr>
+<tr id="kurz1">
+<td class="tc1"><span style='background: url("http://ihned.cz/img/finweb/vlajky/USD.gif") 100% 50% no-repeat;'><a href="/index.php?p=006G00">USD</a></span></td>
+<td class="tc2">19,029 Kč</td>
+<td class="tc3"><span class="change-up">0,491 %</span></td>
+</tr>
+<tr id="kurz2">
+<td class="tc1"><span style='background: url("http://ihned.cz/img/finweb/vlajky/GBP.gif") 100% 50% no-repeat;'><a href="/index.php?p=006G00">GBP</a></span></td>
+<td class="tc2">29,695 Kč</td>
+<td class="tc3"><span class="change-up">0,413 %</span></td>
+</tr>
+<tr id="kurz3">
+<td class="tc1"><span style='background: url("http://ihned.cz/img/finweb/vlajky/JPY.gif") 100% 50% no-repeat;'><a href="/index.php?p=006G00">JPY</a></span></td>
+<td class="tc2">22,005 Kč</td>
+<td class="tc3"><span class="change-up">1,056 %</span></td>
+</tr>
+</table>
+</div></div> </div> <script language="javascript" type="text/javascript">	<!--		kurzy = new Rotator("kurzy", 230,15,"up",4,1,4,50,6000,"kurz");		var ktic = getCookie("ktic");		if (ktic==1) { kurzy.off(); box_hide_now("kurzy-in"); document.getElementById("kurzy-obr").src="/img/0/000000/close_non.gif"; }	//-->	</script>
+<div class="t-k-s" title="SPAD">
+<div class="ksb-title"><a href="http://ekonom.ihned.cz/index.php?p=40S000">SPAD</a><div class="zavri"><img height="12" id="spad-obr" onclick='if (stic==1) {this.src="/img/0/000000/close.gif"; stic=0; spad.on(); box_show_hide("spad-in"); setCookie("stic", "0", 1000); } else { this.src="/img/0/000000/close_non.gif"; spad.off(); stic=1; setCookie("stic", "1", 1000); box_hide_now("spad-in"); }' src="/img/0/000000/close.gif" width="12"/></div></div>
+<div class="ksb-in" id="spad-in"><div id="ticker-spad" onmouseout="spad.on()" onmouseover="spad.off()">
+<table cellpadding="0" cellspacing="0">
+<tr id="spadid0" style="top: 0px">
+<td class="tc1"><a href="http://ekonom.ihned.cz/index.php?p=40S000" target="_blank" title="ISIN: NL0006033375">AAA</a></td>
+<td class="tc2">17.81 Kč</td>
+<td class="tc3"><span class="change-down">-0.168 %</span></td>
+</tr>
+<tr id="spadid1">
+<td class="tc1"><a href="http://ekonom.ihned.cz/index.php?p=40S000" target="_blank" title="ISIN: BMG200452024">CETV</a></td>
+<td class="tc2">401.3 Kč</td>
+<td class="tc3"><span class="change-down">-0.273 %</span></td>
+</tr>
+<tr id="spadid2">
+<td class="tc1"><a href="http://ekonom.ihned.cz/index.php?p=40S000" target="_blank" title="ISIN: CZ0005112300">ČEZ</a></td>
+<td class="tc2">868.3 Kč</td>
+<td class="tc3"><span class="change-down">-0.595 %</span></td>
+</tr>
+<tr id="spadid3">
+<td class="tc1"><a href="http://ekonom.ihned.cz/index.php?p=40S000" target="_blank" title="ISIN: LU0259919230">ECM</a></td>
+<td class="tc2">179.57 Kč</td>
+<td class="tc3"><span class="change-up">1.527 %</span></td>
+</tr>
+<tr id="spadid4">
+<td class="tc1"><a href="http://ekonom.ihned.cz/index.php?p=40S000" target="_blank" title="ISIN: AT0000652011">ERSTE</a></td>
+<td class="tc2">766 Kč</td>
+<td class="tc3"><span class="change-down">-5.221 %</span></td>
+</tr>
+<tr id="spadid5">
+<td class="tc1"><a href="http://ekonom.ihned.cz/index.php?p=40S000" target="_blank" title="ISIN: CZ0008019106">KB</a></td>
+<td class="tc2">3688 Kč</td>
+<td class="tc3"><span class="change-down">-0.189 %</span></td>
+</tr>
+<tr id="spadid6">
+<td class="tc1"><a href="http://ekonom.ihned.cz/index.php?p=40S000" target="_blank" title="ISIN: NL0006282204">NWR</a></td>
+<td class="tc2">223.5 Kč</td>
+<td class="tc3"><span class="change-down">-0.887 %</span></td>
+</tr>
+<tr id="spadid7">
+<td class="tc1"><a href="http://ekonom.ihned.cz/index.php?p=40S000" target="_blank" title="ISIN: LU0122624777">ORCO</a></td>
+<td class="tc2">124 Kč</td>
+<td class="tc3"><span class="change-down">-0.249 %</span></td>
+</tr>
+<tr id="spadid8">
+<td class="tc1"><a href="http://ekonom.ihned.cz/index.php?p=40S000" target="_blank" title="ISIN: LU0275164910">PEGAS</a></td>
+<td class="tc2">433.1 Kč</td>
+<td class="tc3"><span class="change-down">-0.437 %</span></td>
+</tr>
+<tr id="spadid9">
+<td class="tc1"><a href="http://ekonom.ihned.cz/index.php?p=40S000" target="_blank" title="ISIN: CS0008418869">PM ČR</a></td>
+<td class="tc2">8802 Kč</td>
+<td class="tc3"><span class="change-down">-0.542 %</span></td>
+</tr>
+<tr id="spadid10">
+<td class="tc1"><a href="http://ekonom.ihned.cz/index.php?p=40S000" target="_blank" title="ISIN: CZ0009093209">O2 C.R.</a></td>
+<td class="tc2">433.4 Kč</td>
+<td class="tc3"><span class="change-up">0.301 %</span></td>
+</tr>
+<tr id="spadid11">
+<td class="tc1"><a href="http://ekonom.ihned.cz/index.php?p=40S000" target="_blank" title="ISIN: CZ0009091500">UNIPET</a></td>
+<td class="tc2">211 Kč</td>
+<td class="tc3"><span class="change-down">-0.659 %</span></td>
+</tr>
+<tr id="spadid12">
+<td class="tc1"><a href="http://ekonom.ihned.cz/index.php?p=40S000" target="_blank" title="ISIN: AT0000908504">VIG</a></td>
+<td class="tc2">911.5 Kč</td>
+<td class="tc3"><span class="change-down">-1.363 %</span></td>
+</tr>
+</table>
+</div></div>
+</div>
+<script language="javascript" type="text/javascript">
+	<!--
+		spad = new Rotator("spad", 230,15,"up",4,1,13,50,6000,"spadid");
+		var stic = getCookie("stic");
+		if (stic==1) { spad.off(); box_hide_now("spad-in"); document.getElementById("spad-obr").src="/img/0/000000/close_non.gif"; }
+	//-->
+	</script>
+<div class="rbox-label-foto"><a href="http://obrazem.ihned.cz/">Obrazem</a></div>
+<div class="rbox-foto">
+<script type="text/javascript">var fotoid = '45340420';</script>
+<div id="f45340420">
+<a class="g-i" href="http://Obrazem.iHNed.cz/c1-45340420-slavna-bounty-a-dalsi-historicke-koraby-si-daly-dostavenicko-v-minnesote" title="Slavná Bounty a další historické koráby si daly dostaveníčko v Minnesotě"><img alt="Prehlidka-lod Bounty" height="72" src="http://img.ihned.cz/attachment.php/820/26644820/ituv3458BCEFGIlPQbdefghxyz01Sw29/Prehlidka-lod_Bounty_110x72.jpg" title="Prehlidka-lod Bounty" width="110"/></a>
+<a class="tit2" href="http://Obrazem.iHNed.cz/c1-45340420-slavna-bounty-a-dalsi-historicke-koraby-si-daly-dostavenicko-v-minnesote" title="Slavná Bounty a další historické koráby si daly dostaveníčko v Minnesotě">Slavná Bounty a další historické koráby si daly dostaveníčko v Minnesotě</a>
+<p>Velkolepou přehlídku chystá na tento víkend americké městečko Duluth ve státě Minnesota. Na Hořejší jezero se...</p>
+<div class="r-c">čteno: 327x   názorů: 0</div>
+</div>
+<div class="hidden" id="f45314260">
+<a class="g-i" href="http://Obrazem.iHNed.cz/c1-45314260-pitr-byl-na-uteku-v-zahranici-presto-si-za-prahou-budoval-luxusni-sidlo" title="Pitr byl na útěku v zahraničí, přesto si za Prahou budoval luxusní sídlo"><img alt="Dům podnikatele Tomáše Pitra v Jesenici u Prahy" height="72" src="http://img.ihned.cz/attachment.php/450/26621450/ot8P1azc93hVH0j54RrpnIGdeAlQWS67/pitr_110x72.jpg" title="Dům podnikatele Tomáše Pitra v Jesenici u Prahy" width="110"/></a>
+<a class="tit2" href="http://Obrazem.iHNed.cz/c1-45314260-pitr-byl-na-uteku-v-zahranici-presto-si-za-prahou-budoval-luxusni-sidlo" title="Pitr byl na útěku v zahraničí, přesto si za Prahou budoval luxusní sídlo">Pitr byl na útěku v zahraničí, přesto si za Prahou budoval luxusní sídlo</a>
+<p>Ačkoli byl na útěku, podnikatel Tomáš Pitr údajně i ze zahraničí řídil svůj byznys v Česku. Přestavoval také...</p>
+<div class="r-c">čteno: 13545x   názorů: 4</div>
+</div>
+<div class="hidden" id="f45315930">
+<a class="g-i" href="http://Obrazem.iHNed.cz/c1-45315930-lijaky-zrejme-zpusobily-pad-airbusu-v-pakistanu-ted-komplikuji-i-patrani" title="Lijáky zřejmě způsobily pád airbusu v Pákistánu, teď komplikují i pátrání"><img alt="Pakistan-pad letadla" height="72" src="http://img.ihned.cz/attachment.php/460/26624460/aiotuv8BCDF7GIKNOj6Wbcefhpz1U9Vn/Pakistan-pad_letadla_110x72.jpg" title="Pakistan-pad letadla" width="110"/></a>
+<a class="tit2" href="http://Obrazem.iHNed.cz/c1-45315930-lijaky-zrejme-zpusobily-pad-airbusu-v-pakistanu-ted-komplikuji-i-patrani" title="Lijáky zřejmě způsobily pád airbusu v Pákistánu, teď komplikují i pátrání">Lijáky zřejmě způsobily pád airbusu v Pákistánu, teď komplikují i pátrání</a>
+<p>Pákistán drží státní smutek za 152 obětí středeční letecké havárie. Záchranáři zatím nalezli 115 těl, pátrání...</p>
+<div class="r-c">čteno: 629x   názorů: 0</div>
+</div>
+<div class="hidden" id="f45314250">
+<a class="g-i" href="http://Obrazem.iHNed.cz/c1-45314250-policejni-kontrola-tenhle-autobus-uz-na-trat-nevyjede-vzdyt-se-rozpada" title="Policejní kontrola: Tenhle autobus už na trať nevyjede, vždyť se rozpadá"><img alt="Policejní kontrola" height="72" src="http://img.ihned.cz/attachment.php/610/26621610/mOBQTRfWrGSjwlg5sknaAxpczqU8M3i2/Policejn__kontrola_110x72.jpg" title="Policejní kontrola" width="110"/></a>
+<a class="tit2" href="http://Obrazem.iHNed.cz/c1-45314250-policejni-kontrola-tenhle-autobus-uz-na-trat-nevyjede-vzdyt-se-rozpada" title="Policejní kontrola: Tenhle autobus už na trať nevyjede, vždyť se rozpadá">Policejní kontrola: Tenhle autobus už na trať nevyjede, vždyť se rozpadá</a>
+<p>Poněkud překvapeně vypadali ve čtvrtek ráno řidiči pražských autobusů u stanice metra Háje - čekala je...</p>
+<div class="r-c">čteno: 6109x   názorů: 0</div>
+</div>
+<div class="hidden" id="f45298780">
+<a class="g-i" href="http://Obrazem.iHNed.cz/c1-45298780-pivo-jinak-aneb-kdyz-studentum-pomaha-k-tvorbe-reklamni-slogan" title="Pivo jinak aneb Když studentům pomáhá k tvorbě reklamní slogan"><img alt="Umělecká díla inspirovaná pivem" height="72" src="http://img.ihned.cz/attachment.php/210/26614210/lVIsSCaO1G92LDMwuWK0xpnhoeQtAmfq/pivo_110x72.jpg" title="Umělecká díla inspirovaná pivem" width="110"/></a>
+<a class="tit2" href="http://Obrazem.iHNed.cz/c1-45298780-pivo-jinak-aneb-kdyz-studentum-pomaha-k-tvorbe-reklamni-slogan" title="Pivo jinak aneb Když studentům pomáhá k tvorbě reklamní slogan">Pivo jinak aneb Když studentům pomáhá k tvorbě reklamní slogan</a>
+<p>Pivo, pivo, pivo a k tomu několik desítek studentů ze tří ateliérů Ústavu umění a designu Západočeské...</p>
+<div class="r-c">čteno: 1689x   názorů: 0</div>
+</div>
+</div>
+<div class="rbox-foto">
+<div style="background-color: #F6F6F6;">
+<a class="next-gal" href="http://Obrazem.iHNed.cz/c1-45340420-slavna-bounty-a-dalsi-historicke-koraby-si-daly-dostavenicko-v-minnesote" onmouseover="box_hide_now('f'+fotoid); box_show2('f45340420'); fotoid='45340420';" title="Slavná Bounty a další historické koráby si daly dostaveníčko v Minnesotě"><img alt="Prehlidka-lod Bounty" height="48" src="http://img.ihned.cz/attachment.php/830/26644830/iostu35BDE7IKl6PQcdfgxy01SUw29AR/Prehlidka-lod_Bounty_48x48.jpg" title="Prehlidka-lod Bounty" width="48"/></a><a class="next-gal" href="http://Obrazem.iHNed.cz/c1-45314260-pitr-byl-na-uteku-v-zahranici-presto-si-za-prahou-budoval-luxusni-sidlo" onmouseover="box_hide_now('f'+fotoid); box_show2('f45314260'); fotoid='45314260';" title="Pitr byl na útěku v zahraničí, přesto si za Prahou budoval luxusní sídlo"><img alt="Dům podnikatele Tomáše Pitra v Jesenici u Prahy" height="48" src="http://img.ihned.cz/attachment.php/440/26621440/aiostv3CE7HIKLMkl6bcdfqrxy1STwRm/pitr_48x48.jpg" title="Dům podnikatele Tomáše Pitra v Jesenici u Prahy" width="48"/></a><a class="next-gal" href="http://Obrazem.iHNed.cz/c1-45315930-lijaky-zrejme-zpusobily-pad-airbusu-v-pakistanu-ted-komplikuji-i-patrani" onmouseover="box_hide_now('f'+fotoid); box_show2('f45315930'); fotoid='45315930';" title="Lijáky zřejmě způsobily pád airbusu v Pákistánu, teď komplikují i pátrání"><img alt="Pakistan-pad letadla" height="48" src="http://img.ihned.cz/attachment.php/470/26624470/otv5BE7GHIJLOjkl6Qcdhqrz01S2ARVn/Pakistan-pad_letadla_48x48.jpg" title="Pakistan-pad letadla" width="48"/></a><a class="next-gal" href="http://Obrazem.iHNed.cz/c1-45314250-policejni-kontrola-tenhle-autobus-uz-na-trat-nevyjede-vzdyt-se-rozpada" onmouseover="box_hide_now('f'+fotoid); box_show2('f45314250'); fotoid='45314250';" title="Policejní kontrola: Tenhle autobus už na trať nevyjede, vždyť se rozpadá"><img alt="Policejní kontrola" height="48" src="http://img.ihned.cz/attachment.php/600/26621600/Fj8zJrI6wTCQaDP0ogMvcUn7pmq2hs3e/Policejn__kontrola_48x48.jpg" title="Policejní kontrola" width="48"/></a><a class="next-gal" href="http://Obrazem.iHNed.cz/c1-45298780-pivo-jinak-aneb-kdyz-studentum-pomaha-k-tvorbe-reklamni-slogan" onmouseover="box_hide_now('f'+fotoid); box_show2('f45298780'); fotoid='45298780';" title="Pivo jinak aneb Když studentům pomáhá k tvorbě reklamní slogan"><img alt="Umělecká díla inspirovaná pivem" height="48" src="http://img.ihned.cz/attachment.php/200/26614200/p7ngljobU6GyBucSLVaW581eiOJ2H3zh/pivo_48x48.jpg" title="Umělecká díla inspirovaná pivem" width="48"/></a>
+</div>
+<div class="rbox-next2"><a href="http://obrazem.ihned.cz/">další galerie</a></div>
+</div>
+<div class="karieraweb-label"><a href="http://www.karieraweb.cz/" target="_blank"><img alt="www.KarieraWeb.cz" height="12" src="http://kariera.ihned.cz/img/q/iHNed_Kariera_small.gif" width="103"/></a></div><div class="karieraweb-box"><img alt="" src="http://kariera.ihned.cz/img/q/bg_allwebs_box-topline.gif"/><div class="kw-box-items"><a href="http://prace.ihned.cz/obchodniho-zastupce-pro-volny-prodej-pro-region-cechy/91853/nabidky/detail/" title="OBCHODNÍHO ZÁSTUPCE PRO VOLNÝ PRODEJ pro region Čechy">OBCHODNÍHO ZÁSTUPCE PRO VOLNÝ PRODEJ pro region Čechy</a><a href="http://prace.ihned.cz/kandidat-vhodny-na-pozici-clena-vrcholoveho-managementu/91852/nabidky/detail/" title="Kandidát vhodný na pozici člena vrcholového managementu">Kandidát vhodný na pozici člena vrcholového managementu</a><a href="http://prace.ihned.cz/key-account-manazer-account-manazer/91842/nabidky/detail/" title="KEY ACCOUNT MANAŽER / ACCOUNT MANAŽER">KEY ACCOUNT MANAŽER / ACCOUNT MANAŽER</a><a href="http://prace.ihned.cz/projektovy-manazer-do-projektove-kancelare/91841/nabidky/detail/" title="Projektový manažer do projektové kanceláře">Projektový manažer do projektové kanceláře</a></div><img alt="" src="http://kariera.ihned.cz/img/q/bg_allwebs_box-bottomline.gif"/></div>
+<div class="rbox-label"><a href="http://komentare.ihned.cz/">Komentáře</a><span>, </span><a href="http://rozhovory.ihned.cz/">Rozhovory</a><span class="label-sp">  </span></div>
+<div class="rbox">
+<div class="i"><a href="http://Domaci.iHNed.cz/c1-45320560-on-line-vyssi-poplatek-u-specialistu-nebudou-muset-platit-vsichni"><img alt="Leoš Heger" height="48" src="http://img.ihned.cz/attachment.php/650/26631650/iouv8BEFHIJKMO6Wdefqryz1STU29ARm/Leo__Heger_48x48.jpg" title="Leoš Heger" width="48"/></a></div>
+<div>
+<a class="tit2" href="http://Domaci.iHNed.cz/c1-45320560-on-line-vyssi-poplatek-u-specialistu-nebudou-muset-platit-vsichni">ON-LINE: Vyšší poplatek u specialistů nebudou muset platit všichni</a><br/>
+						Ministr zdravotnictví Leoš Heger odpovídal čtenářům iHNed.cz. <a class="m" href="http://Domaci.iHNed.cz/c1-45320560-on-line-vyssi-poplatek-u-specialistu-nebudou-muset-platit-vsichni">»»»</a>
+</div>
+</div>
+<div class="rbox">
+<ul>
+<li><a href="http://HN.IHNED.CZ/c1-45330810-99-slov">99 slov Martina Jašminského</a></li>
+<li><a href="http://HN.IHNED.CZ/c1-45330350-potize-malych-velkych-uspor">Julie Hrstková: Potíže malých velkých úspor</a></li>
+<li><a href="http://Blog.iHNed.cz/machacek/c1-45318260-pitr-kajinek-showbyznys-a-justice">Pitr, Kajínek - showbyznys a justice</a></li>
+</ul>
+</div>
+<div class="rbox-label"><a href="http://tema.ihned.cz/">Téma</a><span class="label-sp">  </span></div>
+<div class="rbox">
+<div class="i"><a href="http://Zahranicni.iHNed.cz/c1-45316390-o-vikendu-autem-k-mori-nejezdete-cekaji-se-nejhorsi-kolony-letni-sezony"><img alt="Kolona ve Svycarsku" height="48" src="http://img.ihned.cz/attachment.php/640/26625640/aotv3BE7IKLMNj6PWbefhqrx01SUw2RV/Kolona_ve_Svycarsku_48x48.jpg" title="Kolona ve Svycarsku" width="48"/></a></div>
+<div>
+<a class="tit2" href="http://Zahranicni.iHNed.cz/c1-45316390-o-vikendu-autem-k-mori-nejezdete-cekaji-se-nejhorsi-kolony-letni-sezony">O víkendu autem k moři nejezděte. Čekají se nejhorší kolony letní sezóny</a><br/>
+						UVNITŘ ANIMACE PRO ŘIDIČE Školákům z jižního Německa začínají prázdniny, v Itálii vypukne... <a class="m" href="http://Zahranicni.iHNed.cz/c1-45316390-o-vikendu-autem-k-mori-nejezdete-cekaji-se-nejhorsi-kolony-letni-sezony">»»»</a>
+</div>
+</div>
+<div class="rbox">
+<ul>
+<li><a href="http://Domaci.iHNed.cz/c1-45316040-kalousek-muze-setrit-i-jinde-stat-utraci-za-sochy-a-krmelce-pro-zvirata">Kalousek může šetřit i jinde. Stát utrácí za sochy a krmelce pro zvířata</a></li>
+<li><a href="http://FinWeb.iHNed.cz/c1-45314750-bankam-dosla-trpelivost-radeji-se-uz-pripravuji-na-odchod-statu-z-eurozony">Bankám došla trpělivost. Raději se už připravují na odchod státu z eurozóny</a></li>
+<li><a href="http://Ekonomika.iHNed.cz/c1-45299630-neni-to-vtip-nezname-auto-z-male-zeme-tatra-t-87-je-veteranem-roku-v-usa">Není to vtip. "Neznámé auto z malé země" Tatra T 87 je veteránem roku v USA</a></li>
+</ul>
+</div>
+<div class="rbox-label"><a href="/index.php?p=000600">Z našich titulů</a><span class="label-sp">  </span></div>
+<div class="rbox">
+<ul>
+<li><a href="http://MODERNIRIZENI.IHNED.CZ/c1-45298990-vyhnete-se-10-chybam-pri-prodeji-firmy">Vyhněte se 10 chybám při prodeji firmy</a></li>
+<li><a href="http://MODERNIRIZENI.IHNED.CZ/c1-45299330-facebook-v-praci-letos-uz-tolik-ne">Facebook v práci? Letos už tolik ne</a></li>
+<li><a href="http://Investice.iHNed.cz/c1-45317450-investicni-radce-prodejte-kupte-ponechte-si-29-7-2010">Investiční rádce: Prodejte, kupte, ponechte si - 29. 7. 2010</a></li>
+<li><a href="http://EKONOM.IHNED.CZ/c1-45304640-statni-osliku-otres-se">VZP kupuje za miliardu část firmy IZIP. Za elektronické zdravotní knížky zaplatí již podruhé</a></li>
+<li><a href="http://Investice.iHNed.cz/c1-45263230-usd-uzavira-slabe-pruraz-nad-1-30-se-zda-nevyhnutelny">USD uzavírá slabě, průraz nad 1.30 se zdá nevyhnutelný</a></li>
+<li><a href="http://MaM.IHNED.CZ/c1-45203570-vlastni-negativni-reklama-ma-uspech">Vlastní negativní reklama má úspěch</a></li>
+<li><a href="http://Investice.iHNed.cz/c1-45151550-makroekonomicke-shrnuti-a-dnesni-vysledky-stres-testu-bank">Makroekonomické shrnutí a dnešní výsledky stres testů bank</a></li>
+<li><a href="http://EKONOM.IHNED.CZ/c1-45099360-zisky-do-posledni-trisky">Zisky do poslední třísky</a></li>
+</ul>
+</div>
+<div class="rbox-label" id="nr-s"><span>Servis  </span></div>
+<div class="rbox-servis">
+<a href="http://ihned.cz/index.php?p=000000_news"></a>
+<form action="index.php?p=000000_news" method="post" name="iniHP_email_zpravy_form">
+						Každý den čerstvé zprávy ve Vaší schránce<br/>
+<div class="newsletter-p">
+<input class="buttono" type="submit" value="ODESLAT"/>
+<input class="policko" name="iniHP_email_zpravicky_all[email]" onfocus="if(this.value=='Zadejte e-mail...'){this.value=''}" type="text" value="Zadejte e-mail..."/>
+</div>
+<input name="iniHP_email_zpravicky_all[orders][1]" type="hidden" value="1"/>
+</form>
+</div>
+<div class="iphone"><a href="http://appshopper.com/news/hn-reader" title="Vyzkoušejte naši novou aplikaci pro iPhone"><img alt="Vyzkoušejte naši novou aplikaci pro iPhone" height="140" src="img/0/0_hp09/banner_iphone.jpg" width="300"/></a></div>
+<div style="cleanerface"> </div>
+<div class="fb-hp">
+<script src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php/cs_CZ" type="text/javascript"></script><script type="text/javascript">FB.init("563af38484b65ffb526b5ca8faaf2439");</script><fb:fan connections="" profile_id="93433992603" stream="" width="298"></fb:fan>
+</div>
+<div id="twitter"><a href="http://twitter.com/iHNed_zpravy
+" id="vogel">Sledujte zpravodajství iHNed.cz<br>na síti Twitter</br></a></div>
+<div class="rbox-servis2">
+<a href="http://ihned.cz/?p=000000_rss"><img alt="RSS" height="14" src="img/0/000000/servis-rss-xml.gif" width="36"/></a><a href="http://pda.ihned.cz/"><img alt="PDA" height="14" src="img/0/000000/servis-pda.gif" width="36"/></a><a href="http://ihned.cz/index.php?p=O40000"><img alt="MMS" height="14" src="img/0/000000/servis-mms.gif" width="36"/></a><a href="http://ihned.cz/index.php?p=O40000"><img alt="SMS" height="14" src="img/0/000000/servis-sms.gif" width="36"/></a>
+<br/>Kontakt: <a href="mailto:redakce@ihned.cz  ">redakce@ihned.cz</a>
+</div>
+</div>
+</div>
+<div id="banhn" style="clear: both; width: 1000px; padding: 5px 0;"><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://fpdownload.macromedia.com/get/flashplayer/current/swflash.cab" height="240" id="predplHN" width="1000">
+<param name="width" value="1000"/><param name="height" value="240"/><param name="quality" value="high"/>
+<param name="allowScriptAccess" value="always"/><param name="allowFullScreen" value="true"/>
+<param name="movie" value="http://ihned.cz/img/advert/2010/predplatneHN.swf"/>
+<embed align="middle" allowfullscreen="true" allowscriptaccess="always" height="240" loop="true" name="predplHN" play="true" pluginspage="http://www.adobe.com/go/getflashplayer" src="http://ihned.cz/img/advert/2010/predplatneHN.swf" type="application/x-shockwave-flash" width="1000"/>
+</object></div>
+<div id="foot">
+<div id="map">
+<span>Zpravodajství: </span><a href="http://ihned.cz/" rel="nofollow" title="iHNed.cz">Hlavní strana</a>,  <a href="http://domaci.ihned.cz/" rel="nofollow">Domácí</a>,  <a href="http://zahranicni.ihned.cz/" rel="nofollow">Zahraniční</a>,  <a href="http://ekonomika.ihned.cz/" rel="nofollow">Ekonomika</a>,  <a href="http://finweb.ihned.cz/" rel="nofollow">FinWeb</a>,  <a href="http://digiweb.ihned.cz/" rel="nofollow">DigiWeb</a>,  <a href="http://kultura.ihned.cz/" rel="nofollow">Kultura</a>,  <a href="http://cestovani.ihned.cz/" rel="nofollow">Cestování</a>,  <a href="http://sport.ihned.cz/" rel="nofollow">Sport</a>,  <a href="http://auto.ihned.cz/" rel="nofollow">Auto</a>,  <a href="http://jidlo.ihned.cz/" rel="nofollow">Jídlo</a>,  <a href="http://video.ihned.cz/" rel="nofollow">Video</a>,  <a href="http://blog.ihned.cz/" rel="nofollow">Blogy</a>,  <a href="http://kariera.ihned.cz/" rel="nofollow">KarieraWeb</a>,  <a href="http://investice.ihned.cz/" rel="nofollow">Investice</a>,  <a href="http://reality.ihned.cz/" rel="nofollow">Reality</a><br/>
+<br class="s8"/>
+<span>Deníky, týdeníky: </span><a href="http://hn.ihned.cz/" rel="nofollow">Deník Hospodářské noviny</a> s přílohami <a href="http://in.ihned.cz/" rel="nofollow">IN magazín</a>, <a href="http://vikend.ihned.cz/" rel="nofollow">Víkend</a>, <a href="http://exporter.ihned.cz/" rel="nofollow">Exportér</a>, <a href="http://proc-ne.ihned.cz/" rel="nofollow">Proč ne?!</a>, <a href="http://boutique.ihned.cz/" rel="nofollow">boutIQue</a>,  <a href="http://respekt.ihned.cz/" rel="nofollow">Týdeník Respekt</a>,  <a href="http://ekonom.ihned.cz/" rel="nofollow">Týdeník Ekonom</a>,  <a href="http://mam.ihned.cz/" rel="nofollow">Týdeník Marketing &amp; Media</a>,<br/>
+<span style="background: none;"> </span><a href="http://ov.ihned.cz/" rel="nofollow">Obchodní věstník</a><br/>
+<br class="s8"/>
+<span>Měsíčníky: </span><a href="http://bankovnictvi.ihned.cz/" rel="nofollow">Bankovnictví</a>,  <a href="http://financnimanagement.cz/" rel="nofollow">Finanční management</a>,  <a href="http://fpweb.ihned.cz/" rel="nofollow">Finanční poradce</a>,  <a href="http://managerweb.ihned.cz/" rel="nofollow">ManagerWeb</a>,  <a href="http://modernirizeni.ihned.cz/" rel="nofollow">Moderní řízení</a>,  <a href="http://pravniradce.ihned.cz/" rel="nofollow">Právní rádce</a>,  <a href="http://hrmanagement.ihned.cz/" rel="nofollow">HR management</a>,  <a href="http://trendmarketing.ihned.cz/" rel="nofollow">Trend Marketing</a>,  <a href="http://signmagazine.ihned.cz/" rel="nofollow">Sign</a>,  <a href="http://eregal.ihned.cz/" rel="nofollow">Regal</a>,<br/>
+<span style="background: none;"> </span><a href="http://sportawellness.ihned.cz/" rel="nofollow">Sport&amp;wellness</a>,  <a href="http://hotel-spa.ihned.cz/" rel="nofollow">Hotel &amp; spa</a>,  <a href="http://business-spotlight.ihned.cz/" rel="nofollow">Business Spotlight</a>,  <a href="http://stavitel.ihned.cz/" rel="nofollow">Stavitel</a>,  <a href="http://technik.ihned.cz/" rel="nofollow">Technik</a>,  <a href="http://moderniobec.ihned.cz/" rel="nofollow">Moderní obec</a>,  <a href="http://logistika.ihned.cz/" rel="nofollow">Logistika</a>,  <a href="http://odpady.ihned.cz/" rel="nofollow">Odpady</a><br/>
+<br class="s8"/>
+<span>Ostatní:  </span><a href="http://pocasi.ihned.cz/" rel="nofollow">Počasí</a>,  <a href="http://tv.ihned.cz/" rel="nofollow">TV</a>,  <a href="http://ihned.cz/mobil/" rel="nofollow">Zprávy na mobil</a>,  <a href="http://knihy.ihned.cz/" rel="nofollow">Knihy</a>,  <a href="http://ov.ihned.cz/souteze/" rel="nofollow">Veřejné soutěže</a>,  <a href="http://online.ihned.cz/" rel="nofollow">Online rozhovory</a>,  <a href="http://seminare.ihned.cz/" rel="nofollow">Semináře</a>,  <a href="http://corporate.ihned.cz/" rel="nofollow">Podniky informují</a>,  <a href="http://eshop.respekt.cz/" rel="nofollow">Respekt Eshop</a>,  <a href="http://hnonline.sk/" rel="nofollow">HNonline.sk</a><br/>
+<br class="s8"/>
+<span>Speciály:  </span><a href="http://fotbal.ihned.cz/" rel="nofollow">MS ve fotbale</a>,  <a href="http://kultura.ihned.cz/mff/" rel="nofollow">MFF Karlovy Vary</a><br/>
+</div>
+<div id="copy">
+<a href="http://eol.ihned.cz/copyright/" rel="nofollow">Copyright</a> © 1996-2010 <a href="http://economia.ihned.cz/" rel="nofollow">Economia, a.s.</a>, divize <a href="http://eol.ihned.cz/" rel="nofollow">Nová média</a>, člen <a href="http://www.uvdt.cz/" rel="nofollow">UVDT</a>, Sekce vydavatelů internetových titulů.  iHNed ISSN 1213-7693<br/>
+<a href="http://eol.ihned.cz/online-inzerce/" rel="nofollow">Informace o inzerci</a>, inzertní kontakt <a href="mailto:inzerce@ihned.cz">inzerce@ihned.cz</a>, redakční kontakt <a href="mailto:redakce@ihned.cz">redakce@ihned.cz</a>. Další kontakty <a href="http://eol.ihned.cz/kontakty-nova-media/" rel="nofollow">zde</a>.
+		</div>
+</div>
+</div>
+<div id="d-big-foto-bg"> </div><div id="d-big-foto"></div>
+<div id="r-sky-l"></div>
+<div id="r-sky"><span id="r-sky-ozn">reklama</span><div class="reklama"><!-- BBmedia one2many Pozice: ihned.cz(2059) / Homepage(1) / Skyscraper 120x600(9) / (7) -->
+<div id="bmone2n-2059.1.9.7">
+<noscript><div style="display:inline"><a href="http://ad2.bbmedia.cz/please/redirect/2059/1/9/7/"><img alt="" height="0" src="http://ad2.bbmedia.cz/please/showit/2059/1/9/7/?typkodu=img" style="border-width:0" width="0"/></a></div></noscript>
+</div></div></div>
+<script type="text/javascript">
+	set_xPos("ihned","r-sky", 999);
+	set_xPos("ihned","r-sky-l", -119);
+</script>
+<div class="reklama"><!-- BBmedia one2many code -->
+<script charset="windows-1250" src="http://ad2.bbmedia.cz/bb/bb_one2n.js?1195055724" type="text/javascript"></script>
+<script type="text/javascript">/* <![CDATA[ */ 
+bmone2n.addPosition('2059.1.3.7','','r-big','display:inline');
+//bmone2n.addPosition('2059.1.6.7','','r-full','display:inline');
+bmone2n.addPosition('2059.1.5.7','','r-sfull','display:inline');
+bmone2n.addPosition('2059.1.8.7','','r-ht2','display:inline');
+bmone2n.addPosition('2059.1.7.7','','r-ht1','display:inline');
+bmone2n.addPosition('2059.1.2.7','','r-leader','display:block');
+bmone2n.addPosition('2059.1.9.7','','r-sky','display:inline');
+bmone2n.addPosition('2059.1.10.7','','r-rectan-d','display:inline');
+bmone2n.getAd('ad2.bbmedia.cz','','');
+ /* ]]> */</script>
+<div id="bmone2t-2059.1.3.7" style="display:none"><script type="text/javascript">/* <![CDATA[ */ bmone2n.makeAd('2059.1.3.7'); /* ]]> */</script></div>
+<div id="bmone2t-2059.1.5.7" style="display:none"><script type="text/javascript">/* <![CDATA[ */ bmone2n.makeAd('2059.1.5.7'); /* ]]> */</script></div>
+<!--div id='bmone2t-2059.1.6.7' style='display:none'><script type='text/javascript'>/* <![CDATA[ */ bmone2n.makeAd('2059.1.6.7'); /* ]]> */</script></div-->
+<div id="bmone2t-2059.1.8.7" style="display:none"><script type="text/javascript">/* <![CDATA[ */ bmone2n.makeAd('2059.1.8.7'); /* ]]> */</script></div>
+<div id="bmone2t-2059.1.7.7" style="display:none"><script type="text/javascript">/* <![CDATA[ */ bmone2n.makeAd('2059.1.7.7'); /* ]]> */</script></div>
+<div id="bmone2t-2059.1.2.7" style="display:none"><script type="text/javascript">/* <![CDATA[ */ bmone2n.makeAd('2059.1.2.7'); /* ]]> */</script></div>
+<div id="bmone2t-2059.1.9.7" style="display:none"><script type="text/javascript">/* <![CDATA[ */ bmone2n.makeAd('2059.1.9.7'); /* ]]> */</script></div>
+<div id="bmone2t-2059.1.10.7" style="display:none"><script type="text/javascript">/* <![CDATA[ */ bmone2n.makeAd('2059.1.10.7'); /* ]]> */</script></div>
+<script type="text/javascript">/* <![CDATA[ */ bm12n_orig_onload = (window.onload) ? window.onload : null; function bm12n_onLoad() { bmone2n.moveAd();  if (bm12n_orig_onload) {bm12n_orig_onload();} } window.onload = bm12n_onLoad; /* ]]> */</script></div>
+<div class="reklama"><script src="http://www.google-analytics.com/urchin.js" type="text/javascript"></script>
+<script type="text/javascript">
+_uacct = "UA-4618954-1";
+urchinTracker();
+</script></div>
+<script type="text/javascript">
+	on_load2();
+	
+	$("DIV.ow:contains('Obrazem.iHNed') .prx, DIV.otv:contains('Obrazem.iHNed') .txt").prepend('OBRAZEM: ');
+	$("DIV.ow:contains('Video.iHNed') .prx, DIV.otv:contains('Video.iHNed') .txt").prepend('VIDEO: ');
+	$("DIV.ow-r:contains('Blog.iHNed') .ow-author").append(' bloguje').css('display','inline');
+	
+</script>
+<!-- (c) 2008 Gemius SA / gemiusHeatMap(GHM+XY) / http://www.ihned.cz -->
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+var ghmxy_align = 'center';
+var ghmxy_type = 'absolute';
+var ghmxy_identifier = 'okuV7vs0bR5kqYAjp2rbCJciLb9IhELZipfk3NxY6hH.q7';
+//--><!]]>
+</script>
+<script src="http://cz.hit.gemius.pl/hmapxy.js" type="text/javascript"></script>
+</body>
+</html>

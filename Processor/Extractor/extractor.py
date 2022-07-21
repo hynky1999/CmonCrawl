@@ -1,10 +1,9 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
-import logging
 from typing import Any, Dict
 
 from bs4 import BeautifulSoup
-from utils import PipeMetadata
+from utils import PipeMetadata, metadata_logger
 
 
 class BaseExtractor(ABC):
@@ -23,13 +22,17 @@ class BaseExtractor(ABC):
 
     def extract(self, response: str, metadata: PipeMetadata) -> Dict[Any, Any] | None:
         if self.filter_raw(response, metadata) is False:
-            logging.warn("Failed to filter raw", extra={"metadata": metadata})
+            metadata_logger.warn(
+                "Failed to filter raw", extra={"domain_record": metadata.domain_record}
+            )
             return None
 
         article = self.preprocess(response, metadata)
         soup = BeautifulSoup(article, "html.parser")
         if self.filter_soup(soup, metadata) is False:
-            logging.warn("Failed to filter soup", extra={"metadata": metadata})
+            metadata_logger.warn(
+                "Failed to filter soup", extra={"domain_record": metadata.domain_record}
+            )
             return None
 
         return self.extract_soup(soup, metadata)
@@ -61,9 +64,9 @@ class BaseExtractor(ABC):
                 metadata.encoding = encoding
                 break
             except ValueError:
-                logging.warn(
+                metadata_logger.warn(
                     f"Failed to decode with {encoding}",
-                    extra={"metadata": metadata},
+                    extra={"domain_record": metadata.domain_record},
                 )
         else:
             raise ValueError("Failed to decode")

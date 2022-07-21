@@ -12,6 +12,15 @@
             "args": ["${file}", "processed_articles"],
             "console": "integratedTerminal",
             "justMyCode": true
+        },
+        {
+            "name": "Python",
+            "type": "python",
+            "request": "launch",
+            "program": " cd ../ && ./download_article.py",
+            "args": ["--limit=100", "to=2011-12-12", "ihned.cz", "./ihned2011"],
+            "console": "integratedTerminal",
+            "justMyCode": true
         }
     ]
 }
