@@ -9,28 +9,21 @@ services:
     ports:
       - "8161:8161"
       - "61613:61613"
-
-  producer-seznamzpravy.cz:
+  producer-irozhlas.cz:
     build: ./Aggregator
-    command: "seznamzpravy.cz"
-    depends_on:
-      - consumer
-
-  producer-idnes.cz:
-    build: ./Aggregator
-    command: "idnes.cz"
+    command: "--limit=1000 --to=2020-06-30 novinky.cz"
     depends_on:
       - consumer
 
   consumer:
     build: ./Processor
-    args: 
+    command: "--use_hostname_output --timeout=1 --pills_to_die=1 --queue_size=200"
     volumes:
       - ./output:/app/output:z
     deploy:
-      replicas: 1
+      replicas: 5
     depends_on:
       - artemis
 
-volumes:
-  artemis-data:
+# volumes:
+#  artemis-data:

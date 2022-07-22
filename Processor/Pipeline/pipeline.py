@@ -31,7 +31,7 @@ class ProcessorPipeline:
                 "Processed article", extra={"domain_record": metadata.domain_record}
             )
 
-        except (ValueError, PageDownloadException) as e:
+        except (ValueError, PageDownloadException, OSError) as e:
             metadata_logger.error(
                 f"{e}", extra={"domain_record": metadata.domain_record}
             )

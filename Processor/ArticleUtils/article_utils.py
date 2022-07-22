@@ -213,6 +213,9 @@ def date_complex_extract(
     if date_tag is None:
         return None
     date_str = get_text_transform(date_tag)
+    if date_str is None:
+        return None
+
     if remove_additional_info:
         date_str = date_str.split("-")[0]
     if remove_day:
@@ -242,12 +245,14 @@ def date_complex_extract(
         date = format_date_transform(no_year_date_format)(date_str)
         year_tag = get_tag_transform(year_css)(soup)
         if year_tag is not None:
-            year_match = year_regex.search(get_text_transform(year_tag))
-            if year_match is not None:
-                try:
-                    year = int(year_match.group("year"))
-                except ValueError:
-                    pass
+            text = get_text_transform(year_tag)
+            if text is not None:
+                year_match = year_regex.search(text)
+                if year_match is not None:
+                    try:
+                        year = int(year_match.group("year"))
+                    except ValueError:
+                        pass
 
     if date is not None and year is not None:
         return date.replace(year=year)

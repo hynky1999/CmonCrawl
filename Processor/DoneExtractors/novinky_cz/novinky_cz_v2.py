@@ -17,6 +17,7 @@ from ArticleUtils.article_utils import (
 from bs4 import BeautifulSoup, Tag
 from Extractor.extractor_utils import (
     get_attribute_transform,
+    get_tag_transform,
     get_text_transform,
 )
 from utils import PipeMetadata
@@ -25,6 +26,8 @@ allowed_classes_div = {
     # text
     "g_c6",
     "g_c9",
+    "f_cZ",
+    "f_eB",
     # images
     "g_cJ",
 }
@@ -60,8 +63,8 @@ class NovinkyCZV2Extractor(ArticleExtractor):
             },
             {
                 "content": 'article > div[data-dot-data=\'{"component":"article-content"}\'] > div',
-                "author": "div.ogm-article-author__texts > div:nth-child(2)",
-                "category": "div[data-dot='ogm-breadcrumb-navigation'] > a:nth-child(2) > span",
+                # Very improvvised for compatibility
+                "category": "[data-dot*='navi'] > a[href*=novinky]:nth-child(2)",
             },
             {
                 "content": article_content_transform(
@@ -78,13 +81,32 @@ class NovinkyCZV2Extractor(ArticleExtractor):
             "comments_num": None,
             "publication_date": date_complex_extract(
                 soup,
-                "div.ogm-article-author__date",
+                ".ogm-article-author-social .atm-date-formatted",
                 "%d. %m. %Y, %H:%M",
                 hours_minutes_with_fallback=True,
                 fallback=metadata.domain_record.timestamp,
             ),
+            "author": self.custom_extract_author(soup, metadata),
         }
         return extracted_dict
+
+    def custom_extract_author(self, soup: BeautifulSoup, metadata: PipeMetadata):
+        author = None
+        tag = get_tag_transform("div.ogm-article-author__texts > div:nth-child(2)")(
+            soup
+        )
+        if tag is not None:
+            author = get_text_transform(tag)
+            if author is not None:
+                return author_transform(author)
+
+        tag = get_tag_transform('div[data-dot-data=\'{"click":"author"}\']')(soup)
+        if tag is not None:
+            author = get_text_transform(tag)
+            if author is not None:
+                return author_transform(author)
+
+        return author
 
 
 extractor = NovinkyCZV2Extractor()

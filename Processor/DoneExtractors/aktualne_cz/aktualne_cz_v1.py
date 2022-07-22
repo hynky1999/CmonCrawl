@@ -40,7 +40,7 @@ year_since_to_re = re.compile(r"\d{4}\s*–\s*(?P<year>\d{4})")
 
 
 class AktualneCZV1Extractor(ArticleExtractor):
-    TO = datetime(2015, 9, 10)
+    TO = datetime(2014, 9, 10)
 
     def __init__(self):
 
@@ -54,7 +54,7 @@ class AktualneCZV1Extractor(ArticleExtractor):
                 "keywords": [get_attribute_transform("content"), keywords_transform],
             },
             {
-                "content": "div.clanek-text-obsah",
+                "content": "div[class*=clanek-text]",
                 "category": "ul#nav-breadcrumb > li >  a",
                 "author": "p.clanek-autor",
                 "comments_num": "#disqusCounter > span",
@@ -71,13 +71,6 @@ class AktualneCZV1Extractor(ArticleExtractor):
                 "category": [get_text_transform, category_transform],
             },
             "div#obsah",
-            filter_allowed_domain_prefixes=[
-                "zpravy",
-                "nazory",
-                "sport",
-                "magazin",
-                "zena",
-            ],
         )
         self.date_css = ".clanek-datum"
 

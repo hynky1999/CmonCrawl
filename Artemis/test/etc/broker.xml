@@ -71,14 +71,14 @@ under the License.
       
       <!--
        This value was determined through a calculation.
-       Your system could perform 25 writes per millisecond
+       Your system could perform 13.89 writes per millisecond
        on the current journal configuration.
-       That translates as a sync write every 40000 nanoseconds.
+       That translates as a sync write every 72000 nanoseconds.
 
        Note: If you specify 0 the system will perform writes directly to the disk.
              We recommend this to be 0 if you are using journalType=MAPPED and journal-datasync=false.
       -->
-      <journal-buffer-timeout>40000</journal-buffer-timeout>
+      <journal-buffer-timeout>72000</journal-buffer-timeout>
 
 
       <!--
@@ -131,7 +131,7 @@ under the License.
       <critical-analyzer-policy>HALT</critical-analyzer-policy>
 
       
-      <page-sync-timeout>1823999</page-sync-timeout>
+      <page-sync-timeout>1716000</page-sync-timeout>
 
 
       <!-- the system will enter into page mode once you hit this limit. This is an estimate in bytes of how much the messages are using in memory
@@ -163,23 +163,23 @@ under the License.
          <!-- Acceptor for every supported protocol -->
          <acceptor name="artemis">tcp://0.0.0.0:61616?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;amqpMinLargeMessageSize=102400;protocols=CORE,AMQP,STOMP,HORNETQ,MQTT,OPENWIRE;useEpoll=true;amqpCredits=1000;amqpLowCredits=300;amqpDuplicateDetection=true;supportAdvisory=false;suppressInternalManagementObjects=false</acceptor>
 
-         <!-- STOMP -->
-         <acceptor name="stomp">tcp://0.0.0.0:61613?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=STOMP;useEpoll=true;amqpDuplicateDetection=true;multicastPrefix=/topic/;anycastPrefix=/queue/</acceptor>
+         <!-- STOMP Acceptor. -->
+         <acceptor name="stomp">tcp://0.0.0.0:61613?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=STOMP;useEpoll=true</acceptor>
 
       </acceptors>
 
 
       <security-settings>
          <security-setting match="#">
-            <permission type="createNonDurableQueue" roles="amq, producer, consumer"/>
-            <permission type="deleteNonDurableQueue" roles="amq, producer, consumer"/>
-            <permission type="createDurableQueue" roles="amq, producer, consumer"/>
-            <permission type="deleteDurableQueue" roles="amq, producer, consumer"/>
-            <permission type="createAddress" roles="amq, producer, consumer"/>
-            <permission type="deleteAddress" roles="amq, producer, consumer"/>
-            <permission type="consume" roles="amq, consumer"/>
+            <permission type="createNonDurableQueue" roles="amq"/>
+            <permission type="deleteNonDurableQueue" roles="amq"/>
+            <permission type="createDurableQueue" roles="amq"/>
+            <permission type="deleteDurableQueue" roles="amq"/>
+            <permission type="createAddress" roles="amq"/>
+            <permission type="deleteAddress" roles="amq"/>
+            <permission type="consume" roles="amq"/>
             <permission type="browse" roles="amq"/>
-            <permission type="send" roles="amq, producer"/>
+            <permission type="send" roles="amq"/>
             <!-- we need this otherwise ./artemis data imp wouldn't work -->
             <permission type="manage" roles="amq"/>
          </security-setting>
@@ -203,6 +203,8 @@ under the License.
             <dead-letter-address>DLQ</dead-letter-address>
             <expiry-address>ExpiryQueue</expiry-address>
             <redelivery-delay>0</redelivery-delay>
+
+
             <!-- if max-size-bytes and max-size-messages were both enabled, the system will enter into paging
                  based on the first attribute to hits the maximum value -->
             <!-- limit for the address in bytes, -1 means unlimited -->
@@ -216,16 +218,6 @@ under the License.
             <auto-delete-queues>false</auto-delete-queues>
             <auto-delete-addresses>false</auto-delete-addresses>
          </address-setting>
-         <address-setting match="queue/#">
-            <default-address-routing-type>ANYCAST</default-address-routing-type>
-            <default-queue-routing-type>ANYCAST</default-queue-routing-type>
-         </address-setting>
-         <address-setting match="topic/#">
-            <default-address-routing-type>MULTICAST</default-address-routing-type>
-            <default-queue-routing-type>MULTICAST</default-queue-routing-type>
-         </address-setting>
-
-
       </address-settings>
 
       <addresses>
@@ -257,16 +249,5 @@ under the License.
       </broker-plugins>
       -->
 
-      <id-cache-size>10000000</id-cache-size>
-      <persist-id-cache>true</persist-id-cache>
-
-
-
-      <wildcard-addresses>
-         <routing-enabled>true</routing-enabled>
-         <delimiter>.</delimiter>
-         <any-words>#</any-words>
-         <single-word>*</single-word>
-      </wildcard-addresses>
    </core>
 </configuration>

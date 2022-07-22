@@ -18,6 +18,10 @@ from Processor.OutStreamer.stream_to_file import (
 from Processor.Pipeline.pipeline import ProcessorPipeline
 
 from Processor.Router.router import Router
+from Processor.utils import all_purpose_logger, metadata_logger
+
+all_purpose_logger.setLevel("INFO")
+metadata_logger.setLevel("WARN")
 
 
 async def article_download(
@@ -38,7 +42,14 @@ async def article_download(
     outstreamer = OutStreamerFileHTMLContent(origin=output)
 
     aggregator = await IndexAggregator(
-        [url], cc_servers=cc_server, since=since, to=to, limit=limit, max_retry=15, sleep_step=10
+        [url],
+        cc_servers=cc_server,
+        since=since,
+        to=to,
+        limit=limit,
+        max_retry=15,
+        sleep_step=10,
+        prefetch_size=1,
     ).aopen()
     async for domain_record in aggregator:
         records.append(domain_record)

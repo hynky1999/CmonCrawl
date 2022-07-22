@@ -1,8 +1,14 @@
 #!/bin/bash
-ARTEMIS_PATH="./artemis_run"
-ARTEMIS_CFG="./config"
-if [[ ! -e "$ARTEMIS_PATH" ]]; then
-    ./artemis-create/bin/artemis create --user=f --password=f --require-login --http-host="$1" ${ARTEMIS_PATH}
+SCRIPT=$(realpath "$0")
+ARTEMIS_PATH="$(dirname "$SCRIPT")/artemis_run"
+ARTEMIS_CFG="$(dirname "$SCRIPT")/config"
+export ARTEMIS_PATH
+export ARTEMIS_CFG
+
+if [[ -z $HOST ]]; then
+    HOST="0.0.0.0"
 fi
-cp -f ${ARTEMIS_CFG} ${ARTEMIS_PATH}/etc
+
+"$(dirname "$0")/artemis-create/bin/artemis" create --force --user=f --password=f --require-login --host="$HOST" --http-host="$HOST" --no-amqp-acceptor --no-hornetq-acceptor --no-mqtt-acceptor "${ARTEMIS_PATH}"
+python3 adjust_config.py
 "${ARTEMIS_PATH}"/bin/artemis run

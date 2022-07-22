@@ -34,7 +34,8 @@ class PipeMetadata:
 
 
 metadata_logger = logging.getLogger("metadata_logger")
-metadata_logger.setLevel(logging.INFO)
+metadata_logger.setLevel(logging.ERROR)
+metadata_logger.propagate = False
 handler = logging.StreamHandler()
 handler.setFormatter(
     logging.Formatter(
@@ -44,7 +45,8 @@ handler.setFormatter(
 metadata_logger.addHandler(handler)
 
 all_purpose_logger = logging.getLogger("all_purpose_logger")
-metadata_logger.setLevel(logging.INFO)
+all_purpose_logger.setLevel(logging.INFO)
+all_purpose_logger.propagate = False
 handler = logging.StreamHandler()
 handler.setFormatter(
     logging.Formatter(

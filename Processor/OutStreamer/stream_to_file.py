@@ -135,7 +135,7 @@ class OutStreamerFileJSON(OutStreamerFileDefault):
         origin: Path,
         extension: str = ".json",
         pretty: Boolean = False,
-        **kwargs: Dict[Any, Any],
+        **kwargs: Any,
     ):
         super().__init__(origin, extension, **kwargs)
         self.pretty = pretty

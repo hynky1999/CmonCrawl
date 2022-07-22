@@ -3,19 +3,46 @@ import asyncio
 from datetime import datetime
 import json
 import logging
+import re
 from typing import List
+from urllib.parse import urlparse
 
 from stomp import Connection
 from stomp.exception import StompException
 
 from index_query import IndexAggregator
+from utils import all_purpose_logger
 
 DUPL_ID_HEADER = "_AMQ_DUPL_ID"
+logging.basicConfig(level=logging.WARN)
 
 
 def init_connection(conn: Connection):
     conn.connect(login="producer", passcode="producer", wait=True)
+    all_purpose_logger.info(f"Connected to queue")
     return conn
+
+
+ext_sub = re.compile(r"\.html|\.jpg|\.png|\.zip")
+multiple_slash = re.compile(r"/")
+path_re = re.compile(r"(\/[a-zA-Z0-9_\-]*)*(\/[a-zA-Z0-9\-]+)")
+remove_trailing = re.compile(r"[\/\-0-9]+$")
+
+
+def unify_url_id(url: str):
+    parsed = urlparse(url)
+    path_processed = ext_sub.sub("", parsed.path)
+    path_processed = multiple_slash.sub("/", path_processed)
+    path_match = path_re.search(path_processed)
+    if path_match:
+        path_processed = path_match.group(0)
+    else:
+        all_purpose_logger.warning(f"No path match for {url}")
+    path_processed = remove_trailing.sub("", path_processed)
+    splitted_netloc = parsed.netloc.split(".")
+    netloc = ".".join(splitted_netloc[-2:])
+
+    return f"{netloc}{path_processed}"
 
 
 async def aggregate(
@@ -31,7 +58,11 @@ async def aggregate(
     sleep_step: int,
 ):
     conn = Connection([(queue_host, queue_port)], heartbeats=(10000, 10000))
-    logging.info(f"Connected to queue at: {queue_host}:{queue_port}")
+    while conn.is_connected() is False:
+        try:
+            conn = init_connection(conn)
+        except StompException:
+            pass
     i = 0
     async with IndexAggregator(
         [url],
@@ -43,26 +74,26 @@ async def aggregate(
         max_retry=max_retries,
         sleep_step=sleep_step,
     ) as aggregator:
-        try:
-            async for domain_record in aggregator:
-                try:
-                    if not conn.is_connected():
-                        conn = init_connection(conn)
-                    json_str = json.dumps(domain_record.__dict__, default=str)
-                    conn.send(
-                        f"/queue/articles.{url}",
-                        json_str,
-                        # headers={DUPL_ID_HEADER: domain_record.url},
-                    )
-                    logging.info(f"Sent url: {domain_record.url}")
-                    i += 1
-                except (KeyboardInterrupt, StompException) as e:
-                    logging.error(e)
-                    break
-        except Exception as e:
-            logging.error(e)
+        async for domain_record in aggregator:
+            try:
+                while not conn.is_connected():
+                    conn = init_connection(conn)
+                json_str = json.dumps(domain_record.__dict__, default=str)
+                id = unify_url_id(domain_record.url)
+                conn.send(
+                    f"queue.articles.{url}",
+                    json_str,
+                    headers={DUPL_ID_HEADER: id},
+                )
+                all_purpose_logger.info(f"Sent url: {domain_record.url} with id: {id}")
+                i += 1
+            except (KeyboardInterrupt) as e:
+                break
+            except Exception as e:
+                all_purpose_logger.error(e, exc_info=True)
 
-    logging.info("Sent {i} messages")
+    all_purpose_logger.info(f"Sent {i} messages")
+    conn.send(f"topic.poisson_pill.{url}", "", headers={"type": "poisson_pill"})
     conn.disconnect()
 
 
@@ -75,8 +106,13 @@ if __name__ == "__main__":
     parser.add_argument("--queue_host", type=str, default="artemis")
     parser.add_argument("--queue_port", type=int, default=61613)
     parser.add_argument("--cc_servers", nargs="+", type=str, default=[])
-    parser.add_argument("--prefetch_size", type=int, default=3)
-    parser.add_argument("--max_retries", type=int, default=5)
-    parser.add_argument("--sleep_step", type=int, default=1)
-    args = parser.parse_args()
-    asyncio.run(aggregate(**vars(args)))
+    parser.add_argument("--prefetch_size", type=int, default=2)
+    parser.add_argument("--max_retries", type=int, default=20)
+    parser.add_argument("--sleep_step", type=int, default=5)
+    args = vars(parser.parse_args())
+    if isinstance(args["since"], str):
+        args["since"] = datetime.fromisoformat(args["since"])
+
+    if isinstance(args["to"], str):
+        args["to"] = datetime.fromisoformat(args["to"])
+    asyncio.run(aggregate(**args))

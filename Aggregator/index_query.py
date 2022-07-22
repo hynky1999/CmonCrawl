@@ -2,24 +2,19 @@ from __future__ import annotations
 from collections import deque
 from dataclasses import dataclass
 from datetime import datetime
-import logging
 import re
 
 from errors import PageResponseError
 from ndjson_decoder import Decoder
 from types import TracebackType
 from typing import Any, AsyncIterable, AsyncIterator, Deque, List, Dict, Tuple, Type
+from utils import all_purpose_logger
 
 from aiohttp import ClientError, ClientSession, ContentTypeError
 import asyncio
 import random
 
 ALLOWED_ERR_FOR_RETRIES = [500, 502, 503, 504]
-
-logging.basicConfig(
-    format="%(asctime)s - %(filename)s:%(lineno)d - " "%(levelname)s - %(message)s",
-    level="INFO",
-)
 
 
 @dataclass
@@ -149,7 +144,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
                         **args,
                     )
         except (ClientError, TimeoutError) as e:
-            logging.error(e)
+            all_purpose_logger.error(e)
             raise PageResponseError(
                 domain,
                 status=503,
@@ -229,8 +224,6 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
             return CC_servers
 
     class IndexAggregatorIterator(AsyncIterator[DomainRecord]):
-        # TODO
-        # Add better logging to know what we failed to crawl
         def __init__(
             self,
             client: ClientSession,
@@ -284,7 +277,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
                             next_crawl.domain,
                             retry=i,
                         )
-                        logging.info(
+                        all_purpose_logger.info(
                             f"Succeeded to get number of pages = {pages} of {next_crawl.domain} from {next_crawl.cdx_server}"
                         )
                         break
@@ -295,7 +288,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
                             if err.status in ALLOWED_ERR_FOR_RETRIES
                             else 0
                         )
-                        logging.error(
+                        all_purpose_logger.error(
                             f"Failed to retrieve number of pages of {err.domain} from {err.cdx_server} with reason {err.status}: {err.reason} retry: {err.retry}/{max_retry}"
                         )
                         if (
@@ -337,7 +330,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
                 task = self.prefetch_queue.popleft()
                 try:
                     self.__domain_records = await task
-                    logging.info(
+                    all_purpose_logger.info(
                         f"Suceeded to prefetch page {self.__domain_records.origin.page} of {self.__domain_records.origin.domain} from {self.__domain_records.origin.cdx_server} found {len(self.__domain_records.records)} records"
                     )
                     return len(self.__domain_records.records)
@@ -347,7 +340,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
                     max_retry = (
                         self.__max_retry if err.status in ALLOWED_ERR_FOR_RETRIES else 0
                     )
-                    logging.error(
+                    all_purpose_logger.error(
                         f"Failed to retrieve page {err.page} of {err.domain} from {err.cdx_server} with reason {err.status}: {err.reason} retry: {err.retry}/{max_retry}"
                     )
                     if (

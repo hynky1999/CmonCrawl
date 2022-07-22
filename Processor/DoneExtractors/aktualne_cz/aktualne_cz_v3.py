@@ -72,28 +72,18 @@ class AktualneCZV3Extractor(ArticleExtractor):
             {
                 "content": "div.article__content",
                 "author": "div.author",
+                "category": "div.header__menu > nav > ul > li:nth-child(1) > a",
             },
             {
                 "content": article_content_transform(article_fc),
-                "brief": [get_text_transform, brief_transform],
+                "category": [get_text_transform, category_transform],
                 "author": [
                     get_tags_transform("div > a.author__name"),
                     get_text_list_transform(","),
                     author_transform,
                 ],
             },
-            "div.left-column > div.article",
-            filter_must_exist=[
-                # Prevents Aktualne+ "articles"
-                "div[id='aktu-menu-spa']",
-            ],
-            filter_allowed_domain_prefixes=[
-                "zpravy",
-                "nazory",
-                "sport",
-                "magazin",
-                "zena",
-            ],
+            "body",
         )
 
     def custom_filter_raw(self, response: str, metadata: PipeMetadata) -> bool:

@@ -59,7 +59,9 @@ def parse_warc(warc_str: str, metadata: PipeMetadata):
         # Old format
         http_h, html = warc_str.split("\r\n\r\n", maxsplit=1)
         # Stripl last /n
-        html = html[:-1]
+        # It just works don't ask me why
+        if metadata.domain_record.timestamp.year < 2012:
+            html = html[:-1]
         warc_h = ""
     else:
         warc_h, http_h, html = warc_str.split("\r\n\r\n", maxsplit=2)

@@ -60,7 +60,7 @@ class ArticleExtractor(BaseExtractor):
             )
             return None
 
-        metadata.name = metadata.domain_record.url.replace("/", "_")
+        metadata.name = metadata.domain_record.url.replace("/", "_")[:80]
         return extracted_dict
 
     def custom_filter_raw(self, response: str, metadata: PipeMetadata) -> bool:

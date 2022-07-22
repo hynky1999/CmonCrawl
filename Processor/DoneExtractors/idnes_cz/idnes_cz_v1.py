@@ -33,7 +33,7 @@ def date_transform(text: str):
 
 
 class IdnesCZV1Extractor(ArticleExtractor):
-    ENCODING = "utf-8"
+    ENCODING = "windows-1250"
     TO = datetime(2011, 8, 9)
 
     def __init__(self):

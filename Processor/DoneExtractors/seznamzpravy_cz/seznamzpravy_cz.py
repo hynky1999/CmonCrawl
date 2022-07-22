@@ -32,6 +32,8 @@ allowed_classes_div = {
     "g_V",
     "f_c5",
     "f_c6",
+    "c_Q",
+    "d_cg",
 }
 
 allowed_classes_figure = {
@@ -130,6 +132,12 @@ class SeznamZpravyExtractor(ArticleExtractor):
             fallback=metadata.domain_record.timestamp,
         )
         return date
+
+    def filter_raw(self, response: str, metadata: PipeMetadata) -> bool:
+        parts = metadata.url_parsed.path.split("/")
+        if len(parts) > 1 and parts[1] == "clanek":
+            return True
+        return False
 
 
 extractor = SeznamZpravyExtractor()

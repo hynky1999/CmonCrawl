@@ -15,6 +15,9 @@ from utils import DomainRecord, PipeMetadata, all_purpose_logger, metadata_logge
 
 FOLDER = "articles_processed"
 
+all_purpose_logger.setLevel("INFO")
+metadata_logger.setLevel("WARN")
+
 
 def parse_article(article_path: Path):
     with open(article_path, "r") as f:
@@ -48,7 +51,7 @@ def parse_article(article_path: Path):
         year = 2020
     else:
         year = int(year.group(0))
-    all_purpose_logger.info(f"Found url: {url}")
+    all_purpose_logger.debug(f"Found url: {url}")
 
     metadata = PipeMetadata(
         DomainRecord(

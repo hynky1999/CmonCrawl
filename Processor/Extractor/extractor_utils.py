@@ -29,8 +29,8 @@ def get_text_transform(tag: Tag, recursive: bool = True):
     tag_text = tag.find(text=True, recursive=False)
     if tag_text:
         return tag_text.text
-    
-    return tag_text.text
+
+    return None
 
 
 def get_text_list_transform(sep: str = ""):
