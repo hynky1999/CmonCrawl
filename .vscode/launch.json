@@ -7,7 +7,7 @@
             "request": "launch",
             "program": "${workspaceRoot}/download_article.py",
             "console": "integratedTerminal",
-            "args": ["--limit=1000", "--to=2012-12-12", "idnes.cz", "Processor/denik2019"]
+            "args": ["--limit=1000", "--to=2018-08-31", "idnes.cz", "Processor/denik2019"]
         },
         {
             "name": "Process",

@@ -5,9 +5,8 @@ from pathlib import Path
 import random
 from typing import Any, Dict, List
 from xmlrpc.client import Boolean
-from Downloader.warc import PipeMetadata
 from OutStreamer.outstreamer import OutStreamer
-from utils import all_purpose_logger, metadata_logger
+from utils import PipeMetadata, all_purpose_logger, metadata_logger
 from aiofiles import open as asyncOpen
 
 import os

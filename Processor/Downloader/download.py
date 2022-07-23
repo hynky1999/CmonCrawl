@@ -1,16 +1,17 @@
 from __future__ import annotations
 import asyncio
 from base64 import b32decode
-import gzip
+import io
 import random
+from tabnanny import check
 from types import TracebackType
 from aiohttp import ClientError, ClientSession
-from typing import Type
+from typing import List, Tuple, Type
 from hashlib import md5, sha1
 
 from Downloader.errors import PageDownloadException
-from Downloader.warc import PipeMetadata, parse_warc
-from utils import DomainRecord, metadata_logger
+from utils import DomainRecord, PipeMetadata, metadata_logger
+from warcio import ArchiveIterator
 
 ALLOWED_ERR_FOR_RETRIES = [500, 502, 503, 504]
 
@@ -36,9 +37,7 @@ class Downloader:
     async def __aenter__(self) -> Downloader:
         return await self.aopen()
 
-    async def download(
-        self, domain_record: DomainRecord, metadata: PipeMetadata, retry: int = 0
-    ) -> str:
+    async def download(self, domain_record: DomainRecord):
         # Because someone thought having non c-like range is good idea
         # Both end/start are inclusive
         headers = {
@@ -47,85 +46,59 @@ class Downloader:
             )
         }
         url = f"{self.BASE_URL}{domain_record.filename}"
-        try:
-            response_bytes = bytes()
-            async with self.client.get(url, headers=headers) as response:
-                if not response.ok:
-                    raise PageDownloadException(
-                        domain_record, response.reason, response.status
-                    )
-                # will be unziped
-                response_bytes = await response.content.read()
-            content = parse_warc(
-                self.unwrap(response_bytes, metadata.encoding),
-                metadata,
-            )
-        except (ClientError, TimeoutError, PageDownloadException) as e:
-            max_retry = self.max_retry
-            if (
-                isinstance(e, PageDownloadException)
-                and e.status not in ALLOWED_ERR_FOR_RETRIES
-            ):
-                max_retry = 0
+        for retry in range(self.max_retry):
+            try:
+                response_bytes = bytes()
+                async with self.client.get(url, headers=headers) as response:
+                    if not response.ok:
+                        raise PageDownloadException(
+                            domain_record, response.reason, response.status
+                        )
+                    # will be unziped, we cannot use the stream since warcio doesn't support async
+                    response_bytes = await response.content.read()
+                    return self.unwrap(response_bytes, domain_record)
+            except (
+                ClientError,
+                TimeoutError,
+                PageDownloadException,
+            ) as e:
+                max_retry = self.max_retry
+                if (
+                    isinstance(e, PageDownloadException)
+                    and e.status not in ALLOWED_ERR_FOR_RETRIES
+                ):
+                    max_retry = retry
 
-            metadata_logger.error(
-                f"Failed to retrieve from page retry: {retry}/{max_retry}",
-                extra={"domain_record": metadata.domain_record},
-            )
-            if retry < self.max_retry:
-                await asyncio.sleep(random.randint(0, (retry + 1) * self.__sleep_step))
-                return await self.download(domain_record, metadata, retry + 1)
-            else:
-                raise ValueError(f"Failed to download {domain_record.url}")
-
-        if self.digest_verification:
-            hash_type: str
-            hash: str
-            if metadata.warc_header is None:
-                raise ValueError("No digest found")
-
-            digest = metadata.warc_header.get("payload_digest")
-            if digest is None:
-                metadata_logger.warn(
-                    "Warc header has no digest, using digest from domain record",
-                    extra={"domain_record": metadata.domain_record},
+                metadata_logger.error(
+                    f"Failed to retrieve from domain_record retry: {retry}/{max_retry}",
+                    extra={"domain_record": domain_record},
                 )
-                if metadata.domain_record.digest is None:
-                    raise ValueError("Digest is missing in domain record")
-                hash_type, hash = "sha1", metadata.domain_record.digest
-            else:
-                hash_type, hash = digest.split(":")
-            digest = metadata.domain_record.digest
-            if digest is not None and digest != hash:
-                raise ValueError(f'Digest mismatch: "{digest}" != "{hash}"')
+                if retry >= self.max_retry:
+                    break
+                await asyncio.sleep(random.randint(0, (retry + 1) * self.__sleep_step))
 
-            if self.verify_digest(hash_type, hash, content, metadata.encoding) == False:
-                raise ValueError("Digest verification failed")
+        return []
 
-            return content
-
-    def verify_digest(
-        self, hash_type: str, digest: str, content: str, encoding: str
-    ) -> bool:
-        # ADD md5
-        digest_decoded = b32decode(digest)
-        hash_digest = ""
-        if hash_type == "sha1":
-            hash_digest = sha1(content.encode(encoding)).digest()
-
-        elif hash_type == "md5":
-            hash_digest = md5(content.encode(encoding)).digest()
-        else:
-            raise ValueError(f"Unknown hash type {hash_type}")
-
-        if digest_decoded != hash_digest:
-            return False
-        return True
-
-    def unwrap(self, response: bytes, encoding: str) -> str:
-        content = gzip.decompress(response).decode(encoding)
-
-        return content
+    def unwrap(
+        self, response: bytes, domain_record: DomainRecord
+    ) -> List[Tuple[str, PipeMetadata]]:
+        ariter = ArchiveIterator(
+            io.BytesIO(response), check_digests="raise", arc2warc=True
+        )
+        encoding = "latin-1"
+        warcs = [
+            (
+                warc.content_stream().read().decode(encoding),
+                PipeMetadata(
+                    domain_record,
+                    warc_header=dict(warc.rec_headers.headers),
+                    http_header=dict(warc.http_headers.headers),
+                    encoding=encoding,
+                ),
+            )
+            for warc in ariter
+        ]
+        return warcs
 
     async def aclose(
         self,

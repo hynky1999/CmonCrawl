@@ -20,10 +20,12 @@ def text_unifications_transform(text: List[str]):
 
 
 multiple_new_line = re.compile(r"\n\s*\n+")
+multiple_tabs = re.compile(r"\t\s*\t+")
 
 
 def text_unification_transform(text: str):
     text = multiple_new_line.sub("\n", text)
+    text = multiple_tabs.sub("\n", text)
     return text.strip().replace("\xa0", " ")
 
 

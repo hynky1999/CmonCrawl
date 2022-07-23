@@ -51,4 +51,6 @@ dependencies:
   - xz=5.2.5=h7f8727e_1
   - yarl=1.6.3=py310h7f8727e_1
   - zlib=1.2.12=h7f8727e_2
+  - pip:
+    - warcio==1.7.4
 prefix: /home/kydliceh/.conda/envs/processor

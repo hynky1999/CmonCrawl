@@ -11,7 +11,7 @@ services:
       - "61613:61613"
   producer-irozhlas.cz:
     build: ./Aggregator
-    command: "--limit=1000 --to=2020-06-30 novinky.cz"
+    command: "--limit=400 --to=2011-12-31 ihned.cz"
     depends_on:
       - consumer
 

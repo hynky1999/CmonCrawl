@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any, Dict
-from Downloader.warc import PipeMetadata
+
+from utils import PipeMetadata
 
 
 class OutStreamer(ABC):

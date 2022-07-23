@@ -6,7 +6,7 @@ import json
 import os
 from pathlib import Path
 import random
-from typing import Dict, Set, Tuple
+from typing import Dict, List, Set, Tuple
 
 from stomp import Connection, ConnectionListener
 from stomp.utils import Frame
@@ -96,9 +96,9 @@ async def call_pipeline_with_ack(
 ):
     # Make sure no exception is thrown from this function
     # So that we can nack it if needed
-    path = None
+    paths = []
     try:
-        path = await pipeline.process_domain_record(msg.dr)
+        paths = await pipeline.process_domain_record(msg.dr)
         # Ack at any result
         client.ack(msg.headers.get("message-id"), msg.headers.get("subscription"))
 
@@ -106,7 +106,7 @@ async def call_pipeline_with_ack(
         # pipeline should never throw exception so if it does we should inspect it and not ack it
         client.nack(msg.headers.get("message-id"), msg.headers.get("subscription"))
         all_purpose_logger.error(f"Error in pipeline: {e}", exc_info=True)
-    return (msg, path)
+    return (msg, paths)
 
 
 def get_hostname_output_path(output_path: Path):
@@ -128,7 +128,7 @@ async def processor(
     timeout: int,
 ):
     timeout_delta = timedelta(minutes=timeout)
-    pending_extracts: Set[asyncio.Task[Tuple[Message, Path | None]]] = set()
+    pending_extracts: Set[asyncio.Task[Tuple[Message, List[Path]]]] = set()
     conn = Connection(
         [(queue_host, queue_port)], reconnect_attempts_max=-1, heartbeats=(10000, 10000)
     )
@@ -162,12 +162,13 @@ async def processor(
                         pending_extracts, return_when="FIRST_COMPLETED"
                     )
                     for task in done:
-                        message, path = task.result()
-                        if path is not None:
-                            all_purpose_logger.info(
-                                f"Downloaded {message.dr.url} to {path}"
-                            )
-                            extracted_num += 1
+                        message, paths = task.result()
+                        if len(paths) > 0:
+                            for path in paths:
+                                all_purpose_logger.info(
+                                    f"Downloaded {message.dr.url} to {path}"
+                                )
+                                extracted_num += 1
                         else:
                             all_purpose_logger.info(
                                 f"Failed to extract {message.dr.url}"
@@ -191,10 +192,11 @@ async def processor(
         for task in gathered:
             if isinstance(task, Exception):
                 continue
-            message, path = task
-            if path is not None:
-                all_purpose_logger.info(f"Downloaded {message.dr.url} to {path}")
-                extracted_num += 1
+            message, paths = task
+            if len(paths) > 0:
+                for path in paths:
+                    all_purpose_logger.info(f"Downloaded {message.dr.url} to {path}")
+                    extracted_num += 1
             else:
                 all_purpose_logger.info(f"Failed to extract {message.dr.url}")
 

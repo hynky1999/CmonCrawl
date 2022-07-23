@@ -51,7 +51,9 @@ class DenikV3Extractor(ArticleExtractor):
             },
             {
                 "content": ".article-text",
-                "category": "li.submenu__item > a.active",
+                "category": "ul[class*=menu] > li > a.active",
+                "keywords": "ul.article-tags-list",
+                "author": ".section-article-autor",
             },
             {
                 "content": [
@@ -65,7 +67,9 @@ class DenikV3Extractor(ArticleExtractor):
                         "\n".join(text_unifications_transform(x))
                     ),
                 ],
+                "keywords": [get_text_transform, keywords_transform],
                 "category": [get_text_transform, category_transform],
+                "author": [get_text_transform, author_transform],
             },
             ".page",
         )

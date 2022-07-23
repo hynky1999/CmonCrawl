@@ -17,9 +17,11 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
         await self.di.aclose(None, None, None)
 
     async def test_indexer_num_pages(self):
-        num, size = await self.di.get_number_of_pages(
-            self.client, self.CC_SERVERS[0], "idnes.cz"
+        response = await self.di.get_number_of_pages(
+            self.client, self.CC_SERVERS[0], "idnes.cz", max_retry=20
         )
+        self.assertIsNotNone(response)
+        num, size = response.content
         self.assertEqual(num, 14)
         self.assertEqual(size, 5)
 
@@ -33,9 +35,10 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
 
     async def test_caputred_responses(self):
         responses = await self.di.get_captured_responses(
-            self.client, self.CC_SERVERS[0], "idnes.cz", retry=0, page=0
+            self.client, self.CC_SERVERS[0], "idnes.cz", page=0, max_retry=10
         )
-        self.assertEqual(len(responses), 12066)
+        self.assertIsNotNone(responses.content)
+        self.assertEqual(len(responses.content), 12066)
         print("XDDDDD", self.client.closed)
 
     async def test_since(self):
