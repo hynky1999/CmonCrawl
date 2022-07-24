@@ -3,7 +3,7 @@ from shutil import copy2, copyfile
 from xml.dom import minidom
 from pathlib import Path
 
-ARTEMIS_CFG = Path(os.environ.get("ARTEMIS_PATH", "/var/lib/artemis")) / "etc"
+ARTEMIS_CFG = Path(os.environ.get("ARTEMIS_RUN_PATH", "/var/lib/artemis")) / "etc"
 LOGIN_CFG = Path(
     os.environ.get("ARTEMIS_CFG", Path(__file__).parent.resolve() / "config")
 )
