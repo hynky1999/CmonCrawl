@@ -1,6 +1,5 @@
 #!/bin/bash
-# INDEXORS=('idnes.cz' 'aktualne.cz' 'novinky.cz' 'seznamzpravy.cz' 'irozhlas.cz')
-INDEXORS=('idnes.cz' 'aktualne.cz')
+INDEXORS=('idnes.cz' 'aktualne.cz' 'novinky.cz' 'seznamzpravy.cz' 'irozhlas.cz')
 PYTHON_PATH="/opt/python/3.10.4/bin/python3"
 ARTEMIS_HOST="cpu-node15"
 ARTEMIS_PORT="61602"
@@ -11,7 +10,7 @@ ARTEMIS_PATH="$(realpath "$(dirname "$0")"/Artemis)"
 AGGREGATOR_PATH="$(realpath "$(dirname "$0")"/Aggregator)"
 PROCESSOR_PATH="$(realpath "$(dirname "$0")"/Processor)"
 EXC="qsub -j y -cwd"
-PROCESSORS_NUM="$((5 * ${#INDEXORS[@]}))"
+PROCESSORS_NUM="$((7 * ${#INDEXORS[@]}))"
 
 #Artemis
 $EXC -o artemis.log -e artemis.err -q "cpu.q@$ARTEMIS_HOST" -pe smp 4 -l mem_free="$ARTEMIS_MEMORY_MAX",act_mem_free="$ARTEMIS_MEMORY_MAX" "$ARTEMIS_PATH/create_artemis.sh" "$ARTEMIS_PATH" "0.0.0.0"  "$ARTEMIS_PORT" "$HTTP_PORT" "$ARTEMIS_MEMORY_MAX"
