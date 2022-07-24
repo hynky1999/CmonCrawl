@@ -1,13 +1,16 @@
-import asyncio
+import sys
 from pathlib import Path
+
+sys.path.append(Path("App").absolute().as_posix())
+import asyncio
 import unittest
 import os
 import re
 from datetime import datetime
-from Downloader.download import Downloader
-from OutStreamer.stream_to_file import OutStreamerFileDefault
-from Router.router import Router
-from utils import DomainRecord, PipeMetadata
+from App.Downloader.download import Downloader
+from App.OutStreamer.stream_to_file import OutStreamerFileDefault
+from App.Router.router import Router
+from App.processor_utils import DomainRecord, PipeMetadata
 
 
 class DownloaderTests(unittest.IsolatedAsyncioTestCase):

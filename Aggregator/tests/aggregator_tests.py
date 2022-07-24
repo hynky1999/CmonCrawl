@@ -1,8 +1,18 @@
+import sys
+from pathlib import Path
+
+sys.path.append(Path("App").absolute().as_posix())
+
 from datetime import datetime
 from typing import List
-from aggregator import unify_url_id
-from index_query import DomainRecord, IndexAggregator
+from App.aggregator import unify_url_id
+from App.index_query import DomainRecord, IndexAggregator
 import unittest
+
+
+from App.utils import all_purpose_logger
+
+all_purpose_logger.setLevel("DEBUG")
 
 
 class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
@@ -127,22 +137,22 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
             "https://pocasi.idnes.cz/?t=img_v&regionId=6&d=03.12.2019%2005:00&strana=3",
         ]
         urls_ids = [
-            "idnes.cz/ekonomika/domaci/maso-polsko-drubezi-zavadne-salmonela",
-            "irozhlas.cz/ekonomika/ministerstvo-financi-oznami-lonsky-deficit-statniho-rozpoctu",
-            "idnes.cz/miliony-za-skodu-plzen-sly-tajemne-firme-do-karibiku-f9u-/domaci",
-            "aktualne.cz/domaci/faltynek-necekane-prijel-za-valkovou-blizi-se-jeji-konec/r",
-            "aktualne.cz/dvtv/dvtv-zive-babis-je-pod-obrovskym-tlakem-protoze-nejsme-best/r",
-            "aktualne.cz/snih-komplikuje-dopravu-v-praze-problemy-hlasi-i-severni-a-z/r",
-            "seznamzpravy.cz/clanek/domaci-zivot-v-cesku-manazer-obvineny-s-hlubuckem-za-korupci-ma-dostat-odmenu-az-13-milionu",
-            "denik.cz/staty-mimo-eu/rusko-ukrajina-valka-boje",
-            "denik.cz/z_domova/zdenek-skromach-chci-na-hrad-ale-proti-zemanovi-nepujdu",
-            "denik.cz/ekonomika/skoda-auto-odbory-odmitly-navrh-firmy",
-            "ihned.cz/c1-59259950-data-retention-zivot-v-zaznamech-mobilniho-operatora",
-            "ihned.cz/c1-65144800-south-stream-prijde-gazprom-draho-firma-pozaduje-za-zruseny-projekty-stovky-milionu-euro",
-            "novinky.cz/domaci/290965-nove-zvoleneho-prezidenta-si-hned-prevezme-ochranka",
-            "novinky.cz/zahranicni/svet/clanek/nas-vztah-s-ruskem-zapad-spatne-pochopil-rika-cina",
-            "novinky.cz",
-            "idnes.cz",
+            "www.idnes.cz/ekonomika/domaci/maso-polsko-drubezi-zavadne-salmonela",
+            "www.irozhlas.cz/ekonomika/ministerstvo-financi-oznami-lonsky-deficit-statniho-rozpoctu",
+            "zpravy.idnes.cz/miliony-za-skodu-plzen-sly-tajemne-firme-do-karibiku-f9u-/domaci",
+            "zpravy.aktualne.cz/domaci/faltynek-necekane-prijel-za-valkovou-blizi-se-jeji-konec/r",
+            "video.aktualne.cz/dvtv/dvtv-zive-babis-je-pod-obrovskym-tlakem-protoze-nejsme-best/r",
+            "zpravy.aktualne.cz/snih-komplikuje-dopravu-v-praze-problemy-hlasi-i-severni-a-z/r",
+            "www.seznamzpravy.cz/clanek/domaci-zivot-v-cesku-manazer-obvineny-s-hlubuckem-za-korupci-ma-dostat-odmenu-az-13-milionu",
+            "www.denik.cz/staty-mimo-eu/rusko-ukrajina-valka-boje",
+            "www.denik.cz/z_domova/zdenek-skromach-chci-na-hrad-ale-proti-zemanovi-nepujdu",
+            "www.denik.cz/ekonomika/skoda-auto-odbory-odmitly-navrh-firmy",
+            "data.blog.ihned.cz/c1-59259950-data-retention-zivot-v-zaznamech-mobilniho-operatora",
+            "archiv.ihned.cz/c1-65144800-south-stream-prijde-gazprom-draho-firma-pozaduje-za-zruseny-projekty-stovky-milionu-euro",
+            "www.novinky.cz/domaci/290965-nove-zvoleneho-prezidenta-si-hned-prevezme-ochranka",
+            "www.novinky.cz/zahranicni/svet/clanek/nas-vztah-s-ruskem-zapad-spatne-pochopil-rika-cina",
+            "www.novinky.cz",
+            "pocasi.idnes.cz",
         ]
         for i, url in enumerate(urls):
             self.assertEquals(unify_url_id(url), urls_ids[i])

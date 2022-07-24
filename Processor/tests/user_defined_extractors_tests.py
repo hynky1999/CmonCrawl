@@ -1,9 +1,16 @@
-from datetime import datetime
-from importlib.metadata import metadata
-import json
+import sys
 from pathlib import Path
+
+sys.path.append(Path("App").absolute().as_posix())
+
+from datetime import datetime
+import json
 import unittest
-from Router.router import Router
+from App.Router.router import Router
+from App.processor_utils import all_purpose_logger, metadata_logger
+
+all_purpose_logger.setLevel("DEBUG")
+metadata_logger.setLevel("DEBUG")
 
 
 from process_article import parse_article
@@ -27,7 +34,7 @@ def parse_extracted_json(extracted_path: Path):
 class IrozhlasTests(unittest.TestCase):
     def setUp(self) -> None:
         self.router = Router()
-        self.router.load_modules(str(Path("DoneExtractors").absolute()))
+        self.router.load_modules(str(Path("App/DoneExtractors").absolute()))
         self.router.register_route("irozhlas_cz", [r".*irozhlas\.cz.*"])
         self.name = "rozhlasCZ"
 
@@ -62,7 +69,7 @@ class IrozhlasTests(unittest.TestCase):
 class SeznamZpravyCZ(unittest.TestCase):
     def setUp(self) -> None:
         self.router = Router()
-        self.router.load_modules(str(Path("DoneExtractors").absolute()))
+        self.router.load_modules(str(Path("App/DoneExtractors").absolute()))
         self.router.register_route("irozhlas_cz", [r".*irozhlas\.cz.*"])
         self.router.register_route("seznamzpravy_cz", [r".*seznamzpravy\.cz.*"])
         self.name = "seznamzpravyCZ"
@@ -98,7 +105,7 @@ class SeznamZpravyCZ(unittest.TestCase):
 class NovinkyCZTests(unittest.TestCase):
     def setUp(self) -> None:
         self.router = Router()
-        self.router.load_modules(str(Path("DoneExtractors").absolute()))
+        self.router.load_modules(str(Path("App/DoneExtractors").absolute()))
         self.router.register_route("novinky_cz_v2", [r".*novinky\.cz.*"])
         self.router.register_route("novinky_cz_v1", [r".*novinky\.cz.*"])
         self.name = "novinkyCZ"
@@ -134,7 +141,7 @@ class NovinkyCZTests(unittest.TestCase):
 class AktualneCZTests(unittest.TestCase):
     def setUp(self) -> None:
         self.router = Router()
-        self.router.load_modules(str(Path("DoneExtractors").absolute()))
+        self.router.load_modules(str(Path("App/DoneExtractors").absolute()))
         self.router.register_route("aktualne_cz_v3", [r".*aktualne\.cz.*"])
         self.router.register_route("aktualne_cz_v2", [r".*aktualne\.cz.*"])
         self.router.register_route("aktualne_cz_v1", [r".*aktualne\.cz.*"])
@@ -171,7 +178,7 @@ class AktualneCZTests(unittest.TestCase):
 class IdnesCZ(unittest.TestCase):
     def setUp(self) -> None:
         self.router = Router()
-        self.router.load_modules(str(Path("DoneExtractors").absolute()))
+        self.router.load_modules(str(Path("App/DoneExtractors").absolute()))
         self.router.register_route("idnes_cz_v2", [r".*idnes\.cz.*"])
         self.router.register_route("idnes_cz_v1", [r".*idnes\.cz.*"])
         self.name = "idnesCZ"
@@ -207,7 +214,7 @@ class IdnesCZ(unittest.TestCase):
 class DenikCZ(unittest.TestCase):
     def setUp(self) -> None:
         self.router = Router()
-        self.router.load_modules(str(Path("DoneExtractors").absolute()))
+        self.router.load_modules(str(Path("App/DoneExtractors").absolute()))
         self.router.register_route("denik_cz_v1", [r".*denik\.cz.*"])
         self.router.register_route("denik_cz_v2", [r".*denik\.cz.*"])
         self.router.register_route("denik_cz_v3", [r".*denik\.cz.*"])
@@ -244,7 +251,7 @@ class DenikCZ(unittest.TestCase):
 class IhnedCZ(unittest.TestCase):
     def setUp(self) -> None:
         self.router = Router()
-        self.router.load_modules(str(Path("DoneExtractors").absolute()))
+        self.router.load_modules(str(Path("App/DoneExtractors").absolute()))
         self.router.register_route("ihned_cz_v1", [r".*ihned\.cz.*"])
         self.router.register_route("ihned_cz_v2", [r".*ihned\.cz.*"])
         self.router.register_route("ihned_cz_v3", [r".*ihned\.cz.*"])

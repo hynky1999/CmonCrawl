@@ -20,7 +20,7 @@ def adjust_broker_config(mytree: minidom.Document):
         """
     <root>
         <duplicates>
-            <id-cache-size>100000000</id-cache-size>
+            <id-cache-size>10000000</id-cache-size>
             <persist-id-cache>true</persist-id-cache>
         </duplicates>
         <wildcard>
@@ -79,6 +79,7 @@ def adjust_broker_config(mytree: minidom.Document):
     for child in broker_settings.getElementsByTagName("addresses")[0].childNodes:
         if isinstance(child, minidom.Element):
             addresses.insertBefore(child.cloneNode(True), addresses.firstChild)
+
     return mytree
 
 

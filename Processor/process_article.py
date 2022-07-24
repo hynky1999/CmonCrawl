@@ -1,8 +1,14 @@
+import json
+import sys
+from pathlib import Path
+
+sys.path.append(Path("App").absolute().as_posix())
+
+
 import argparse
 from datetime import datetime
-from pathlib import Path
 import re
-from typing import List
+from typing import Any, Dict, List
 
 import bs4
 import asyncio
@@ -11,12 +17,20 @@ from OutStreamer.stream_to_file import (
 )
 
 from Router.router import Router
-from utils import DomainRecord, PipeMetadata, all_purpose_logger, metadata_logger
+from processor_utils import (
+    DomainRecord,
+    PipeMetadata,
+    all_purpose_logger,
+    metadata_logger,
+)
+
+# sys.path.append(Path("Processor").absolute().as_posix())
+# sys.path.append(Path("Aggregator").absolute().as_posix())
 
 FOLDER = "articles_processed"
 
-all_purpose_logger.setLevel("INFO")
-metadata_logger.setLevel("WARN")
+all_purpose_logger.setLevel("DEBUG")
+metadata_logger.setLevel("DEBUG")
 
 
 def parse_article(article_path: Path):
@@ -66,7 +80,15 @@ def parse_article(article_path: Path):
     return article, metadata
 
 
-async def article_process(article_path: List[Path], output_path: Path, router: Router):
+async def article_process(
+    article_path: List[Path], output_path: Path, config_path: Path
+):
+
+    with open(config_path, "r") as f:
+        config = json.load(f)
+    router = Router()
+    router.load_modules(str(Path("App/DoneExtractors").absolute()))
+    router.register_routes(config.get("routes", []))
     outstreamer = OutStreamerFileJSON(origin=output_path, pretty=True, order_num=False)
     for article in article_path:
         article, metadata = parse_article(article)
@@ -90,24 +112,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Download articles")
     parser.add_argument("article_path", nargs="+", type=Path)
     parser.add_argument("output_path", type=Path)
+    parser.add_argument("--config_path", type=Path, default=Path("App/config.json"))
     args = parser.parse_args()
 
-    # Router
-    router = Router()
-    router.load_modules(str(Path("DoneExtractors").absolute()))
-    router.register_route("idnes_cz_v1", [r".*idnes\.cz.*"])
-    router.register_route("idnes_cz_v2", [r".*idnes\.cz.*"])
-    router.register_route("seznamzpravy_cz", [r".*seznamzpravy\.cz.*"])
-    router.register_route("irozhlas_cz", [r".*irozhlas\.cz.*"])
-    router.register_route("novinky_cz_v1", [r".*novinky\.cz.*"])
-    router.register_route("novinky_cz_v2", [r".*novinky\.cz.*"])
-    router.register_route("aktualne_cz_v1", [r".*aktualne\.cz.*"])
-    router.register_route("aktualne_cz_v2", [r".*aktualne\.cz.*"])
-    router.register_route("aktualne_cz_v3", [r".*aktualne\.cz.*"])
-    router.register_route("denik_cz_v1", [r".*denik\.cz.*"])
-    router.register_route("denik_cz_v2", [r".*denik\.cz.*"])
-    router.register_route("denik_cz_v3", [r".*denik\.cz.*"])
-    router.register_route("ihned_cz_v1", [r".*ihned\.cz.*"])
-    router.register_route("ihned_cz_v2", [r".*ihned\.cz.*"])
-    router.register_route("ihned_cz_v3", [r".*ihned\.cz.*"])
-    asyncio.run(article_process(**vars(args), router=router))
+    asyncio.run(article_process(**vars(args)))

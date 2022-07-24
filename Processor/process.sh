@@ -1,9 +1,5 @@
 #!/bin/bash
-
-ENV_PATH="myenv"
-if [[ ! -e "$ENV_PATH" ]]; then
-    conda env create --prefix "$ENV_PATH" --file environment.yml
-fi
-
-conda run --no-capture-output --prefix "$ENV_PATH" python processor.py "$@"
+SCRIPT=$(realpath "$0")
+cd "$(dirname "$SCRIPT")/App" || exit
+conda run  --prefix="$ENV_PATH" --no-capture-output python processor.py "$@"
 
