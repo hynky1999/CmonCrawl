@@ -1,6 +1,5 @@
 #!/bin/bash
-cd "./App" || exit
-ENV_PATH="$(shift)"
-echo "$ENV_PATH"
-# conda run  --prefix="$ENV_PATH" --no-capture-output python aggregator.py "$@"
+AGG_PATH="$1" && shift
+"${AGG_PATH}/env/bin/python3" "$AGG_PATH/App/aggregator.py" "$@"
+
 

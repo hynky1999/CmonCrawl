@@ -20,8 +20,8 @@ def adjust_broker_config(mytree: minidom.Document):
         """
     <root>
         <duplicates>
-            <id-cache-size>10000000</id-cache-size>
-            <persist-id-cache>true</persist-id-cache>
+            <id-cache-size>100000000</id-cache-size>
+            <persist-id-cache>false</persist-id-cache>
         </duplicates>
         <wildcard>
             <wildcard-addresses>

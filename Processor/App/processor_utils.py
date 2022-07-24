@@ -47,8 +47,8 @@ if not metadata_logger.hasHandlers():
     metadata_logger.addHandler(handler)
 
 all_purpose_logger = logging.getLogger("prod_all_purose_logger")
+all_purpose_logger.setLevel(logging.INFO)
 if not all_purpose_logger.hasHandlers():
-    all_purpose_logger.setLevel(logging.INFO)
     all_purpose_logger.propagate = False
     handler = logging.StreamHandler()
     handler.setFormatter(

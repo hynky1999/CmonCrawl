@@ -18,8 +18,8 @@ from Pipeline.pipeline import ProcessorPipeline
 from processor_utils import DomainRecord, all_purpose_logger, metadata_logger
 from Router.router import Router
 
-all_purpose_logger.setLevel(logging.WARN)
-metadata_logger.setLevel(logging.INFO)
+all_purpose_logger.setLevel(logging.INFO)
+metadata_logger.setLevel(logging.WARN)
 
 
 @dataclass
@@ -136,9 +136,9 @@ async def processor(
         try:
             if use_hostname_output:
                 output_path = get_hostname_output_path(output_path)
-                pipeline = init_pipeline(
-                    downloader, extractors_path, output_path, config
-                )
+            pipeline = init_pipeline(
+                downloader, extractors_path, output_path, config
+            )
         except Exception as e:
             all_purpose_logger.error(f"{e}", exc_info=True)
             return
@@ -185,7 +185,11 @@ async def processor(
                             )
                         )
                     )
-            except (Exception) as e:
+            except StompException as e:
+                all_purpose_logger.error(e, exc_info=True)
+                continue
+
+            except Exception as e:
                 all_purpose_logger.error(e, exc_info=True)
                 break
 

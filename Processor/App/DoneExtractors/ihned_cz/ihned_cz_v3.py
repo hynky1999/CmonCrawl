@@ -69,4 +69,4 @@ class DenikV3Extractor(ArticleExtractor):
         return extracted_dict
 
 
-extractor = DenikV2Extractor()
+extractor = DenikV3Extractor()
