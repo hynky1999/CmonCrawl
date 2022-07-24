@@ -1,14 +1,16 @@
-import asyncio
+import sys
 from pathlib import Path
+
+sys.path.append(Path("App").absolute().as_posix())
+import asyncio
 import unittest
 import os
 import re
 from datetime import datetime
-from Downloader.download import Downloader
-from Downloader.warc import PipeMetadata
-from OutStreamer.stream_to_file import OutStreamerFileDefault
-from Router.router import Router
-from utils import DomainRecord
+from App.Downloader.download import Downloader
+from App.OutStreamer.stream_to_file import OutStreamerFileDefault
+from App.Router.router import Router
+from App.processor_utils import DomainRecord, PipeMetadata
 
 
 class DownloaderTests(unittest.IsolatedAsyncioTestCase):
@@ -24,28 +26,8 @@ class DownloaderTests(unittest.IsolatedAsyncioTestCase):
             timestamp=datetime.today(),
             encoding="latin-1",
         )
-        metadata = PipeMetadata(domain_record=dr)
-        res = await self.downloader.download(dr, metadata)
+        res = (await self.downloader.download(dr))[0][0]
         self.assertIsNotNone(re.search("Provozovatelem serveru iDNES.cz je MAFRA", res))
-
-    async def test_digest_verification_sha(self):
-        dr = DomainRecord(
-            url="idnes.cz",
-            filename="crawl-data/CC-MAIN-2022-05/segments/1642320302715.38/warc/CC-MAIN-20220121010736-20220121040736-00132.warc.gz",
-            length=30698,
-            offset=863866755,
-            timestamp=datetime.today(),
-            encoding="latin-1",
-        )
-        metadata = PipeMetadata(domain_record=dr)
-        res = await self.downloader.download(dr, metadata)
-        hash_type = "sha1"
-        digest = "5PWKBZGXQFKX4VHAFUMMN34FC76OBXVX"
-        self.assertTrue(
-            self.downloader.verify_digest(
-                hash_type, digest, res, metadata.domain_record.encoding
-            )
-        )
 
     async def asyncTearDown(self) -> None:
         await self.downloader.aclose(None, None, None)

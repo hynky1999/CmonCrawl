@@ -1,10 +1,18 @@
+import sys
+from pathlib import Path
+
+sys.path.append(Path("App").absolute().as_posix())
+
 from datetime import datetime
-import logging
 from typing import List
-from index_query import DomainRecord, IndexAggregator
+from App.aggregator import unify_url_id
+from App.index_query import DomainRecord, IndexAggregator
 import unittest
 
-logging.basicConfig(level=logging.DEBUG)
+
+from App.utils import all_purpose_logger
+
+all_purpose_logger.setLevel("DEBUG")
 
 
 class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
@@ -19,9 +27,11 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
         await self.di.aclose(None, None, None)
 
     async def test_indexer_num_pages(self):
-        num, size = await self.di.get_number_of_pages(
-            self.client, self.CC_SERVERS[0], "idnes.cz"
+        response = await self.di.get_number_of_pages(
+            self.client, self.CC_SERVERS[0], "idnes.cz", max_retry=20
         )
+        self.assertIsNotNone(response)
+        num, size = response.content
         self.assertEqual(num, 14)
         self.assertEqual(size, 5)
 
@@ -31,13 +41,14 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
         )
         # I better make this quickly because next Crawl comming soon
         # Since I plan to make add date restrictions this will be easly fixable
-        self.assertEqual(len(indexes), 88)
+        self.assertEqual(len(indexes), 89)
 
     async def test_caputred_responses(self):
         responses = await self.di.get_captured_responses(
-            self.client, self.CC_SERVERS[0], "idnes.cz", retry=0, page=0
+            self.client, self.CC_SERVERS[0], "idnes.cz", page=0, max_retry=10
         )
-        self.assertEqual(len(responses), 12066)
+        self.assertIsNotNone(responses.content)
+        self.assertEqual(len(responses.content), 12066)
         print("XDDDDD", self.client.closed)
 
     async def test_since(self):
@@ -105,6 +116,46 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
         for iterator in self.di.iterators:
             for task in iterator.prefetch_queue:
                 self.assertTrue(task.cancelled() or task.done())
+
+    async def test_unify_urls_id(self):
+        urls = [
+            "https://www.idnes.cz/ekonomika/domaci/maso-polsko-drubezi-zavadne-salmonela.A190301_145636_ekonomika_svob",
+            "https://www.irozhlas.cz/ekonomika/ministerstvo-financi-oznami-lonsky-deficit-statniho-rozpoctu-_201201030127_mdvorakova",
+            "http://zpravy.idnes.cz/miliony-za-skodu-plzen-sly-tajemne-firme-do-karibiku-f9u-/domaci.aspx?c=A120131_221541_domaci_brm",
+            "http://zpravy.aktualne.cz/domaci/faltynek-necekane-prijel-za-valkovou-blizi-se-jeji-konec/r~ed7fae16abe111e4ba57002590604f2e/",
+            "https://video.aktualne.cz/dvtv/dvtv-zive-babis-je-pod-obrovskym-tlakem-protoze-nejsme-best/r~6c744d0c803f11eb9f15ac1f6b220ee8/",
+            "https://zpravy.aktualne.cz/snih-komplikuje-dopravu-v-praze-problemy-hlasi-i-severni-a-z/r~725593e0279311e991e8ac1f6b220ee8/",
+            "https://www.seznamzpravy.cz/clanek/domaci-zivot-v-cesku-manazer-obvineny-s-hlubuckem-za-korupci-ma-dostat-odmenu-az-13-milionu-209379",
+            "https://www.denik.cz/staty-mimo-eu/rusko-ukrajina-valka-boje-20220306.html",
+            "http://www.denik.cz/z_domova/zdenek-skromach-chci-na-hrad-ale-proti-zemanovi-nepujdu-20150204.html",
+            "https://www.denik.cz/ekonomika/skoda-auto-odbory-odmitly-navrh-firmy-20180209.html",
+            "http://data.blog.ihned.cz/c1-59259950-data-retention-zivot-v-zaznamech-mobilniho-operatora",
+            "http://archiv.ihned.cz/c1-65144800-south-stream-prijde-gazprom-draho-firma-pozaduje-za-zruseny-projekty-stovky-milionu-euro",
+            "http://www.novinky.cz/domaci/290965-nove-zvoleneho-prezidenta-si-hned-prevezme-ochranka.html",
+            "https://www.novinky.cz/zahranicni/svet/clanek/nas-vztah-s-ruskem-zapad-spatne-pochopil-rika-cina-40403627",
+            "https://www.novinky.cz",
+            "https://pocasi.idnes.cz/?t=img_v&regionId=6&d=03.12.2019%2005:00&strana=3",
+        ]
+        urls_ids = [
+            "www.idnes.cz/ekonomika/domaci/maso-polsko-drubezi-zavadne-salmonela",
+            "www.irozhlas.cz/ekonomika/ministerstvo-financi-oznami-lonsky-deficit-statniho-rozpoctu",
+            "zpravy.idnes.cz/miliony-za-skodu-plzen-sly-tajemne-firme-do-karibiku-f9u-/domaci",
+            "zpravy.aktualne.cz/domaci/faltynek-necekane-prijel-za-valkovou-blizi-se-jeji-konec/r",
+            "video.aktualne.cz/dvtv/dvtv-zive-babis-je-pod-obrovskym-tlakem-protoze-nejsme-best/r",
+            "zpravy.aktualne.cz/snih-komplikuje-dopravu-v-praze-problemy-hlasi-i-severni-a-z/r",
+            "www.seznamzpravy.cz/clanek/domaci-zivot-v-cesku-manazer-obvineny-s-hlubuckem-za-korupci-ma-dostat-odmenu-az-13-milionu",
+            "www.denik.cz/staty-mimo-eu/rusko-ukrajina-valka-boje",
+            "www.denik.cz/z_domova/zdenek-skromach-chci-na-hrad-ale-proti-zemanovi-nepujdu",
+            "www.denik.cz/ekonomika/skoda-auto-odbory-odmitly-navrh-firmy",
+            "data.blog.ihned.cz/c1-59259950-data-retention-zivot-v-zaznamech-mobilniho-operatora",
+            "archiv.ihned.cz/c1-65144800-south-stream-prijde-gazprom-draho-firma-pozaduje-za-zruseny-projekty-stovky-milionu-euro",
+            "www.novinky.cz/domaci/290965-nove-zvoleneho-prezidenta-si-hned-prevezme-ochranka",
+            "www.novinky.cz/zahranicni/svet/clanek/nas-vztah-s-ruskem-zapad-spatne-pochopil-rika-cina",
+            "www.novinky.cz",
+            "pocasi.idnes.cz",
+        ]
+        for i, url in enumerate(urls):
+            self.assertEquals(unify_url_id(url), urls_ids[i])
 
 
 if __name__ == "__main__":
