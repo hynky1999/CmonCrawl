@@ -3,7 +3,7 @@ from shutil import copy2, copyfile
 from xml.dom import minidom
 from pathlib import Path
 
-ARTEMIS_CFG = Path(os.environ.get("ARTEMIS_PATH", "/var/lib/artemis")) / "etc"
+ARTEMIS_CFG = Path(os.environ.get("ARTEMIS_RUN_PATH", "/var/lib/artemis")) / "etc"
 LOGIN_CFG = Path(
     os.environ.get("ARTEMIS_CFG", Path(__file__).parent.resolve() / "config")
 )
@@ -20,8 +20,8 @@ def adjust_broker_config(mytree: minidom.Document):
         """
     <root>
         <duplicates>
-            <id-cache-size>10000000</id-cache-size>
-            <persist-id-cache>true</persist-id-cache>
+            <id-cache-size>100000000</id-cache-size>
+            <persist-id-cache>false</persist-id-cache>
         </duplicates>
         <wildcard>
             <wildcard-addresses>

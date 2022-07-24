@@ -16,7 +16,7 @@ from utils import all_purpose_logger
 
 DUPL_ID_HEADER = "_AMQ_DUPL_ID"
 logging.basicConfig(level=logging.WARN)
-all_purpose_logger.setLevel(logging.WARN)
+all_purpose_logger.setLevel(logging.INFO)
 
 
 def init_connection(conn: Connection):
@@ -79,6 +79,7 @@ async def aggregate(
             try:
                 while not conn.is_connected():
                     conn = init_connection(conn)
+
                 json_str = json.dumps(domain_record.__dict__, default=str)
                 id = unify_url_id(domain_record.url)
                 conn.send(

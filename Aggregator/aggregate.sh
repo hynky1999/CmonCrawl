@@ -1,5 +1,5 @@
 #!/bin/bash
-SCRIPT=$(realpath "$0")
-cd "$(dirname "$SCRIPT")/App" || exit
-conda run  --prefix="$ENV_PATH" --no-capture-output python aggregator.py "$@"
+AGG_PATH="$1" && shift
+"${AGG_PATH}/env/bin/python3" "$AGG_PATH/App/aggregator.py" "$@"
+
 
