@@ -1,8 +1,10 @@
 FROM continuumio/miniconda3
-WORKDIR /app
-
+WORKDIR /var/lib/Processor
 COPY ./environment.yml .
 RUN conda env create --name myenv --file environment.yml
-COPY ./App .
+COPY ./App ./App
+COPY processor.py .
+COPY __init__.py .
+WORKDIR /var/lib
 SHELL ["conda", "run", "-n", "myenv"]
-ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "myenv", "python", "processor.py"]
+ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "myenv", "python3", "-m" , "Processor.processor", "--output_path=/output"]

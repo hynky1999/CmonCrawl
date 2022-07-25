@@ -1,15 +1,15 @@
 import json
 from typing import Any, Dict
 from bs4 import BeautifulSoup, Tag
-from Extractor.extractor_utils import (
+from Processor.App.Extractor.extractor_utils import (
     extract_transform,
     get_attribute_transform,
     get_tag_transform,
     get_text_transform,
 )
-from ArticleUtils.article_extractor import ArticleExtractor
+from Processor.App.ArticleUtils.article_extractor import ArticleExtractor
 
-from ArticleUtils.article_utils import (
+from Processor.App.ArticleUtils.article_utils import (
     ALLOWED_H,
     LIST_TAGS,
     TABLE_TAGS,
@@ -22,8 +22,8 @@ from ArticleUtils.article_utils import (
     headline_transform,
     keywords_transform,
 )
-from processor_utils import PipeMetadata
-from DoneExtractors.aktualne_cz.aktualne_cz_v1 import year_since_to_re
+from Processor.App.processor_utils import PipeMetadata
+from Processor.App.DoneExtractors.aktualne_cz.aktualne_cz_v1 import year_since_to_re
 
 allowed_classes_div = {
     # text

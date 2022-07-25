@@ -12,11 +12,15 @@ from typing import Any, Dict, List, Set, Tuple
 from stomp import Connection, ConnectionListener
 from stomp.utils import Frame
 from stomp.exception import StompException
-from Downloader.download import Downloader
-from OutStreamer.stream_to_file import OutStreamerFileJSON
-from Pipeline.pipeline import ProcessorPipeline
-from processor_utils import DomainRecord, all_purpose_logger, metadata_logger
-from Router.router import Router
+from Processor.App.Downloader.downloader import DownloaderFull
+from Processor.App.OutStreamer.stream_to_file import OutStreamerFileJSON
+from Processor.App.Pipeline.pipeline import ProcessorPipeline
+from Processor.App.processor_utils import (
+    DomainRecord,
+    all_purpose_logger,
+    metadata_logger,
+)
+from Processor.App.Router.router import Router
 
 all_purpose_logger.setLevel(logging.INFO)
 metadata_logger.setLevel(logging.WARN)
@@ -35,7 +39,7 @@ class ListnerStats:
 
 
 def init_pipeline(
-    downloader: Downloader,
+    downloader: DownloaderFull,
     extractors_path: Path,
     output_path: Path,
     config: Dict[str, Any],
@@ -119,6 +123,7 @@ async def processor(
     timeout: int,
     config_path: Path,
     extractors_path: Path,
+    max_retry: int,
 ):
     timeout_delta = timedelta(minutes=timeout)
     with open(Path(config_path)) as f:
@@ -132,13 +137,11 @@ async def processor(
     conn.set_listener("", listener)
     all_purpose_logger.debug("Connecting to queue")
     extracted_num = 0
-    async with Downloader(max_retry=20, sleep_step=5) as downloader:
+    async with DownloaderFull(max_retry=max_retry, sleep_step=5) as downloader:
         try:
             if use_hostname_output:
                 output_path = get_hostname_output_path(output_path)
-            pipeline = init_pipeline(
-                downloader, extractors_path, output_path, config
-            )
+            pipeline = init_pipeline(downloader, extractors_path, output_path, config)
         except Exception as e:
             all_purpose_logger.error(f"{e}", exc_info=True)
             return
@@ -193,6 +196,7 @@ async def processor(
                 all_purpose_logger.error(e, exc_info=True)
                 break
 
+        # Process reamining stuff in queue
         gathered = await asyncio.gather(*pending_extracts, return_exceptions=True)
         for task in gathered:
             if isinstance(task, Exception):
@@ -220,6 +224,15 @@ if __name__ == "__main__":
     parser.add_argument("--output_path", type=Path, default=Path("output"))
     parser.add_argument("--use_hostname_output", action="store_true")
     parser.add_argument("--timeout", type=int, default=60)
-    parser.add_argument("--config_path", type=Path, default=Path("config.json"))
-    parser.add_argument("--extractors_path", type=Path, default=Path("DoneExtractors"))
+    parser.add_argument("--max_retry", type=int, default=20)
+    parser.add_argument(
+        "--config_path",
+        type=Path,
+        default=Path(__file__).parent / "App" / "config.json",
+    )
+    parser.add_argument(
+        "--extractors_path",
+        type=Path,
+        default=Path(__file__).parent / "App" / "DoneExtractors",
+    )
     asyncio.run(processor(**vars(parser.parse_args())))

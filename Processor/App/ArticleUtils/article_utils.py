@@ -5,7 +5,10 @@ from urllib.parse import ParseResult
 
 from bs4 import BeautifulSoup, Tag
 
-from Extractor.extractor_utils import get_tag_transform, get_text_transform
+from Processor.App.Extractor.extractor_utils import (
+    get_tag_transform,
+    get_text_transform,
+)
 
 LINE_SEPARATOR = "\n"
 

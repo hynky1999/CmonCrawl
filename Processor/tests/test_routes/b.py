@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 from App.Extractor.extractor import BaseExtractor
-from processor_utils import PipeMetadata
+from App.processor_utils import PipeMetadata
 
 
 NAME = "BBB"

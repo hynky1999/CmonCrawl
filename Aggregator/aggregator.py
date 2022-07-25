@@ -4,15 +4,14 @@ from datetime import datetime
 import json
 import logging
 import re
-import sys
 from typing import List
 from urllib.parse import urlparse
 
 from stomp import Connection
 from stomp.exception import StompException
 
-from index_query import IndexAggregator
-from utils import all_purpose_logger
+from Aggregator.App.index_query import IndexAggregator
+from Aggregator.App.utils import all_purpose_logger
 
 DUPL_ID_HEADER = "_AMQ_DUPL_ID"
 logging.basicConfig(level=logging.WARN)
@@ -54,11 +53,12 @@ async def aggregate(
     since: datetime,
     to: datetime,
     limit: int | None,
-    max_retries: int,
+    max_retry: int,
     prefetch_size: int,
     sleep_step: int,
 ):
     conn = Connection([(queue_host, queue_port)], heartbeats=(10000, 10000))
+    # make sure we have connection so that we cant send the poission pill
     while conn.is_connected() is False:
         try:
             conn = init_connection(conn)
@@ -72,7 +72,7 @@ async def aggregate(
         to=to,
         limit=limit,
         prefetch_size=prefetch_size,
-        max_retry=max_retries,
+        max_retry=max_retry,
         sleep_step=sleep_step,
     ) as aggregator:
         async for domain_record in aggregator:
@@ -109,7 +109,7 @@ if __name__ == "__main__":
     parser.add_argument("--queue_port", type=int, default=61616)
     parser.add_argument("--cc_servers", nargs="+", type=str, default=[])
     parser.add_argument("--prefetch_size", type=int, default=2)
-    parser.add_argument("--max_retries", type=int, default=20)
+    parser.add_argument("--max_retry", type=int, default=20)
     parser.add_argument("--sleep_step", type=int, default=5)
     args = vars(parser.parse_args())
     if isinstance(args["since"], str):

@@ -1,7 +1,7 @@
 from datetime import datetime
 import re
 from typing import Any, Dict
-from ArticleUtils.article_utils import (
+from Processor.App.ArticleUtils.article_utils import (
     ALLOWED_H,
     LIST_TAGS,
     TABLE_TAGS,
@@ -9,21 +9,20 @@ from ArticleUtils.article_utils import (
     author_transform,
     brief_transform,
     category_transform,
-    comments_num_transform,
     date_complex_extract,
     headline_transform,
     keywords_transform,
 )
-from Extractor.extractor_utils import (
+from Processor.App.Extractor.extractor_utils import (
     get_attribute_transform,
     get_tag_transform,
     get_tags_transform,
     get_text_list_transform,
     get_text_transform,
 )
-from processor_utils import PipeMetadata
+from Processor.App.processor_utils import PipeMetadata
 from bs4 import BeautifulSoup, Tag
-from ArticleUtils.article_extractor import ArticleExtractor
+from Processor.App.ArticleUtils.article_extractor import ArticleExtractor
 
 
 allowed_classes_p = {"p1"}

@@ -4,8 +4,8 @@ from typing import Any, Dict
 
 from bs4 import BeautifulSoup
 
-from ArticleUtils.article_extractor import ArticleExtractor
-from ArticleUtils.article_utils import (
+from Processor.App.ArticleUtils.article_extractor import ArticleExtractor
+from Processor.App.ArticleUtils.article_utils import (
     article_content_transform,
     author_transform,
     brief_transform,
@@ -14,14 +14,14 @@ from ArticleUtils.article_utils import (
     headline_transform,
     keywords_transform,
 )
-from Extractor.extractor_utils import (
+from Processor.App.Extractor.extractor_utils import (
     get_attribute_transform,
     get_tag_transform,
     get_tags_transform,
     get_text_list_transform,
     get_text_transform,
 )
-from processor_utils import PipeMetadata
+from Processor.App.processor_utils import PipeMetadata
 
 date_sub = re.compile(r"(\(?Poslední aktualizace) | (\(aktualizováno.*)")
 

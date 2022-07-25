@@ -1,118 +1,76 @@
+from datetime import datetime
 import json
-import sys
+import logging
+import os
 from pathlib import Path
 
-sys.path.append(Path("App").absolute().as_posix())
+from Processor.App.Downloader.dummy_downloader import DownloaderDummy
+from Processor.App.Pipeline.pipeline import ProcessorPipeline
 
 
 import argparse
-from datetime import datetime
-import re
-from typing import Any, Dict, List
-
-import bs4
+from typing import List
 import asyncio
-from OutStreamer.stream_to_file import (
+from Processor.App.OutStreamer.stream_to_file import (
     OutStreamerFileJSON,
 )
 
-from Router.router import Router
-from processor_utils import (
+from Processor.App.Router.router import Router
+from Processor.App.processor_utils import (
     DomainRecord,
-    PipeMetadata,
     all_purpose_logger,
     metadata_logger,
 )
 
-# sys.path.append(Path("Processor").absolute().as_posix())
-# sys.path.append(Path("Aggregator").absolute().as_posix())
-
-FOLDER = "articles_processed"
-
-all_purpose_logger.setLevel("DEBUG")
-metadata_logger.setLevel("DEBUG")
-
-
-def parse_article(article_path: Path):
-    with open(article_path, "r") as f:
-        article = f.read()
-
-    bs4_article = bs4.BeautifulSoup(article, "html.parser")
-    url = None
-    url_match = bs4_article.select_one("meta[property='og:url']")
-    # This is terrible but works
-    if url is None:
-        if url_match:
-            url = url_match.get("content")
-    if url is None:
-        url_match = bs4_article.select_one("link[rel='home']")
-        if url_match:
-            url = url_match.get("href")
-            url += "/category/"
-    if url is None:
-        url_match = bs4_article.select_one("link[title*='RSS']")
-        if url_match:
-            url = url_match.get("href")
-            url += "/category/"
-    if url is None:
-        url_match = bs4_article.select_one("link[media*='handheld']")
-        if url_match:
-            url = url_match.get("href")
-            url += "/category/"
-
-    year = re.search(r"\d{4}", article_path.name)
-    if year is None:
-        year = 2020
-    else:
-        year = int(year.group(0))
-    all_purpose_logger.debug(f"Found url: {url}")
-
-    metadata = PipeMetadata(
-        DomainRecord(
-            filename=article_path.stem,
-            url=url,
-            offset=0,
-            length=100,
-            timestamp=datetime(year, 1, 1),
-        ),
-        encoding="utf-8",
-    )
-    return article, metadata
+all_purpose_logger.setLevel(logging.DEBUG)
+metadata_logger.setLevel(logging.DEBUG)
 
 
 async def article_process(
-    article_path: List[Path], output_path: Path, config_path: Path
+    article_path: List[Path],
+    output_path: Path,
+    config_path: Path,
+    extractors_path: Path,
+    url: str | None,
+    date: datetime | None,
 ):
 
     with open(config_path, "r") as f:
         config = json.load(f)
     router = Router()
-    router.load_modules(str(Path("App/DoneExtractors").absolute()))
+    router.load_modules(extractors_path)
     router.register_routes(config.get("routes", []))
+    downloader = DownloaderDummy(article_path, url, date)
     outstreamer = OutStreamerFileJSON(origin=output_path, pretty=True, order_num=False)
-    for article in article_path:
-        article, metadata = parse_article(article)
-
-        try:
-            extractor = router.route(
-                metadata.domain_record.url, metadata.domain_record.timestamp, metadata
-            )
-            output = extractor.extract(article, metadata)
-            if output is None:
-                continue
-            metadata.name = metadata.domain_record.filename
-            await outstreamer.stream(output, metadata)
-        except Exception as e:
-            metadata_logger.error(
-                e, exc_info=True, extra={"domain_record": metadata.domain_record}
-            )
+    pipeline = ProcessorPipeline(router, downloader, outstreamer)
+    # Will be changed anyway
+    dummy_record = DomainRecord("", "", 0, 0)
+    for path in article_path:
+        created_paths = await pipeline.process_domain_record(dummy_record)
+        if len(created_paths) == 0:
+            continue
+        created_path = created_paths[0]
+        os.rename(created_path, created_path.parent / (path.stem + ".json"))
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Download articles")
     parser.add_argument("article_path", nargs="+", type=Path)
     parser.add_argument("output_path", type=Path)
-    parser.add_argument("--config_path", type=Path, default=Path("App/config.json"))
-    args = parser.parse_args()
+    parser.add_argument(
+        "--config_path",
+        type=Path,
+        default=Path(__file__).parent / "App" / "config.json",
+    )
+    parser.add_argument(
+        "--extractors_path",
+        type=Path,
+        default=Path(Path(__file__).parent / "App" / "DoneExtractors"),
+    )
+    parser.add_argument("--date", type=str)
+    parser.add_argument("--url", type=str)
+    args = vars(parser.parse_args())
+    if isinstance(args["date"], str):
+        args["date"] = datetime.fromisoformat(args["date"])
 
-    asyncio.run(article_process(**vars(args)))
+    asyncio.run(article_process(**args))

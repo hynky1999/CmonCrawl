@@ -1,18 +1,35 @@
 from __future__ import annotations
 import asyncio
+from datetime import datetime
 import io
+from pathlib import Path
 import random
+import re
 from types import TracebackType
 from aiohttp import ClientError, ClientSession
 from typing import List, Tuple, Type
+from aiofiles import open as asyncOpen
+import bs4
 
-from processor_utils import DomainRecord, PipeMetadata, metadata_logger
+from Processor.App.processor_utils import (
+    DomainRecord,
+    PipeMetadata,
+    metadata_logger,
+    all_purpose_logger,
+)
 from warcio import ArchiveIterator
 
 ALLOWED_ERR_FOR_RETRIES = [500, 502, 503, 504]
 
-
+# TODO add dummy extractor for testing
 class Downloader:
+    async def download(
+        self, domain_record: DomainRecord
+    ) -> (List[Tuple[str, PipeMetadata]]):
+        raise NotImplementedError()
+
+
+class DownloaderFull(Downloader):
     def __init__(
         self,
         base_url: str = "https://data.commoncrawl.org/",
@@ -34,7 +51,7 @@ class Downloader:
         return await self.aopen()
 
     async def download(self, domain_record: DomainRecord):
-        def should_retry(retry: int, reason: str, status: int, **args):
+        def should_retry(retry: int, reason: str, status: int, **args: str):
             metadata_logger.error(
                 f"Failed to retrieve from domain_record {status}: {reason} retry: {retry+1}/{self.__max_retry} add_info: {args}",
                 extra={"domain_record": domain_record},

@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
-from Extractor.extractor import BaseExtractor
-from processor_utils import PipeMetadata, metadata_logger
+from Processor.App.Extractor.extractor import BaseExtractor
+from Processor.App.processor_utils import PipeMetadata, metadata_logger
 
 
 class Extractor(BaseExtractor):

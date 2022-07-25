@@ -1,6 +1,6 @@
 from datetime import datetime
-from ArticleUtils.article_extractor import ArticleExtractor
-from ArticleUtils.article_utils import (
+from Processor.App.ArticleUtils.article_extractor import ArticleExtractor
+from Processor.App.ArticleUtils.article_utils import (
     article_content_transform,
     author_transform,
     brief_transform,
@@ -11,8 +11,8 @@ from ArticleUtils.article_utils import (
     iso_date_transform,
     keywords_transform,
 )
-from DoneExtractors.idnes_cz.idnes_cz_v1 import date_transform
-from Extractor.extractor_utils import (
+from Processor.App.DoneExtractors.idnes_cz.idnes_cz_v1 import date_transform
+from Processor.App.Extractor.extractor_utils import (
     get_attribute_transform,
     get_tags_transform,
     get_text_list_transform,

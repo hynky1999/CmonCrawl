@@ -11,6 +11,7 @@
     ],
     "python.testing.pytestEnabled": false,
     "python.testing.unittestEnabled": true,
-    "python.analysis.typeCheckingMode": "basic",
-    "python.linting.mypyPath": "/usr/bin/mypy"
+    "python.analysis.typeCheckingMode": "strict",
+    "python.linting.mypyPath": "/usr/bin/mypy",
+    "cSpell.enabled": true
 }

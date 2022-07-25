@@ -1,5 +1,17 @@
 from typing import Any, Callable, Dict, List
-from bs4 import BeautifulSoup, Tag
+from bs4 import Tag
+
+"""
+ Whole point of these functions is that is possible to use them
+ without lamdas which looks ugly imo. The reason for using transform
+ is that we don't have to check for None values like crazy aka once
+ None always None.
+
+ The proble is that it doesn't have any sort of static checking
+ which really sucks and debuging is a bit harder.
+
+ No idea how to enforce this since the output can be anything.
+"""
 
 
 def get_tag_transform(tag_desc: str):
@@ -70,6 +82,10 @@ def extract_transform(
         str, Callable[[Any], Any] | List[Callable[[Any], Any]]
     ],
 ) -> Dict[str, Any]:
+    # Aka find tag and use function to extract it.
+    # TODO ADD multiple values for key in extract_dict
+    # This would be very valuable since some sites have multiple
+    # location for value.
     if tag is None:
         return dict()
 
@@ -82,6 +98,7 @@ def extract_transform(
 
 
 def combine_dicts(dicts: List[Dict[str, Any]]):
+    # Combines dicts choose the first one that is not None.
     def recursive_get(key: str, dicts: List[Dict[str, Any]], i: int) -> Any:
         if i >= len(dicts):
             return None
