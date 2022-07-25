@@ -1,5 +1,5 @@
 # Main usage
-Once all extractors are created and configured all you need, you can start extracting.
+Once all extractors are created and configured, you can start extracting.
 ## Docker
 In order to use docker you need to have docker and docker-compose installed. If you want to deploy on cluster you will need to use swarm.
 
