@@ -5,8 +5,12 @@ from pathlib import Path
 import random
 from typing import Any, Dict, List
 from xmlrpc.client import Boolean
-from OutStreamer.outstreamer import OutStreamer
-from processor_utils import PipeMetadata, all_purpose_logger, metadata_logger
+from Processor.App.OutStreamer.outstreamer import OutStreamer
+from Processor.App.processor_utils import (
+    PipeMetadata,
+    all_purpose_logger,
+    metadata_logger,
+)
 from aiofiles import open as asyncOpen
 
 import os

@@ -1,27 +1,25 @@
-import sys
+import asyncio
+import logging
 from pathlib import Path
-
-sys.path.append(Path("Processor/App").absolute().as_posix())
-sys.path.append(Path("Aggregator/App").absolute().as_posix())
-
 
 import argparse
 from datetime import datetime
 from pathlib import Path
 from typing import List
-from Downloader.download import Downloader
-from index_query import DomainRecord, IndexAggregator
-import asyncio
-from OutStreamer.stream_to_file import (
-    OutStreamerFileHTMLContent,
+from Processor.App.Downloader.downloader import DownloaderFull
+from Processor.App.Pipeline.pipeline import ProcessorPipeline
+from Processor.App.processor_utils import (
+    all_purpose_logger,
+    metadata_logger,
+    DomainRecord as DomainRecordProc,
 )
-from Pipeline.pipeline import ProcessorPipeline
+from Processor.App.Router.router import Router
+from Processor.App.OutStreamer.stream_to_file import OutStreamerFileHTMLContent
+from Aggregator.App.index_query import IndexAggregator, DomainRecord as DomainRecordAgg
 
-from Router.router import Router
-from processor_utils import all_purpose_logger, metadata_logger
 
-all_purpose_logger.setLevel("INFO")
-metadata_logger.setLevel("WARN")
+all_purpose_logger.setLevel(logging.INFO)
+metadata_logger.setLevel(logging.WARN)
 
 
 async def article_download(
@@ -34,12 +32,14 @@ async def article_download(
     encoding: str = "utf-8",
 ):
     # Sync queue because I didn't want to put effort in
-    records: List[DomainRecord] = []
+    records: List[DomainRecordAgg] = []
 
     # At start so we can fail faster
     router = Router()
-    router.load_module(Path("Processor/App/Extractor/DummyExtractor.py").absolute())
-    router.register_route("DummyExtractor", [r".*"])
+    router.load_module(
+        Path(__file__).parent / "Processor" / "App" / "Extractor" / "dummy_extractor.py"
+    )
+    router.register_route("dummy_extractor", [r".*"])
     outstreamer = OutStreamerFileHTMLContent(origin=output)
 
     aggregator = await IndexAggregator(
@@ -56,16 +56,20 @@ async def article_download(
         records.append(domain_record)
     await aggregator.aclose(None, None, None)
 
-    print(f"Downloaded {len(records)} articles")
-    downloader = await Downloader(digest_verification=True).aopen()
-    pipeline = ProcessorPipeline(
-        router=router, downloader=downloader, outstreamer=outstreamer
-    )
-    for dr in records:
-        dr.encoding = dr.encoding if dr.encoding is not None else encoding
-        await pipeline.process_domain_record(dr)
-    await downloader.aclose(None, None, None)
-    print("Finished pipeline")
+    all_purpose_logger.info(f"Downloaded {len(records)} articles")
+    async with DownloaderFull(digest_verification=True) as downloader:
+        try:
+            pipeline = ProcessorPipeline(
+                router=router, downloader=downloader, outstreamer=outstreamer
+            )
+            for dr in records:
+                dr.encoding = dr.encoding if dr.encoding is not None else encoding
+                dr_proc = DomainRecordProc(**dr.__dict__)
+                await pipeline.process_domain_record(dr_proc)
+        except Exception as e:
+            all_purpose_logger.error(e, exc_info=True)
+            raise e
+    all_purpose_logger.info("Finished pipeline")
 
 
 if __name__ == "__main__":

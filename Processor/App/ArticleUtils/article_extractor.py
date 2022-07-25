@@ -1,13 +1,19 @@
 from typing import Any, Callable, Dict, List
 
 from bs4 import BeautifulSoup
-from ArticleUtils.article_utils import must_exist_filter, must_not_exist_filter
-from Extractor.extractor import BaseExtractor
-from Extractor.extractor_utils import combine_dicts, extract_transform
+from Processor.App.ArticleUtils.article_utils import (
+    must_exist_filter,
+    must_not_exist_filter,
+)
+from Processor.App.Extractor.extractor import BaseExtractor
+from Processor.App.Extractor.extractor_utils import combine_dicts, extract_transform
 
-from processor_utils import PipeMetadata, metadata_logger
+from Processor.App.processor_utils import PipeMetadata, metadata_logger
 
-# All keys are required if value if true then the extracted value must be non None
+# All keys are required if value is True then the extracted value must be not None
+# and not empty
+
+
 REQUIRED_FIELDS = {
     "content": True,
     "headline": True,
@@ -44,20 +50,14 @@ class ArticleExtractor(BaseExtractor):
         self.filter_must_exist = filter_must_exist
         self.filter_must_not_exist = filter_must_not_exist
         self.filter_allowed_domain_prefixes = filter_allowed_domain_prefixes
+        self.non_empty: bool = True
 
     def extract(self, response: str, metadata: PipeMetadata) -> Dict[Any, Any] | None:
         return super().extract(response, metadata)
 
     def extract_soup(self, soup: BeautifulSoup, metadata: PipeMetadata):
         extracted_dict = self.article_extract(soup, metadata)
-        if not self.check_required(extracted_dict, metadata, non_empty=True):
-            return None
-
-        author = extracted_dict.get("author", [])
-        if not isinstance(author, List) or len(author) == 0:
-            metadata_logger.warn(
-                "Empty author list", extra={"domain_record": metadata.domain_record}
-            )
+        if not self.check_required(extracted_dict, metadata):
             return None
 
         metadata.name = metadata.domain_record.url.replace("/", "_")[:80]
@@ -102,9 +102,7 @@ class ArticleExtractor(BaseExtractor):
 
         return True
 
-    def check_required(
-        self, extracted_dict: Dict[Any, Any], metadata: PipeMetadata, non_empty=False
-    ):
+    def check_required(self, extracted_dict: Dict[Any, Any], metadata: PipeMetadata):
         for key, value in REQUIRED_FIELDS.items():
             if key not in extracted_dict:
                 metadata_logger.warn(
@@ -121,7 +119,7 @@ class ArticleExtractor(BaseExtractor):
                     )
                     return False
 
-                if non_empty:
+                if self.non_empty:
                     if isinstance(extracted_val, str) and extracted_val == "":
                         metadata_logger.warn(
                             f"{self.__class__.__name__}: empty string for key: {key} is not allowed",
@@ -160,4 +158,5 @@ class ArticleExtractor(BaseExtractor):
     def custom_extract(
         self, soup: BeautifulSoup, metadata: PipeMetadata
     ) -> Dict[str, Any]:
+        # Allows for custom extraction of values
         return {}

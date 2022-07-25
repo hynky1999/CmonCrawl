@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from datetime import datetime
 import re
 
-from ndjson_decoder import Decoder
+from Aggregator.App.ndjson_decoder import Decoder
 from types import TracebackType
 from typing import (
     Any,
@@ -17,7 +17,7 @@ from typing import (
     Tuple,
     Type,
 )
-from utils import all_purpose_logger
+from Aggregator.App.utils import all_purpose_logger
 
 from aiohttp import ClientError, ClientSession, ContentTypeError
 import asyncio

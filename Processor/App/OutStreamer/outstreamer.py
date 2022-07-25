@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any, Dict
 
-from processor_utils import PipeMetadata
+from Processor.App.processor_utils import PipeMetadata
 
 
 class OutStreamer(ABC):

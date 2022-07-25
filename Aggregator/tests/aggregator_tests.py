@@ -5,12 +5,12 @@ sys.path.append(Path("App").absolute().as_posix())
 
 from datetime import datetime
 from typing import List
-from App.aggregator import unify_url_id
-from App.index_query import DomainRecord, IndexAggregator
+from aggregator import unify_url_id
+from Processor.App.index_query import DomainRecord, IndexAggregator
 import unittest
 
 
-from App.utils import all_purpose_logger
+from Processor.App.utils import all_purpose_logger
 
 all_purpose_logger.setLevel("DEBUG")
 

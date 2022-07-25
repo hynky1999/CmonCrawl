@@ -1,9 +1,9 @@
 from pathlib import Path
 from typing import List
-from Router.router import Router
-from Downloader.download import Downloader
-from OutStreamer.outstreamer import OutStreamer
-from processor_utils import DomainRecord, PipeMetadata, metadata_logger
+from Processor.App.Router.router import Router
+from Processor.App.Downloader.downloader import Downloader
+from Processor.App.OutStreamer.outstreamer import OutStreamer
+from Processor.App.processor_utils import DomainRecord, metadata_logger
 from warcio.exceptions import ArchiveLoadFailed
 
 
@@ -32,13 +32,13 @@ class ProcessorPipeline:
                 )
                 output = extractor.extract(downloaded_article, metadata)
                 if output is None:
-                    metadata_logger.warn(
+                    metadata_logger.debug(
                         f"No output from {extractor.__class__}",
                         extra={"domain_record": metadata.domain_record},
                     )
                     continue
                 paths.append(await self.oustreamer.stream(output, metadata))
-                metadata_logger.info(
+                metadata_logger.debug(
                     "Processed article", extra={"domain_record": metadata.domain_record}
                 )
         # Not catching IOError because some other processor could process it -> nack

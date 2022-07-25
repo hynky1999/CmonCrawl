@@ -1,8 +1,8 @@
 from datetime import datetime
 from typing import Any, Dict
 
-from ArticleUtils.article_extractor import ArticleExtractor
-from ArticleUtils.article_utils import (
+from Processor.App.ArticleUtils.article_extractor import ArticleExtractor
+from Processor.App.ArticleUtils.article_utils import (
     ALLOWED_H,
     LIST_TAGS,
     TABLE_TAGS,
@@ -15,12 +15,12 @@ from ArticleUtils.article_utils import (
     keywords_transform,
 )
 from bs4 import BeautifulSoup, Tag
-from Extractor.extractor_utils import (
+from Processor.App.Extractor.extractor_utils import (
     get_attribute_transform,
     get_tag_transform,
     get_text_transform,
 )
-from processor_utils import PipeMetadata
+from Processor.App.processor_utils import PipeMetadata
 
 allowed_classes_div = {
     # text

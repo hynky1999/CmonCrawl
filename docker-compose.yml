@@ -8,7 +8,6 @@ services:
     #   - artemis-data:/var/lib/artemis/data
     ports:
       - "8161:8161"
-      - "61613:61613"
     # You can set up limits here
     # But make sure you also correct java memory in artemis Dockerfile in order to have effect.
     deploy:
@@ -19,7 +18,7 @@ services:
   producer-idnes.cz:
     # This is the producer service, you can have multiple of them
     build: ./Aggregator
-    command: "--to=2021-12-04 --since=2019-12-12 idnes.cz"
+    command: [ "--to=2021-12-04", "--since=2019-12-12", "idnes.cz" ]
     depends_on:
       - consumer
 
@@ -27,9 +26,15 @@ services:
   # Make sure you use use-hostname-output to have disitnguished output folders for each consumer.
   consumer:
     build: ./Processor
-    command: "--use_hostname_output --timeout=1 --pills_to_die=1 --queue_size=200"
+    command:
+      [
+        "--use_hostname_output",
+        "--timeout=1",
+        "--pills_to_die=1",
+        "--queue_size=200"
+      ]
     volumes:
-      - ./output:/app/output:z
+      - ./output:/output:z
     deploy:
       # Number of replicas
       replicas: 4

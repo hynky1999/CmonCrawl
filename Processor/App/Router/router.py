@@ -8,8 +8,12 @@ from dataclasses import dataclass
 from types import ModuleType
 from typing import Any, Dict, List, Union
 
-from Extractor.extractor import BaseExtractor
-from processor_utils import PipeMetadata, metadata_logger, all_purpose_logger
+from Processor.App.Extractor.extractor import BaseExtractor
+from Processor.App.processor_utils import (
+    PipeMetadata,
+    metadata_logger,
+    all_purpose_logger,
+)
 
 
 @dataclass

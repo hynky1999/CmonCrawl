@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Any, Dict
 
 from bs4 import BeautifulSoup
-from processor_utils import PipeMetadata, metadata_logger
+from Processor.App.processor_utils import PipeMetadata, metadata_logger
 
 
 class BaseExtractor(ABC):
@@ -15,9 +15,11 @@ class BaseExtractor(ABC):
         pass
 
     def filter_raw(self, response: str, metadata: PipeMetadata) -> bool:
+        # If raw fails bs4 will not be used -> speed
         return True
 
     def filter_soup(self, soup: BeautifulSoup, metadata: PipeMetadata) -> bool:
+        # slow but has more info
         return True
 
     def extract(self, response: str, metadata: PipeMetadata) -> Dict[Any, Any] | None:
@@ -45,7 +47,7 @@ class BaseExtractor(ABC):
 
     def preprocess(self, response: str, metadata: PipeMetadata) -> str:
         linux = response.replace("\r\n", "\n")
-        # Sorted set
+        # Sorted set pythonic way
         encodings: Dict[str, int] = {}
         if self.ENCODING is not None:
             encodings[self.ENCODING] = 1

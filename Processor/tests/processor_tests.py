@@ -1,21 +1,21 @@
-import sys
 from pathlib import Path
 
-sys.path.append(Path("App").absolute().as_posix())
 import asyncio
 import unittest
 import os
 import re
 from datetime import datetime
-from App.Downloader.download import Downloader
-from App.OutStreamer.stream_to_file import OutStreamerFileDefault
-from App.Router.router import Router
-from App.processor_utils import DomainRecord, PipeMetadata
+from Processor.App.Downloader.downloader import DownloaderFull
+from Processor.App.OutStreamer.stream_to_file import OutStreamerFileDefault
+from Processor.App.Router.router import Router
+from Processor.App.processor_utils import DomainRecord, PipeMetadata
 
 
 class DownloaderTests(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self) -> None:
-        self.downloader: Downloader = await Downloader(digest_verification=True).aopen()
+        self.downloader: DownloaderFull = await DownloaderFull(
+            digest_verification=True
+        ).aopen()
 
     async def test_download_url(self):
         dr = DomainRecord(
@@ -38,7 +38,7 @@ class RouterTests(unittest.TestCase):
         self.router = Router()
         path = os.path.abspath(__file__)
         # python path from this file
-        self.router.load_modules(os.path.join(os.path.dirname(path), "test_routes"))
+        self.router.load_modules(Path(path).parent / "test_routes")
         self.router.register_route("AAA", [r"www.idnes.*", r"1111.cz"])
         # Names to to match by NAME in file
         self.router.register_route("BBB", r"seznam.cz")
