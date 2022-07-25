@@ -9,10 +9,12 @@ ARTEMIS_MEMORY_MAX="64g"
 CUR_DIR="$(realpath "$(dirname "$0")")"
 AGG_EXEC="${CUR_DIR}/aggregate.sh"
 PROC_EXEC="${CUR_DIR}/process.sh"
+PROCESSOR_PATH="${CUR_DIR}/Processor"
+AGGREGATOR_PATH="${CUR_DIR}/Aggregator"
 ARTEMIS_PATH="$CUR_DIR/Artemis"
 ARTEMIS_RUN_PATH=$ARTEMIS_PATH/run_artemis
-#EXC="qsub -j y -cwd"
-PROCESSORS_NUM="$((10 * ${#INDEXORS[@]}))"
+EXC="qsub -j y -cwd"
+PROCESSORS_NUM="$((7 * ${#INDEXORS[@]}))"
 # If fresh start =1 then all Artemis data will be deleted
 # -> duplicates will be forgotten and data lost.
 # Good for testing.
@@ -24,7 +26,7 @@ $EXC -o artemis.log -e artemis.err -q "cpu.q@$ARTEMIS_HOST" \
 -l mem_free="$ARTEMIS_MEMORY_MAX",act_mem_free="$ARTEMIS_MEMORY_MAX" \
 "$ARTEMIS_PATH/create_artemis.sh" \
 "$ARTEMIS_PATH" \
-"$ARTEMIS_RUN_PATH"
+"$ARTEMIS_RUN_PATH" \
 "0.0.0.0" \
 "$ARTEMIS_PORT" \
 "$HTTP_PORT" \
@@ -42,7 +44,7 @@ for index in "${INDEXORS[@]}"; do
     $EXC -o "aggregator_$index.log" -e "aggregator_$index.err" "$AGG_EXEC" "$CUR_DIR" \
     --queue_host="$ARTEMIS_HOST" \
     --queue_port=$ARTEMIS_PORT \
-    --max_retries=50 \
+    --max_retry=50 \
     "$index"
 done
 
@@ -61,7 +63,7 @@ for ((i=0; i < "$PROCESSORS_NUM"; ++i)); do
     --queue_port="$ARTEMIS_PORT" \
     --output_path="$(realpath "./output_${i}")" \
     --timeout=360 \
-    --max_retries=20 \
+    --max_retry=20 \
     --extractors_path="$PROCESSOR_PATH/App/DoneExtractors" \
     --config_path="$PROCESSOR_PATH/App/config.json"
 done
