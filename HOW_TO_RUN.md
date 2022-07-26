@@ -50,6 +50,6 @@ It tries to deduce url from the html content. YOu can specify url manually. If y
 
 ```
 Example:
-python process_article.py --url=http://www.idnes.cz/zpravy/slovensko/slovensko-je-v-krizi-s-evropou-a-je-to-v-krizi-s-evropo/ --date=2011-01-01 slovenkso1.html slovenkso2.html out
+python -m Processor.process_article --url=http://www.idnes.cz/zpravy/slovensko/slovensko-je-v-krizi-s-evropou-a-je-to-v-krizi-s-evropo/ --date=2011-01-01 slovenkso1.html slovenkso2.html out
 ```
 ```
