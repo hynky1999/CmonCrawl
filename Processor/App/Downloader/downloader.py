@@ -71,10 +71,10 @@ class DownloaderFull(Downloader):
                         reason = response.reason if response.reason else "Unknown"
                         if not should_retry(retry, reason, response.status):
                             break
-                        continue
-                    # will be unziped, we cannot use the stream since warcio doesn't support async
-                    response_bytes = await response.content.read()
-                    return self.unwrap(response_bytes, domain_record)
+                    else:
+                        # will be unziped, we cannot use the stream since warcio doesn't support async
+                        response_bytes = await response.content.read()
+                        return self.unwrap(response_bytes, domain_record)
             except (
                 ClientError,
                 TimeoutError,

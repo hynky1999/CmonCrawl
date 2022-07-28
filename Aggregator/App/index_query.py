@@ -155,16 +155,14 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
                         reason = response.reason if response.reason else "Unknown"
                         if not should_retry(retry, reason, status, **args):
                             break
-                        else:
-                            continue
-
-                    content = await response.json(
-                        content_type=content_type, loads=Decoder().decode
-                    )
-                    all_purpose_logger.info(
-                        f"Successfully retrieved page of {domain} from {cdx_server} add_info: {args}"
-                    )
-                    break
+                    else:
+                        content = await response.json(
+                            content_type=content_type, loads=Decoder().decode
+                        )
+                        all_purpose_logger.info(
+                            f"Successfully retrieved page of {domain} from {cdx_server} add_info: {args}"
+                        )
+                        break
             except ContentTypeError as e:
                 all_purpose_logger.error(str(e), exc_info=True)
                 break
