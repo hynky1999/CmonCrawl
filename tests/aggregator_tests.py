@@ -1,3 +1,4 @@
+import logging
 import sys
 from pathlib import Path
 
@@ -5,14 +6,14 @@ sys.path.append(Path("App").absolute().as_posix())
 
 from datetime import datetime
 from typing import List
-from aggregator import unify_url_id
-from Processor.App.index_query import DomainRecord, IndexAggregator
+from Aggregator.aggregator import unify_url_id
+from Aggregator.App.index_query import DomainRecord, IndexAggregator
 import unittest
 
 
-from Processor.App.utils import all_purpose_logger
+from Aggregator.App.utils import all_purpose_logger
 
-all_purpose_logger.setLevel("DEBUG")
+all_purpose_logger.setLevel(logging.DEBUG)
 
 
 class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
@@ -28,7 +29,7 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
 
     async def test_indexer_num_pages(self):
         response = await self.di.get_number_of_pages(
-            self.client, self.CC_SERVERS[0], "idnes.cz", max_retry=20
+            self.client, self.CC_SERVERS[0], "idnes.cz", max_retry=20, sleep_step=4
         )
         self.assertIsNotNone(response)
         num, size = response.content
@@ -45,11 +46,15 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
 
     async def test_caputred_responses(self):
         responses = await self.di.get_captured_responses(
-            self.client, self.CC_SERVERS[0], "idnes.cz", page=0, max_retry=10
+            self.client,
+            self.CC_SERVERS[0],
+            "idnes.cz",
+            page=0,
+            max_retry=10,
+            sleep_step=100,
         )
         self.assertIsNotNone(responses.content)
         self.assertEqual(len(responses.content), 12066)
-        print("XDDDDD", self.client.closed)
 
     async def test_since(self):
         # That is crawl date not published date
@@ -88,6 +93,10 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
             [],
             since=datetime(2022, 5, 1),
             to=datetime(2022, 1, 10),
+            limit=None,
+            max_retry=10,
+            sleep_step=4,
+            prefetch_size=2,
         )
         # Generates only for 2020
         q = iterator.init_crawls_queue(

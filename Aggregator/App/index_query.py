@@ -130,11 +130,11 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         params: Dict[str, Any],
         content_type: str,
         max_retry: int,
-        allowed_status_errors=ALLOWED_ERR_FOR_RETRIES,
-        sleep_step: int = 2,
+        sleep_step: int,
+        allowed_status_errors: List[int] = ALLOWED_ERR_FOR_RETRIES,
         **args: Any,
     ):
-        def should_retry(retry: int, reason: str, status: int, **args):
+        def should_retry(retry: int, reason: str, status: int, **args: Any):
             all_purpose_logger.error(
                 f"Failed to retrieve page of {domain} from {cdx_server} with reason {status}: {reason} retry: {retry + 1}/{max_retry} add_info: {args}"
             )
@@ -145,7 +145,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
 
         status = 0
         content = None
-        reason = None
+        reason: str | None = None
 
         for retry in range(max_retry):
             try:
@@ -171,7 +171,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
 
             except (ClientError, TimeoutError) as e:
                 reason = f"{type(e)} {str(e)}"
-                if not should_retry(retry, reason, 0, **args):
+                if not should_retry(retry, reason, 500, **args):
                     break
 
             await asyncio.sleep(random.randint(0, (retry + 1) * sleep_step))
@@ -183,6 +183,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         cdx_server: str,
         domain: str,
         max_retry: int,
+        sleep_step: int,
         page_size: int | None = None,
     ):
         params: Dict[str, str | int] = {
@@ -202,6 +203,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
             "text/x-ndjson",
             max_retry=max_retry,
             type="num_pages",
+            sleep_step=sleep_step,
         )
         if response.content is not None:
             pages = response.content[0].get("pages", 0)
@@ -217,6 +219,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         cdx_server: str,
         domain: str,
         max_retry: int,
+        sleep_step: int,
         page: int,
         since: datetime = datetime.min,
         to: datetime = datetime.max,
@@ -236,6 +239,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
             params,
             "text/x-ndjson",
             max_retry=max_retry,
+            sleep_step=sleep_step,
             page=page,
         )
         if reponse.content is not None:
@@ -266,13 +270,13 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
             client: ClientSession,
             domains: List[str],
             CC_files: List[str],
-            since: datetime = datetime.min,
-            to: datetime = datetime.max,
-            limit: int | None = None,
-            max_retry: int = 5,
-            prefetch_size: int = 4,
+            since: datetime,
+            to: datetime,
+            limit: int | None,
+            max_retry: int,
+            prefetch_size: int,
             # time sleeping lineary increases with failed attempts
-            sleep_step: int = 3,
+            sleep_step: int,
         ):
             self.__client = client
             self.__opt_prefetch_size = prefetch_size
@@ -313,6 +317,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
                     next_crawl.cdx_server,
                     next_crawl.domain,
                     max_retry=self.__max_retry,
+                    sleep_step=self.__sleep_step,
                 )
                 if retr.content is None:
                     # Failed to retrieve it
@@ -408,6 +413,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
                     since=self.__since,
                     to=self.__to,
                     max_retry=1,
+                    sleep_step=self.__sleep_step,
                 ),
                 dc,
                 retry,

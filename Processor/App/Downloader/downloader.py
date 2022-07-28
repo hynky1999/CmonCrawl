@@ -1,21 +1,15 @@
 from __future__ import annotations
 import asyncio
-from datetime import datetime
 import io
-from pathlib import Path
 import random
-import re
 from types import TracebackType
 from aiohttp import ClientError, ClientSession
 from typing import List, Tuple, Type
-from aiofiles import open as asyncOpen
-import bs4
 
 from Processor.App.processor_utils import (
     DomainRecord,
     PipeMetadata,
     metadata_logger,
-    all_purpose_logger,
 )
 from warcio import ArchiveIterator
 
@@ -89,8 +83,8 @@ class DownloaderFull(Downloader):
                     break
 
             await asyncio.sleep(random.randint(0, (retry + 1) * self.__sleep_step))
-
-        return []
+        ret: List[Tuple[str, PipeMetadata]] = []
+        return ret
 
     def unwrap(
         self, response: bytes, domain_record: DomainRecord
