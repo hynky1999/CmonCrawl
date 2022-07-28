@@ -47,7 +47,7 @@ async def pipeline_wrapper(router: Router, name: Path):
 class ExtractSameTest(unittest.IsolatedAsyncioTestCase):
     def setUp(self) -> None:
         self.router = Router()
-        self.router.load_modules(Path("App/DoneExtractors"))
+        self.router.load_modules(Path("Processor/App/DoneExtractors"))
         self.name = ""
 
     async def test_extract_articles(self):

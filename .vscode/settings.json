@@ -5,7 +5,7 @@
     "python.testing.unittestArgs": [
         "-v",
         "-s",
-        "./*/tests",
+        "./tests",
         "-p",
         "*test*.py"
     ],
@@ -13,5 +13,5 @@
     "python.testing.unittestEnabled": true,
     "python.analysis.typeCheckingMode": "strict",
     "python.linting.mypyPath": "/usr/bin/mypy",
-    "cSpell.enabled": true
+    "cSpell.enabled": false
 }

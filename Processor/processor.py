@@ -124,6 +124,7 @@ async def processor(
     config_path: Path,
     extractors_path: Path,
     max_retry: int,
+    sleep_step: int
 ):
     timeout_delta = timedelta(minutes=timeout)
     with open(Path(config_path)) as f:
@@ -137,7 +138,7 @@ async def processor(
     conn.set_listener("", listener)
     all_purpose_logger.debug("Connecting to queue")
     extracted_num = 0
-    async with DownloaderFull(max_retry=max_retry, sleep_step=5) as downloader:
+    async with DownloaderFull(max_retry=max_retry, sleep_step=sleep_step) as downloader:
         try:
             if use_hostname_output:
                 output_path = get_hostname_output_path(output_path)
@@ -225,6 +226,7 @@ if __name__ == "__main__":
     parser.add_argument("--use_hostname_output", action="store_true")
     parser.add_argument("--timeout", type=int, default=60)
     parser.add_argument("--max_retry", type=int, default=20)
+    parser.add_argument("--sleep_step", type=int, default=5)
     parser.add_argument(
         "--config_path",
         type=Path,
