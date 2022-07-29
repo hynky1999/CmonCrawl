@@ -119,9 +119,11 @@ class OutStreamerFileDefault(OutStreamer):
             f"Writing to {file_path}", extra={"domain_record": metadata.domain_record}
         )
         try:
-            async with asyncOpen(file_path, "w") as f:
+            tmp_path = file_path.with_suffix(".tmp")
+            async with asyncOpen(tmp_path, "w") as f:
                 out = self.metadata_to_string(extracted_data)
                 await f.write(out)
+                os.rename(tmp_path, file_path)
         except OSError as e:
             metadata_logger.error(
                 f"{e}\n retrying {retries}/{self.max_retries}",
