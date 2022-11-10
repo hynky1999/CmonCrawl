@@ -29,18 +29,20 @@ REQUIRED_FIELDS = {
 class ArticleExtractor(BaseExtractor):
     def __init__(
         self,
-        header_css_dict: Dict[str, str],
+        header_css_dict: Dict[str, str] = {},
         header_extract_dict: Dict[
             str, List[Callable[[Any], Any]] | Callable[[Any], Any]
-        ],
-        article_css_dict: Dict[str, str],
+        ] = {},
+        article_css_dict: Dict[str, str] = {},
         article_extract_dict: Dict[
             str, List[Callable[[Any], Any]] | Callable[[Any], Any]
-        ],
-        article_css_selector: str,
+        ] = {},
+        article_css_selector: str = "body",
         filter_must_exist: List[str] = [],
         filter_must_not_exist: List[str] = [],
         filter_allowed_domain_prefixes: List[str] | None = None,
+        required_fields: Dict[str, bool] = REQUIRED_FIELDS,
+        non_empty: bool = True,
     ):
         self.header_css_dict = header_css_dict
         self.header_extract_dict = header_extract_dict
@@ -50,7 +52,8 @@ class ArticleExtractor(BaseExtractor):
         self.filter_must_exist = filter_must_exist
         self.filter_must_not_exist = filter_must_not_exist
         self.filter_allowed_domain_prefixes = filter_allowed_domain_prefixes
-        self.non_empty: bool = True
+        self.required_fields = required_fields
+        self.non_empty: bool = non_empty
 
     def extract(self, response: str, metadata: PipeMetadata) -> Dict[Any, Any] | None:
         return super().extract(response, metadata)
@@ -103,7 +106,7 @@ class ArticleExtractor(BaseExtractor):
         return True
 
     def check_required(self, extracted_dict: Dict[Any, Any], metadata: PipeMetadata):
-        for key, value in REQUIRED_FIELDS.items():
+        for key, value in self.required_fields.items():
             if key not in extracted_dict:
                 metadata_logger.warn(
                     f"{self.__class__.__name__}: failed to extract {key}",

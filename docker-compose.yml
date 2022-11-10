@@ -3,9 +3,8 @@ services:
   artemis:
     build: "./Artemis"
     container_name: "artemis"
-    # Persistent volume don't use this for testing as it will filter out same urls
-    # volumes:
-    #   - artemis-data:/var/lib/artemis/data
+    volumes:
+      - artemis-data:/var/lib/artemis/data
     ports:
       - "8161:8161"
     # You can set up limits here
@@ -31,7 +30,8 @@ services:
         "--use_hostname_output",
         "--timeout=1",
         "--pills_to_die=1",
-        "--queue_size=200"
+        "--queue_size=200",
+        "--config_path=Processor/UserDefined/cz_config.json"
       ]
     volumes:
       - ./output:/output:z
@@ -41,5 +41,5 @@ services:
     depends_on:
       - artemis
 
-# volumes:
-#  artemis-data:
+volumes:
+  artemis-data:
