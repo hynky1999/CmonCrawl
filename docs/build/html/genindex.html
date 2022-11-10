@@ -1,0 +1,1062 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Index &#8212; CommonCrawl Extractor 1.0 documentation</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="#" />
+    <link rel="search" title="Search" href="search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">CommonCrawl Extractor 1.0 documentation</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Contents:
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="installation.html">
+   Installation
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="quickstart/index.html">
+   Quick Start Guide
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="quickstart/overview.html">
+     Quick Overview
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="quickstart/quick-start.html">
+     Quickstart
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="quickstart/artemis-queue.html">
+     Artemis Queue
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="api.html">
+   API
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="generated/Aggregator.html">
+     Aggregator
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+    <label for="toctree-checkbox-3">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="generated/Aggregator.App.html">
+       Aggregator.App
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+      <label for="toctree-checkbox-4">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="generated/Aggregator.App.index_query.html">
+         Aggregator.App.index_query
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="generated/Aggregator.App.ndjson_decoder.html">
+         Aggregator.App.ndjson_decoder
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="generated/Aggregator.App.utils.html">
+         Aggregator.App.utils
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="generated/Aggregator.aggregator.html">
+       Aggregator.aggregator
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="generated/Processor.html">
+     Processor
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+    <label for="toctree-checkbox-5">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="generated/Processor.App.html">
+       Processor.App
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+      <label for="toctree-checkbox-6">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="generated/Processor.App.Downloader.html">
+         Processor.App.Downloader
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="generated/Processor.App.Extractor.html">
+         Processor.App.Extractor
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="generated/Processor.App.OutStreamer.html">
+         Processor.App.OutStreamer
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="generated/Processor.App.Pipeline.html">
+         Processor.App.Pipeline
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="generated/Processor.App.Router.html">
+         Processor.App.Router
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="generated/Processor.App.processor_utils.html">
+         Processor.App.processor_utils
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="generated/Processor.App.ArticleUtils.html">
+         Processor.App.ArticleUtils
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="generated/Processor.process_article.html">
+       Processor.process_article
+      </a>
+     </li>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="generated/Processor.processor.html">
+       Processor.processor
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+      <label for="toctree-checkbox-7">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="generated/Processor.processor.Listener.html">
+         Processor.processor.Listener
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="generated/Processor.processor.ListnerStats.html">
+         Processor.processor.ListnerStats
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="generated/Processor.processor.Message.html">
+         Processor.processor.Message
+        </a>
+       </li>
+      </ul>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1></h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+
+<h1 id="index">Index</h1>
+
+<div class="genindex-jumpbox">
+ <a href="#_"><strong>_</strong></a>
+ | <a href="#A"><strong>A</strong></a>
+ | <a href="#B"><strong>B</strong></a>
+ | <a href="#C"><strong>C</strong></a>
+ | <a href="#D"><strong>D</strong></a>
+ | <a href="#E"><strong>E</strong></a>
+ | <a href="#F"><strong>F</strong></a>
+ | <a href="#G"><strong>G</strong></a>
+ | <a href="#I"><strong>I</strong></a>
+ | <a href="#L"><strong>L</strong></a>
+ | <a href="#M"><strong>M</strong></a>
+ | <a href="#O"><strong>O</strong></a>
+ | <a href="#P"><strong>P</strong></a>
+ | <a href="#R"><strong>R</strong></a>
+ | <a href="#S"><strong>S</strong></a>
+ | <a href="#U"><strong>U</strong></a>
+ 
+</div>
+<h2 id="_">_</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/Aggregator.App.index_query.DomainCrawl.__init__.html#Aggregator.App.index_query.DomainCrawl.__init__">__init__() (Aggregator.App.index_query.DomainCrawl method)</a>, <a href="generated/Aggregator.App.index_query.DomainCrawl.html#Aggregator.App.index_query.DomainCrawl.__init__">[1]</a>
+
+      <ul>
+        <li><a href="generated/Aggregator.App.index_query.DomainRecord.__init__.html#Aggregator.App.index_query.DomainRecord.__init__">(Aggregator.App.index_query.DomainRecord method)</a>, <a href="generated/Aggregator.App.index_query.DomainRecord.html#Aggregator.App.index_query.DomainRecord.__init__">[1]</a>
+</li>
+        <li><a href="generated/Aggregator.App.index_query.IndexAggregator.__init__.html#Aggregator.App.index_query.IndexAggregator.__init__">(Aggregator.App.index_query.IndexAggregator method)</a>, <a href="generated/Aggregator.App.index_query.IndexAggregator.html#Aggregator.App.index_query.IndexAggregator.__init__">[1]</a>
+</li>
+        <li><a href="generated/Aggregator.App.index_query.RetrieveResponse.__init__.html#Aggregator.App.index_query.RetrieveResponse.__init__">(Aggregator.App.index_query.RetrieveResponse method)</a>, <a href="generated/Aggregator.App.index_query.RetrieveResponse.html#Aggregator.App.index_query.RetrieveResponse.__init__">[1]</a>
+</li>
+        <li><a href="generated/Aggregator.App.ndjson_decoder.Decoder.__init__.html#Aggregator.App.ndjson_decoder.Decoder.__init__">(Aggregator.App.ndjson_decoder.Decoder method)</a>, <a href="generated/Aggregator.App.ndjson_decoder.Decoder.html#Aggregator.App.ndjson_decoder.Decoder.__init__">[1]</a>
+</li>
+        <li><a href="generated/Processor.App.ArticleUtils.article_extractor.ArticleExtractor.__init__.html#Processor.App.ArticleUtils.article_extractor.ArticleExtractor.__init__">(Processor.App.ArticleUtils.article_extractor.ArticleExtractor method)</a>, <a href="generated/Processor.App.ArticleUtils.article_extractor.ArticleExtractor.html#Processor.App.ArticleUtils.article_extractor.ArticleExtractor.__init__">[1]</a>
+</li>
+        <li><a href="generated/Processor.App.Downloader.downloader.Downloader.__init__.html#Processor.App.Downloader.downloader.Downloader.__init__">(Processor.App.Downloader.downloader.Downloader method)</a>, <a href="generated/Processor.App.Downloader.downloader.Downloader.html#Processor.App.Downloader.downloader.Downloader.__init__">[1]</a>
+</li>
+        <li><a href="generated/Processor.App.Downloader.downloader.DownloaderFull.__init__.html#Processor.App.Downloader.downloader.DownloaderFull.__init__">(Processor.App.Downloader.downloader.DownloaderFull method)</a>, <a href="generated/Processor.App.Downloader.downloader.DownloaderFull.html#Processor.App.Downloader.downloader.DownloaderFull.__init__">[1]</a>
+</li>
+        <li><a href="generated/Processor.App.Downloader.dummy_downloader.DownloaderDummy.__init__.html#Processor.App.Downloader.dummy_downloader.DownloaderDummy.__init__">(Processor.App.Downloader.dummy_downloader.DownloaderDummy method)</a>, <a href="generated/Processor.App.Downloader.dummy_downloader.DownloaderDummy.html#Processor.App.Downloader.dummy_downloader.DownloaderDummy.__init__">[1]</a>
+</li>
+        <li><a href="generated/Processor.App.Extractor.dummy_extractor.Extractor.__init__.html#Processor.App.Extractor.dummy_extractor.Extractor.__init__">(Processor.App.Extractor.dummy_extractor.Extractor method)</a>, <a href="generated/Processor.App.Extractor.dummy_extractor.Extractor.html#Processor.App.Extractor.dummy_extractor.Extractor.__init__">[1]</a>
+</li>
+        <li><a href="generated/Processor.App.Extractor.extractor.BaseExtractor.__init__.html#Processor.App.Extractor.extractor.BaseExtractor.__init__">(Processor.App.Extractor.extractor.BaseExtractor method)</a>, <a href="generated/Processor.App.Extractor.extractor.BaseExtractor.html#Processor.App.Extractor.extractor.BaseExtractor.__init__">[1]</a>
+</li>
+        <li><a href="generated/Processor.App.OutStreamer.dummy_streamer.DummyStreamer.__init__.html#Processor.App.OutStreamer.dummy_streamer.DummyStreamer.__init__">(Processor.App.OutStreamer.dummy_streamer.DummyStreamer method)</a>, <a href="generated/Processor.App.OutStreamer.dummy_streamer.DummyStreamer.html#Processor.App.OutStreamer.dummy_streamer.DummyStreamer.__init__">[1]</a>
+</li>
+        <li><a href="generated/Processor.App.OutStreamer.outstreamer.OutStreamer.__init__.html#Processor.App.OutStreamer.outstreamer.OutStreamer.__init__">(Processor.App.OutStreamer.outstreamer.OutStreamer method)</a>, <a href="generated/Processor.App.OutStreamer.outstreamer.OutStreamer.html#Processor.App.OutStreamer.outstreamer.OutStreamer.__init__">[1]</a>
+</li>
+        <li><a href="generated/Processor.App.OutStreamer.stream_to_file.OutStreamerFileDefault.__init__.html#Processor.App.OutStreamer.stream_to_file.OutStreamerFileDefault.__init__">(Processor.App.OutStreamer.stream_to_file.OutStreamerFileDefault method)</a>, <a href="generated/Processor.App.OutStreamer.stream_to_file.OutStreamerFileDefault.html#Processor.App.OutStreamer.stream_to_file.OutStreamerFileDefault.__init__">[1]</a>
+</li>
+        <li><a href="generated/Processor.App.OutStreamer.stream_to_file.OutStreamerFileHTMLContent.__init__.html#Processor.App.OutStreamer.stream_to_file.OutStreamerFileHTMLContent.__init__">(Processor.App.OutStreamer.stream_to_file.OutStreamerFileHTMLContent method)</a>, <a href="generated/Processor.App.OutStreamer.stream_to_file.OutStreamerFileHTMLContent.html#Processor.App.OutStreamer.stream_to_file.OutStreamerFileHTMLContent.__init__">[1]</a>
+</li>
+        <li><a href="generated/Processor.App.OutStreamer.stream_to_file.OutStreamerFileJSON.__init__.html#Processor.App.OutStreamer.stream_to_file.OutStreamerFileJSON.__init__">(Processor.App.OutStreamer.stream_to_file.OutStreamerFileJSON method)</a>, <a href="generated/Processor.App.OutStreamer.stream_to_file.OutStreamerFileJSON.html#Processor.App.OutStreamer.stream_to_file.OutStreamerFileJSON.__init__">[1]</a>
+</li>
+        <li><a href="generated/Processor.App.Pipeline.pipeline.ProcessorPipeline.__init__.html#Processor.App.Pipeline.pipeline.ProcessorPipeline.__init__">(Processor.App.Pipeline.pipeline.ProcessorPipeline method)</a>, <a href="generated/Processor.App.Pipeline.pipeline.ProcessorPipeline.html#Processor.App.Pipeline.pipeline.ProcessorPipeline.__init__">[1]</a>
+</li>
+        <li><a href="generated/Processor.App.processor_utils.DomainRecord.__init__.html#Processor.App.processor_utils.DomainRecord.__init__">(Processor.App.processor_utils.DomainRecord method)</a>, <a href="generated/Processor.App.processor_utils.DomainRecord.html#Processor.App.processor_utils.DomainRecord.__init__">[1]</a>
+</li>
+        <li><a href="generated/Processor.App.processor_utils.PipeMetadata.__init__.html#Processor.App.processor_utils.PipeMetadata.__init__">(Processor.App.processor_utils.PipeMetadata method)</a>, <a href="generated/Processor.App.processor_utils.PipeMetadata.html#Processor.App.processor_utils.PipeMetadata.__init__">[1]</a>
+</li>
+        <li><a href="generated/Processor.App.Router.router.Route.__init__.html#Processor.App.Router.router.Route.__init__">(Processor.App.Router.router.Route method)</a>, <a href="generated/Processor.App.Router.router.Route.html#Processor.App.Router.router.Route.__init__">[1]</a>
+</li>
+        <li><a href="generated/Processor.App.Router.router.Router.__init__.html#Processor.App.Router.router.Router.__init__">(Processor.App.Router.router.Router method)</a>, <a href="generated/Processor.App.Router.router.Router.html#Processor.App.Router.router.Router.__init__">[1]</a>
+</li>
+        <li><a href="generated/Processor.processor.Listener.__init__.html#Processor.processor.Listener.__init__">(Processor.processor.Listener method)</a>, <a href="generated/Processor.processor.Listener.html#Processor.processor.Listener.__init__">[1]</a>
+</li>
+        <li><a href="generated/Processor.processor.ListnerStats.__init__.html#Processor.processor.ListnerStats.__init__">(Processor.processor.ListnerStats method)</a>, <a href="generated/Processor.processor.ListnerStats.html#Processor.processor.ListnerStats.__init__">[1]</a>
+</li>
+        <li><a href="generated/Processor.processor.Message.__init__.html#Processor.processor.Message.__init__">(Processor.processor.Message method)</a>, <a href="generated/Processor.processor.Message.html#Processor.processor.Message.__init__">[1]</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="A">A</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/Aggregator.App.index_query.IndexAggregator.aclose.html#Aggregator.App.index_query.IndexAggregator.aclose">aclose() (Aggregator.App.index_query.IndexAggregator method)</a>
+
+      <ul>
+        <li><a href="generated/Processor.App.Downloader.downloader.DownloaderFull.aclose.html#Processor.App.Downloader.downloader.DownloaderFull.aclose">(Processor.App.Downloader.downloader.DownloaderFull method)</a>
+</li>
+      </ul></li>
+      <li>
+    Aggregator
+
+      <ul>
+        <li><a href="generated/Aggregator.html#module-Aggregator">module</a>
+</li>
+      </ul></li>
+      <li>
+    Aggregator.aggregator
+
+      <ul>
+        <li><a href="generated/Aggregator.aggregator.html#module-Aggregator.aggregator">module</a>
+</li>
+      </ul></li>
+      <li>
+    Aggregator.App
+
+      <ul>
+        <li><a href="generated/Aggregator.App.html#module-Aggregator.App">module</a>
+</li>
+      </ul></li>
+      <li>
+    Aggregator.App.index_query
+
+      <ul>
+        <li><a href="generated/Aggregator.App.index_query.html#module-Aggregator.App.index_query">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    Aggregator.App.ndjson_decoder
+
+      <ul>
+        <li><a href="generated/Aggregator.App.ndjson_decoder.html#module-Aggregator.App.ndjson_decoder">module</a>
+</li>
+      </ul></li>
+      <li>
+    Aggregator.App.utils
+
+      <ul>
+        <li><a href="generated/Aggregator.App.utils.html#module-Aggregator.App.utils">module</a>
+</li>
+      </ul></li>
+      <li><a href="generated/Aggregator.App.index_query.IndexAggregator.aopen.html#Aggregator.App.index_query.IndexAggregator.aopen">aopen() (Aggregator.App.index_query.IndexAggregator method)</a>
+
+      <ul>
+        <li><a href="generated/Processor.App.Downloader.downloader.DownloaderFull.aopen.html#Processor.App.Downloader.downloader.DownloaderFull.aopen">(Processor.App.Downloader.downloader.DownloaderFull method)</a>
+</li>
+      </ul></li>
+      <li><a href="generated/Processor.App.ArticleUtils.article_extractor.ArticleExtractor.article_extract.html#Processor.App.ArticleUtils.article_extractor.ArticleExtractor.article_extract">article_extract() (Processor.App.ArticleUtils.article_extractor.ArticleExtractor method)</a>
+</li>
+      <li><a href="generated/Processor.App.ArticleUtils.article_extractor.ArticleExtractor.html#Processor.App.ArticleUtils.article_extractor.ArticleExtractor">ArticleExtractor (class in Processor.App.ArticleUtils.article_extractor)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="B">B</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/Processor.App.Extractor.extractor.BaseExtractor.html#Processor.App.Extractor.extractor.BaseExtractor">BaseExtractor (class in Processor.App.Extractor.extractor)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="C">C</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/Processor.App.ArticleUtils.article_extractor.ArticleExtractor.check_required.html#Processor.App.ArticleUtils.article_extractor.ArticleExtractor.check_required">check_required() (Processor.App.ArticleUtils.article_extractor.ArticleExtractor method)</a>
+</li>
+      <li><a href="generated/Processor.App.OutStreamer.dummy_streamer.DummyStreamer.clean_up.html#Processor.App.OutStreamer.dummy_streamer.DummyStreamer.clean_up">clean_up() (Processor.App.OutStreamer.dummy_streamer.DummyStreamer method)</a>
+
+      <ul>
+        <li><a href="generated/Processor.App.OutStreamer.outstreamer.OutStreamer.clean_up.html#Processor.App.OutStreamer.outstreamer.OutStreamer.clean_up">(Processor.App.OutStreamer.outstreamer.OutStreamer method)</a>
+</li>
+        <li><a href="generated/Processor.App.OutStreamer.stream_to_file.OutStreamerFileDefault.clean_up.html#Processor.App.OutStreamer.stream_to_file.OutStreamerFileDefault.clean_up">(Processor.App.OutStreamer.stream_to_file.OutStreamerFileDefault method)</a>
+</li>
+        <li><a href="generated/Processor.App.OutStreamer.stream_to_file.OutStreamerFileHTMLContent.clean_up.html#Processor.App.OutStreamer.stream_to_file.OutStreamerFileHTMLContent.clean_up">(Processor.App.OutStreamer.stream_to_file.OutStreamerFileHTMLContent method)</a>
+</li>
+        <li><a href="generated/Processor.App.OutStreamer.stream_to_file.OutStreamerFileJSON.clean_up.html#Processor.App.OutStreamer.stream_to_file.OutStreamerFileJSON.clean_up">(Processor.App.OutStreamer.stream_to_file.OutStreamerFileJSON method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/Processor.App.ArticleUtils.article_extractor.ArticleExtractor.custom_extract.html#Processor.App.ArticleUtils.article_extractor.ArticleExtractor.custom_extract">custom_extract() (Processor.App.ArticleUtils.article_extractor.ArticleExtractor method)</a>
+</li>
+      <li><a href="generated/Processor.App.ArticleUtils.article_extractor.ArticleExtractor.custom_filter_raw.html#Processor.App.ArticleUtils.article_extractor.ArticleExtractor.custom_filter_raw">custom_filter_raw() (Processor.App.ArticleUtils.article_extractor.ArticleExtractor method)</a>
+</li>
+      <li><a href="generated/Processor.App.ArticleUtils.article_extractor.ArticleExtractor.custom_filter_soup.html#Processor.App.ArticleUtils.article_extractor.ArticleExtractor.custom_filter_soup">custom_filter_soup() (Processor.App.ArticleUtils.article_extractor.ArticleExtractor method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="D">D</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/Aggregator.App.ndjson_decoder.Decoder.decode.html#Aggregator.App.ndjson_decoder.Decoder.decode">decode() (Aggregator.App.ndjson_decoder.Decoder method)</a>
+</li>
+      <li><a href="generated/Aggregator.App.ndjson_decoder.Decoder.html#Aggregator.App.ndjson_decoder.Decoder">Decoder (class in Aggregator.App.ndjson_decoder)</a>
+</li>
+      <li><a href="generated/Aggregator.App.index_query.DomainCrawl.html#Aggregator.App.index_query.DomainCrawl">DomainCrawl (class in Aggregator.App.index_query)</a>
+</li>
+      <li><a href="generated/Aggregator.App.index_query.DomainRecord.html#Aggregator.App.index_query.DomainRecord">DomainRecord (class in Aggregator.App.index_query)</a>
+
+      <ul>
+        <li><a href="generated/Processor.App.processor_utils.DomainRecord.html#Processor.App.processor_utils.DomainRecord">(class in Processor.App.processor_utils)</a>
+</li>
+      </ul></li>
+      <li><a href="generated/Processor.App.Downloader.downloader.Downloader.download.html#Processor.App.Downloader.downloader.Downloader.download">download() (Processor.App.Downloader.downloader.Downloader method)</a>
+
+      <ul>
+        <li><a href="generated/Processor.App.Downloader.downloader.DownloaderFull.download.html#Processor.App.Downloader.downloader.DownloaderFull.download">(Processor.App.Downloader.downloader.DownloaderFull method)</a>
+</li>
+        <li><a href="generated/Processor.App.Downloader.dummy_downloader.DownloaderDummy.download.html#Processor.App.Downloader.dummy_downloader.DownloaderDummy.download">(Processor.App.Downloader.dummy_downloader.DownloaderDummy method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/Processor.App.Downloader.downloader.Downloader.html#Processor.App.Downloader.downloader.Downloader">Downloader (class in Processor.App.Downloader.downloader)</a>
+</li>
+      <li><a href="generated/Processor.App.Downloader.dummy_downloader.DownloaderDummy.html#Processor.App.Downloader.dummy_downloader.DownloaderDummy">DownloaderDummy (class in Processor.App.Downloader.dummy_downloader)</a>
+</li>
+      <li><a href="generated/Processor.App.Downloader.downloader.DownloaderFull.html#Processor.App.Downloader.downloader.DownloaderFull">DownloaderFull (class in Processor.App.Downloader.downloader)</a>
+</li>
+      <li><a href="generated/Processor.App.OutStreamer.dummy_streamer.DummyStreamer.html#Processor.App.OutStreamer.dummy_streamer.DummyStreamer">DummyStreamer (class in Processor.App.OutStreamer.dummy_streamer)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="E">E</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/Processor.App.ArticleUtils.article_extractor.ArticleExtractor.extract.html#Processor.App.ArticleUtils.article_extractor.ArticleExtractor.extract">extract() (Processor.App.ArticleUtils.article_extractor.ArticleExtractor method)</a>
+
+      <ul>
+        <li><a href="generated/Processor.App.Extractor.dummy_extractor.Extractor.extract.html#Processor.App.Extractor.dummy_extractor.Extractor.extract">(Processor.App.Extractor.dummy_extractor.Extractor method)</a>
+</li>
+        <li><a href="generated/Processor.App.Extractor.extractor.BaseExtractor.extract.html#Processor.App.Extractor.extractor.BaseExtractor.extract">(Processor.App.Extractor.extractor.BaseExtractor method)</a>
+</li>
+      </ul></li>
+      <li><a href="generated/Processor.App.ArticleUtils.article_extractor.ArticleExtractor.extract_soup.html#Processor.App.ArticleUtils.article_extractor.ArticleExtractor.extract_soup">extract_soup() (Processor.App.ArticleUtils.article_extractor.ArticleExtractor method)</a>
+
+      <ul>
+        <li><a href="generated/Processor.App.Extractor.dummy_extractor.Extractor.extract_soup.html#Processor.App.Extractor.dummy_extractor.Extractor.extract_soup">(Processor.App.Extractor.dummy_extractor.Extractor method)</a>
+</li>
+        <li><a href="generated/Processor.App.Extractor.extractor.BaseExtractor.extract_soup.html#Processor.App.Extractor.extractor.BaseExtractor.extract_soup">(Processor.App.Extractor.extractor.BaseExtractor method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/Processor.App.Downloader.dummy_downloader.DownloaderDummy.extract_url.html#Processor.App.Downloader.dummy_downloader.DownloaderDummy.extract_url">extract_url() (Processor.App.Downloader.dummy_downloader.DownloaderDummy method)</a>
+</li>
+      <li><a href="generated/Processor.App.Downloader.dummy_downloader.DownloaderDummy.extract_year.html#Processor.App.Downloader.dummy_downloader.DownloaderDummy.extract_year">extract_year() (Processor.App.Downloader.dummy_downloader.DownloaderDummy method)</a>
+</li>
+      <li><a href="generated/Processor.App.Extractor.dummy_extractor.Extractor.html#Processor.App.Extractor.dummy_extractor.Extractor">Extractor (class in Processor.App.Extractor.dummy_extractor)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="F">F</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/Processor.App.ArticleUtils.article_extractor.ArticleExtractor.filter_raw.html#Processor.App.ArticleUtils.article_extractor.ArticleExtractor.filter_raw">filter_raw() (Processor.App.ArticleUtils.article_extractor.ArticleExtractor method)</a>
+
+      <ul>
+        <li><a href="generated/Processor.App.Extractor.dummy_extractor.Extractor.filter_raw.html#Processor.App.Extractor.dummy_extractor.Extractor.filter_raw">(Processor.App.Extractor.dummy_extractor.Extractor method)</a>
+</li>
+        <li><a href="generated/Processor.App.Extractor.extractor.BaseExtractor.filter_raw.html#Processor.App.Extractor.extractor.BaseExtractor.filter_raw">(Processor.App.Extractor.extractor.BaseExtractor method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/Processor.App.ArticleUtils.article_extractor.ArticleExtractor.filter_soup.html#Processor.App.ArticleUtils.article_extractor.ArticleExtractor.filter_soup">filter_soup() (Processor.App.ArticleUtils.article_extractor.ArticleExtractor method)</a>
+
+      <ul>
+        <li><a href="generated/Processor.App.Extractor.dummy_extractor.Extractor.filter_soup.html#Processor.App.Extractor.dummy_extractor.Extractor.filter_soup">(Processor.App.Extractor.dummy_extractor.Extractor method)</a>
+</li>
+        <li><a href="generated/Processor.App.Extractor.extractor.BaseExtractor.filter_soup.html#Processor.App.Extractor.extractor.BaseExtractor.filter_soup">(Processor.App.Extractor.extractor.BaseExtractor method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="G">G</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/Aggregator.App.index_query.IndexAggregator.get_all_CC_indexes.html#Aggregator.App.index_query.IndexAggregator.get_all_CC_indexes">get_all_CC_indexes() (Aggregator.App.index_query.IndexAggregator static method)</a>
+</li>
+      <li><a href="generated/Aggregator.App.index_query.IndexAggregator.get_captured_responses.html#Aggregator.App.index_query.IndexAggregator.get_captured_responses">get_captured_responses() (Aggregator.App.index_query.IndexAggregator static method)</a>
+</li>
+      <li><a href="generated/Processor.App.OutStreamer.stream_to_file.OutStreamerFileDefault.get_file_name.html#Processor.App.OutStreamer.stream_to_file.OutStreamerFileDefault.get_file_name">get_file_name() (Processor.App.OutStreamer.stream_to_file.OutStreamerFileDefault method)</a>
+
+      <ul>
+        <li><a href="generated/Processor.App.OutStreamer.stream_to_file.OutStreamerFileHTMLContent.get_file_name.html#Processor.App.OutStreamer.stream_to_file.OutStreamerFileHTMLContent.get_file_name">(Processor.App.OutStreamer.stream_to_file.OutStreamerFileHTMLContent method)</a>
+</li>
+        <li><a href="generated/Processor.App.OutStreamer.stream_to_file.OutStreamerFileJSON.get_file_name.html#Processor.App.OutStreamer.stream_to_file.OutStreamerFileJSON.get_file_name">(Processor.App.OutStreamer.stream_to_file.OutStreamerFileJSON method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/Aggregator.App.index_query.IndexAggregator.get_number_of_pages.html#Aggregator.App.index_query.IndexAggregator.get_number_of_pages">get_number_of_pages() (Aggregator.App.index_query.IndexAggregator static method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="I">I</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/Aggregator.App.index_query.IndexAggregator.html#Aggregator.App.index_query.IndexAggregator">IndexAggregator (class in Aggregator.App.index_query)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="L">L</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/Processor.processor.Listener.html#Processor.processor.Listener">Listener (class in Processor.processor)</a>
+</li>
+      <li><a href="generated/Processor.processor.ListnerStats.html#Processor.processor.ListnerStats">ListnerStats (class in Processor.processor)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/Processor.App.Router.router.Router.load_module.html#Processor.App.Router.router.Router.load_module">load_module() (Processor.App.Router.router.Router method)</a>
+</li>
+      <li><a href="generated/Processor.App.Router.router.Router.load_modules.html#Processor.App.Router.router.Router.load_modules">load_modules() (Processor.App.Router.router.Router method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="M">M</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/Processor.processor.Message.html#Processor.processor.Message">Message (class in Processor.processor)</a>
+</li>
+      <li><a href="generated/Processor.App.OutStreamer.stream_to_file.OutStreamerFileDefault.metadata_to_string.html#Processor.App.OutStreamer.stream_to_file.OutStreamerFileDefault.metadata_to_string">metadata_to_string() (Processor.App.OutStreamer.stream_to_file.OutStreamerFileDefault method)</a>
+
+      <ul>
+        <li><a href="generated/Processor.App.OutStreamer.stream_to_file.OutStreamerFileHTMLContent.metadata_to_string.html#Processor.App.OutStreamer.stream_to_file.OutStreamerFileHTMLContent.metadata_to_string">(Processor.App.OutStreamer.stream_to_file.OutStreamerFileHTMLContent method)</a>
+</li>
+        <li><a href="generated/Processor.App.OutStreamer.stream_to_file.OutStreamerFileJSON.metadata_to_string.html#Processor.App.OutStreamer.stream_to_file.OutStreamerFileJSON.metadata_to_string">(Processor.App.OutStreamer.stream_to_file.OutStreamerFileJSON method)</a>
+</li>
+      </ul></li>
+      <li><a href="generated/Processor.App.Downloader.dummy_downloader.DownloaderDummy.mine_metadata.html#Processor.App.Downloader.dummy_downloader.DownloaderDummy.mine_metadata">mine_metadata() (Processor.App.Downloader.dummy_downloader.DownloaderDummy method)</a>
+</li>
+      <li>
+    module
+
+      <ul>
+        <li><a href="generated/Aggregator.html#module-Aggregator">Aggregator</a>
+</li>
+        <li><a href="generated/Aggregator.aggregator.html#module-Aggregator.aggregator">Aggregator.aggregator</a>
+</li>
+        <li><a href="generated/Aggregator.App.html#module-Aggregator.App">Aggregator.App</a>
+</li>
+        <li><a href="generated/Aggregator.App.index_query.html#module-Aggregator.App.index_query">Aggregator.App.index_query</a>
+</li>
+        <li><a href="generated/Aggregator.App.ndjson_decoder.html#module-Aggregator.App.ndjson_decoder">Aggregator.App.ndjson_decoder</a>
+</li>
+        <li><a href="generated/Aggregator.App.utils.html#module-Aggregator.App.utils">Aggregator.App.utils</a>
+</li>
+        <li><a href="generated/Processor.html#module-Processor">Processor</a>
+</li>
+        <li><a href="generated/Processor.App.html#module-Processor.App">Processor.App</a>
+</li>
+        <li><a href="generated/Processor.App.ArticleUtils.html#module-Processor.App.ArticleUtils">Processor.App.ArticleUtils</a>
+</li>
+        <li><a href="generated/Processor.App.ArticleUtils.article_extractor.html#module-Processor.App.ArticleUtils.article_extractor">Processor.App.ArticleUtils.article_extractor</a>
+</li>
+        <li><a href="generated/Processor.App.ArticleUtils.article_utils.html#module-Processor.App.ArticleUtils.article_utils">Processor.App.ArticleUtils.article_utils</a>
+</li>
+        <li><a href="generated/Processor.App.Downloader.html#module-Processor.App.Downloader">Processor.App.Downloader</a>
+</li>
+        <li><a href="generated/Processor.App.Downloader.downloader.html#module-Processor.App.Downloader.downloader">Processor.App.Downloader.downloader</a>
+</li>
+        <li><a href="generated/Processor.App.Downloader.dummy_downloader.html#module-Processor.App.Downloader.dummy_downloader">Processor.App.Downloader.dummy_downloader</a>
+</li>
+        <li><a href="generated/Processor.App.Extractor.html#module-Processor.App.Extractor">Processor.App.Extractor</a>
+</li>
+        <li><a href="generated/Processor.App.Extractor.dummy_extractor.html#module-Processor.App.Extractor.dummy_extractor">Processor.App.Extractor.dummy_extractor</a>
+</li>
+        <li><a href="generated/Processor.App.Extractor.extractor.html#module-Processor.App.Extractor.extractor">Processor.App.Extractor.extractor</a>
+</li>
+        <li><a href="generated/Processor.App.Extractor.extractor_utils.html#module-Processor.App.Extractor.extractor_utils">Processor.App.Extractor.extractor_utils</a>
+</li>
+        <li><a href="generated/Processor.App.OutStreamer.html#module-Processor.App.OutStreamer">Processor.App.OutStreamer</a>
+</li>
+        <li><a href="generated/Processor.App.OutStreamer.dummy_streamer.html#module-Processor.App.OutStreamer.dummy_streamer">Processor.App.OutStreamer.dummy_streamer</a>
+</li>
+        <li><a href="generated/Processor.App.OutStreamer.outstreamer.html#module-Processor.App.OutStreamer.outstreamer">Processor.App.OutStreamer.outstreamer</a>
+</li>
+        <li><a href="generated/Processor.App.OutStreamer.stream_to_file.html#module-Processor.App.OutStreamer.stream_to_file">Processor.App.OutStreamer.stream_to_file</a>
+</li>
+        <li><a href="generated/Processor.App.Pipeline.html#module-Processor.App.Pipeline">Processor.App.Pipeline</a>
+</li>
+        <li><a href="generated/Processor.App.Pipeline.pipeline.html#module-Processor.App.Pipeline.pipeline">Processor.App.Pipeline.pipeline</a>
+</li>
+        <li><a href="generated/Processor.App.processor_utils.html#module-Processor.App.processor_utils">Processor.App.processor_utils</a>
+</li>
+        <li><a href="generated/Processor.App.Router.html#module-Processor.App.Router">Processor.App.Router</a>
+</li>
+        <li><a href="generated/Processor.App.Router.router.html#module-Processor.App.Router.router">Processor.App.Router.router</a>
+</li>
+        <li><a href="generated/Processor.process_article.html#module-Processor.process_article">Processor.process_article</a>
+</li>
+        <li><a href="generated/Processor.processor.html#module-Processor.processor">Processor.processor</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="O">O</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/Processor.processor.Listener.on_before_message.html#Processor.processor.Listener.on_before_message">on_before_message() (Processor.processor.Listener method)</a>
+</li>
+      <li><a href="generated/Processor.processor.Listener.on_connected.html#Processor.processor.Listener.on_connected">on_connected() (Processor.processor.Listener method)</a>
+</li>
+      <li><a href="generated/Processor.processor.Listener.on_connecting.html#Processor.processor.Listener.on_connecting">on_connecting() (Processor.processor.Listener method)</a>
+</li>
+      <li><a href="generated/Processor.processor.Listener.on_disconnected.html#Processor.processor.Listener.on_disconnected">on_disconnected() (Processor.processor.Listener method)</a>
+</li>
+      <li><a href="generated/Processor.processor.Listener.on_disconnecting.html#Processor.processor.Listener.on_disconnecting">on_disconnecting() (Processor.processor.Listener method)</a>
+</li>
+      <li><a href="generated/Processor.processor.Listener.on_error.html#Processor.processor.Listener.on_error">on_error() (Processor.processor.Listener method)</a>
+</li>
+      <li><a href="generated/Processor.processor.Listener.on_heartbeat.html#Processor.processor.Listener.on_heartbeat">on_heartbeat() (Processor.processor.Listener method)</a>
+</li>
+      <li><a href="generated/Processor.processor.Listener.on_heartbeat_timeout.html#Processor.processor.Listener.on_heartbeat_timeout">on_heartbeat_timeout() (Processor.processor.Listener method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/Processor.processor.Listener.on_message.html#Processor.processor.Listener.on_message">on_message() (Processor.processor.Listener method)</a>
+</li>
+      <li><a href="generated/Processor.processor.Listener.on_receipt.html#Processor.processor.Listener.on_receipt">on_receipt() (Processor.processor.Listener method)</a>
+</li>
+      <li><a href="generated/Processor.processor.Listener.on_receiver_loop_completed.html#Processor.processor.Listener.on_receiver_loop_completed">on_receiver_loop_completed() (Processor.processor.Listener method)</a>
+</li>
+      <li><a href="generated/Processor.processor.Listener.on_send.html#Processor.processor.Listener.on_send">on_send() (Processor.processor.Listener method)</a>
+</li>
+      <li><a href="generated/Processor.App.OutStreamer.outstreamer.OutStreamer.html#Processor.App.OutStreamer.outstreamer.OutStreamer">OutStreamer (class in Processor.App.OutStreamer.outstreamer)</a>
+</li>
+      <li><a href="generated/Processor.App.OutStreamer.stream_to_file.OutStreamerFileDefault.html#Processor.App.OutStreamer.stream_to_file.OutStreamerFileDefault">OutStreamerFileDefault (class in Processor.App.OutStreamer.stream_to_file)</a>
+</li>
+      <li><a href="generated/Processor.App.OutStreamer.stream_to_file.OutStreamerFileHTMLContent.html#Processor.App.OutStreamer.stream_to_file.OutStreamerFileHTMLContent">OutStreamerFileHTMLContent (class in Processor.App.OutStreamer.stream_to_file)</a>
+</li>
+      <li><a href="generated/Processor.App.OutStreamer.stream_to_file.OutStreamerFileJSON.html#Processor.App.OutStreamer.stream_to_file.OutStreamerFileJSON">OutStreamerFileJSON (class in Processor.App.OutStreamer.stream_to_file)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="P">P</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/Processor.App.processor_utils.PipeMetadata.html#Processor.App.processor_utils.PipeMetadata">PipeMetadata (class in Processor.App.processor_utils)</a>
+</li>
+      <li><a href="generated/Processor.App.ArticleUtils.article_extractor.ArticleExtractor.preprocess.html#Processor.App.ArticleUtils.article_extractor.ArticleExtractor.preprocess">preprocess() (Processor.App.ArticleUtils.article_extractor.ArticleExtractor method)</a>
+
+      <ul>
+        <li><a href="generated/Processor.App.Extractor.dummy_extractor.Extractor.preprocess.html#Processor.App.Extractor.dummy_extractor.Extractor.preprocess">(Processor.App.Extractor.dummy_extractor.Extractor method)</a>
+</li>
+        <li><a href="generated/Processor.App.Extractor.extractor.BaseExtractor.preprocess.html#Processor.App.Extractor.extractor.BaseExtractor.preprocess">(Processor.App.Extractor.extractor.BaseExtractor method)</a>
+</li>
+      </ul></li>
+      <li><a href="generated/Processor.App.Pipeline.pipeline.ProcessorPipeline.process_domain_record.html#Processor.App.Pipeline.pipeline.ProcessorPipeline.process_domain_record">process_domain_record() (Processor.App.Pipeline.pipeline.ProcessorPipeline method)</a>
+</li>
+      <li>
+    Processor
+
+      <ul>
+        <li><a href="generated/Processor.html#module-Processor">module</a>
+</li>
+      </ul></li>
+      <li>
+    Processor.App
+
+      <ul>
+        <li><a href="generated/Processor.App.html#module-Processor.App">module</a>
+</li>
+      </ul></li>
+      <li>
+    Processor.App.ArticleUtils
+
+      <ul>
+        <li><a href="generated/Processor.App.ArticleUtils.html#module-Processor.App.ArticleUtils">module</a>
+</li>
+      </ul></li>
+      <li>
+    Processor.App.ArticleUtils.article_extractor
+
+      <ul>
+        <li><a href="generated/Processor.App.ArticleUtils.article_extractor.html#module-Processor.App.ArticleUtils.article_extractor">module</a>
+</li>
+      </ul></li>
+      <li>
+    Processor.App.ArticleUtils.article_utils
+
+      <ul>
+        <li><a href="generated/Processor.App.ArticleUtils.article_utils.html#module-Processor.App.ArticleUtils.article_utils">module</a>
+</li>
+      </ul></li>
+      <li>
+    Processor.App.Downloader
+
+      <ul>
+        <li><a href="generated/Processor.App.Downloader.html#module-Processor.App.Downloader">module</a>
+</li>
+      </ul></li>
+      <li>
+    Processor.App.Downloader.downloader
+
+      <ul>
+        <li><a href="generated/Processor.App.Downloader.downloader.html#module-Processor.App.Downloader.downloader">module</a>
+</li>
+      </ul></li>
+      <li>
+    Processor.App.Downloader.dummy_downloader
+
+      <ul>
+        <li><a href="generated/Processor.App.Downloader.dummy_downloader.html#module-Processor.App.Downloader.dummy_downloader">module</a>
+</li>
+      </ul></li>
+      <li>
+    Processor.App.Extractor
+
+      <ul>
+        <li><a href="generated/Processor.App.Extractor.html#module-Processor.App.Extractor">module</a>
+</li>
+      </ul></li>
+      <li>
+    Processor.App.Extractor.dummy_extractor
+
+      <ul>
+        <li><a href="generated/Processor.App.Extractor.dummy_extractor.html#module-Processor.App.Extractor.dummy_extractor">module</a>
+</li>
+      </ul></li>
+      <li>
+    Processor.App.Extractor.extractor
+
+      <ul>
+        <li><a href="generated/Processor.App.Extractor.extractor.html#module-Processor.App.Extractor.extractor">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    Processor.App.Extractor.extractor_utils
+
+      <ul>
+        <li><a href="generated/Processor.App.Extractor.extractor_utils.html#module-Processor.App.Extractor.extractor_utils">module</a>
+</li>
+      </ul></li>
+      <li>
+    Processor.App.OutStreamer
+
+      <ul>
+        <li><a href="generated/Processor.App.OutStreamer.html#module-Processor.App.OutStreamer">module</a>
+</li>
+      </ul></li>
+      <li>
+    Processor.App.OutStreamer.dummy_streamer
+
+      <ul>
+        <li><a href="generated/Processor.App.OutStreamer.dummy_streamer.html#module-Processor.App.OutStreamer.dummy_streamer">module</a>
+</li>
+      </ul></li>
+      <li>
+    Processor.App.OutStreamer.outstreamer
+
+      <ul>
+        <li><a href="generated/Processor.App.OutStreamer.outstreamer.html#module-Processor.App.OutStreamer.outstreamer">module</a>
+</li>
+      </ul></li>
+      <li>
+    Processor.App.OutStreamer.stream_to_file
+
+      <ul>
+        <li><a href="generated/Processor.App.OutStreamer.stream_to_file.html#module-Processor.App.OutStreamer.stream_to_file">module</a>
+</li>
+      </ul></li>
+      <li>
+    Processor.App.Pipeline
+
+      <ul>
+        <li><a href="generated/Processor.App.Pipeline.html#module-Processor.App.Pipeline">module</a>
+</li>
+      </ul></li>
+      <li>
+    Processor.App.Pipeline.pipeline
+
+      <ul>
+        <li><a href="generated/Processor.App.Pipeline.pipeline.html#module-Processor.App.Pipeline.pipeline">module</a>
+</li>
+      </ul></li>
+      <li>
+    Processor.App.processor_utils
+
+      <ul>
+        <li><a href="generated/Processor.App.processor_utils.html#module-Processor.App.processor_utils">module</a>
+</li>
+      </ul></li>
+      <li>
+    Processor.App.Router
+
+      <ul>
+        <li><a href="generated/Processor.App.Router.html#module-Processor.App.Router">module</a>
+</li>
+      </ul></li>
+      <li>
+    Processor.App.Router.router
+
+      <ul>
+        <li><a href="generated/Processor.App.Router.router.html#module-Processor.App.Router.router">module</a>
+</li>
+      </ul></li>
+      <li>
+    Processor.process_article
+
+      <ul>
+        <li><a href="generated/Processor.process_article.html#module-Processor.process_article">module</a>
+</li>
+      </ul></li>
+      <li>
+    Processor.processor
+
+      <ul>
+        <li><a href="generated/Processor.processor.html#module-Processor.processor">module</a>
+</li>
+      </ul></li>
+      <li><a href="generated/Processor.App.Pipeline.pipeline.ProcessorPipeline.html#Processor.App.Pipeline.pipeline.ProcessorPipeline">ProcessorPipeline (class in Processor.App.Pipeline.pipeline)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="R">R</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/Aggregator.App.ndjson_decoder.Decoder.raw_decode.html#Aggregator.App.ndjson_decoder.Decoder.raw_decode">raw_decode() (Aggregator.App.ndjson_decoder.Decoder method)</a>
+</li>
+      <li><a href="generated/Processor.App.Router.router.Router.register_route.html#Processor.App.Router.router.Router.register_route">register_route() (Processor.App.Router.router.Router method)</a>
+</li>
+      <li><a href="generated/Processor.App.Router.router.Router.register_routes.html#Processor.App.Router.router.Router.register_routes">register_routes() (Processor.App.Router.router.Router method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/Aggregator.App.index_query.RetrieveResponse.html#Aggregator.App.index_query.RetrieveResponse">RetrieveResponse (class in Aggregator.App.index_query)</a>
+</li>
+      <li><a href="generated/Processor.App.Router.router.Route.html#Processor.App.Router.router.Route">Route (class in Processor.App.Router.router)</a>
+</li>
+      <li><a href="generated/Processor.App.Router.router.Router.route.html#Processor.App.Router.router.Router.route">route() (Processor.App.Router.router.Router method)</a>
+</li>
+      <li><a href="generated/Processor.App.Router.router.Router.html#Processor.App.Router.router.Router">Router (class in Processor.App.Router.router)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="S">S</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/Processor.App.OutStreamer.dummy_streamer.DummyStreamer.stream.html#Processor.App.OutStreamer.dummy_streamer.DummyStreamer.stream">stream() (Processor.App.OutStreamer.dummy_streamer.DummyStreamer method)</a>
+
+      <ul>
+        <li><a href="generated/Processor.App.OutStreamer.outstreamer.OutStreamer.stream.html#Processor.App.OutStreamer.outstreamer.OutStreamer.stream">(Processor.App.OutStreamer.outstreamer.OutStreamer method)</a>
+</li>
+        <li><a href="generated/Processor.App.OutStreamer.stream_to_file.OutStreamerFileDefault.stream.html#Processor.App.OutStreamer.stream_to_file.OutStreamerFileDefault.stream">(Processor.App.OutStreamer.stream_to_file.OutStreamerFileDefault method)</a>
+</li>
+        <li><a href="generated/Processor.App.OutStreamer.stream_to_file.OutStreamerFileHTMLContent.stream.html#Processor.App.OutStreamer.stream_to_file.OutStreamerFileHTMLContent.stream">(Processor.App.OutStreamer.stream_to_file.OutStreamerFileHTMLContent method)</a>
+</li>
+        <li><a href="generated/Processor.App.OutStreamer.stream_to_file.OutStreamerFileJSON.stream.html#Processor.App.OutStreamer.stream_to_file.OutStreamerFileJSON.stream">(Processor.App.OutStreamer.stream_to_file.OutStreamerFileJSON method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="U">U</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/Processor.App.Downloader.downloader.DownloaderFull.unwrap.html#Processor.App.Downloader.downloader.DownloaderFull.unwrap">unwrap() (Processor.App.Downloader.downloader.DownloaderFull method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Hynek Kydlíček<br/>
+  
+      &copy; Copyright 2022, Hynek Kydlíček.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>
