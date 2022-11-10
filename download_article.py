@@ -72,7 +72,7 @@ async def article_download(
     all_purpose_logger.info("Finished pipeline")
 
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser(description="Download articles")
     parser.add_argument("url")
     parser.add_argument("output", type=Path)
@@ -88,3 +88,7 @@ if __name__ == "__main__":
         args["to"] = datetime.fromisoformat(args["to"])
 
     asyncio.run(article_download(**args))
+
+
+if __name__ == "__main__":
+    main()

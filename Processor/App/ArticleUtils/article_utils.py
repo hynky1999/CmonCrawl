@@ -269,3 +269,20 @@ def date_complex_extract(
             return fallback.replace(hour=date.hour, minute=date.minute)
 
     return fallback
+
+
+year_since_to_re = re.compile(r"\d{4}\s*–\s*(?P<year>\d{4})")
+
+
+
+######################
+# Specific extractors utils
+
+def date_transform(text: str):
+    date = format_date_transform("%d. %m. %Y %H:%M")(text)
+    if date is not None:
+        return date
+    date = format_date_transform("%d. %m. %Y")(text)
+    if date is not None:
+        return date
+    return None

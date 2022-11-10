@@ -3,6 +3,7 @@ WORKDIR /var/lib/Processor
 COPY ./environment.yml .
 RUN conda env create --name myenv --file environment.yml
 COPY ./App ./App
+COPY ./UserDefined ./UserDefined
 COPY processor.py .
 COPY __init__.py .
 WORKDIR /var/lib

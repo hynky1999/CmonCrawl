@@ -45,6 +45,7 @@ def init_pipeline(
     config: Dict[str, Any],
 ):
     router = Router()
+
     router.load_modules(extractors_path)
     router.register_routes(config["routes"])
     outstreamer = OutStreamerFileJSON(Path(output_path))
@@ -122,13 +123,23 @@ async def processor(
     queue_size: int,
     timeout: int,
     config_path: Path,
-    extractors_path: Path,
     max_retry: int,
     sleep_step: int
 ):
+
+
     timeout_delta = timedelta(minutes=timeout)
     with open(Path(config_path)) as f:
         config = json.load(f)
+
+    # Set's extractor path based on config
+    extractors_path = config.get("extractors_path")
+    if extractors_path is not None:
+        extractors_path = config_path.parent / extractors_path
+    else:
+        extractors_path = Path(__file__).parent / "UserDefined"
+
+
     pending_extracts: Set[asyncio.Task[Tuple[Message, List[Path]]]] = set()
     conn = Connection(
         [(queue_host, queue_port)], reconnect_attempts_max=-1, heartbeats=(10000, 10000)
@@ -230,11 +241,6 @@ if __name__ == "__main__":
     parser.add_argument(
         "--config_path",
         type=Path,
-        default=Path(__file__).parent / "App" / "config.json",
-    )
-    parser.add_argument(
-        "--extractors_path",
-        type=Path,
-        default=Path(__file__).parent / "App" / "DoneExtractors",
+        default=Path(__file__).parent / "UserDefined" / "config.json",
     )
     asyncio.run(processor(**vars(parser.parse_args())))

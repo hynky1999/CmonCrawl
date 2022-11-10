@@ -30,7 +30,6 @@ async def article_process(
     article_path: List[Path],
     output_path: Path,
     config_path: Path,
-    extractors_path: Path,
     url: str | None,
     date: datetime | None,
 ):
@@ -38,6 +37,12 @@ async def article_process(
     with open(config_path, "r") as f:
         config = json.load(f)
     router = Router()
+    extractors_path = config.get("extractors_path")
+    if extractors_path is not None:
+        extractors_path = config_path.parent / extractors_path
+    else:
+        extractors_path = Path(__file__).parent / "UserDefined"
+
     router.load_modules(extractors_path)
     router.register_routes(config.get("routes", []))
     downloader = DownloaderDummy(article_path, url, date)
@@ -53,19 +58,15 @@ async def article_process(
         os.rename(created_path, created_path.parent / (path.stem + ".json"))
 
 
-if __name__ == "__main__":
+
+def main():
     parser = argparse.ArgumentParser(description="Download articles")
     parser.add_argument("article_path", nargs="+", type=Path)
     parser.add_argument("output_path", type=Path)
     parser.add_argument(
         "--config_path",
         type=Path,
-        default=Path(__file__).parent / "App" / "config.json",
-    )
-    parser.add_argument(
-        "--extractors_path",
-        type=Path,
-        default=Path(Path(__file__).parent / "App" / "DoneExtractors"),
+        default=Path(__file__).parent / "UserDefined" / "config.json",
     )
     parser.add_argument("--date", type=str)
     parser.add_argument("--url", type=str)
@@ -74,3 +75,6 @@ if __name__ == "__main__":
         args["date"] = datetime.fromisoformat(args["date"])
 
     asyncio.run(article_process(**args))
+
+if __name__ == "__main__":
+    main()
