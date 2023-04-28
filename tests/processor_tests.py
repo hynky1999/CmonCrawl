@@ -5,15 +5,15 @@ import unittest
 import os
 import re
 from datetime import datetime
-from Processor.App.Downloader.downloader import DownloaderFull
-from Processor.App.OutStreamer.stream_to_file import OutStreamerFileDefault
-from Processor.App.Router.router import Router
-from Processor.App.processor_utils import DomainRecord, PipeMetadata
+from cmoncrawl.processor.pipeline.downloader import AsyncDownloader
+from cmoncrawl.processor.pipeline.streamer import OutStreamerFileDefault
+from cmoncrawl.processor.pipeline.router import Router
+from cmoncrawl.common.types import DomainRecord, PipeMetadata
 
 
 class DownloaderTests(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self) -> None:
-        self.downloader: DownloaderFull = await DownloaderFull(
+        self.downloader: AsyncDownloader = await AsyncDownloader(
             digest_verification=True
         ).aopen()
 
@@ -66,7 +66,7 @@ class RouterTests(unittest.TestCase):
 
 class OutStremaerTests(unittest.IsolatedAsyncioTestCase):
     def setUp(self) -> None:
-        self.outstreamer_file = OutStreamerFileDefault(origin=Path("./test"))
+        self.outstreamer_file = OutStreamerFileDefault(root=Path("./test"))
         self.metadata = PipeMetadata(DomainRecord("", "", 0, 0))
 
     async def test_simple_write(self):

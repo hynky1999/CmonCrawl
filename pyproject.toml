@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "Common-Crawl-Extractor"
-version = "0.1.0"
+version = "0.8.0"
 dependencies = [
   "aiofiles==0.8.0",
   "aiohttp==3.8.1",
@@ -26,12 +26,33 @@ dependencies = [
   "yarl==1.7.2"
 ]
 
+keywords = [
+  "Common Crawl",
+  "Crawl",
+  "Extractor",
+  "Common Crawl Extractor",
+  "Web Crawler",
+  "Web Extractor",
+  "Web Scraper",
+]
+
+readme = "README.md"
+license = {file = "MIT"}
+
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+]
 
 [tool.setuptools.packages.find]
-include = [""Processor", "Aggregator"]
-
-
+include = ["cmoncrawl*"]
+exclude = ["tests*", "docs*", "examples*"]
 
 [project.scripts]
-process-article = "Processor.process_article:main"
+cmondownload = "cmoncrawl.integrations.commands:run_download"
+cmonextract = "cmoncrawl.integrations.commands:run_extract"
 
+[project.urls]
+Source = "https://github.com/hynky1999/Rocnikovy-Projekt"
