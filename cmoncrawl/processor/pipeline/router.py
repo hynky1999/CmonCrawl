@@ -110,12 +110,16 @@ class Router(IRouter):
             return time.replace(tzinfo=timezone.utc)
         return time
 
-    def route(self, url: str, time: datetime, metadata: PipeMetadata) -> IExtractor:
+    def route(
+        self, url: str, time: datetime | None, metadata: PipeMetadata
+    ) -> IExtractor:
         # check if offset naive datetime if so then convert to utc
-        time = self._as_offset_aware(time)
+        time = self._as_offset_aware(time) if time is not None else None
         for route in self.registered_routes:
             for regex in route.regexes:
-                if regex.match(url) and route.since <= time and time < route.to:
+                if regex.match(url) and (
+                    time is None or (route.since <= time and time < route.to)
+                ):
                     metadata_logger.debug(
                         f"Routed {url} to {route.name}",
                         extra={"domain_record": metadata.domain_record},

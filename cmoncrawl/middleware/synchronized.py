@@ -29,8 +29,6 @@ async def index_and_extract(
                     paths: List[Path] = await pipeline.process_domain_record(
                         domain_record
                     )
-                    if paths:
-                        all_purpose_logger.info(f"Processed {domain_record.url}")
                 except KeyboardInterrupt as e:
                     break
 

@@ -2,6 +2,8 @@ from datetime import datetime
 from enum import Enum
 import json
 import logging
+import multiprocessing
+from functools import partial
 from pathlib import Path
 from cmoncrawl.aggregator.index_query import IndexAggregator
 from cmoncrawl.common.types import ExtractConfig
@@ -12,7 +14,7 @@ from cmoncrawl.processor.pipeline.streamer import StreamerFileHTML
 from cmoncrawl.processor.pipeline.extractor import HTMLExtractor, DomainRecordExtractor
 from cmoncrawl.middleware.synchronized import index_and_extract, extract
 import argparse
-from typing import List
+from typing import Any, Dict, List
 import asyncio
 from cmoncrawl.processor.pipeline.streamer import (
     StreamerFileJSON,
@@ -94,26 +96,50 @@ async def extract_from_files(
         await extract(domain_records, pipeline)
 
 
-def run_extract():
+def extract_args():
     parser = argparse.ArgumentParser(description="Download articles")
     parser.add_argument("files", nargs="+", type=Path)
     parser.add_argument("output_path", type=Path)
     parser.add_argument(
+        "config_path",
+        type=Path,
+    )
+    parser.add_argument(
         "--mode", type=ExtractMode, choices=list(ExtractMode), default=ExtractMode.HTML
     )
     parser.add_argument("--debug", action="store_true")
-    parser.add_argument(
-        "--config_path",
-        type=Path,
-    )
     parser.add_argument("--date", type=str, default=datetime.now().isoformat())
     parser.add_argument("--max_crawls_per_file", type=int, default=50_000)
     parser.add_argument("--max_directory_size", type=int, default=1000)
+    parser.add_argument("--n_proc", type=int, default=1)
     parser.add_argument("--url", type=str, default="")
-    args = vars(parser.parse_args())
-    args["date"] = datetime.fromisoformat(args["date"])
+    return vars(parser.parse_args())
 
-    asyncio.run(extract_from_files(**args))
+
+def _extract_task(
+    output_path: Path, config: ExtractConfig, files: List[Path], args: Dict[str, Any]
+):
+    asyncio.run(
+        extract_from_files(output_path=output_path, config=config, files=files, **args)
+    )
+
+
+def run_extract():
+    args = extract_args()
+    args["date"] = datetime.fromisoformat(args["date"])
+    files = args["files"]
+    del args["files"]
+    pool = multiprocessing.Pool(args["n_proc"])
+    del args["n_proc"]
+    output_path = args["output_path"]
+    del args["output_path"]
+    with open(args["config_path"], "r") as f:
+        config = ExtractConfig.schema().load(json.load(f))
+    del args["config_path"]
+    pool.starmap(
+        _extract_task,
+        [(output_path / str(i), config, files, args) for i, file in enumerate(files)],
+    )
 
 
 # ==================================================================================================

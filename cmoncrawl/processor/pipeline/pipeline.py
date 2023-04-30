@@ -39,6 +39,10 @@ class ProcessorPipeline:
                     )
                     continue
                 paths.append(await self.oustreamer.stream(output, metadata))
+                metadata_logger.info(
+                    "Successfully processed",
+                    extra={"domain_record": metadata.domain_record},
+                )
             except ValueError as e:
                 metadata_logger.error(
                     str(e),
