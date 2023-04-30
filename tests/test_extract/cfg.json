@@ -1,0 +1,12 @@
+{
+    "extractors_path": "tests/test_extract/extractors",
+    "routes": [
+        {
+            "regexes": [".*"],
+            "extractors": [{
+                "name": "test_extractor",
+                "since": "2009-01-01T00:00:00+00:00"
+            }]
+        }
+    ]
+}

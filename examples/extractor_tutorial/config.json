@@ -1,5 +1,4 @@
 {
-    "addresses": ["queue.bbc.com"],
     "extractors_path": "./Extractors",
     "routes":   [
         {
