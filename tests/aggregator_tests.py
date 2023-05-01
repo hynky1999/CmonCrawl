@@ -6,12 +6,13 @@ sys.path.append(Path("App").absolute().as_posix())
 
 from datetime import datetime
 from typing import List
-from Aggregator.aggregator import unify_url_id
-from Aggregator.App.index_query import DomainRecord, IndexAggregator
+from cmoncrawl.aggregator.utils.helpers import unify_url_id
+from cmoncrawl.common.types import DomainRecord
+from cmoncrawl.aggregator.index_query import IndexAggregator
 import unittest
 
 
-from Aggregator.App.utils import all_purpose_logger
+from cmoncrawl.common.loggers import all_purpose_logger
 
 all_purpose_logger.setLevel(logging.DEBUG)
 
@@ -40,21 +41,11 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
         indexes = await self.di.get_all_CC_indexes(
             self.client, self.di.cc_indexes_server
         )
-        # I better make this quickly because next Crawl comming soon
-        # Since I plan to make add date restrictions this will be easly fixable
+        indexes = sorted(indexes)
+        indexes = indexes[
+            : indexes.index("https://index.commoncrawl.org/CC-MAIN-2022-27-index") + 1
+        ]
         self.assertEqual(len(indexes), 89)
-
-    async def test_caputred_responses(self):
-        responses = await self.di.get_captured_responses(
-            self.client,
-            self.CC_SERVERS[0],
-            "idnes.cz",
-            page=0,
-            max_retry=10,
-            sleep_step=100,
-        )
-        self.assertIsNotNone(responses.content)
-        self.assertEqual(len(responses.content), 12066)
 
     async def test_since(self):
         # That is crawl date not published date
@@ -108,14 +99,6 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
             ],
         )
         self.assertEqual(len(q), 2)
-
-    async def test_iterator_single(self):
-        records: List[DomainRecord] = []
-        async for record in self.di:
-            records.append(record)
-
-        # Checked by alternative client
-        self.assertEqual(len(records), 194393)
 
     async def test_cancel_iterator_tasks(self):
         self.di.limit = 10

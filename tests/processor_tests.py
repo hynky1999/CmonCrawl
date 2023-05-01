@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 import asyncio
@@ -5,15 +6,15 @@ import unittest
 import os
 import re
 from datetime import datetime
-from Processor.App.Downloader.downloader import DownloaderFull
-from Processor.App.OutStreamer.stream_to_file import OutStreamerFileDefault
-from Processor.App.Router.router import Router
-from Processor.App.processor_utils import DomainRecord, PipeMetadata
+from cmoncrawl.processor.pipeline.downloader import AsyncDownloader
+from cmoncrawl.processor.pipeline.streamer import StreamerFileJSON, StreamerFileHTML
+from cmoncrawl.processor.pipeline.router import Router
+from cmoncrawl.common.types import DomainRecord, PipeMetadata
 
 
 class DownloaderTests(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self) -> None:
-        self.downloader: DownloaderFull = await DownloaderFull(
+        self.downloader: AsyncDownloader = await AsyncDownloader(
             digest_verification=True
         ).aopen()
 
@@ -66,27 +67,59 @@ class RouterTests(unittest.TestCase):
 
 class OutStremaerTests(unittest.IsolatedAsyncioTestCase):
     def setUp(self) -> None:
-        self.outstreamer_file = OutStreamerFileDefault(origin=Path("./test"))
+        self.html_folder = Path(__file__).parent / "test_html"
+        self.json_folder = Path(__file__).parent / "test_json"
+        self.outstreamer_json = StreamerFileJSON(self.json_folder, 100, 100)
+        self.outstreamer_html = StreamerFileHTML(self.html_folder, 5)
         self.metadata = PipeMetadata(DomainRecord("", "", 0, 0))
 
     async def test_simple_write(self):
-        file = await self.outstreamer_file.stream(dict(), self.metadata)
+        file = await self.outstreamer_json.stream(dict(), self.metadata)
         self.assertTrue(os.path.exists(file))
 
     async def test_clean_up(self):
-        file = await self.outstreamer_file.stream(dict(), self.metadata)
-        await self.outstreamer_file.clean_up()
+        file = await self.outstreamer_json.stream(dict(), self.metadata)
+        await self.outstreamer_json.clean_up()
         self.assertFalse(os.path.exists(file))
 
     async def test_create_directory(self):
-        self.outstreamer_file.max_directory_size = 3
+        self.outstreamer_json.max_directory_size = 3
+        self.outstreamer_json.max_file_size = 1
         writes = [
-            asyncio.create_task(self.outstreamer_file.stream(dict(), self.metadata))
+            asyncio.create_task(self.outstreamer_json.stream(dict(), self.metadata))
             for _ in range(15)
         ]
         await asyncio.gather(*writes)
-        size = len(os.listdir("./test"))
+        size = len(os.listdir(self.json_folder))
         self.assertEqual(size, 5)
 
+    async def test_create_multi_file(self):
+        self.outstreamer_json.max_directory_size = 1
+        self.outstreamer_json.max_file_size = 5
+
+        writes = [
+            asyncio.create_task(self.outstreamer_json.stream(dict(), self.metadata))
+            for _ in range(5)
+        ]
+        await asyncio.gather(*writes)
+        size = len(os.listdir(self.json_folder))
+        self.assertEqual(size, 1)
+        num_lines = sum(
+            1 for _ in open(self.json_folder / "directory_0" / "0_file.json", "r")
+        )
+        self.assertEqual(num_lines, 5)
+
+    async def test_check_content_json(self):
+        writes = [
+            asyncio.create_task(self.outstreamer_json.stream({"num": n}, self.metadata))
+            for n in range(2)
+        ]
+        files = await asyncio.gather(*writes)
+        with open(files[0], "r") as f:
+            ct = [json.loads(line) for line in f]
+        for i in range(2):
+            self.assertEqual(ct[i]["num"], i)
+
     async def asyncTearDown(self) -> None:
-        await self.outstreamer_file.clean_up()
+        await self.outstreamer_json.clean_up()
+        await self.outstreamer_html.clean_up()
