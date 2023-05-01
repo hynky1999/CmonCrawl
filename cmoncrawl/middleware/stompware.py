@@ -49,28 +49,23 @@ class ArtemisAggregator:
         self.url = url
         self.heartbeat = heartbeat
 
-    def _init_connection(self, conn: Connection):
+    def _init_connection(self):
+        conn = Connection(
+            [(self.queue_host, self.queue_port)],
+            heartbeats=(self.heartbeat, self.heartbeat),
+        )
         conn.connect(login="producer", passcode="producer", wait=True)
         all_purpose_logger.info(f"Connected to queue")
         return conn
 
     async def aggregate(self, filter_duplicates: bool = True):
-        conn = Connection(
-            [(self.queue_host, self.queue_port)],
-            heartbeats=(self.heartbeat, self.heartbeat),
-        )
-        # make sure we have connection so that we cant send the poission pill
-        while conn.is_connected() is False:
-            try:
-                conn = self._init_connection(conn)
-            except StompException:
-                pass
+        conn = self._init_connection()
         i = 0
         async with self.index_agg as aggregator:
             async for domain_record in aggregator:
                 try:
                     while not conn.is_connected():
-                        conn = self._init_connection(conn)
+                        conn = self._init_connection()
 
                     json_str = json.dumps(domain_record.__dict__, default=str)
                     headers = {}
@@ -148,13 +143,21 @@ class ArtemisProcessor:
                 except ValueError:
                     pass
 
-    def _init_connection(self, conn: Connection, addresses: List[str]):
+    def _init_connection(self, addresses: List[str]):
+        conn = Connection(
+            [(self.queue_host, self.queue_port)],
+            reconnect_attempts_max=-1,
+            heartbeats=(self.heartbeat, self.heartbeat),
+        )
         conn.connect(login="consumer", passcode="consumer", wait=True)
         for address in addresses:
             conn.subscribe(address, id=address, ack="client-individual")
         conn.subscribe("topic.poisson_pill.#", id="poisson_pill", ack="auto")
+        listener_stats = ListnerStats()
+        listener = self.Listener(asyncio.Queue(0), listener_stats)
+        conn.set_listener("", listener)
         all_purpose_logger.info("Connected to queue")
-        return conn
+        return conn, listener
 
     async def _call_pipeline_with_ack(
         self,
@@ -182,14 +185,7 @@ class ArtemisProcessor:
         timeout_delta = timedelta(minutes=self.timeout)
         # Set's extractor path based on config
         pending_extracts: Set[asyncio.Task[Tuple[Message, List[Path]]]] = set()
-        conn = Connection(
-            [(self.queue_host, self.queue_port)],
-            reconnect_attempts_max=-1,
-            heartbeats=(self.heartbeat, self.heartbeat),
-        )
-        listener_stats = ListnerStats()
-        listener = self.Listener(asyncio.Queue(0), listener_stats)
-        conn.set_listener("", listener)
+        conn, listener = self._init_connection(self.addresses)
         all_purpose_logger.debug("Connecting to queue")
         extracted_num = 0
         try:
@@ -212,7 +208,7 @@ class ArtemisProcessor:
                 try:
                     # Auto reconnect if queue disconnects
                     if not conn.is_connected():
-                        conn = self._init_connection(conn, self.addresses)
+                        conn, listener = self._init_connection(self.addresses)
 
                     if len(pending_extracts) > 0:
                         done, pending_extracts = await asyncio.wait(
