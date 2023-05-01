@@ -37,7 +37,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         limit: int | None = None,
         max_retry: int = 5,
         prefetch_size: int = 3,
-        sleep_step: int = 10,
+        sleep_step: int = 20,
     ) -> None:
         self.domains = domains
         self.cc_indexes_server = cc_indexes_server
@@ -232,10 +232,11 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
 
     @staticmethod
     async def get_all_CC_indexes(client: ClientSession, cdx_server: str) -> List[str]:
-        async with client.get(cdx_server) as response:
-            r_json = await response.json(content_type="application/json")
-            CC_servers = [js["cdx-api"] for js in r_json]
-            return CC_servers
+        for _ in range(3):
+            async with client.get(cdx_server) as response:
+                r_json = await response.json(content_type="application/json")
+                CC_servers = [js["cdx-api"] for js in r_json]
+                return CC_servers
 
     class IndexAggregatorIterator(AsyncIterator[DomainRecord]):
         def __init__(

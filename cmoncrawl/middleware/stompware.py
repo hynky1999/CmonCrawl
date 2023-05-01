@@ -36,21 +36,28 @@ class ListnerStats:
 
 class ArtemisAggregator:
     def __init__(
-        self, queue_host: str, queue_port: int, url: str, index_agg: IndexAggregator
+        self,
+        queue_host: str,
+        queue_port: int,
+        url: str,
+        index_agg: IndexAggregator,
+        heartbeat: int = 10000,
     ):
         self.queue_host = queue_host
         self.queue_port = queue_port
         self.index_agg = index_agg
         self.url = url
+        self.heartbeat = heartbeat
 
     def _init_connection(self, conn: Connection):
         conn.connect(login="producer", passcode="producer", wait=True)
         all_purpose_logger.info(f"Connected to queue")
         return conn
 
-    async def aggregate(self):
+    async def aggregate(self, filter_duplicates: bool = True):
         conn = Connection(
-            [(self.queue_host, self.queue_port)], heartbeats=(10000, 10000)
+            [(self.queue_host, self.queue_port)],
+            heartbeats=(self.heartbeat, self.heartbeat),
         )
         # make sure we have connection so that we cant send the poission pill
         while conn.is_connected() is False:
@@ -66,20 +73,26 @@ class ArtemisAggregator:
                         conn = self._init_connection(conn)
 
                     json_str = json.dumps(domain_record.__dict__, default=str)
-                    id = unify_url_id(domain_record.url)
+                    headers = {}
+                    if filter_duplicates:
+                        id = unify_url_id(domain_record.url)
+                        headers[DUPL_ID_HEADER] = id
                     conn.send(
                         f"queue.{self.url}",
                         json_str,
-                        headers={DUPL_ID_HEADER: id},
+                        headers=headers,
                     )
                     all_purpose_logger.debug(
                         f"Sent url: {domain_record.url} with id: {id}"
                     )
                     i += 1
-                except (KeyboardInterrupt) as e:
-                    break
+                except StompException as e:
+                    all_purpose_logger.error(e, exc_info=True)
+                    continue
+
                 except Exception as e:
                     all_purpose_logger.error(e, exc_info=True)
+                    break
 
         all_purpose_logger.info(f"Sent {i} messages")
         conn.send(
@@ -98,6 +111,7 @@ class ArtemisProcessor:
         timeout: int,
         addresses: List[str],
         pipeline: ProcessorPipeline,
+        heartbeat: int = 10000,
     ):
         self.queue_host = queue_host
         self.queue_port = queue_port
@@ -106,10 +120,13 @@ class ArtemisProcessor:
         self.timeout = timeout
         self.pipeline = pipeline
         self.addresses = addresses
+        self.heartbeat = heartbeat
 
     class Listener(ConnectionListener):
         def __init__(
-            self, messages: asyncio.Queue[Message], listener_stats: ListnerStats
+            self,
+            messages: asyncio.Queue[Message],
+            listener_stats: ListnerStats,
         ):
             self.messages = messages
             self.pills = 0
@@ -140,7 +157,10 @@ class ArtemisProcessor:
         return conn
 
     async def _call_pipeline_with_ack(
-        self, pipeline: ProcessorPipeline, msg: Message, client: Connection
+        self,
+        pipeline: ProcessorPipeline,
+        msg: Message,
+        client: Connection,
     ):
         # Make sure no exception is thrown from this function
         # So that we can nack it if needed
@@ -165,7 +185,7 @@ class ArtemisProcessor:
         conn = Connection(
             [(self.queue_host, self.queue_port)],
             reconnect_attempts_max=-1,
-            heartbeats=(10000, 10000),
+            heartbeats=(self.heartbeat, self.heartbeat),
         )
         listener_stats = ListnerStats()
         listener = self.Listener(asyncio.Queue(0), listener_stats)
