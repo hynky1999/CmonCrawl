@@ -1,7 +1,8 @@
-from functools import reduce
-from itertools import accumulate
-from typing import Any, Callable, Dict, List
+from typing import Any, Callable, Dict, List, Sized
 from bs4 import Tag
+
+from cmoncrawl.common.types import PipeMetadata
+from cmoncrawl.common.loggers import metadata_logger
 
 """
  Whole point of these functions is that is possible to use them
@@ -119,3 +120,41 @@ def combine_dicts(dicts: List[Dict[str, Any]]):
 
     keys = [key for d in dicts for key in d.keys()]
     return {key: recursive_get(key, dicts, 0) for key in keys}
+
+
+def check_required(
+    required_fields: Dict[str, bool], extractor_name: str, non_empty: bool = False
+):
+    def inner(extracted_dict: Dict[Any, Any], metadata: PipeMetadata):
+        for key, value in required_fields.items():
+            if key not in extracted_dict:
+                metadata_logger.warn(
+                    f"{extractor_name} failed to extract {key}",
+                    extra={"domain_record": metadata.domain_record},
+                )
+                return False
+            extracted_val = extracted_dict[key]
+            if value:
+                if extracted_val is None:
+                    metadata_logger.warn(
+                        f"{extractor_name}: None for key: {key} is not allowed",
+                        extra={"domain_record": metadata.domain_record},
+                    )
+                    return False
+
+                if non_empty:
+                    if isinstance(extracted_val, str) and extracted_val == "":
+                        metadata_logger.warn(
+                            f"{extractor_name}: empty string for key: {key} is not allowed",
+                            extra={"domain_record": metadata.domain_record},
+                        )
+                        return False
+                    if isinstance(extracted_val, Sized) and len(extracted_val) == 0:
+                        metadata_logger.warn(
+                            f"{extractor_name}: empty list for key: {key} is not allowed",
+                            extra={"domain_record": metadata.domain_record},
+                        )
+                        return False
+        return True
+
+    return inner

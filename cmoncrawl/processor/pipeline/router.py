@@ -111,9 +111,11 @@ class Router(IRouter):
         return time
 
     def route(
-        self, url: str, time: datetime | None, metadata: PipeMetadata
+        self, url: str | None, time: datetime | None, metadata: PipeMetadata
     ) -> IExtractor:
         # check if offset naive datetime if so then convert to utc
+        if url is None:
+            raise ValueError("Url must not be None")
         time = self._as_offset_aware(time) if time is not None else None
         for route in self.registered_routes:
             for regex in route.regexes:

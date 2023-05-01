@@ -3,7 +3,6 @@ from enum import Enum
 import json
 import logging
 import multiprocessing
-from functools import partial
 from pathlib import Path
 from cmoncrawl.aggregator.index_query import IndexAggregator
 from cmoncrawl.common.types import ExtractConfig
@@ -49,7 +48,7 @@ def setup_loggers(debug: bool):
 
 
 def get_extract_downloader(
-    mode: ExtractMode, files_path: List[Path], url: str, date: datetime
+    mode: ExtractMode, files_path: List[Path], url: str | None, date: datetime | None
 ):
     match mode:
         case ExtractMode.HTML:
@@ -64,9 +63,22 @@ def get_domain_records_json(file_path: Path) -> List[DomainRecord]:
     return [DomainRecord.schema().load(record["domain_record"]) for record in js]
 
 
-def get_domain_records_html(url: str, date: datetime):
+def get_domain_records_html(url: str | None, date: datetime | None):
     # Just return dummy as correct crawl will be loaded from dummy downloader
     return [DomainRecord("", url=url, offset=0, length=0, timestamp=date)]
+
+
+def load_config(config_path: Path) -> ExtractConfig:
+    with open(config_path, "r") as f:
+        config = json.load(f)
+    return ExtractConfig.schema().load(config)
+
+
+def create_router(config: ExtractConfig) -> Router:
+    router = Router()
+    router.load_modules(config.extractors_path)
+    router.register_routes(config.routes)
+    return router
 
 
 async def extract_from_files(
@@ -74,16 +86,14 @@ async def extract_from_files(
     output_path: Path,
     config: ExtractConfig,
     mode: ExtractMode,
-    url: str,
-    date: datetime,
+    url: str | None,
+    date: datetime | None,
     max_directory_size: int,
     max_crawls_per_file: int,
     debug: bool,
 ):
     setup_loggers(debug)
-    router = Router()
-    router.load_modules(config.extractors_path)
-    router.register_routes(config.routes)
+    router = create_router(config)
     downloader = get_extract_downloader(mode, files, url, date)
     outstreamer = StreamerFileJSON(output_path, max_directory_size, max_crawls_per_file)
     pipeline = ProcessorPipeline(router, downloader, outstreamer)
@@ -109,7 +119,7 @@ def extract_args():
     )
     parser.add_argument("--debug", action="store_true")
     parser.add_argument("--date", type=str, default=datetime.now().isoformat())
-    parser.add_argument("--max_crawls_per_file", type=int, default=50_000)
+    parser.add_argument("--max_crawls_per_file", type=int, default=100_000)
     parser.add_argument("--max_directory_size", type=int, default=1000)
     parser.add_argument("--n_proc", type=int, default=1)
     parser.add_argument("--url", type=str, default="")
@@ -133,12 +143,11 @@ def run_extract():
     del args["n_proc"]
     output_path = args["output_path"]
     del args["output_path"]
-    with open(args["config_path"], "r") as f:
-        config = ExtractConfig.schema().load(json.load(f))
+    config = load_config(args["config_path"])
     del args["config_path"]
     pool.starmap(
         _extract_task,
-        [(output_path / str(i), config, files, args) for i, file in enumerate(files)],
+        [(output_path / str(i), config, [file], args) for i, file in enumerate(files)],
     )
 
 
@@ -234,7 +243,7 @@ def run_download():
     parser.add_argument("--max_directory_size", type=int, default=1000)
     parser.add_argument("--filter_non_200", action="store_true", default=True)
     json_group = parser.add_argument_group("json")
-    json_group.add_argument("--max_crawls_per_file", type=int, default=50_000)
+    json_group.add_argument("--max_crawls_per_file", type=int, default=100_000)
     args = vars(parser.parse_args())
     if isinstance(args["since"], str):
         args["since"] = datetime.fromisoformat(args["since"])

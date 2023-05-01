@@ -7,9 +7,7 @@ from cmoncrawl.common.loggers import all_purpose_logger
 import asyncio
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-import os
 from pathlib import Path
-import random
 from typing import Dict, List, Set, Tuple
 from cmoncrawl.aggregator.utils.helpers import unify_url_id
 
@@ -93,8 +91,6 @@ class ArtemisAggregator:
 class ArtemisProcessor:
     def __init__(
         self,
-        output_path: Path,
-        use_hostname_output: bool,
         queue_host: str,
         queue_port: int,
         pills_to_die: int | None,
@@ -103,8 +99,6 @@ class ArtemisProcessor:
         addresses: List[str],
         pipeline: ProcessorPipeline,
     ):
-        self.output_path = output_path
-        self.use_hostname_output = use_hostname_output
         self.queue_host = queue_host
         self.queue_port = queue_port
         self.pills_to_die = pills_to_die
@@ -164,17 +158,7 @@ class ArtemisProcessor:
             all_purpose_logger.error(f"Error in pipeline: {e}", exc_info=True)
         return (msg, paths)
 
-    def _get_hostname_output_path(self, output_path: Path):
-        hostname = os.environ["HOSTNAME"]
-        if hostname == "":
-            hostname = f"default{random.randint(0, 100)}"
-            all_purpose_logger.warning(
-                f"HOSTNAME is not set using hostname: {hostname}"
-            )
-
-        return output_path / hostname
-
-    async def processor(self):
+    async def process(self):
         timeout_delta = timedelta(minutes=self.timeout)
         # Set's extractor path based on config
         pending_extracts: Set[asyncio.Task[Tuple[Message, List[Path]]]] = set()
@@ -188,10 +172,6 @@ class ArtemisProcessor:
         conn.set_listener("", listener)
         all_purpose_logger.debug("Connecting to queue")
         extracted_num = 0
-        output_path = self.output_path
-        if self.use_hostname_output:
-            output_path = self._get_hostname_output_path(output_path)
-
         try:
             if hasattr(self.pipeline.downloader, "__aenter__"):
                 await self.pipeline.downloader.__aenter__()

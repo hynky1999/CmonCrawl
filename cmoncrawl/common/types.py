@@ -12,7 +12,7 @@ from dataclasses_json import dataclass_json, config
 @dataclass
 class DomainRecord:
     filename: str
-    url: str
+    url: str | None
     offset: int
     length: int
     digest: str | None = None
