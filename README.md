@@ -1,5 +1,9 @@
 ## CommonCrawl Extractor with great versatility
 
+### Why is this solution better than others ?
+Unlike all other commoncrawl extractors, this project allows creation of custom extractors with high level of modularity.
+Unlike getting records from CmonCrawl index using Amazon's Athena this solution is completely free of cost :)
+
 
 ### Usage
 
