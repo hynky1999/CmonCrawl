@@ -37,7 +37,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         limit: int | None = None,
         max_retry: int = 5,
         prefetch_size: int = 3,
-        sleep_step: int = 10,
+        sleep_step: int = 20,
     ) -> None:
         self.domains = domains
         self.cc_indexes_server = cc_indexes_server
@@ -131,16 +131,20 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
                         if not should_retry(retry, reason, status, **args):
                             break
                     else:
-                        content = await response.json(
-                            content_type=content_type, loads=Decoder().decode
-                        )
+                        try:
+                            content = await response.json(
+                                content_type=content_type, loads=Decoder().decode
+                            )
+                        except ContentTypeError as e:
+                            all_purpose_logger.error(str(e), exc_info=True)
+                            all_purpose_logger.error(e.message, exc_info=True)
+                            all_purpose_logger.error(response.content)
+
+                            break
                         all_purpose_logger.info(
                             f"Successfully retrieved page of {domain} from {cdx_server} add_info: {args}"
                         )
                         break
-            except ContentTypeError as e:
-                all_purpose_logger.error(str(e), exc_info=True)
-                break
 
             except (ClientError, TimeoutError) as e:
                 reason = f"{type(e)} {str(e)}"
@@ -232,10 +236,11 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
 
     @staticmethod
     async def get_all_CC_indexes(client: ClientSession, cdx_server: str) -> List[str]:
-        async with client.get(cdx_server) as response:
-            r_json = await response.json(content_type="application/json")
-            CC_servers = [js["cdx-api"] for js in r_json]
-            return CC_servers
+        for _ in range(3):
+            async with client.get(cdx_server) as response:
+                r_json = await response.json(content_type="application/json")
+                CC_servers = [js["cdx-api"] for js in r_json]
+                return CC_servers
 
     class IndexAggregatorIterator(AsyncIterator[DomainRecord]):
         def __init__(

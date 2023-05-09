@@ -36,50 +36,65 @@ class ListnerStats:
 
 class ArtemisAggregator:
     def __init__(
-        self, queue_host: str, queue_port: int, url: str, index_agg: IndexAggregator
+        self,
+        queue_host: str,
+        queue_port: int,
+        url: str,
+        index_agg: IndexAggregator,
+        heartbeat: int = 10000,
     ):
         self.queue_host = queue_host
         self.queue_port = queue_port
         self.index_agg = index_agg
         self.url = url
+        self.heartbeat = heartbeat
 
-    def _init_connection(self, conn: Connection):
+    def _init_connection(self):
+        conn = Connection(
+            [(self.queue_host, self.queue_port)],
+            heartbeats=(self.heartbeat, self.heartbeat),
+        )
         conn.connect(login="producer", passcode="producer", wait=True)
         all_purpose_logger.info(f"Connected to queue")
         return conn
 
-    async def aggregate(self):
-        conn = Connection(
-            [(self.queue_host, self.queue_port)], heartbeats=(10000, 10000)
-        )
-        # make sure we have connection so that we cant send the poission pill
-        while conn.is_connected() is False:
+    async def aggregate(self, filter_duplicates: bool = True):
+        while True:
             try:
-                conn = self._init_connection(conn)
-            except StompException:
-                pass
+                conn = self._init_connection()
+                break
+            except StompException as e:
+                all_purpose_logger.error(e, exc_info=True)
+                await asyncio.sleep(5)
+                continue
         i = 0
         async with self.index_agg as aggregator:
             async for domain_record in aggregator:
                 try:
                     while not conn.is_connected():
-                        conn = self._init_connection(conn)
+                        conn = self._init_connection()
 
                     json_str = json.dumps(domain_record.__dict__, default=str)
+                    headers = {}
                     id = unify_url_id(domain_record.url)
+                    if filter_duplicates:
+                        headers[DUPL_ID_HEADER] = id
                     conn.send(
                         f"queue.{self.url}",
                         json_str,
-                        headers={DUPL_ID_HEADER: id},
+                        headers=headers,
                     )
                     all_purpose_logger.debug(
                         f"Sent url: {domain_record.url} with id: {id}"
                     )
                     i += 1
-                except (KeyboardInterrupt) as e:
-                    break
+                except (StompException, OSError) as e:
+                    all_purpose_logger.error(e, exc_info=True)
+                    continue
+
                 except Exception as e:
                     all_purpose_logger.error(e, exc_info=True)
+                    break
 
         all_purpose_logger.info(f"Sent {i} messages")
         conn.send(
@@ -98,6 +113,7 @@ class ArtemisProcessor:
         timeout: int,
         addresses: List[str],
         pipeline: ProcessorPipeline,
+        heartbeat: int = 10000,
     ):
         self.queue_host = queue_host
         self.queue_port = queue_port
@@ -106,10 +122,13 @@ class ArtemisProcessor:
         self.timeout = timeout
         self.pipeline = pipeline
         self.addresses = addresses
+        self.heartbeat = heartbeat
 
     class Listener(ConnectionListener):
         def __init__(
-            self, messages: asyncio.Queue[Message], listener_stats: ListnerStats
+            self,
+            messages: asyncio.Queue[Message],
+            listener_stats: ListnerStats,
         ):
             self.messages = messages
             self.pills = 0
@@ -131,16 +150,27 @@ class ArtemisProcessor:
                 except ValueError:
                     pass
 
-    def _init_connection(self, conn: Connection, addresses: List[str]):
+    def _init_connection(self, addresses: List[str]):
+        conn = Connection(
+            [(self.queue_host, self.queue_port)],
+            reconnect_attempts_max=-1,
+            heartbeats=(self.heartbeat, self.heartbeat),
+        )
         conn.connect(login="consumer", passcode="consumer", wait=True)
         for address in addresses:
             conn.subscribe(address, id=address, ack="client-individual")
         conn.subscribe("topic.poisson_pill.#", id="poisson_pill", ack="auto")
+        listener_stats = ListnerStats()
+        listener = self.Listener(asyncio.Queue(0), listener_stats)
+        conn.set_listener("", listener)
         all_purpose_logger.info("Connected to queue")
-        return conn
+        return conn, listener
 
     async def _call_pipeline_with_ack(
-        self, pipeline: ProcessorPipeline, msg: Message, client: Connection
+        self,
+        pipeline: ProcessorPipeline,
+        msg: Message,
+        client: Connection,
     ):
         # Make sure no exception is thrown from this function
         # So that we can nack it if needed
@@ -162,14 +192,14 @@ class ArtemisProcessor:
         timeout_delta = timedelta(minutes=self.timeout)
         # Set's extractor path based on config
         pending_extracts: Set[asyncio.Task[Tuple[Message, List[Path]]]] = set()
-        conn = Connection(
-            [(self.queue_host, self.queue_port)],
-            reconnect_attempts_max=-1,
-            heartbeats=(10000, 10000),
-        )
-        listener_stats = ListnerStats()
-        listener = self.Listener(asyncio.Queue(0), listener_stats)
-        conn.set_listener("", listener)
+        while True:
+            try:
+                conn, listener = self._init_connection(self.addresses)
+                break
+            except StompException as e:
+                all_purpose_logger.error(e, exc_info=True)
+                await asyncio.sleep(5)
+                continue
         all_purpose_logger.debug("Connecting to queue")
         extracted_num = 0
         try:
@@ -192,7 +222,7 @@ class ArtemisProcessor:
                 try:
                     # Auto reconnect if queue disconnects
                     if not conn.is_connected():
-                        conn = self._init_connection(conn, self.addresses)
+                        conn, listener = self._init_connection(self.addresses)
 
                     if len(pending_extracts) > 0:
                         done, pending_extracts = await asyncio.wait(

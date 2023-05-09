@@ -89,8 +89,7 @@ class AsyncDownloader(IDownloader):
                 TimeoutError,
             ) as e:
                 if not should_retry(retry, f"{str(e)} {type(e)}", 0):
-                    break
-
+                    raise e
             await asyncio.sleep(random.randint(0, (retry + 1) * self.__sleep_step))
         ret: List[Tuple[str, PipeMetadata]] = []
         return ret

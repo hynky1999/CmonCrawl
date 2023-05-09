@@ -1,10 +1,9 @@
-import asyncio
 import shutil
 from datetime import datetime
 import json
 from pathlib import Path
 import unittest
-from cmoncrawl.integrations.commands import extract_from_files, ExtractMode
+from cmoncrawl.integrations.extract import extract_from_files, ExtractMode
 from cmoncrawl.common.types import ExtractConfig
 
 
@@ -37,10 +36,11 @@ class Extract_from_files(unittest.IsolatedAsyncioTestCase):
             output_path=self.base_folder / "output",
             mode=ExtractMode.RECORD,
             date=datetime(2021, 1, 1),
-            debug=False,
             max_crawls_per_file=10,
             max_directory_size=1,
             url="",
+            max_retry=1,
+            sleep_step=1,
         )
         with open(self.output_folder / "directory_0" / "0_file.json") as f:
             lines = f.readlines()
@@ -61,10 +61,11 @@ class Extract_from_files(unittest.IsolatedAsyncioTestCase):
             output_path=self.base_folder / "output",
             mode=ExtractMode.HTML,
             date=datetime(2021, 1, 1),
-            debug=False,
             max_crawls_per_file=1,
             max_directory_size=10,
             url="",
+            max_retry=1,
+            sleep_step=1,
         )
         with open(self.output_folder / "directory_0" / "0_file.json") as f:
             lines = f.readlines()
