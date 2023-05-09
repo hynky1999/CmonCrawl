@@ -59,7 +59,14 @@ class ArtemisAggregator:
         return conn
 
     async def aggregate(self, filter_duplicates: bool = True):
-        conn = self._init_connection()
+        while True:
+            try:
+                conn = self._init_connection()
+                break
+            except StompException as e:
+                all_purpose_logger.error(e, exc_info=True)
+                await asyncio.sleep(5)
+                continue
         i = 0
         async with self.index_agg as aggregator:
             async for domain_record in aggregator:
@@ -69,8 +76,8 @@ class ArtemisAggregator:
 
                     json_str = json.dumps(domain_record.__dict__, default=str)
                     headers = {}
+                    id = unify_url_id(domain_record.url)
                     if filter_duplicates:
-                        id = unify_url_id(domain_record.url)
                         headers[DUPL_ID_HEADER] = id
                     conn.send(
                         f"queue.{self.url}",
@@ -81,7 +88,7 @@ class ArtemisAggregator:
                         f"Sent url: {domain_record.url} with id: {id}"
                     )
                     i += 1
-                except StompException as e:
+                except (StompException, OSError) as e:
                     all_purpose_logger.error(e, exc_info=True)
                     continue
 
@@ -185,7 +192,14 @@ class ArtemisProcessor:
         timeout_delta = timedelta(minutes=self.timeout)
         # Set's extractor path based on config
         pending_extracts: Set[asyncio.Task[Tuple[Message, List[Path]]]] = set()
-        conn, listener = self._init_connection(self.addresses)
+        while True:
+            try:
+                conn, listener = self._init_connection(self.addresses)
+                break
+            except StompException as e:
+                all_purpose_logger.error(e, exc_info=True)
+                await asyncio.sleep(5)
+                continue
         all_purpose_logger.debug("Connecting to queue")
         extracted_num = 0
         try:
