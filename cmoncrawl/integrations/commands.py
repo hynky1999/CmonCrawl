@@ -23,7 +23,7 @@ def add_subparsers(parser: Any):
 
 def get_args():
     parser = argparse.ArgumentParser()
-    subparser = parser.add_subparsers(dest="command")
+    subparser = parser.add_subparsers(dest="command", required=True)
     add_subparsers(subparser)
     return parser
 

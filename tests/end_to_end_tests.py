@@ -39,6 +39,8 @@ class Extract_from_files(unittest.IsolatedAsyncioTestCase):
             max_crawls_per_file=10,
             max_directory_size=1,
             url="",
+            max_retry=1,
+            sleep_step=1,
         )
         with open(self.output_folder / "directory_0" / "0_file.json") as f:
             lines = f.readlines()
@@ -62,6 +64,8 @@ class Extract_from_files(unittest.IsolatedAsyncioTestCase):
             max_crawls_per_file=1,
             max_directory_size=10,
             url="",
+            max_retry=1,
+            sleep_step=1,
         )
         with open(self.output_folder / "directory_0" / "0_file.json") as f:
             lines = f.readlines()
