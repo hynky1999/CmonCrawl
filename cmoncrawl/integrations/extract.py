@@ -9,7 +9,7 @@ from cmoncrawl.processor.pipeline.downloader import DownloaderDummy, AsyncDownlo
 from cmoncrawl.processor.pipeline.pipeline import ProcessorPipeline
 from cmoncrawl.middleware.synchronized import extract
 import argparse
-from typing import Any, Dict, List
+from typing import Any, List
 import asyncio
 from cmoncrawl.processor.pipeline.streamer import (
     StreamerFileJSON,
@@ -45,7 +45,7 @@ def add_args(subparser: Any):
     )
     parser.add_argument("output_path", type=Path)
     parser.add_argument("files", nargs="+", type=Path)
-    parser.add_argument("--max_crawls_per_file", type=int, default=100_000)
+    parser.add_argument("--max_crawls_per_file", type=int, default=500_000)
     parser.add_argument("--max_directory_size", type=int, default=1000)
     parser.add_argument("--n_proc", type=int, default=1)
     mode_subparser = parser.add_subparsers(dest="mode", required=True)

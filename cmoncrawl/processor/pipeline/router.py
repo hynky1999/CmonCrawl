@@ -30,7 +30,9 @@ class Route:
 
 class IRouter(ABC):
     @abstractmethod
-    def route(self, url: str, time: datetime, metadata: PipeMetadata) -> IExtractor:
+    def route(
+        self, url: str | None, time: datetime | None, metadata: PipeMetadata
+    ) -> IExtractor:
         raise NotImplementedError()
 
 
@@ -39,7 +41,7 @@ class Router(IRouter):
         self.registered_routes: List[Route] = []
         self.modules: Dict[str, IExtractor] = {}
 
-    def load_module(self, module_path: Path) -> IExtractor:
+    def load_module(self, module_path: Path):
         module_name = os.path.splitext(os.path.basename(module_path))[0]
         spec = importlib.util.spec_from_file_location(module_name, module_path)
         if spec is None:
@@ -51,7 +53,10 @@ class Router(IRouter):
             raise Exception("Failed to load module: " + module_name)
 
         spec.loader.exec_module(module)
+        return module, module_name
 
+    def load_module_as_extractor(self, module_path: Path):
+        module, module_name = self.load_module(module_path)
         name: str = getattr(module, "NAME", module_name)
         extractor: IExtractor | None = getattr(module, "extractor", None)
         if extractor is None:
@@ -67,7 +72,10 @@ class Router(IRouter):
                 if not file.endswith(".py"):
                     continue
 
-                extractors.append(self.load_module(Path(root) / file))
+                if file == "__init__.py":
+                    self.load_module(Path(root) / file)
+
+                extractors.append(self.load_module_as_extractor(Path(root) / file))
         all_purpose_logger.info(f"Loaded {len(extractors)} extractors")
 
     def load_extractor(self, name: str, extractor: IExtractor):

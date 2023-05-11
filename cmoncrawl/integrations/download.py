@@ -24,7 +24,7 @@ class DownloadOutputFormat(Enum):
 
 def add_mode_args(subparser: Any):
     record_parser = subparser.add_parser(DownloadOutputFormat.RECORD.value)
-    record_parser.add_argument("--max_crawls_per_file", type=int, default=100_000)
+    record_parser.add_argument("--max_crawls_per_file", type=int, default=500_000)
     subparser.add_parser(DownloadOutputFormat.HTML.value)
     return subparser
 

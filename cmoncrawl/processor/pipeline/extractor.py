@@ -92,7 +92,11 @@ class HTMLExtractor(BaseExtractor):
         self.filter_non_ok = filter_non_ok
 
     def extract_soup(self, soup: BeautifulSoup, metadata: PipeMetadata):
-        metadata.name = metadata.domain_record.url.replace("/", "_")[:100]
+        metadata.name = (
+            metadata.domain_record.url.replace("/", "_")[:100]
+            if metadata.domain_record.url is not None
+            else "unknown"
+        )
         result_dict: Dict[str, Any] = {"html": str(soup)}
 
         return result_dict
@@ -120,7 +124,11 @@ class DomainRecordExtractor(BaseExtractor):
         self.filter_non_ok = filter_non_ok
 
     def extract_soup(self, soup: BeautifulSoup, metadata: PipeMetadata):
-        metadata.name = metadata.domain_record.url.replace("/", "_")[:100]
+        metadata.name = (
+            metadata.domain_record.url.replace("/", "_")[:100]
+            if metadata.domain_record.url is not None
+            else "unknown"
+        )
         result_dict: Dict[str, Any] = {
             "domain_record": metadata.domain_record.to_dict()
         }
