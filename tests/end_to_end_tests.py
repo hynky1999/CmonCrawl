@@ -32,7 +32,7 @@ class Extract_from_files(unittest.IsolatedAsyncioTestCase):
             cfg: ExtractConfig = ExtractConfig.schema(many=False).load(js)
         results = await extract_from_files(
             config=cfg,
-            files=[self.base_folder / "files" / "file.json"],
+            files=[self.base_folder / "files" / "file.jsonl"],
             output_path=self.base_folder / "output",
             mode=ExtractMode.RECORD,
             date=datetime(2021, 1, 1),
@@ -42,7 +42,7 @@ class Extract_from_files(unittest.IsolatedAsyncioTestCase):
             max_retry=1,
             sleep_step=1,
         )
-        with open(self.output_folder / "directory_0" / "0_file.json") as f:
+        with open(self.output_folder / "directory_0" / "0_file.jsonl") as f:
             lines = f.readlines()
         self.assertEqual(len(lines), 5)
         self.assertEqual(
@@ -67,7 +67,7 @@ class Extract_from_files(unittest.IsolatedAsyncioTestCase):
             max_retry=1,
             sleep_step=1,
         )
-        with open(self.output_folder / "directory_0" / "0_file.json") as f:
+        with open(self.output_folder / "directory_0" / "0_file.jsonl") as f:
             lines = f.readlines()
         self.assertEqual(len(lines), 1)
         self.assertEqual(

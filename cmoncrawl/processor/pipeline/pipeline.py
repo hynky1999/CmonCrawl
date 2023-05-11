@@ -27,24 +27,20 @@ class ProcessorPipeline:
             metadata_logger.error(f"{e}", extra={"domain_record": domain_record})
 
         for (downloaded_article, metadata) in downloaded_articles:
-            try:
-                extractor = self.router.route(
-                    metadata.domain_record.url,
-                    metadata.domain_record.timestamp,
-                    metadata,
+            extractor = self.router.route(
+                metadata.domain_record.url,
+                metadata.domain_record.timestamp,
+                metadata,
+            )
+            output = extractor.extract(downloaded_article, metadata)
+            if output is None:
+                metadata_logger.warn(
+                    f"Extractor {extractor.__class__.__name__} returned None for {metadata.domain_record.url}"
                 )
-                output = extractor.extract(downloaded_article, metadata)
-                if output is None:
-                    continue
+                continue
 
-                if "additional_info" not in output:
-                    output["additional_info"] = additional_info
+            if "additional_info" not in output:
+                output["additional_info"] = additional_info
 
-                paths.append(await self.oustreamer.stream(output, metadata))
-            except ValueError as e:
-                metadata_logger.error(
-                    str(e),
-                    extra={"domain_record": domain_record},
-                )
-        # Not catching IOError because some other processor could process it -> nack
+            paths.append(await self.oustreamer.stream(output, metadata))
         return paths

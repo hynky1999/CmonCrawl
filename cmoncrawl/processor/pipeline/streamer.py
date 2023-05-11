@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 import asyncio
 import json
-from math import log
 from pathlib import Path
 import random
 from typing import Any, Dict, List
@@ -183,7 +182,7 @@ class StreamerFileJSON(BaseStreamerFile):
         max_file_size: int,
         pretty: Boolean = False,
     ):
-        super().__init__(root, max_directory_size, max_file_size, extension=".json")
+        super().__init__(root, max_directory_size, max_file_size, extension=".jsonl")
         self.pretty = pretty
 
     def metadata_to_string(self, extracted_data: Dict[Any, Any]) -> str:
