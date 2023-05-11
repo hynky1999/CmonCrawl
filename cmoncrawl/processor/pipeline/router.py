@@ -30,7 +30,9 @@ class Route:
 
 class IRouter(ABC):
     @abstractmethod
-    def route(self, url: str, time: datetime, metadata: PipeMetadata) -> IExtractor:
+    def route(
+        self, url: str | None, time: datetime | None, metadata: PipeMetadata
+    ) -> IExtractor:
         raise NotImplementedError()
 
 
