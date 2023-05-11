@@ -17,7 +17,7 @@ class ProcessorPipeline:
         self.oustreamer = outstreamer
 
     async def process_domain_record(
-        self, domain_record: DomainRecord, additional_info: Dict[str, Any] = {}
+        self, domain_record: DomainRecord, additional_info: Dict[str, Any]
     ):
         paths: List[Path] = []
         downloaded_articles = []
@@ -35,7 +35,8 @@ class ProcessorPipeline:
             output = extractor.extract(downloaded_article, metadata)
             if output is None:
                 metadata_logger.warn(
-                    f"Extractor {extractor.__class__.__name__} returned None for {metadata.domain_record.url}"
+                    f"Extractor {extractor.__class__.__name__} returned None for {metadata.domain_record.url}",
+                    extra={"domain_record": metadata.domain_record},
                 )
                 continue
 

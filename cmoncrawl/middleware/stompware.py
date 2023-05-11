@@ -176,7 +176,7 @@ class ArtemisProcessor:
         # So that we can nack it if needed
         paths = []
         try:
-            paths = await pipeline.process_domain_record(msg.dr)
+            paths = await pipeline.process_domain_record(msg.dr, {})
             # Ack at any result
             client.ack(msg.headers.get("message-id"), msg.headers.get("subscription"))
 

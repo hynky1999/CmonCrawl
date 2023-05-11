@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List, Set
+from typing import Any, Dict, List, Set, Tuple
 from cmoncrawl.aggregator.index_query import IndexAggregator
 from cmoncrawl.processor.pipeline.pipeline import ProcessorPipeline
 from cmoncrawl.common.types import DomainRecord
@@ -25,7 +25,7 @@ async def index_and_extract(
                 if filter_non_unique_url and unify_url_id(url) in processed_urls:
                     continue
                 try:
-                    await pipeline.process_domain_record(domain_record)
+                    await pipeline.process_domain_record(domain_record, {})
                 except KeyboardInterrupt as e:
                     break
 
@@ -41,10 +41,14 @@ async def index_and_extract(
             await pipeline.downloader.__aexit__(None, None, None)
 
 
-async def _extract_task(domain_record: DomainRecord, pipeline: ProcessorPipeline):
+async def _extract_task(
+    domain_record: DomainRecord,
+    additional_info: Dict[str, Any],
+    pipeline: ProcessorPipeline,
+):
     result = []
     try:
-        result = await pipeline.process_domain_record(domain_record)
+        result = await pipeline.process_domain_record(domain_record, additional_info)
     except KeyboardInterrupt as e:
         raise e
     except Exception as e:
@@ -56,12 +60,12 @@ async def _extract_task(domain_record: DomainRecord, pipeline: ProcessorPipeline
 
 
 async def extract(
-    domain_records: List[DomainRecord],
+    records: List[Tuple[DomainRecord, Dict[str, Any]]],
     pipeline: ProcessorPipeline,
     concurrent_length: int = 20,
     timeout: int = 5,
 ):
-    domain_records_iterator = iter(tqdm(domain_records))
+    domain_records_iterator = iter(tqdm(records))
     domains_exausted = False
     if hasattr(pipeline.downloader, "__aenter__"):
         await pipeline.downloader.__aenter__()
@@ -70,13 +74,16 @@ async def extract(
         while not domains_exausted or len(queue) > 0:
             # Put into queue till possible
             while len(queue) < concurrent_length and not domains_exausted:
-                next_domain_record = next(domain_records_iterator, None)
-                if next_domain_record is None:
+                next_record = next(domain_records_iterator, None)
+                if next_record is None:
                     domains_exausted = True
                     break
+                next_domain_record, additional_info = next_record
 
                 queue.add(
-                    asyncio.create_task(_extract_task(next_domain_record, pipeline))
+                    asyncio.create_task(
+                        _extract_task(next_domain_record, additional_info, pipeline)
+                    )
                 )
 
             done, queue = await asyncio.wait(
