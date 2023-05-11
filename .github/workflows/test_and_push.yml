@@ -1,11 +1,15 @@
+name: Pypi Publish
+
 on:
   release:
-    type:
+    types:
       - created
 
 env:
   PYTHON_VERSION: "3.10"
   TWINE_USERNAME: __token__
+
+
 jobs:
   publish:
     runs-on: ubuntu-latest
