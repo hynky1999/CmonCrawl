@@ -1,9 +1,7 @@
 on:
-  push:
-    branches:
-      - main
-
-
+  release:
+    type:
+      - created
 
 env:
   PYTHON_VERSION: "3.10"
