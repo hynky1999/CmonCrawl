@@ -15,6 +15,7 @@ async def index_and_extract(
     filter_non_unique_url: bool = False,
 ):
     processed_urls: Set[str] = set()
+    total_extracted: int = 0
 
     if hasattr(pipeline.downloader, "__aenter__"):
         await pipeline.downloader.__aenter__()
@@ -26,6 +27,7 @@ async def index_and_extract(
                     continue
                 try:
                     await pipeline.process_domain_record(domain_record, {})
+                    total_extracted += 1
                 except KeyboardInterrupt as e:
                     break
 
@@ -39,6 +41,7 @@ async def index_and_extract(
     finally:
         if hasattr(pipeline.downloader, "__aexit__"):
             await pipeline.downloader.__aexit__(None, None, None)
+    all_purpose_logger.info(f"Extracted {total_extracted} urls")
 
 
 async def _extract_task(
@@ -67,6 +70,7 @@ async def extract(
 ):
     domain_records_iterator = iter(tqdm(records))
     domains_exausted = False
+    total_extracted: int = 0
     if hasattr(pipeline.downloader, "__aenter__"):
         await pipeline.downloader.__aenter__()
     try:
@@ -92,6 +96,7 @@ async def extract(
             for task in done:
                 try:
                     await task
+                    total_extracted += 1
                 except KeyboardInterrupt as e:
                     break
 
@@ -104,3 +109,4 @@ async def extract(
     finally:
         if hasattr(pipeline.downloader, "__aexit__"):
             await pipeline.downloader.__aexit__(None, None, None)
+    all_purpose_logger.info(f"Extracted {total_extracted} urls")

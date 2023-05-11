@@ -3,6 +3,7 @@ from enum import Enum
 from pathlib import Path
 from typing import Any, List
 from cmoncrawl.aggregator.index_query import IndexAggregator
+from cmoncrawl.common.types import MatchType
 from cmoncrawl.processor.pipeline.downloader import AsyncDownloader
 from cmoncrawl.processor.pipeline.pipeline import ProcessorPipeline
 from cmoncrawl.processor.pipeline.streamer import StreamerFileHTML
@@ -32,9 +33,9 @@ def add_mode_args(subparser: Any):
 def add_args(subparser: Any):
     parser = subparser.add_parser("download")
     parser.add_argument("url")
+    parser.add_argument("output", type=Path)
     mode_subparser = parser.add_subparsers(dest="mode", required=True)
     mode_subparser = add_mode_args(mode_subparser)
-    parser.add_argument("output", type=Path)
     parser.add_argument("--limit", type=int, default=5)
     parser.add_argument(
         "--since", type=datetime.fromisoformat, default=str(datetime.min)
@@ -44,6 +45,12 @@ def add_args(subparser: Any):
     parser.add_argument("--max_retry", type=int, default=30)
     parser.add_argument("--sleep_step", type=int, default=4)
     # Add option to output to either json or html
+    parser.add_argument(
+        "--match_type",
+        type=MatchType,
+        choices=list(MatchType.__members__.values()),
+        default=MatchType.PREFIX,
+    )
     parser.add_argument("--max_directory_size", type=int, default=1000)
     parser.add_argument("--filter_non_200", action="store_true", default=True)
     parser.set_defaults(func=run_download)
@@ -85,6 +92,7 @@ def url_download_prepare_streamer(
 
 async def url_download(
     url: str,
+    match_type: str | None,
     output: Path,
     cc_server: List[str] | None,
     since: datetime,
@@ -108,6 +116,7 @@ async def url_download(
     index_agg = IndexAggregator(
         cc_servers=cc_server or [],
         domains=[url],
+        match_type=match_type,
         since=since,
         to=to,
         limit=limit,
@@ -122,6 +131,7 @@ def run_download(args: argparse.Namespace):
     return asyncio.run(
         url_download(
             args.url,
+            args.match_type,
             args.output,
             args.cc_server,
             args.since,

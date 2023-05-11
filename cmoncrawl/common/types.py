@@ -1,4 +1,5 @@
 from datetime import datetime
+from enum import Enum
 from pathlib import Path
 from typing import Any, Dict, List
 from urllib.parse import urlparse
@@ -93,3 +94,14 @@ class ExtractConfig:
 
     extractors_path: Path
     routes: List[RoutesConfig]
+
+
+class MatchType(Enum):
+    """
+    Match type for cdx server.
+    """
+
+    EXACT = "exact"
+    PREFIX = "prefix"
+    HOST = "host"
+    DOMAIN = "domain"
