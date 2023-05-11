@@ -17,7 +17,12 @@ from typing import (
     Type,
 )
 from cmoncrawl.common.loggers import all_purpose_logger
-from cmoncrawl.common.types import DomainRecord, RetrieveResponse, DomainCrawl
+from cmoncrawl.common.types import (
+    DomainRecord,
+    RetrieveResponse,
+    DomainCrawl,
+    MatchType,
+)
 
 from aiohttp import ClientError, ClientSession, ContentTypeError
 import asyncio
@@ -31,6 +36,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         self,
         domains: List[str],
         cc_indexes_server: str = "http://index.commoncrawl.org/collinfo.json",
+        match_type: MatchType | None = None,
         cc_servers: List[str] = [],
         since: datetime = datetime.min,
         to: datetime = datetime.max,
@@ -48,6 +54,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         self.max_retry = max_retry
         self.prefetch_size = prefetch_size
         self.sleep_step = sleep_step
+        self.match_type = match_type
         self.iterators: List[IndexAggregator.IndexAggregatorIterator] = []
 
     async def aopen(self) -> IndexAggregator:
@@ -68,6 +75,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
             self.client,
             self.domains,
             self.cc_servers,
+            match_type=self.match_type,
             since=self.since,
             to=self.to,
             limit=self.limit,
@@ -110,7 +118,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         **args: Any,
     ):
         def should_retry(retry: int, reason: str, status: int, **args: Any):
-            all_purpose_logger.error(
+            all_purpose_logger.warn(
                 f"Failed to retrieve page of {domain} from {cdx_server} with reason {status}: {reason} retry: {retry + 1}/{max_retry} add_info: {args}"
             )
             if status not in allowed_status_errors:
@@ -124,6 +132,9 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
 
         for retry in range(max_retry):
             try:
+                all_purpose_logger.debug(
+                    f"Sending request to {cdx_server} with params: {params}, retry: {retry + 1}/{max_retry}"
+                )
                 async with client.get(cdx_server, params=params) as response:
                     status = response.status
                     if not response.ok:
@@ -139,7 +150,6 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
                             all_purpose_logger.error(str(e), exc_info=True)
                             all_purpose_logger.error(e.message, exc_info=True)
                             all_purpose_logger.error(response.content)
-
                             break
                         all_purpose_logger.info(
                             f"Successfully retrieved page of {domain} from {cdx_server} add_info: {args}"
@@ -159,6 +169,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         client: ClientSession,
         cdx_server: str,
         domain: str,
+        match_type: MatchType | None,
         max_retry: int,
         sleep_step: int,
         page_size: int | None = None,
@@ -166,9 +177,11 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         params: Dict[str, str | int] = {
             "showNumPages": "true",
             "output": "json",
-            "matchType": "domain",
             "url": domain,
         }
+
+        if match_type is not None:
+            params["matchType"] = match_type.value
 
         if page_size is not None:
             params["page_size"] = page_size
@@ -195,6 +208,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         client: ClientSession,
         cdx_server: str,
         domain: str,
+        match_type: MatchType | None,
         max_retry: int,
         sleep_step: int,
         page: int,
@@ -203,12 +217,13 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
     ):
         params: Dict[str, str | int] = {
             "output": "json",
-            "matchType": "domain",
             "page": page,
             "url": domain,
             "from": to_timestamp_format(since),
             "to": to_timestamp_format(to),
         }
+        if match_type is not None:
+            params["matchType"] = match_type.value
         reponse = await IndexAggregator.__retrieve(
             client,
             domain,
@@ -241,6 +256,10 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
                 r_json = await response.json(content_type="application/json")
                 CC_servers = [js["cdx-api"] for js in r_json]
                 return CC_servers
+        all_purpose_logger.error(
+            f"Failed to get CC servers from {cdx_server} after 3 attempts"
+        )
+        return []
 
     class IndexAggregatorIterator(AsyncIterator[DomainRecord]):
         def __init__(
@@ -248,6 +267,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
             client: ClientSession,
             domains: List[str],
             CC_files: List[str],
+            match_type: MatchType | None,
             since: datetime,
             to: datetime,
             limit: int | None,
@@ -268,6 +288,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
             self.__max_retry = max_retry
             self.__total = 0
             self.__sleep_step = sleep_step
+            self.__match_type = match_type
 
             self.__crawls_remaining = self.init_crawls_queue(domains, CC_files)
 
@@ -294,6 +315,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
                     self.__client,
                     next_crawl.cdx_server,
                     next_crawl.domain,
+                    match_type=self.__match_type,
                     max_retry=self.__max_retry,
                     sleep_step=self.__sleep_step,
                 )
@@ -344,11 +366,12 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
                             retry < _max_retry
                             and response.status in ALLOWED_ERR_FOR_RETRIES
                         ):
-                            all_purpose_logger.info(
-                                f"Retrying {dc.domain} of {dc.cdx_server} retry {retry + 1}/{_max_retry}"
-                            )
                             self.prefetch_queue.add(
                                 asyncio.create_task(self.__fetch_next_dc(dc, retry + 1))
+                            )
+                        else:
+                            all_purpose_logger.error(
+                                f"Failed to fetch {dc.domain} of {dc.cdx_server} with status {response.status}"
                             )
 
             # Nothing more to prefetch
@@ -387,6 +410,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
                     self.__client,
                     dc.cdx_server,
                     dc.domain,
+                    match_type=self.__match_type,
                     page=dc.page,
                     since=self.__since,
                     to=self.__to,
