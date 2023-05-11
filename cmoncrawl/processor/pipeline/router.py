@@ -74,8 +74,8 @@ class Router(IRouter):
 
                 if file == "__init__.py":
                     self.load_module(Path(root) / file)
-
-                extractors.append(self.load_module_as_extractor(Path(root) / file))
+                else:
+                    extractors.append(self.load_module_as_extractor(Path(root) / file))
         all_purpose_logger.info(f"Loaded {len(extractors)} extractors")
 
     def load_extractor(self, name: str, extractor: IExtractor):
