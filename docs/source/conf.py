@@ -22,7 +22,7 @@ copyright = "2022, Hynek Kydlíček"
 author = "Hynek Kydlíček"
 
 # The full version, including alpha/beta/rc tags
-release = "0.9.3"
+release = "1.0.0"
 
 
 # -- General configuration ---------------------------------------------------
@@ -72,8 +72,3 @@ html_theme = "sphinx_book_theme"
 autosummary_generate_overwrite = False
 
 
-
-# Add any paths that contain custom static files (such as style sheets) here,
-# relative to this directory. They are copied after the builtin static files,
-# so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ["_static"]
