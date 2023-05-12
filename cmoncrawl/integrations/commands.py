@@ -10,7 +10,9 @@ from cmoncrawl.common.loggers import (
 
 
 def add_args(parser: argparse.ArgumentParser):
-    parser.add_argument("--debug", action="store_true", default=False)
+    parser.add_argument(
+        "--debug", action="store_true", default=False, help="Debug mode"
+    )
     return parser
 
 
@@ -23,7 +25,9 @@ def add_subparsers(parser: Any):
 
 def get_args():
     parser = argparse.ArgumentParser()
-    subparser = parser.add_subparsers(dest="command", required=True)
+    subparser = parser.add_subparsers(
+        dest="command", required=True, help="Command to run"
+    )
     add_subparsers(subparser)
     return parser
 

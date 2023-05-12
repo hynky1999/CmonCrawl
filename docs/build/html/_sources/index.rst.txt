@@ -10,12 +10,12 @@ Welcome to CommonCrawl Extractor's documentation!
    :maxdepth: 3
    :caption: Contents:
 
-   installation
-   quickstart/index
+   usage
+   cli/index
+   extraction/index
+   prog_guide/index
+   misc/index
    api
-
-
-
 
 
 

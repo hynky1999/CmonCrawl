@@ -12,6 +12,10 @@ from dataclasses_json import dataclass_json, config
 @dataclass_json
 @dataclass
 class DomainRecord:
+    """
+    Domain record.
+    """
+
     filename: str
     url: str | None
     offset: int
@@ -42,6 +46,10 @@ class PipeMetadata:
 
 @dataclass
 class RetrieveResponse:
+    """
+    Response from retrieve.
+    """
+
     status: int
     content: Any
     reason: None | str
@@ -49,6 +57,10 @@ class RetrieveResponse:
 
 @dataclass
 class DomainCrawl:
+    """
+    Domain crawl.
+    """
+
     domain: str = ""
     cdx_server: str = ""
     page: int = 0

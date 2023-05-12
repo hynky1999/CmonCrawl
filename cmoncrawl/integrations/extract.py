@@ -27,30 +27,72 @@ class ExtractMode(Enum):
 
 
 def add_mode_args(subparser: Any):
-    record_parser = subparser.add_parser(ExtractMode.RECORD.value)
-    record_parser.add_argument("--max_retry", type=int, default=30)
-    record_parser.add_argument("--sleep_step", type=int, default=4)
-
-    html_parser = subparser.add_parser(ExtractMode.HTML.value)
-    html_parser.add_argument(
-        "--date", type=datetime.fromisoformat, default=str(datetime.now())
+    record_parser = subparser.add_parser(
+        ExtractMode.RECORD.value, help="Extract data from jsonl record files"
     )
-    html_parser.add_argument("--url", type=str, default="")
+    record_parser.add_argument(
+        "--max_retry", type=int, default=30, help="Max number of warc download attempts"
+    )
+    record_parser.add_argument(
+        "--sleep_step",
+        type=int,
+        default=4,
+        help="Number of increased second to add to sleep time between each failed download attempt",
+    )
+
+    html_parser = subparser.add_parser(
+        ExtractMode.HTML.value, help="Extract data from HTML files"
+    )
+    html_parser.add_argument(
+        "--date",
+        type=datetime.fromisoformat,
+        default=str(datetime.now()),
+        help="Date of extraction of HTML files in iso format e.g. 2021-01-01, default is today",
+    )
+    html_parser.add_argument(
+        "--url",
+        type=str,
+        default="",
+        help="URL from which the HTML files were downloaded, by default it will try to infer from file content",
+    )
     return subparser
 
 
 def add_args(subparser: Any):
-    parser = subparser.add_parser("extract")
+    parser = subparser.add_parser(
+        "extract", help="Extract data from records/html files"
+    )
     parser.add_argument(
         "config_path",
         type=Path,
+        help="Path to config file containing extraction rules",
     )
-    parser.add_argument("output_path", type=Path)
-    parser.add_argument("files", nargs="+", type=Path)
-    parser.add_argument("--max_crawls_per_file", type=int, default=500_000)
-    parser.add_argument("--max_directory_size", type=int, default=1000)
-    parser.add_argument("--n_proc", type=int, default=1)
-    mode_subparser = parser.add_subparsers(dest="mode", required=True)
+    parser.add_argument("output_path", type=Path, help="Path to output directory")
+    parser.add_argument(
+        "files", nargs="+", type=Path, help="Files to extract data from"
+    )
+    parser.add_argument(
+        "--max_crawls_per_file",
+        type=int,
+        default=500_000,
+        help="Max number of extractions per file output",
+    )
+    parser.add_argument(
+        "--max_directory_size",
+        type=int,
+        default=1000,
+        help="Max number of extraction files per directory",
+    )
+    parser.add_argument(
+        "--n_proc",
+        type=int,
+        default=1,
+        help="Number of processes to use for extraction. The paralelization is on file level, thus for single file it's useless to use more than one process.",
+    )
+
+    mode_subparser = parser.add_subparsers(
+        dest="mode", required=True, help="Extraction mode"
+    )
     mode_subparser = add_mode_args(mode_subparser)
     parser.set_defaults(func=run_extract)
 
@@ -91,7 +133,7 @@ def get_domain_records_html(
     url: str | None, date: datetime | None
 ) -> List[Tuple[DomainRecord, Dict[str, Any]]]:
     # Just return dummy as correct crawl will be loaded from dummy downloader
-    return [DomainRecord("", url=url, offset=0, length=0, timestamp=date), {}]
+    return [(DomainRecord("", url=url, offset=0, length=0, timestamp=date), {})]
 
 
 def load_config(config_path: Path) -> ExtractConfig:

@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Welcome to CommonCrawl Extractor’s documentation! &#8212; CommonCrawl Extractor 1.0 documentation</title>
+    <title>Welcome to CommonCrawl Extractor’s documentation! &#8212; CmonCrawl 0.9.3 documentation</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -39,7 +39,7 @@
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Installation" href="installation.html" />
+    <link rel="next" title="Usage" href="usage.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -78,7 +78,7 @@
       
       
       
-      <h1 class="site-logo" id="site-title">CommonCrawl Extractor 1.0 documentation</h1>
+      <h1 class="site-logo" id="site-title">CmonCrawl 0.9.3 documentation</h1>
       
     </a>
 </div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
@@ -93,13 +93,13 @@
 </p>
 <ul class="nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="installation.html">
-   Installation
+  <a class="reference internal" href="usage.html">
+   Usage
   </a>
  </li>
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="quickstart/index.html">
-   Quick Start Guide
+  <a class="reference internal" href="cli/index.html">
+   Command Line Interface
   </a>
   <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
   <label for="toctree-checkbox-1">
@@ -108,18 +108,84 @@
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="quickstart/overview.html">
-     Quick Overview
+    <a class="reference internal" href="cli/cli.html">
+     Command Line Interface
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="quickstart/quick-start.html">
-     Quickstart
+    <a class="reference internal" href="cli/download.html">
+     Command Line Download
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="quickstart/artemis-queue.html">
-     Artemis Queue
+    <a class="reference internal" href="cli/extract.html">
+     Command line Extract
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="extraction/index.html">
+   Extraction
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="extraction/creating_extractor.html">
+     Custom Extractor
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="extraction/config_file.html">
+     Extractor config file
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="extraction/utils.html">
+     Extraction utils
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="prog_guide/index.html">
+   Programming Guide
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="prog_guide/overview.html">
+     Programming Guide
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="prog_guide/pip.html">
+     Custom Pipeline
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="misc/index.html">
+   Miscellaneous
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="misc/domain_record.html">
+     Domain Record
     </a>
    </li>
   </ul>
@@ -128,121 +194,25 @@
   <a class="reference internal" href="api.html">
    API
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
-  <label for="toctree-checkbox-2">
+  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
    <i class="fas fa-chevron-down">
    </i>
   </label>
   <ul>
    <li class="toctree-l2 has-children">
-    <a class="reference internal" href="generated/Aggregator.html">
-     Aggregator
+    <a class="reference internal" href="generated/cmoncrawl.html">
+     cmoncrawl
     </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
-    <label for="toctree-checkbox-3">
+    <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+    <label for="toctree-checkbox-6">
      <i class="fas fa-chevron-down">
      </i>
     </label>
     <ul>
      <li class="toctree-l3 has-children">
-      <a class="reference internal" href="generated/Aggregator.App.html">
-       Aggregator.App
-      </a>
-      <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
-      <label for="toctree-checkbox-4">
-       <i class="fas fa-chevron-down">
-       </i>
-      </label>
-      <ul>
-       <li class="toctree-l4">
-        <a class="reference internal" href="generated/Aggregator.App.index_query.html">
-         Aggregator.App.index_query
-        </a>
-       </li>
-       <li class="toctree-l4">
-        <a class="reference internal" href="generated/Aggregator.App.ndjson_decoder.html">
-         Aggregator.App.ndjson_decoder
-        </a>
-       </li>
-       <li class="toctree-l4">
-        <a class="reference internal" href="generated/Aggregator.App.utils.html">
-         Aggregator.App.utils
-        </a>
-       </li>
-      </ul>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="generated/Aggregator.aggregator.html">
-       Aggregator.aggregator
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="generated/Processor.html">
-     Processor
-    </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
-    <label for="toctree-checkbox-5">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul>
-     <li class="toctree-l3 has-children">
-      <a class="reference internal" href="generated/Processor.App.html">
-       Processor.App
-      </a>
-      <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
-      <label for="toctree-checkbox-6">
-       <i class="fas fa-chevron-down">
-       </i>
-      </label>
-      <ul>
-       <li class="toctree-l4">
-        <a class="reference internal" href="generated/Processor.App.Downloader.html">
-         Processor.App.Downloader
-        </a>
-       </li>
-       <li class="toctree-l4">
-        <a class="reference internal" href="generated/Processor.App.Extractor.html">
-         Processor.App.Extractor
-        </a>
-       </li>
-       <li class="toctree-l4">
-        <a class="reference internal" href="generated/Processor.App.OutStreamer.html">
-         Processor.App.OutStreamer
-        </a>
-       </li>
-       <li class="toctree-l4">
-        <a class="reference internal" href="generated/Processor.App.Pipeline.html">
-         Processor.App.Pipeline
-        </a>
-       </li>
-       <li class="toctree-l4">
-        <a class="reference internal" href="generated/Processor.App.Router.html">
-         Processor.App.Router
-        </a>
-       </li>
-       <li class="toctree-l4">
-        <a class="reference internal" href="generated/Processor.App.processor_utils.html">
-         Processor.App.processor_utils
-        </a>
-       </li>
-       <li class="toctree-l4">
-        <a class="reference internal" href="generated/Processor.App.ArticleUtils.html">
-         Processor.App.ArticleUtils
-        </a>
-       </li>
-      </ul>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="generated/Processor.process_article.html">
-       Processor.process_article
-      </a>
-     </li>
-     <li class="toctree-l3 has-children">
-      <a class="reference internal" href="generated/Processor.processor.html">
-       Processor.processor
+      <a class="reference internal" href="generated/cmoncrawl.aggregator.html">
+       cmoncrawl.aggregator
       </a>
       <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
       <label for="toctree-checkbox-7">
@@ -251,18 +221,57 @@
       </label>
       <ul>
        <li class="toctree-l4">
-        <a class="reference internal" href="generated/Processor.processor.Listener.html">
-         Processor.processor.Listener
+        <a class="reference internal" href="generated/cmoncrawl.aggregator.index_query.html">
+         cmoncrawl.aggregator.index_query
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="generated/Processor.processor.ListnerStats.html">
-         Processor.processor.ListnerStats
+        <a class="reference internal" href="generated/cmoncrawl.aggregator.utils.html">
+         cmoncrawl.aggregator.utils
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="generated/cmoncrawl.common.html">
+       cmoncrawl.common
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+      <label for="toctree-checkbox-8">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="generated/cmoncrawl.common.loggers.html">
+         cmoncrawl.common.loggers
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="generated/Processor.processor.Message.html">
-         Processor.processor.Message
+        <a class="reference internal" href="generated/cmoncrawl.common.types.html">
+         cmoncrawl.common.types
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="generated/cmoncrawl.processor.html">
+       cmoncrawl.processor
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+      <label for="toctree-checkbox-9">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="generated/cmoncrawl.processor.extraction.html">
+         cmoncrawl.processor.extraction
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="generated/cmoncrawl.processor.pipeline.html">
+         cmoncrawl.processor.pipeline
         </a>
        </li>
       </ul>
@@ -457,44 +466,82 @@ title="Print to PDF"
 <div class="toctree-wrapper compound">
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#docker">Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#workflow">Workflow</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="quickstart/index.html">Quick Start Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/overview.html">Quick Overview</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="quickstart/overview.html#querying-commoncrawl">1. Querying CommonCrawl</a></li>
-<li class="toctree-l3"><a class="reference internal" href="quickstart/overview.html#downloading-a-file">2. Downloading a file</a></li>
-<li class="toctree-l3"><a class="reference internal" href="quickstart/overview.html#choose-parser">3. Choose parser</a></li>
-<li class="toctree-l3"><a class="reference internal" href="quickstart/overview.html#filtering-out-the-web-page">4. Filtering out the web page</a></li>
-<li class="toctree-l3"><a class="reference internal" href="quickstart/overview.html#extract-fields-from-the-page">5. Extract fields from the page</a></li>
-<li class="toctree-l3"><a class="reference internal" href="quickstart/overview.html#file-saving">6. File saving</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli/index.html">Command Line Interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cli/cli.html">Command Line Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli/cli.html#examples">Examples</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/quick-start.html">Quickstart</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="quickstart/quick-start.html#extractor">Extractor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="quickstart/quick-start.html#download-article-py"><cite>download_article.py</cite></a></li>
-<li class="toctree-l3"><a class="reference internal" href="quickstart/quick-start.html#extracting-transformations">Extracting (Transformations)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="quickstart/quick-start.html#extracting-bs4-version">Extracting( BS4 version)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="quickstart/quick-start.html#filtering">Filtering</a></li>
-<li class="toctree-l3"><a class="reference internal" href="quickstart/quick-start.html#config-json">config.json</a></li>
-<li class="toctree-l3"><a class="reference internal" href="quickstart/quick-start.html#testing-our-extractor">Testing our extractor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="quickstart/quick-start.html#running-the-extractor">Running the extractor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/download.html">Command Line Download</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli/download.html#positional-arguments">Positional arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli/download.html#options">Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli/download.html#record-mode-options">Record mode options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli/download.html#examples">Examples</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/artemis-queue.html">Artemis Queue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/extract.html">Command line Extract</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli/extract.html#positional-arguments">Positional arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli/extract.html#optional-arguments">Optional arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli/extract.html#record-arguments">Record arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli/extract.html#html-arguments">Html arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli/extract.html#examples">Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="extraction/index.html">Extraction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="extraction/creating_extractor.html">Custom Extractor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="extraction/creating_extractor.html#baseextractor">BaseExtractor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extraction/creating_extractor.html#extraction">Extraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extraction/creating_extractor.html#filtering">Filtering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extraction/creating_extractor.html#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="extraction/config_file.html">Extractor config file</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="extraction/config_file.html#structure">Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extraction/config_file.html#example">Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extraction/config_file.html#init-py"><cite>__init__.py</cite></a></li>
+<li class="toctree-l3"><a class="reference internal" href="extraction/config_file.html#arbitrary-code-execution">Arbitrary Code Execution</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="extraction/utils.html">Extraction utils</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="extraction/utils.html#filtering">Filtering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extraction/utils.html#extraction">Extraction</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="prog_guide/index.html">Programming Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="prog_guide/overview.html">Programming Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prog_guide/overview.html#how-to-extract-from-common-crawl-theory">How to extract from Common Crawl (theory)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="prog_guide/overview.html#querying-commoncrawl">1. Querying CommonCrawl</a></li>
+<li class="toctree-l3"><a class="reference internal" href="prog_guide/overview.html#downloading-a-file">2. Downloading a file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="prog_guide/overview.html#choose-extractor">3. Choose extractor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="prog_guide/overview.html#filtering-out-the-web-page">4. Filtering out the web page</a></li>
+<li class="toctree-l3"><a class="reference internal" href="prog_guide/overview.html#extract-fields-from-the-page">5. Extract fields from the page</a></li>
+<li class="toctree-l3"><a class="reference internal" href="prog_guide/overview.html#file-saving">6. File saving</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="prog_guide/pip.html">Custom Pipeline</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="prog_guide/pip.html#pipeline">Pipeline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="prog_guide/pip.html#putting-it-all-together">Putting it all together</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="misc/index.html">Miscellaneous</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="misc/domain_record.html">Domain Record</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc/domain_record.html#domain-record-jsonl-format">Domain Record JSONL format</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="generated/Aggregator.html">Aggregator</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="generated/Aggregator.App.html">Aggregator.App</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/Aggregator.aggregator.html">Aggregator.aggregator</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="generated/Processor.html">Processor</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="generated/Processor.App.html">Processor.App</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/Processor.process_article.html">Processor.process_article</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/Processor.processor.html">Processor.processor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/cmoncrawl.html">cmoncrawl</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/cmoncrawl.aggregator.html">cmoncrawl.aggregator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/cmoncrawl.common.html">cmoncrawl.common</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/cmoncrawl.processor.html">cmoncrawl.processor</a></li>
 </ul>
 </li>
 </ul>
@@ -519,10 +566,10 @@ title="Print to PDF"
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='right-next' id="next-link" href="installation.html" title="next page">
+    <a class='right-next' id="next-link" href="usage.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Installation</p>
+        <p class="prev-next-title">Usage</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

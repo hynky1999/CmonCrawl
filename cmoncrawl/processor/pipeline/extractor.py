@@ -8,12 +8,32 @@ from cmoncrawl.common.loggers import metadata_logger
 
 
 class IExtractor(ABC):
+    """
+    Base class for all extractors
+    """
+
     @abstractmethod
     def extract(self, response: str, metadata: PipeMetadata) -> Dict[str, Any] | None:
+        """
+        Extracts the data from the response, if the extractor fails to extract the data it should return None
+        return None
+
+        Args:
+            response (str): response from the downloader
+            metadata (PipeMetadata): Metadata of the response
+        """
         raise NotImplementedError()
 
 
 class BaseExtractor(IExtractor, ABC):
+    """
+    Base class for all soup extractors
+
+    Args:
+        encoding (str, optional): Default encoding to be used. Defaults to None.
+
+    """
+
     def __init__(self, encoding: str | None = None):
         self.encoding = encoding
 
@@ -85,6 +105,9 @@ class BaseExtractor(IExtractor, ABC):
 class HTMLExtractor(BaseExtractor):
     """
     Dummy Extractor which simply extracts the html
+
+    Args:
+        filter_non_ok (bool, optional): If True, only 200 status codes will be extracted. Defaults to True.
     """
 
     def __init__(self, filter_non_ok: bool = True):
@@ -116,7 +139,10 @@ class HTMLExtractor(BaseExtractor):
 
 class DomainRecordExtractor(BaseExtractor):
     """
-    Dummy Extractor which simply extracts the html
+    Dummy Extractor which simply extracts the domain record
+
+    Args:
+        filter_non_ok (bool, optional): If True, only 200 status codes will be extracted. Defaults to True.
     """
 
     def __init__(self, filter_non_ok: bool = True):

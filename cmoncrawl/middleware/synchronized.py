@@ -9,11 +9,22 @@ from tqdm import tqdm
 import asyncio
 
 
-async def index_and_extract(
+async def query_and_extract(
     index_agg: IndexAggregator,
     pipeline: ProcessorPipeline,
     filter_non_unique_url: bool = False,
 ):
+    """
+    Query the index and extracts the results using the pipeline
+
+    Args:
+        index_agg (IndexAggregator): Index aggregator
+        pipeline (ProcessorPipeline): Pipeline to use
+        filter_non_unique_url (bool, optional): Filter non unique urls.
+            if True, only first successful extraction of a url will be processed,
+            the rest will be skipped. Defaults to False.
+
+    """
     processed_urls: Set[str] = set()
     total_extracted: int = 0
 
@@ -28,6 +39,7 @@ async def index_and_extract(
                 try:
                     await pipeline.process_domain_record(domain_record, {})
                     total_extracted += 1
+                    processed_urls.add(unify_url_id(url))
                 except KeyboardInterrupt as e:
                     break
 
@@ -35,13 +47,12 @@ async def index_and_extract(
                     all_purpose_logger.error(
                         f"Failed to process {domain_record.url} with {e}"
                     )
-                    continue
-                processed_urls.add(unify_url_id(url))
 
     finally:
         if hasattr(pipeline.downloader, "__aexit__"):
             await pipeline.downloader.__aexit__(None, None, None)
     all_purpose_logger.info(f"Extracted {total_extracted} urls")
+    return processed_urls
 
 
 async def _extract_task(
@@ -66,8 +77,18 @@ async def extract(
     records: List[Tuple[DomainRecord, Dict[str, Any]]],
     pipeline: ProcessorPipeline,
     concurrent_length: int = 20,
-    timeout: int = 5,
 ):
+    """
+    Extracts the records using the pipeline, with at most `concurrent_length`
+    records being processed at the same time.
+
+    Args:
+        records (List[Tuple[DomainRecord, Dict[str, Any]]]): List of records to process and additional info
+        pipeline (ProcessorPipeline): Pipeline to use
+        concurrent_length (int, optional): Number of concurrent records to process.
+            Defaults to 20.
+
+    """
     domain_records_iterator = iter(tqdm(records))
     domains_exausted = False
     total_extracted: int = 0
@@ -90,9 +111,7 @@ async def extract(
                     )
                 )
 
-            done, queue = await asyncio.wait(
-                queue, timeout=timeout, return_when=asyncio.FIRST_COMPLETED
-            )
+            done, queue = await asyncio.wait(queue, return_when=asyncio.FIRST_COMPLETED)
             for task in done:
                 try:
                     await task

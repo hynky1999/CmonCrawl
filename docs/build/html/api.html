@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>API &#8212; CommonCrawl Extractor 1.0 documentation</title>
+    <title>API &#8212; CmonCrawl 0.9.3 documentation</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -39,8 +39,8 @@
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Aggregator" href="generated/Aggregator.html" />
-    <link rel="prev" title="Quickstart" href="quickstart/quick-start.html" />
+    <link rel="next" title="cmoncrawl" href="generated/cmoncrawl.html" />
+    <link rel="prev" title="Domain Record" href="misc/domain_record.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -79,7 +79,7 @@
       
       
       
-      <h1 class="site-logo" id="site-title">CommonCrawl Extractor 1.0 documentation</h1>
+      <h1 class="site-logo" id="site-title">CmonCrawl 0.9.3 documentation</h1>
       
     </a>
 </div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
@@ -93,9 +93,14 @@
  </span>
 </p>
 <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="usage.html">
+   Usage
+  </a>
+ </li>
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="quickstart/index.html">
-   Quick Start Guide
+  <a class="reference internal" href="extraction/index.html">
+   Extraction
   </a>
   <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
   <label for="toctree-checkbox-1">
@@ -104,13 +109,84 @@
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="quickstart/overview.html">
-     Quick Overview
+    <a class="reference internal" href="extraction/creating_extractor.html">
+     Extractors structure
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="quickstart/quick-start.html">
-     Quickstart
+    <a class="reference internal" href="extraction/config_file.html">
+     Extractor config file
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="extraction/utils.html">
+     Extraction utils
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="cli/index.html">
+   Command Line Interface
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="cli/cli.html">
+     Command Line Interface
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="cli/download.html">
+     Command Line Download
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="cli/extract.html">
+     Command line Extract
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="prog_guide/index.html">
+   Programming Guide
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="prog_guide/overview.html">
+     Programming Guide
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="prog_guide/pip.html">
+     Custom Pipeline
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="misc/index.html">
+   Miscellaneous
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="misc/domain_record.html">
+     Domain Record
     </a>
    </li>
   </ul>
@@ -119,121 +195,25 @@
   <a class="current reference internal" href="#">
    API
   </a>
-  <input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
-  <label for="toctree-checkbox-2">
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+  <label for="toctree-checkbox-5">
    <i class="fas fa-chevron-down">
    </i>
   </label>
   <ul>
    <li class="toctree-l2 has-children">
-    <a class="reference internal" href="generated/Aggregator.html">
-     Aggregator
+    <a class="reference internal" href="generated/cmoncrawl.html">
+     cmoncrawl
     </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
-    <label for="toctree-checkbox-3">
+    <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+    <label for="toctree-checkbox-6">
      <i class="fas fa-chevron-down">
      </i>
     </label>
     <ul>
      <li class="toctree-l3 has-children">
-      <a class="reference internal" href="generated/Aggregator.App.html">
-       Aggregator.App
-      </a>
-      <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
-      <label for="toctree-checkbox-4">
-       <i class="fas fa-chevron-down">
-       </i>
-      </label>
-      <ul>
-       <li class="toctree-l4">
-        <a class="reference internal" href="generated/Aggregator.App.index_query.html">
-         Aggregator.App.index_query
-        </a>
-       </li>
-       <li class="toctree-l4">
-        <a class="reference internal" href="generated/Aggregator.App.ndjson_decoder.html">
-         Aggregator.App.ndjson_decoder
-        </a>
-       </li>
-       <li class="toctree-l4">
-        <a class="reference internal" href="generated/Aggregator.App.utils.html">
-         Aggregator.App.utils
-        </a>
-       </li>
-      </ul>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="generated/Aggregator.aggregator.html">
-       Aggregator.aggregator
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="generated/Processor.html">
-     Processor
-    </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
-    <label for="toctree-checkbox-5">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul>
-     <li class="toctree-l3 has-children">
-      <a class="reference internal" href="generated/Processor.App.html">
-       Processor.App
-      </a>
-      <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
-      <label for="toctree-checkbox-6">
-       <i class="fas fa-chevron-down">
-       </i>
-      </label>
-      <ul>
-       <li class="toctree-l4">
-        <a class="reference internal" href="generated/Processor.App.Downloader.html">
-         Processor.App.Downloader
-        </a>
-       </li>
-       <li class="toctree-l4">
-        <a class="reference internal" href="generated/Processor.App.Extractor.html">
-         Processor.App.Extractor
-        </a>
-       </li>
-       <li class="toctree-l4">
-        <a class="reference internal" href="generated/Processor.App.OutStreamer.html">
-         Processor.App.OutStreamer
-        </a>
-       </li>
-       <li class="toctree-l4">
-        <a class="reference internal" href="generated/Processor.App.Pipeline.html">
-         Processor.App.Pipeline
-        </a>
-       </li>
-       <li class="toctree-l4">
-        <a class="reference internal" href="generated/Processor.App.Router.html">
-         Processor.App.Router
-        </a>
-       </li>
-       <li class="toctree-l4">
-        <a class="reference internal" href="generated/Processor.App.processor_utils.html">
-         Processor.App.processor_utils
-        </a>
-       </li>
-       <li class="toctree-l4">
-        <a class="reference internal" href="generated/Processor.App.ArticleUtils.html">
-         Processor.App.ArticleUtils
-        </a>
-       </li>
-      </ul>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="generated/Processor.process_article.html">
-       Processor.process_article
-      </a>
-     </li>
-     <li class="toctree-l3 has-children">
-      <a class="reference internal" href="generated/Processor.processor.html">
-       Processor.processor
+      <a class="reference internal" href="generated/cmoncrawl.aggregator.html">
+       cmoncrawl.aggregator
       </a>
       <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
       <label for="toctree-checkbox-7">
@@ -242,18 +222,57 @@
       </label>
       <ul>
        <li class="toctree-l4">
-        <a class="reference internal" href="generated/Processor.processor.Listener.html">
-         Processor.processor.Listener
+        <a class="reference internal" href="generated/cmoncrawl.aggregator.index_query.html">
+         cmoncrawl.aggregator.index_query
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="generated/Processor.processor.ListnerStats.html">
-         Processor.processor.ListnerStats
+        <a class="reference internal" href="generated/cmoncrawl.aggregator.utils.html">
+         cmoncrawl.aggregator.utils
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="generated/cmoncrawl.common.html">
+       cmoncrawl.common
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+      <label for="toctree-checkbox-8">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="generated/cmoncrawl.common.loggers.html">
+         cmoncrawl.common.loggers
         </a>
        </li>
        <li class="toctree-l4">
-        <a class="reference internal" href="generated/Processor.processor.Message.html">
-         Processor.processor.Message
+        <a class="reference internal" href="generated/cmoncrawl.common.types.html">
+         cmoncrawl.common.types
+        </a>
+       </li>
+      </ul>
+     </li>
+     <li class="toctree-l3 has-children">
+      <a class="reference internal" href="generated/cmoncrawl.processor.html">
+       cmoncrawl.processor
+      </a>
+      <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+      <label for="toctree-checkbox-9">
+       <i class="fas fa-chevron-down">
+       </i>
+      </label>
+      <ul>
+       <li class="toctree-l4">
+        <a class="reference internal" href="generated/cmoncrawl.processor.extraction.html">
+         cmoncrawl.processor.extraction
+        </a>
+       </li>
+       <li class="toctree-l4">
+        <a class="reference internal" href="generated/cmoncrawl.processor.pipeline.html">
+         cmoncrawl.processor.pipeline
         </a>
        </li>
       </ul>
@@ -404,10 +423,7 @@ title="Print to PDF"
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/Aggregator.html#module-Aggregator" title="Aggregator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Aggregator</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/Processor.html#module-Processor" title="Processor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Processor</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/cmoncrawl.html#module-cmoncrawl" title="cmoncrawl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cmoncrawl</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -422,17 +438,17 @@ title="Print to PDF"
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="quickstart/quick-start.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="misc/domain_record.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Quickstart</p>
+            <p class="prev-next-title">Domain Record</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="generated/Aggregator.html" title="next page">
+    <a class='right-next' id="next-link" href="generated/cmoncrawl.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Aggregator</p>
+        <p class="prev-next-title">cmoncrawl</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
