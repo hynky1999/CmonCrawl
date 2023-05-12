@@ -17,12 +17,12 @@
 
 # -- Project information -----------------------------------------------------
 
-project = "CommonCrawl Extractor"
+project = "CmonCrawl"
 copyright = "2022, Hynek Kydlíček"
 author = "Hynek Kydlíček"
 
 # The full version, including alpha/beta/rc tags
-release = "1.0"
+release = "0.9.3"
 
 
 # -- General configuration ---------------------------------------------------

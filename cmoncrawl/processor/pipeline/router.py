@@ -29,10 +29,17 @@ class Route:
 
 
 class IRouter(ABC):
+    """
+    Base class for all routers
+    """
+
     @abstractmethod
     def route(
         self, url: str | None, time: datetime | None, metadata: PipeMetadata
     ) -> IExtractor:
+        """
+        Routes the url to the correct extractor
+        """
         raise NotImplementedError()
 
 
@@ -56,6 +63,9 @@ class Router(IRouter):
         return module, module_name
 
     def load_module_as_extractor(self, module_path: Path):
+        """
+        Loads a module and returns its extractor
+        """
         module, module_name = self.load_module(module_path)
         name: str = getattr(module, "NAME", module_name)
         extractor: IExtractor | None = getattr(module, "extractor", None)
@@ -88,6 +98,16 @@ class Router(IRouter):
         since: datetime | None = None,
         to: datetime | None = None,
     ):
+        """
+        Registers a route for a given extractor name and regex
+
+        Args:
+            name (str): The name of the extractor
+            regex (Union[str, List[str]]): The regex to match against
+            since (datetime | None, optional): The earliest time to route to this extractor. Defaults to None.
+            to (datetime | None, optional): The latest time to route to this extractor. Defaults to None.
+
+        """
         if isinstance(regex, str):
             regex = [regex]
         regex_compiled = [re.compile(regex) for regex in regex]
@@ -121,6 +141,14 @@ class Router(IRouter):
     def route(
         self, url: str | None, time: datetime | None, metadata: PipeMetadata
     ) -> IExtractor:
+        """
+        Routes the url to the correct extractor based on the url and time
+
+        Args:
+            url (str | None): The url to route
+            time (datetime | None): The time to route
+            metadata (PipeMetadata): The metadata for the current pipeline
+        """
         # check if offset naive datetime if so then convert to utc
         if url is None:
             raise ValueError("Url must not be None")

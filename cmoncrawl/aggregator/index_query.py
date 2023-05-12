@@ -24,7 +24,7 @@ from cmoncrawl.common.types import (
     MatchType,
 )
 
-from aiohttp import ClientError, ClientSession, ContentTypeError
+from aiohttp import ClientError, ClientSession, ContentTypeError, ServerConnectionError
 import asyncio
 import random
 
@@ -32,6 +32,33 @@ ALLOWED_ERR_FOR_RETRIES = [500, 502, 503, 504]
 
 
 class IndexAggregator(AsyncIterable[DomainRecord]):
+    """
+    This class is responsible for aggregating the index files from commoncrawl.
+    It is an async context manager which can then be used as an async iterator
+    which yields DomainRecord objects, found in the index files of commoncrawl.
+
+    It uses the commoncrawl index server to find the index files.
+
+
+    Args:
+        domains (List[str]): A list of domains to search for.
+        cc_indexes_server (str, optional): The commoncrawl index server to use. Defaults to "http://index.commoncrawl.org/collinfo.json".
+        match_type (MatchType, optional): Match type for cdx-api. Defaults to None.
+        cc_servers (List[str], optional): A list of commoncrawl servers to use. If [], then indexes will be retrieved from the cc_indexes_server. Defaults to [].
+        since (datetime, optional): The start date for the search. Defaults to datetime.min.
+        to (datetime, optional): The end date for the search. Defaults to datetime.max.
+        limit (int, optional): The maximum number of results to return. Defaults to None.
+        max_retry (int, optional): The maximum number of retries for a single request. Defaults to 5.
+        prefetch_size (int, optional): The number of indexes to fetch concurrently. Defaults to 3.
+        sleep_step (int, optional): Sleep increase time between retries. Defaults to 20.
+
+    Examples:
+        >>> async with IndexAggregator(["example.com"]) as aggregator:
+        >>>     async for domain_record in aggregator:
+        >>>         print(domain_record)
+
+    """
+
     def __init__(
         self,
         domains: List[str],
@@ -142,21 +169,20 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
                         if not should_retry(retry, reason, status, **args):
                             break
                     else:
-                        try:
-                            content = await response.json(
-                                content_type=content_type, loads=Decoder().decode
-                            )
-                        except ContentTypeError as e:
-                            all_purpose_logger.error(str(e), exc_info=True)
-                            all_purpose_logger.error(e.message, exc_info=True)
-                            all_purpose_logger.error(response.content)
-                            break
+                        content = await response.json(
+                            content_type=content_type, loads=Decoder().decode
+                        )
                         all_purpose_logger.info(
                             f"Successfully retrieved page of {domain} from {cdx_server} add_info: {args}"
                         )
                         break
 
-            except (ClientError, TimeoutError) as e:
+            except (
+                ClientError,
+                TimeoutError,
+                ServerConnectionError,
+                ContentTypeError,
+            ) as e:
                 reason = f"{type(e)} {str(e)}"
                 if not should_retry(retry, reason, 500, **args):
                     break
@@ -251,6 +277,9 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
 
     @staticmethod
     async def get_all_CC_indexes(client: ClientSession, cdx_server: str) -> List[str]:
+        """
+        Get all CC index servers from a given CDX server
+        """
         for _ in range(3):
             async with client.get(cdx_server) as response:
                 r_json = await response.json(content_type="application/json")
@@ -308,6 +337,9 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
             )
 
         async def __prefetch_next_crawl(self) -> int:
+            """
+            Prefetch the next index server
+            """
             while len(self.__crawls_remaining) > 0:
                 next_crawl = self.__crawls_remaining.popleft()
 
@@ -333,6 +365,9 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
             return 0
 
         async def __await_next_prefetch(self):
+            """
+            Gets the next index retry
+            """
             # Wait for the next prefetch to finish
             # Don't prefetch if limit is set to avoid overfetching
             while len(self.__crawls_remaining) > 0 and (

@@ -6,7 +6,7 @@ from pathlib import Path
 import random
 import re
 from types import TracebackType
-from aiohttp import ClientError, ClientSession
+from aiohttp import ClientError, ClientSession, ContentTypeError, ServerConnectionError
 from typing import List, Tuple, Type
 from aiofiles import open as asyncOpen
 
@@ -24,6 +24,10 @@ ALLOWED_ERR_FOR_RETRIES = [500, 502, 503, 504]
 
 
 class IDownloader:
+    """
+    Base class for all downloaders
+    """
+
     async def download(
         self, domain_record: DomainRecord
     ) -> (List[Tuple[str, PipeMetadata]]):
@@ -31,6 +35,18 @@ class IDownloader:
 
 
 class AsyncDownloader(IDownloader):
+    """
+    Downloader which asynchronously downloads the the data for the domain_record
+
+    Args:
+        base_url (str, optional): Base url where to download data from. Defaults to "https://data.commoncrawl.org/".
+        digest_verification (bool, optional): Whether to verify the digest of the downloaded data. Defaults to True.
+        max_retry (int, optional): Maximum number of retries. Defaults to 5.
+        sleep_step (int, optional): Sleep increase time between retries. Defaults to 10.
+        encoding: Default encoding to be used
+
+    """
+
     def __init__(
         self,
         base_url: str = "https://data.commoncrawl.org/",
@@ -87,8 +103,10 @@ class AsyncDownloader(IDownloader):
             except (
                 ClientError,
                 TimeoutError,
+                ServerConnectionError,
+                ContentTypeError,
             ) as e:
-                if not should_retry(retry, f"{str(e)} {type(e)}", 0):
+                if not should_retry(retry, f"{str(e)} {type(e)}", 500):
                     raise e
             await asyncio.sleep(random.randint(0, (retry + 1) * self.__sleep_step))
         ret: List[Tuple[str, PipeMetadata]] = []
@@ -138,6 +156,11 @@ class DownloaderDummy(IDownloader):
     Dummy downloader for testing
     It doesn't download anything but return files passed in the constructor
     and extracts metadata from the file
+
+    Args:
+        files (List[Path]): List of files to return
+        url (str, optional): Url to use for metadata. Defaults to None.
+        date (datetime, optional): Date to add to metadata. Defaults to None.
     """
 
     def __init__(

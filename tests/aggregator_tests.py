@@ -7,7 +7,7 @@ sys.path.append(Path("App").absolute().as_posix())
 from datetime import datetime
 from typing import List
 from cmoncrawl.aggregator.utils.helpers import unify_url_id
-from cmoncrawl.common.types import DomainRecord
+from cmoncrawl.common.types import DomainRecord, MatchType
 from cmoncrawl.aggregator.index_query import IndexAggregator
 import unittest
 
@@ -26,6 +26,7 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
             max_retry=50,
             sleep_step=10,
             prefetch_size=1,
+            match_type=MatchType.DOMAIN,
         ).aopen()
         self.client = self.di.client
 
@@ -34,7 +35,12 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
 
     async def test_indexer_num_pages(self):
         response = await self.di.get_number_of_pages(
-            self.client, self.CC_SERVERS[0], "idnes.cz", max_retry=20, sleep_step=4
+            self.client,
+            self.CC_SERVERS[0],
+            "idnes.cz",
+            max_retry=20,
+            sleep_step=4,
+            match_type=MatchType.DOMAIN,
         )
         self.assertIsNotNone(response)
         num, size = response.content
