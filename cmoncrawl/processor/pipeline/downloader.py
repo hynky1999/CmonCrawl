@@ -116,7 +116,7 @@ class AsyncDownloader(IDownloader):
         self, response: bytes, domain_record: DomainRecord
     ) -> List[Tuple[str, PipeMetadata]]:
         ariter = ArchiveIterator(
-            io.BytesIO(response), check_digests="raise", arc2warc=True
+            io.BytesIO(response), check_digests="raise", arc2warc=True  # type: ignore wrong typing in package
         )
         encoding = self.encoding
         warcs: List[Tuple[str, PipeMetadata]] = [

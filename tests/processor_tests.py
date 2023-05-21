@@ -7,9 +7,11 @@ import os
 import re
 from datetime import datetime
 from cmoncrawl.processor.pipeline.downloader import AsyncDownloader
+from cmoncrawl.processor.pipeline.extractor import BaseExtractor, HTMLExtractor
 from cmoncrawl.processor.pipeline.streamer import StreamerFileJSON, StreamerFileHTML
 from cmoncrawl.processor.pipeline.router import Router
 from cmoncrawl.common.types import DomainRecord, PipeMetadata
+from bs4 import BeautifulSoup
 
 
 class DownloaderTests(unittest.IsolatedAsyncioTestCase):
@@ -65,6 +67,53 @@ class RouterTests(unittest.TestCase):
         self.assertEqual(c3, self.router.modules["BBB"])
 
 
+class ExtradctorTests(unittest.TestCase):
+    def test_encoding(self):
+        def create_html():
+            return "<html><body><p>test</p></body></html>".encode("latin-1").decode(
+                "latin-1"
+            )
+
+        def create_non_utf8():
+            return bytes([0x81, 0x81, 0x82, 0x83]).decode("latin-1")
+
+        def create_metadata():
+            return PipeMetadata(
+                domain_record=DomainRecord(
+                    filename="",
+                    offset=0,
+                    length=0,
+                    url="",
+                ),
+            )
+
+        extractor = HTMLExtractor()  # type: ignore
+        metadata = create_metadata()
+        extractor.encode(create_html(), metadata)
+        # By default utf-8 is tried
+        self.assertEqual(metadata.encoding, "utf-8")
+
+        # Can be overwriten by setting encoding
+        # Revert back to default
+        metadata = create_metadata()
+        # Set expected encoding
+        metadata.domain_record.encoding = "latin-1"
+        extractor.encode(create_html(), metadata)
+        self.assertEqual(metadata.encoding, "latin-1")
+
+        # By default if everything fails, the default(latin-1) is used
+        metadata = create_metadata()
+        extractor.encode(create_non_utf8(), metadata)
+        self.assertEqual(metadata.encoding, "latin-1")
+
+        # But we can overwrite it by setting raise_on_error
+        metadata = create_metadata()
+        extractor.raise_on_encoding = True
+        metadata.encoding = "latin-1"
+        with self.assertRaises(ValueError):
+            extractor.encode(create_non_utf8(), metadata)
+
+
 class OutStremaerTests(unittest.IsolatedAsyncioTestCase):
     def setUp(self) -> None:
         self.html_folder = Path(__file__).parent / "test_html"
@@ -105,7 +154,7 @@ class OutStremaerTests(unittest.IsolatedAsyncioTestCase):
         size = len(os.listdir(self.json_folder))
         self.assertEqual(size, 1)
         num_lines = sum(
-            1 for _ in open(self.json_folder / "directory_0" / "0_file.json", "r")
+            1 for _ in open(self.json_folder / "directory_0" / "0_file.jsonl", "r")
         )
         self.assertEqual(num_lines, 5)
 

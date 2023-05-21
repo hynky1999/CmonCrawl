@@ -71,7 +71,7 @@ class ArtemisAggregator:
             [(self.queue_host, self.queue_port)],
             heartbeats=(self.heartbeat, self.heartbeat),
         )
-        conn.connect(login="producer", passcode="producer", wait=True)
+        conn.connect(login="producer", passcode="producer", wait=True)  # type: ignore
         all_purpose_logger.info(f"Connected to queue")
         return conn
 
@@ -98,10 +98,10 @@ class ArtemisAggregator:
 
                     json_str = json.dumps(domain_record.__dict__, default=str)
                     headers = {}
-                    id = unify_url_id(domain_record.url)
+                    id = unify_url_id(domain_record.url or "")
                     if filter_duplicates:
                         headers[DUPL_ID_HEADER] = id
-                    conn.send(
+                    conn.send(  # type: ignore
                         f"queue.{self.url}",
                         json_str,
                         headers=headers,
@@ -119,10 +119,10 @@ class ArtemisAggregator:
                     break
 
         all_purpose_logger.info(f"Sent {i} messages")
-        conn.send(
+        conn.send(  # type: ignore
             f"topic.poisson_pill.{self.url}", "", headers={"type": "poisson_pill"}
         )
-        conn.disconnect()
+        conn.disconnect()  # type: ignore
 
 
 class ArtemisProcessor:
@@ -175,16 +175,16 @@ class ArtemisProcessor:
             self.listener_stats = listener_stats
 
         def on_message(self, frame: Frame):
-            if frame.headers.get("type") == "poisson_pill":
+            if frame.headers.get("type") == "poisson_pill":  # type: ignore
                 self.pills += 1
             else:
-                msg_json = json.loads(frame.body)
+                msg_json = json.loads(frame.body)  # type: ignore
                 try:
                     msg_json["timestamp"] = datetime.fromisoformat(
                         msg_json.get("timestamp")
                     )
                     domain_record = DomainRecord(**msg_json)
-                    self.messages.put_nowait(Message(domain_record, frame.headers))
+                    self.messages.put_nowait(Message(domain_record, frame.headers))  # type: ignore
                     self.listener_stats.messages += 1
                     self.listener_stats.last_message_time = datetime.now()
                 except ValueError:
@@ -196,13 +196,13 @@ class ArtemisProcessor:
             reconnect_attempts_max=-1,
             heartbeats=(self.heartbeat, self.heartbeat),
         )
-        conn.connect(login="consumer", passcode="consumer", wait=True)
+        conn.connect(login="consumer", passcode="consumer", wait=True)  # type: ignore
         for address in addresses:
-            conn.subscribe(address, id=address, ack="client-individual")
-        conn.subscribe("topic.poisson_pill.#", id="poisson_pill", ack="auto")
+            conn.subscribe(address, id=address, ack="client-individual")  # type: ignore
+        conn.subscribe("topic.poisson_pill.#", id="poisson_pill", ack="auto")  # type: ignore
         listener_stats = ListnerStats()
         listener = self.Listener(asyncio.Queue(0), listener_stats)
-        conn.set_listener("", listener)
+        conn.set_listener("", listener)  # type: ignore
         all_purpose_logger.info("Connected to queue")
         return conn, listener
 
@@ -244,7 +244,7 @@ class ArtemisProcessor:
         extracted_num = 0
         try:
             if hasattr(self.pipeline.downloader, "__aenter__"):
-                await self.pipeline.downloader.__aenter__()
+                await self.pipeline.downloader.__aenter__()  # type: ignore
 
             while True:
                 if (
@@ -318,9 +318,9 @@ class ArtemisProcessor:
 
         finally:
             if hasattr(self.pipeline.downloader, "__aexit__"):
-                await self.pipeline.downloader.__aexit__(None, None, None)
+                await self.pipeline.downloader.__aexit__(None, None, None)  # type: ignore
 
         all_purpose_logger.info(
             f"Extracted {extracted_num}/{listener.listener_stats.messages} articles"
         )
-        conn.disconnect()
+        conn.disconnect()  # type: ignore

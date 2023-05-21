@@ -29,7 +29,7 @@ async def query_and_extract(
     total_extracted: int = 0
 
     if hasattr(pipeline.downloader, "__aenter__"):
-        await pipeline.downloader.__aenter__()
+        await pipeline.downloader.__aenter__()  # type: ignore
     try:
         async with index_agg:
             async for domain_record in index_agg:
@@ -50,7 +50,7 @@ async def query_and_extract(
 
     finally:
         if hasattr(pipeline.downloader, "__aexit__"):
-            await pipeline.downloader.__aexit__(None, None, None)
+            await pipeline.downloader.__aexit__(None, None, None)  # type: ignore
     all_purpose_logger.info(f"Extracted {total_extracted} urls")
     return processed_urls
 
@@ -93,7 +93,7 @@ async def extract(
     domains_exausted = False
     total_extracted: int = 0
     if hasattr(pipeline.downloader, "__aenter__"):
-        await pipeline.downloader.__aenter__()
+        await pipeline.downloader.__aenter__()  # type: ignore
     try:
         queue: Set[asyncio.Task[List[Path]]] = set()
         while not domains_exausted or len(queue) > 0:
@@ -127,5 +127,5 @@ async def extract(
 
     finally:
         if hasattr(pipeline.downloader, "__aexit__"):
-            await pipeline.downloader.__aexit__(None, None, None)
+            await pipeline.downloader.__aexit__(None, None, None)  # type: ignore
     all_purpose_logger.info(f"Extracted {total_extracted} urls")

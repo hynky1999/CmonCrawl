@@ -119,13 +119,13 @@ def get_domain_records_json(
     with open(file_path, "r") as f:
         for line in tqdm(f):
             js = json.loads(line)
-            domain_record: DomainRecord = DomainRecord.schema().load(
+            domain_record: DomainRecord = DomainRecord.schema().load(  # type: ignore
                 js["domain_record"]
             )
             additional_info = js.get("additional_info", {})
             if not isinstance(additional_info, dict):
                 additional_info = {}
-            records.append((domain_record, additional_info))
+            records.append((domain_record, additional_info))  # type: ignore
     return records
 
 
@@ -139,7 +139,7 @@ def get_domain_records_html(
 def load_config(config_path: Path) -> ExtractConfig:
     with open(config_path, "r") as f:
         config = json.load(f)
-    return ExtractConfig.schema().load(config)
+    return ExtractConfig.schema().load(config)  # type: ignore
 
 
 def create_router(config: ExtractConfig) -> Router:

@@ -70,5 +70,3 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 #
 html_theme = "sphinx_book_theme"
 autosummary_generate_overwrite = False
-
-
