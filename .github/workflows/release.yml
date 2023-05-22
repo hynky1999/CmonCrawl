@@ -13,22 +13,25 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python ${{ env.PYTHON_VERSION }}
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-      - name: Run tests
-        run: |
-          pytest
 
+      - name: Install dependencies
+        run: pip install -r requirements.txt  # Replace with your dependencies installation command
+
+      - name: Run tests
+        run: python -m unittest discover -s tests -p "*_tests.py"  # Replace with your test command
 
 
   publish:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
