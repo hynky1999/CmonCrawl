@@ -3,12 +3,15 @@ from collections import deque
 from datetime import datetime
 import re
 
-from cmoncrawl.aggregator.utils.ndjson_decoder import Decoder
+from cmoncrawl.aggregator.utils import ndjson
+import json
 from types import TracebackType
 from typing import (
     Any,
     AsyncIterable,
     AsyncIterator,
+    Awaitable,
+    Callable,
     Deque,
     List,
     Dict,
@@ -24,7 +27,13 @@ from cmoncrawl.common.types import (
     MatchType,
 )
 
-from aiohttp import ClientError, ClientSession, ContentTypeError, ServerConnectionError
+from aiohttp import (
+    ClientError,
+    ClientResponse,
+    ClientSession,
+    ContentTypeError,
+    ServerConnectionError,
+)
 import asyncio
 import random
 
@@ -156,6 +165,16 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         status = 0
         content = None
         reason: str | None = None
+        decode: Callable[[ClientResponse], Awaitable[Any]]
+
+        if content_type == "text/x-ndjson":
+            decode = lambda response: response.json(
+                content_type=content_type, loads=ndjson.Decoder().decode
+            )
+        elif content_type == "application/json":
+            decode = lambda response: response.json(content_type=content_type)
+        else:
+            raise ValueError(f"Unknown content type: {content_type}")
 
         for retry in range(max_retry):
             try:
@@ -169,9 +188,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
                         if not should_retry(retry, reason, status, **args):
                             break
                     else:
-                        content = await response.json(
-                            content_type=content_type, loads=Decoder().decode  # type: ignore
-                        )
+                        content = await decode(response)
                         all_purpose_logger.info(
                             f"Successfully retrieved page of {domain} from {cdx_server} add_info: {args}"
                         )
@@ -281,15 +298,22 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         """
         Get all CC index servers from a given CDX server
         """
-        for _ in range(3):
-            async with client.get(cdx_server) as response:
-                r_json = await response.json(content_type="application/json")
-                CC_servers = [js["cdx-api"] for js in r_json]
-                return CC_servers
-        all_purpose_logger.error(
-            f"Failed to get CC servers from {cdx_server} after 3 attempts"
+        response = await IndexAggregator.__retrieve(
+            client=client,
+            cdx_server=cdx_server,
+            domain=cdx_server,
+            params={},
+            content_type="application/json",
+            max_retry=10,
+            sleep_step=1,
         )
-        return []
+        if response.content is None:
+            all_purpose_logger.error(
+                f"Failed to get CC servers from {cdx_server} after 3 attempts"
+            )
+            return []
+        CC_servers = [js["cdx-api"] for js in response.content]
+        return CC_servers
 
     class IndexAggregatorIterator(AsyncIterator[DomainRecord]):
         def __init__(
