@@ -34,9 +34,17 @@ def add_mode_args(subparser: Any):
         default=500_000,
         help="Max number of domain records per file output",
     )
-    subparser.add_parser(
+    html_parser = subparser.add_parser(
         DownloadOutputFormat.HTML.value, help="Download HTML files from Common Crawl"
     )
+
+    html_parser.add_argument(
+        "--encoding",
+        type=str,
+        default=None,
+        help="Force usage of specified encoding is possible",
+    )
+
     return subparser
 
 
@@ -105,7 +113,7 @@ def add_args(subparser: Any):
 
 
 def url_download_prepare_router(
-    output_format: DownloadOutputFormat, filter_non_200: bool
+    output_format: DownloadOutputFormat, filter_non_200: bool, encoding: str | None
 ):
     router = Router()
     match output_format:
@@ -115,7 +123,8 @@ def url_download_prepare_router(
             )
         case DownloadOutputFormat.HTML:
             router.load_extractor(
-                "dummy_extractor", HTMLExtractor(filter_non_ok=filter_non_200)
+                "dummy_extractor",
+                HTMLExtractor(filter_non_ok=filter_non_200, encoding=encoding),
             )
     router.register_route("dummy_extractor", [r".*"])
     return router
@@ -140,7 +149,7 @@ def url_download_prepare_streamer(
 
 async def url_download(
     url: str,
-    match_type: str | None,
+    match_type: MatchType | None,
     output: Path,
     cc_server: List[str] | None,
     since: datetime,
@@ -152,11 +161,12 @@ async def url_download(
     max_crawls_per_file: int,
     max_directory_size: int,
     filter_non_200: bool,
+    encoding: str | None,
 ):
     outstreamer = url_download_prepare_streamer(
         mode, output, max_directory_size, max_crawls_per_file
     )
-    router = url_download_prepare_router(mode, filter_non_200)
+    router = url_download_prepare_router(mode, filter_non_200, encoding)
     pipeline = ProcessorPipeline(
         router, AsyncDownloader(max_retry=max_retry), outstreamer
     )
@@ -178,18 +188,21 @@ def run_download(args: argparse.Namespace):
     mode = DownloadOutputFormat(args.mode)
     return asyncio.run(
         url_download(
-            args.url,
-            args.match_type,
-            args.output,
-            args.cc_server,
-            args.since,
-            args.to,
-            args.limit,
-            args.max_retry,
-            args.sleep_step,
-            mode,
-            args.max_crawls_per_file if mode == DownloadOutputFormat.RECORD else 1,
-            args.max_directory_size,
-            args.filter_non_200,
+            url=args.url,
+            match_type=args.match_type,
+            output=args.output,
+            cc_server=args.cc_server,
+            since=args.since,
+            to=args.to,
+            limit=args.limit,
+            max_retry=args.max_retry,
+            sleep_step=args.sleep_step,
+            mode=mode,
+            max_crawls_per_file=args.max_crawls_per_file
+            if mode == DownloadOutputFormat.RECORD
+            else 1,
+            max_directory_size=args.max_directory_size,
+            filter_non_200=args.filter_non_200,
+            encoding=args.encoding if mode == DownloadOutputFormat.HTML else None,
         )
     )

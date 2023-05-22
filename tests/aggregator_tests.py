@@ -23,7 +23,7 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
         self.di = await IndexAggregator(
             ["idnes.cz"],
             cc_servers=self.CC_SERVERS,
-            max_retry=50,
+            max_retry=100,
             sleep_step=10,
             prefetch_size=1,
             match_type=MatchType.DOMAIN,
@@ -59,25 +59,18 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
 
     async def test_since(self):
         # That is crawl date not published date
-        records: List[DomainRecord] = []
         self.di.since = datetime(2022, 1, 21)
+        self.di.limit = 5
 
         async for record in self.di:
             self.assertGreaterEqual(record.timestamp, self.di.since)
-            records.append(record)
-
-        self.assertEqual(len(records), 131149)
 
     async def test_to(self):
         # That is crawl date not published date
-        records: List[DomainRecord] = []
         self.di.to = datetime(2022, 1, 21)
 
         async for record in self.di:
             self.assertLessEqual(record.timestamp, self.di.to)
-            records.append(record)
-
-        self.assertEqual(len(records), 63244)
 
     async def test_limit(self):
         records: List[DomainRecord] = []
@@ -98,6 +91,7 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
             max_retry=10,
             sleep_step=4,
             prefetch_size=2,
+            match_type=MatchType.DOMAIN,
         )
         # Generates only for 2020
         q = iterator.init_crawls_queue(

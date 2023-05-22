@@ -50,7 +50,6 @@ The Athena SQL keys are:
 ```u.url, cc.warc_filename, cc.warc_record_offset, cc.warc_record_length, cc.content_digest, cc.fetch_time```
 
 
-
 The ```additional_info``` field is optional and can contain any additional
 information. It will be added to extracted fields as is. It's usefull
 when you for example want to add to which set the url belongs to.

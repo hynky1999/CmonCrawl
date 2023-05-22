@@ -31,11 +31,12 @@ class BaseExtractor(IExtractor, ABC):
 
     Args:
         encoding (str, optional): Default encoding to be used. Defaults to None.
-
+        raise_on_encoding (bool, optional): If True, the extractor will raise ValueException if it fails to decode the response. Defaults to False.
     """
 
-    def __init__(self, encoding: str | None = None):
+    def __init__(self, encoding: str | None = None, raise_on_encoding: bool = False):
         self.encoding = encoding
+        self.raise_on_encoding = raise_on_encoding
 
     def filter_raw(self, response: str, metadata: PipeMetadata) -> bool:
         # If raw fails bs4 will not be used -> speed
@@ -70,22 +71,22 @@ class BaseExtractor(IExtractor, ABC):
     ) -> Dict[str, Any] | None:
         raise NotImplementedError()
 
-    def preprocess(self, response: str, metadata: PipeMetadata) -> str:
-        linux = response.replace("\r\n", "\n")
-        # Sorted set pythonic way
+    def encode(self, response: str, metadata: PipeMetadata):
+        # Sorted set pythonic way, we assume that dict is sortd
         encodings: Dict[str, int] = {}
         if self.encoding is not None:
             encodings[self.encoding] = 1
         if metadata.domain_record.encoding is not None:
             encodings[metadata.domain_record.encoding] = 1
+        # GET from http header
         http_split = metadata.http_header.get("Content-Type", "").split("charset=")
         if len(http_split) > 1 and http_split[1] != "":
             encodings[http_split[-1]] = 1
 
         # Fallbacks
         encodings["utf-8"] = 1
-
-        encoded = linux.encode(metadata.encoding)
+        encoded = response.encode(metadata.encoding)
+        decoded = None
         for encoding in encodings:
             try:
                 decoded = encoded.decode(encoding)
@@ -96,10 +97,19 @@ class BaseExtractor(IExtractor, ABC):
                     f"Failed to decode with {encoding}",
                     extra={"domain_record": metadata.domain_record},
                 )
-        else:
-            raise ValueError("Failed to decode")
+
+        if decoded is None:
+            if self.raise_on_encoding:
+                raise ValueError("Failed to decode")
+            else:
+                decoded = response
 
         return decoded
+
+    def preprocess(self, response: str, metadata: PipeMetadata) -> str:
+        response = response.replace("\r\n", "\n")
+        response = self.encode(response, metadata)
+        return response
 
 
 class HTMLExtractor(BaseExtractor):
@@ -108,10 +118,11 @@ class HTMLExtractor(BaseExtractor):
 
     Args:
         filter_non_ok (bool, optional): If True, only 200 status codes will be extracted. Defaults to True.
+        encoding (str, optional): Default encoding to be used. Defaults to None. If set, the extractor will raise ValueException if it fails to decode the response.
     """
 
-    def __init__(self, filter_non_ok: bool = True):
-        super().__init__()
+    def __init__(self, filter_non_ok: bool = True, encoding: str | None = None):
+        super().__init__(encoding=encoding, raise_on_encoding=encoding is not None)
         self.filter_non_ok = filter_non_ok
 
     def extract_soup(self, soup: BeautifulSoup, metadata: PipeMetadata):
@@ -146,6 +157,7 @@ class DomainRecordExtractor(BaseExtractor):
     """
 
     def __init__(self, filter_non_ok: bool = True):
+        # We only extract records, don't try to encode
         super().__init__()
         self.filter_non_ok = filter_non_ok
 
@@ -156,7 +168,7 @@ class DomainRecordExtractor(BaseExtractor):
             else "unknown"
         )
         result_dict: Dict[str, Any] = {
-            "domain_record": metadata.domain_record.to_dict()
+            "domain_record": metadata.domain_record.to_dict()  # type: ignore Wrong type
         }
 
         return result_dict

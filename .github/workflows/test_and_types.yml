@@ -1,0 +1,50 @@
+name: Test on main branch
+env:
+  PYTHON_VERSION: "3.10"
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt  # Replace with your dependencies installation command
+
+      - name: Run tests
+        run: python -m unittest discover -s tests -p "*_tests.py"  # Replace with your test command
+  lint_and_types:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt  # Replace with your dependencies installation command
+
+      - name: Lint with pyright
+        run: pip install pyright && pyright
+
+      - name: Lint with black
+        run: pip install black && black --diff .
