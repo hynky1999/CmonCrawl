@@ -102,6 +102,6 @@ Note that you can use the --n_proc option to specify the number of processes to 
 
 ### Advanced usage
 The whole project was written with modularity in mind. That means that you
-can adjust the framework to your needs. To know more check  see [https://hynky1999.github.io/CmonCrawl/build/html/index.html](documentation)
+can adjust the framework to your needs. To know more check  see [https://hynky1999.github.io/CmonCrawl/build/html/usage.html](documentation)
 
 Instead of first getting the records and then extracting them, you can do both in a distributed setting. For more info look at [CZE-NEC](https://github.com/hynky1999/Czech-News-Classification-dataset) project.
