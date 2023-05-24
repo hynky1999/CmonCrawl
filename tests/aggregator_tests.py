@@ -68,6 +68,7 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
     async def test_to(self):
         # That is crawl date not published date
         self.di.to = datetime(2022, 1, 21)
+        self.di.limit = 5
 
         async for record in self.di:
             self.assertLessEqual(record.timestamp, self.di.to)
