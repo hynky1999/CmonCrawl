@@ -23,10 +23,10 @@ class ProcessorPipeline:
         downloaded_articles = []
         try:
             downloaded_articles = await self.downloader.download(domain_record)
-        except (ArchiveLoadFailed) as e:
+        except ArchiveLoadFailed as e:
             metadata_logger.error(f"{e}", extra={"domain_record": domain_record})
 
-        for (downloaded_article, metadata) in downloaded_articles:
+        for downloaded_article, metadata in downloaded_articles:
             extractor = self.router.route(
                 metadata.domain_record.url,
                 metadata.domain_record.timestamp,

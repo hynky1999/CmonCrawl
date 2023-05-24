@@ -205,6 +205,7 @@ def combine_dicts(dicts: List[Dict[str, Any]]):
     Args:
         dicts (List[Dict[str, Any]]): List of dicts to combine.
     """
+
     # Combines dicts choose the first one that is not None.
     def recursive_get(key: str, dicts: List[Dict[str, Any]], i: int) -> Any:
         if i >= len(dicts):

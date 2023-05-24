@@ -124,7 +124,6 @@ class BaseStreamerFile(IStreamer, ABC):
     async def stream(
         self, extracted_data: Dict[Any, Any], metadata: PipeMetadata
     ) -> Path:
-
         # Preemptive so we dont' have to lock
         if self.file_size >= self.max_file_size:
             self.file_size = 1

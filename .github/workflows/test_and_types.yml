@@ -16,9 +16,10 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
 
       - name: Install dependencies
         run: pip install -r requirements.txt  # Replace with your dependencies installation command
@@ -33,15 +34,16 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
 
       - name: Install dependencies
-        run: pip install -r requirements.txt  # Replace with your dependencies installation command
+        run: pip install -r requirements.txt && pip install -r requirements-test.txt
 
       - name: Lint with pyright
-        run: pip install pyright && pyright
+        run: pyright
 
       - name: Lint with black
-        run: pip install black && black --diff .
+        run: black -t py310 --check .
