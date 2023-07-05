@@ -11,7 +11,7 @@ from cmoncrawl.common.loggers import (
 
 def add_args(parser: argparse.ArgumentParser):
     parser.add_argument(
-        "--debug", action="store_true", default=False, help="Debug mode"
+        "--verbosity", action="store_true", default=False, help="Debug mode"
     )
     return parser
 
