@@ -6,7 +6,7 @@ import unittest
 import os
 import re
 from datetime import datetime
-from cmoncrawl.processor.pipeline.downloader import AsyncDownloader
+from cmoncrawl.processor.pipeline.downloader import AsyncDownloader, WarcIterator
 from cmoncrawl.processor.pipeline.extractor import BaseExtractor, HTMLExtractor
 from cmoncrawl.processor.pipeline.streamer import StreamerFileJSON, StreamerFileHTML
 from cmoncrawl.processor.pipeline.router import Router
@@ -37,7 +37,13 @@ class AsyncDownloaderTests(unittest.IsolatedAsyncioTestCase):
 class WarcIteratorTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_iterate(self):
-        file = 
+        file = Path(__file__).parent / "files" / "mini.warc.gz"
+        with WarcIterator(file) as warc:
+            warc_records = list(await warc.download(None))
+
+        self.assertEqual(len(warc_records), 3)
+        self.assertEqual(warc_records[0][1].rec_type, "warcinfo")
+        self.assertEqual(warc_records[2][1].rec_type, "response")
 
         
 

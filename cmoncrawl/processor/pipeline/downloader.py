@@ -199,7 +199,7 @@ class WarcIterator(IDownloader, ContextManager["WarcIterator"]):
         encoding = self.encoding
         warcs: Generator[Tuple[str, PipeMetadata], None, None] = (
             (
-                warc.content_stream().read().decode(encoding),
+                warc.content_stream().read().decode(encoding), 
                 PipeMetadata(
                     DomainRecord(
                         filename=self.file.name,
