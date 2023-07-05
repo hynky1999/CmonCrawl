@@ -49,7 +49,7 @@ class BaseExtractor(IExtractor, ABC):
 
     def extract(self, response: str, metadata: PipeMetadata) -> Dict[str, Any] | None:
         if self.filter_raw(response, metadata) is False:
-            metadata_logger.warn(
+            metadata_logger.info(
                 "Droped due to raw filter",
                 extra={"domain_record": metadata.domain_record},
             )
@@ -62,7 +62,7 @@ class BaseExtractor(IExtractor, ABC):
             metadata_logger.error("Failed to parse soup", extra={"domain_record": metadata.domain_record})
             return None
         if self.filter_soup(soup, metadata) is False:
-            metadata_logger.warn(
+            metadata_logger.info(
                 "Droped due to soup filter",
                 extra={"domain_record": metadata.domain_record},
             )
@@ -145,7 +145,7 @@ class HTMLExtractor(BaseExtractor):
             self.filter_non_ok
             and metadata.http_header.get("http_response_code", 200) != 200
         ):
-            metadata_logger.warning(
+            metadata_logger.info(
                 f"Status: {metadata.http_header.get('http_response_code', 0)}",
                 extra={"domain_record": metadata.domain_record},
             )
@@ -183,7 +183,7 @@ class DomainRecordExtractor(BaseExtractor):
             self.filter_non_ok
             and metadata.http_header.get("http_response_code", 200) != 200
         ):
-            metadata_logger.warning(
+            metadata_logger.info(
                 f"Status: {metadata.http_header.get('http_response_code', 0)}",
                 extra={"domain_record": metadata.domain_record},
             )

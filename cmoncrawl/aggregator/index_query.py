@@ -1,6 +1,7 @@
 from __future__ import annotations
 from collections import deque
 from datetime import datetime
+import logging
 import re
 
 from cmoncrawl.aggregator.utils import ndjson
@@ -154,9 +155,11 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         **args: Any,
     ):
         def should_retry(retry: int, reason: str, status: int, **args: Any):
-            all_purpose_logger.warn(
-                f"Failed to retrieve page of {domain} from {cdx_server} with reason {status}: {reason} retry: {retry + 1}/{max_retry} add_info: {args}"
-            )
+            # if logger at least info than report every retry otherwise report every 10 retries
+            if all_purpose_logger.level <= logging.INFO or retry % 10 == 0:
+                all_purpose_logger.error(
+                    f"Failed to retrieve page of {domain} from {cdx_server} with reason {status}: {reason} retry: {retry + 1}/{max_retry} add_info: {args}"
+                )
             if status not in allowed_status_errors:
                 return False
 
@@ -309,7 +312,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         )
         if response.content is None:
             all_purpose_logger.error(
-                f"Failed to get CC servers from {cdx_server} after 3 attempts"
+                f"Failed to get CC servers from {cdx_server} after {max_retry} attempts"
             )
             return []
         CC_servers = [js["cdx-api"] for js in response.content]
