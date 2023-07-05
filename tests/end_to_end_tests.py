@@ -9,6 +9,9 @@ from cmoncrawl.common.types import ExtractConfig
 
 
 class Extract_from_files(unittest.IsolatedAsyncioTestCase):
+    """
+    CLI Testing
+    """
     async def asyncSetUp(self) -> None:
         all_purpose_logger.setLevel("DEBUG")
         metadata_logger.setLevel("DEBUG")
