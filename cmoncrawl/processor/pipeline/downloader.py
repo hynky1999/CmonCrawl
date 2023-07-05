@@ -126,11 +126,11 @@ class AsyncDownloader(IDownloader, AsyncContextManager["AsyncDownloader"]):
         encoding = self.encoding
         warcs: List[Tuple[str, PipeMetadata]] = [
             (
-                warc.content_stream().read().decode(encoding),
+                warc.content_stream().read().decode(encoding), 
                 PipeMetadata(
                     domain_record,
-                    warc_header=dict(warc.rec_headers.headers),
-                    http_header=dict(warc.http_headers.headers),
+                    warc_header=dict(warc.rec_headers.headers if warc.rec_headers else None),
+                    http_header=dict(warc.http_headers.headers if warc.rec_headers else None),
                     encoding=encoding,
                     rec_type=warc.rec_type,
                 ),
@@ -185,7 +185,7 @@ class WarcIterator(IDownloader, ContextManager["WarcIterator"]):
             tzinfo=timezone.utc
         )
 
-    async def download(self, domain_record: DomainRecord | None):
+    async def download(self, domain_record: DomainRecord | None) -> Generator[Tuple[str, PipeMetadata], None, None]:
         if not self.file_context:
             raise Exception("Context not initialized")
         ariter = ArchiveIterator(
@@ -197,7 +197,7 @@ class WarcIterator(IDownloader, ContextManager["WarcIterator"]):
             self.file_context.seek(0)
 
         encoding = self.encoding
-        warcs: Generator[Tuple[str, PipeMetadata], None, None] = (
+        warcs = (
             (
                 warc.content_stream().read().decode(encoding), 
                 PipeMetadata(
