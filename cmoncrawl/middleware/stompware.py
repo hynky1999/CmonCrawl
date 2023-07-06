@@ -7,7 +7,6 @@ from cmoncrawl.common.loggers import all_purpose_logger
 import asyncio
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from pathlib import Path
 from typing import Dict, List, Set, Tuple
 from cmoncrawl.aggregator.utils.helpers import unify_url_id
 
@@ -231,7 +230,7 @@ class ArtemisProcessor:
     async def process(self):
         timeout_delta = timedelta(minutes=self.timeout)
         # Set's extractor path based on config
-        pending_extracts: Set[asyncio.Task[Tuple[Message, List[Path]]]] = set()
+        pending_extracts: Set[asyncio.Task[Tuple[Message, List[str]]]] = set()
         while True:
             try:
                 conn, listener = self._init_connection(self.addresses)

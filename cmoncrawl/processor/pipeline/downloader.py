@@ -140,10 +140,10 @@ class AsyncDownloader(IDownloader, AsyncContextManager["AsyncDownloader"]):
                 PipeMetadata(
                     domain_record,
                     warc_header=dict(
-                        warc.rec_headers.headers if warc.rec_headers else None
+                        warc.rec_headers.headers if warc.rec_headers else {}
                     ),
                     http_header=dict(
-                        warc.http_headers.headers if warc.rec_headers else None
+                        warc.http_headers.headers if warc.rec_headers else {}
                     ),
                     encoding=encoding,
                     rec_type=warc.rec_type,
@@ -195,7 +195,8 @@ class WarcIterator(IDownloader, ContextManager["WarcIterator"]):
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
-        self.file_context.close()
+        if self.file_context:
+            self.file_context.close()
 
     def __get_warc_date(self, warc: ArcWarcRecord) -> datetime:
         fmt = "%Y-%m-%dT%H:%M:%SZ"
@@ -216,7 +217,7 @@ class WarcIterator(IDownloader, ContextManager["WarcIterator"]):
             length = sum(
                 1
                 for _ in ArchiveIterator(
-                    self.file_context, check_digests="raise", arc2warc=True
+                    self.file_context, check_digests="raise", arc2warc=True  # type: ignore wrong typing in package
                 )
             )
             ariter = tqdm(ariter, total=length)
