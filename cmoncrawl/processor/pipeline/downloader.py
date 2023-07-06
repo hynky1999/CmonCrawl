@@ -7,7 +7,17 @@ import random
 import re
 from types import TracebackType
 from aiohttp import ClientError, ClientSession, ContentTypeError, ServerConnectionError
-from typing import IO, AsyncContextManager, ContextManager, Generator, Iterable, List, Optional, Tuple, Type
+from typing import (
+    IO,
+    AsyncContextManager,
+    ContextManager,
+    Generator,
+    Iterable,
+    List,
+    Optional,
+    Tuple,
+    Type,
+)
 from aiofiles import open as asyncOpen
 
 
@@ -126,11 +136,15 @@ class AsyncDownloader(IDownloader, AsyncContextManager["AsyncDownloader"]):
         encoding = self.encoding
         warcs: List[Tuple[str, PipeMetadata]] = [
             (
-                warc.content_stream().read().decode(encoding), 
+                warc.content_stream().read().decode(encoding),
                 PipeMetadata(
                     domain_record,
-                    warc_header=dict(warc.rec_headers.headers if warc.rec_headers else None),
-                    http_header=dict(warc.http_headers.headers if warc.rec_headers else None),
+                    warc_header=dict(
+                        warc.rec_headers.headers if warc.rec_headers else None
+                    ),
+                    http_header=dict(
+                        warc.http_headers.headers if warc.rec_headers else None
+                    ),
                     encoding=encoding,
                     rec_type=warc.rec_type,
                 ),
@@ -156,6 +170,7 @@ class AsyncDownloader(IDownloader, AsyncContextManager["AsyncDownloader"]):
     ) -> IDownloader:
         return await self.aclose(exc_type=exc_type, exc_val=exc_val, exc_tb=exc_tb)
 
+
 class WarcIterator(IDownloader, ContextManager["WarcIterator"]):
     """
     WarcIterator is local downloader which iterates over the specified warc file
@@ -163,10 +178,13 @@ class WarcIterator(IDownloader, ContextManager["WarcIterator"]):
     Args:
         file (Path): Path to the warc file
         encoding (str, optional): Encoding to be used. Defaults to "latin-1".
-    
+
 
     """
-    def __init__(self, file: Path, encoding: str = "latin-1", show_progress: bool = False):
+
+    def __init__(
+        self, file: Path, encoding: str = "latin-1", show_progress: bool = False
+    ):
         self.file = file
         self.encoding = "latin-1"
         self.file_context: Optional[IO[bytes]] = None
@@ -185,32 +203,47 @@ class WarcIterator(IDownloader, ContextManager["WarcIterator"]):
             tzinfo=timezone.utc
         )
 
-    async def download(self, domain_record: DomainRecord | None) -> Generator[Tuple[str, PipeMetadata], None, None]:
+    async def download(
+        self, domain_record: DomainRecord | None
+    ) -> Generator[Tuple[str, PipeMetadata], None, None]:
         if not self.file_context:
             raise Exception("Context not initialized")
         ariter = ArchiveIterator(
             self.file_context, check_digests="raise", arc2warc=True  # type: ignore wrong typing in package
         )
         if self.show_progress:
-            length = sum(1 for _ in ArchiveIterator(self.file_context, check_digests="raise", arc2warc=True))
+            all_purpose_logger.info(f"Calculating length of {self.file.name}")
+            length = sum(
+                1
+                for _ in ArchiveIterator(
+                    self.file_context, check_digests="raise", arc2warc=True
+                )
+            )
             ariter = tqdm(ariter, total=length)
             self.file_context.seek(0)
 
         encoding = self.encoding
         warcs = (
             (
-                warc.content_stream().read().decode(encoding), 
+                warc.content_stream().read().decode(encoding),
                 PipeMetadata(
                     DomainRecord(
                         filename=self.file.name,
-                        url=warc.rec_headers["WARC-Target-URI"] if warc.rec_headers else "",
+                        url=warc.rec_headers["WARC-Target-URI"]
+                        if warc.rec_headers
+                        else "",
                         offset=self.file_context.tell(),
                         length=warc.length,
-                        timestamp=self.__get_warc_date(warc) if warc.rec_headers else None
+                        timestamp=self.__get_warc_date(warc)
+                        if warc.rec_headers
+                        else None,
                     ),
-
-                    warc_header=dict(warc.rec_headers.headers if warc.rec_headers else {}),
-                    http_header=dict(warc.http_headers.headers if warc.http_headers else {}),
+                    warc_header=dict(
+                        warc.rec_headers.headers if warc.rec_headers else {}
+                    ),
+                    http_header=dict(
+                        warc.http_headers.headers if warc.http_headers else {}
+                    ),
                     encoding=encoding,
                     rec_type=warc.rec_type,
                 ),
@@ -218,7 +251,6 @@ class WarcIterator(IDownloader, ContextManager["WarcIterator"]):
             for warc in ariter
         )
         return warcs
-
 
 
 class DownloaderDummy(IDownloader):
