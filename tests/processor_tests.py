@@ -7,7 +7,7 @@ import os
 import re
 from datetime import datetime
 from cmoncrawl.processor.pipeline.downloader import AsyncDownloader, WarcIterator
-from cmoncrawl.processor.pipeline.extractor import HTMLExtractor
+from cmoncrawl.processor.pipeline.extractor import BaseExtractor, HTMLExtractor
 from cmoncrawl.processor.pipeline.streamer import StreamerFileJSON, StreamerFileHTML
 from cmoncrawl.processor.pipeline.router import Router
 from cmoncrawl.common.types import DomainRecord, PipeMetadata

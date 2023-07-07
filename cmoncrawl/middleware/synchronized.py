@@ -119,7 +119,7 @@ async def extract(
                     break
 
                 except Exception as _:
-                    all_purpose_logger.error(f"Error in task {task}", exc_info=True)
+                    all_purpose_logger.error(f"Failed to process {task}")
                     pass
     except Exception as e:
         all_purpose_logger.error(e, exc_info=True)

@@ -152,7 +152,7 @@ class HTMLExtractor(BaseExtractor):
             self.filter_non_ok
             and metadata.http_header.get("http_response_code", 200) != 200
         ):
-            metadata_logger.info(
+            metadata_logger.warning(
                 f"Status: {metadata.http_header.get('http_response_code', 0)}",
                 extra={"domain_record": metadata.domain_record},
             )
@@ -190,7 +190,7 @@ class DomainRecordExtractor(BaseExtractor):
             self.filter_non_ok
             and metadata.http_header.get("http_response_code", 200) != 200
         ):
-            metadata_logger.info(
+            metadata_logger.warning(
                 f"Status: {metadata.http_header.get('http_response_code', 0)}",
                 extra={"domain_record": metadata.domain_record},
             )

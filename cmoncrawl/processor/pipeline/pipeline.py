@@ -34,7 +34,7 @@ class ProcessorPipeline:
             )
             output = extractor.extract(downloaded_article, metadata)
             if output is None:
-                metadata_logger.info(
+                metadata_logger.warn(
                     f"Extractor {extractor.__class__.__name__} returned None for {metadata.domain_record.url}",
                     extra={"domain_record": metadata.domain_record},
                 )

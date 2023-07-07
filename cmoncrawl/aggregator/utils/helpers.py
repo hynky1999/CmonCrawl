@@ -16,7 +16,7 @@ def unify_url_id(url: str):
     if path_match:
         path_processed = path_match.group(0)
     else:
-        all_purpose_logger.warn(f"No path match for {url}")
+        all_purpose_logger.warning(f"No path match for {url}")
         path_processed = ""
     path_processed = remove_trailing.sub("", path_processed)
     netloc = parsed.netloc
