@@ -1,17 +1,28 @@
 from __future__ import annotations
 import asyncio
-from datetime import datetime
+from datetime import datetime, timezone
 import io
 from pathlib import Path
 import random
 import re
 from types import TracebackType
 from aiohttp import ClientError, ClientSession, ContentTypeError, ServerConnectionError
-from typing import List, Tuple, Type
+from typing import (
+    IO,
+    AsyncContextManager,
+    ContextManager,
+    Generator,
+    Iterable,
+    List,
+    Optional,
+    Tuple,
+    Type,
+)
 from aiofiles import open as asyncOpen
 
 
 import bs4
+from tqdm import tqdm
 
 from cmoncrawl.common.types import (
     DomainRecord,
@@ -19,6 +30,7 @@ from cmoncrawl.common.types import (
 )
 from cmoncrawl.common.loggers import metadata_logger, all_purpose_logger
 from warcio import ArchiveIterator
+from warcio.recordloader import ArcWarcRecord
 
 ALLOWED_ERR_FOR_RETRIES = [500, 502, 503, 504]
 
@@ -29,12 +41,12 @@ class IDownloader:
     """
 
     async def download(
-        self, domain_record: DomainRecord
-    ) -> (List[Tuple[str, PipeMetadata]]):
+        self, domain_record: DomainRecord | None
+    ) -> (Iterable[Tuple[str, PipeMetadata]]):
         raise NotImplementedError()
 
 
-class AsyncDownloader(IDownloader):
+class AsyncDownloader(IDownloader, AsyncContextManager["AsyncDownloader"]):
     """
     Downloader which asynchronously downloads the the data for the domain_record
 
@@ -69,7 +81,7 @@ class AsyncDownloader(IDownloader):
     async def __aenter__(self) -> AsyncDownloader:
         return await self.aopen()
 
-    async def download(self, domain_record: DomainRecord):
+    async def download(self, domain_record: DomainRecord | None):
         def should_retry(retry: int, reason: str, status: int, **args: str):
             metadata_logger.error(
                 f"Failed to retrieve from domain_record {status}: {reason} retry: {retry+1}/{self.__max_retry} add_info: {args}",
@@ -79,6 +91,9 @@ class AsyncDownloader(IDownloader):
                 return False
 
             return True
+
+        if domain_record is None:
+            raise ValueError("Async downloader needs domain record, to download")
 
         # Because someone thought having non c-like range is good idea
         # Both end/start are inclusive
@@ -124,9 +139,14 @@ class AsyncDownloader(IDownloader):
                 warc.content_stream().read().decode(encoding),
                 PipeMetadata(
                     domain_record,
-                    warc_header=dict(warc.rec_headers.headers),
-                    http_header=dict(warc.http_headers.headers),
+                    warc_header=dict(
+                        warc.rec_headers.headers if warc.rec_headers else {}
+                    ),
+                    http_header=dict(
+                        warc.http_headers.headers if warc.rec_headers else {}
+                    ),
                     encoding=encoding,
+                    rec_type=warc.rec_type,
                 ),
             )
             for warc in ariter
@@ -151,6 +171,89 @@ class AsyncDownloader(IDownloader):
         return await self.aclose(exc_type=exc_type, exc_val=exc_val, exc_tb=exc_tb)
 
 
+class WarcIterator(IDownloader, ContextManager["WarcIterator"]):
+    """
+    WarcIterator is local downloader which iterates over the specified warc file
+
+    Args:
+        file (Path): Path to the warc file
+        encoding (str, optional): Encoding to be used. Defaults to "latin-1".
+
+
+    """
+
+    def __init__(
+        self, file: Path, encoding: str = "latin-1", show_progress: bool = False
+    ):
+        self.file = file
+        self.encoding = "latin-1"
+        self.file_context: Optional[IO[bytes]] = None
+        self.show_progress = show_progress
+
+    def __enter__(self) -> WarcIterator:
+        self.file_context = open(self.file, "rb")
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        if self.file_context:
+            self.file_context.close()
+
+    def __get_warc_date(self, warc: ArcWarcRecord) -> datetime:
+        fmt = "%Y-%m-%dT%H:%M:%SZ"
+        return datetime.strptime(warc.rec_headers["WARC-Date"], fmt).replace(
+            tzinfo=timezone.utc
+        )
+
+    async def download(
+        self, domain_record: DomainRecord | None
+    ) -> Generator[Tuple[str, PipeMetadata], None, None]:
+        if not self.file_context:
+            raise Exception("Context not initialized")
+        ariter = ArchiveIterator(
+            self.file_context, check_digests="raise", arc2warc=True  # type: ignore wrong typing in package
+        )
+        if self.show_progress:
+            all_purpose_logger.info(f"Calculating length of {self.file.name}")
+            length = sum(
+                1
+                for _ in ArchiveIterator(
+                    self.file_context, check_digests="raise", arc2warc=True  # type: ignore wrong typing in package
+                )
+            )
+            ariter = tqdm(ariter, total=length)
+            self.file_context.seek(0)
+
+        encoding = self.encoding
+        warcs = (
+            (
+                warc.content_stream().read().decode(encoding),
+                PipeMetadata(
+                    DomainRecord(
+                        filename=self.file.name,
+                        url=warc.rec_headers["WARC-Target-URI"]
+                        if warc.rec_headers
+                        else "",
+                        offset=self.file_context.tell(),
+                        length=warc.length,
+                        timestamp=self.__get_warc_date(warc)
+                        if warc.rec_headers
+                        else None,
+                    ),
+                    warc_header=dict(
+                        warc.rec_headers.headers if warc.rec_headers else {}
+                    ),
+                    http_header=dict(
+                        warc.http_headers.headers if warc.http_headers else {}
+                    ),
+                    encoding=encoding,
+                    rec_type=warc.rec_type,
+                ),
+            )
+            for warc in ariter
+        )
+        return warcs
+
+
 class DownloaderDummy(IDownloader):
     """
     Dummy downloader for testing
@@ -171,7 +274,7 @@ class DownloaderDummy(IDownloader):
         self.date = date
         self.url = url
 
-    async def download(self, domain_record: DomainRecord):
+    async def download(self, domain_record: DomainRecord | None):
         if self.file_index >= len(self.files):
             raise IndexError("No more files to download")
 

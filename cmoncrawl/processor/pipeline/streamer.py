@@ -22,7 +22,8 @@ the extractors.
 
 class IStreamer(ABC):
     """
-    Base class for all outstreamers
+    Base class for all outstreamers, it streams the data out and returns identifier for the data
+    if successful, otherwise it returns None
     """
 
     def __init__(self):
@@ -31,7 +32,7 @@ class IStreamer(ABC):
     @abstractmethod
     async def stream(
         self, extracted_data: Dict[Any, Any], metadata: PipeMetadata
-    ) -> Path:
+    ) -> str | None:
         raise NotImplementedError()
 
     @abstractmethod
@@ -39,9 +40,9 @@ class IStreamer(ABC):
         raise NotImplementedError()
 
 
-class StreamerDummy(IStreamer):
+class MemoryStreamer(IStreamer):
     """
-    Dummy Streamer which keeps the output is memory
+    Memory Streamer which keeps the output is memory
     """
 
     def __init__(self):
@@ -49,7 +50,7 @@ class StreamerDummy(IStreamer):
 
     async def stream(self, extracted_data: Dict[Any, Any], metadata: PipeMetadata):
         self.data[metadata.domain_record.filename] = extracted_data
-        return Path("/")
+        return ""
 
     async def clean_up(self):
         pass
@@ -123,7 +124,7 @@ class BaseStreamerFile(IStreamer, ABC):
 
     async def stream(
         self, extracted_data: Dict[Any, Any], metadata: PipeMetadata
-    ) -> Path:
+    ) -> str:
         # Preemptive so we dont' have to lock
         if self.file_size >= self.max_file_size:
             self.file_size = 1
@@ -145,7 +146,7 @@ class BaseStreamerFile(IStreamer, ABC):
             f"Wrote {file_path} {directory_size}/{self.max_directory_size}",
             extra={"domain_record": metadata.domain_record},
         )
-        return path
+        return str(path.absolute())
 
     async def __stream(
         self,

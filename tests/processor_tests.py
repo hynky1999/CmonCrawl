@@ -6,15 +6,14 @@ import unittest
 import os
 import re
 from datetime import datetime
-from cmoncrawl.processor.pipeline.downloader import AsyncDownloader
+from cmoncrawl.processor.pipeline.downloader import AsyncDownloader, WarcIterator
 from cmoncrawl.processor.pipeline.extractor import BaseExtractor, HTMLExtractor
 from cmoncrawl.processor.pipeline.streamer import StreamerFileJSON, StreamerFileHTML
 from cmoncrawl.processor.pipeline.router import Router
 from cmoncrawl.common.types import DomainRecord, PipeMetadata
-from bs4 import BeautifulSoup
 
 
-class DownloaderTests(unittest.IsolatedAsyncioTestCase):
+class AsyncDownloaderTests(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self) -> None:
         self.downloader: AsyncDownloader = await AsyncDownloader(
             digest_verification=True
@@ -34,6 +33,17 @@ class DownloaderTests(unittest.IsolatedAsyncioTestCase):
 
     async def asyncTearDown(self) -> None:
         await self.downloader.aclose(None, None, None)
+
+
+class WarcIteratorTests(unittest.IsolatedAsyncioTestCase):
+    async def test_iterate(self):
+        file = Path(__file__).parent / "files" / "mini.warc.gz"
+        with WarcIterator(file) as warc:
+            warc_records = list(await warc.download(None))
+
+        self.assertEqual(len(warc_records), 3)
+        self.assertEqual(warc_records[0][1].rec_type, "warcinfo")
+        self.assertEqual(warc_records[2][1].rec_type, "response")
 
 
 class RouterTests(unittest.TestCase):
@@ -114,7 +124,7 @@ class ExtradctorTests(unittest.TestCase):
             extractor.encode(create_non_utf8(), metadata)
 
 
-class OutStremaerTests(unittest.IsolatedAsyncioTestCase):
+class OutStreamerTests(unittest.IsolatedAsyncioTestCase):
     def setUp(self) -> None:
         self.html_folder = Path(__file__).parent / "test_html"
         self.json_folder = Path(__file__).parent / "test_json"
