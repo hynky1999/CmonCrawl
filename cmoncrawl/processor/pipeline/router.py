@@ -151,7 +151,7 @@ class Router(IRouter):
         """
         # check if offset naive datetime if so then convert to utc
         if url is None:
-            all_purpose_logger.warning("No url provided, using empty string")
+            all_purpose_logger.warn("No url provided, using empty string")
             url = ""
 
         time = self._as_offset_aware(time) if time is not None else None

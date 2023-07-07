@@ -2,6 +2,7 @@ from __future__ import annotations
 import asyncio
 from datetime import datetime, timezone
 import io
+import logging
 from pathlib import Path
 import random
 import re
@@ -83,10 +84,13 @@ class AsyncDownloader(IDownloader, AsyncContextManager["AsyncDownloader"]):
 
     async def download(self, domain_record: DomainRecord | None):
         def should_retry(retry: int, reason: str, status: int, **args: str):
-            metadata_logger.error(
-                f"Failed to retrieve from domain_record {status}: {reason} retry: {retry+1}/{self.__max_retry} add_info: {args}",
-                extra={"domain_record": domain_record},
-            )
+            # if logger at least info than report every retry otherwise report every 10 retries
+            if all_purpose_logger.level <= logging.INFO or retry % 10 == 0:
+                metadata_logger.error(
+                    f"Failed to retrieve from domain_record {status}: {reason} retry: {retry+1}/{self.__max_retry} add_info: {args}",
+                    extra={"domain_record": domain_record},
+                )
+
             if status not in ALLOWED_ERR_FOR_RETRIES:
                 return False
 
