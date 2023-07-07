@@ -34,8 +34,8 @@ class AsyncDownloaderTests(unittest.IsolatedAsyncioTestCase):
     async def asyncTearDown(self) -> None:
         await self.downloader.aclose(None, None, None)
 
-class WarcIteratorTests(unittest.IsolatedAsyncioTestCase):
 
+class WarcIteratorTests(unittest.IsolatedAsyncioTestCase):
     async def test_iterate(self):
         file = Path(__file__).parent / "files" / "mini.warc.gz"
         with WarcIterator(file) as warc:
@@ -44,9 +44,6 @@ class WarcIteratorTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(len(warc_records), 3)
         self.assertEqual(warc_records[0][1].rec_type, "warcinfo")
         self.assertEqual(warc_records[2][1].rec_type, "response")
-
-        
-
 
 
 class RouterTests(unittest.TestCase):
