@@ -7,7 +7,6 @@ from cmoncrawl.common.loggers import all_purpose_logger
 import asyncio
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from pathlib import Path
 from typing import Dict, List, Set, Tuple
 from cmoncrawl.aggregator.utils.helpers import unify_url_id
 

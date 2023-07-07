@@ -217,6 +217,7 @@ class WarcIterator(IDownloader, ContextManager["WarcIterator"]):
             self.file_context, check_digests="raise", arc2warc=True  # type: ignore wrong typing in package
         )
         if self.show_progress:
+            all_purpose_logger.info(f"Calculating length of {self.file.name}")
             length = sum(
                 1
                 for _ in ArchiveIterator(

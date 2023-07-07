@@ -1,4 +1,3 @@
-from pathlib import Path
 from typing import Any, Dict, List, Set, Tuple
 from cmoncrawl.aggregator.index_query import IndexAggregator
 from cmoncrawl.processor.pipeline.pipeline import ProcessorPipeline
