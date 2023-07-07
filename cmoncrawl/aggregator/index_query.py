@@ -312,7 +312,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         )
         if response.content is None:
             all_purpose_logger.error(
-                f"Failed to get CC servers from {cdx_server} after {max_retry} attempts"
+                f"Failed to get CC servers from {cdx_server} after 10 attempts"
             )
             return []
         CC_servers = [js["cdx-api"] for js in response.content]

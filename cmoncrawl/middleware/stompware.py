@@ -231,7 +231,7 @@ class ArtemisProcessor:
     async def process(self):
         timeout_delta = timedelta(minutes=self.timeout)
         # Set's extractor path based on config
-        pending_extracts: Set[asyncio.Task[Tuple[Message, List[Path]]]] = set()
+        pending_extracts: Set[asyncio.Task[Tuple[Message, List[str]]]] = set()
         while True:
             try:
                 conn, listener = self._init_connection(self.addresses)

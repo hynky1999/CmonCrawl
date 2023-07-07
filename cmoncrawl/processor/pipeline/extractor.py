@@ -34,7 +34,12 @@ class BaseExtractor(IExtractor, ABC):
         raise_on_encoding (bool, optional): If True, the extractor will raise ValueException if it fails to decode the response. Defaults to False.
     """
 
-    def __init__(self, encoding: str | None = None, raise_on_encoding: bool = False, parser: str="html.parser"):
+    def __init__(
+        self,
+        encoding: str | None = None,
+        raise_on_encoding: bool = False,
+        parser: str = "html.parser",
+    ):
         self.encoding = encoding
         self.raise_on_encoding = raise_on_encoding
         self.parser = parser
@@ -59,7 +64,9 @@ class BaseExtractor(IExtractor, ABC):
         try:
             soup = BeautifulSoup(article, self.parser)
         except:
-            metadata_logger.error("Failed to parse soup", extra={"domain_record": metadata.domain_record})
+            metadata_logger.error(
+                "Failed to parse soup", extra={"domain_record": metadata.domain_record}
+            )
             return None
         if self.filter_soup(soup, metadata) is False:
             metadata_logger.info(

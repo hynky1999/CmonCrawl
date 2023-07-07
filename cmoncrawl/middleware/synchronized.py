@@ -95,7 +95,7 @@ async def extract(
     if hasattr(pipeline.downloader, "__aenter__"):
         await pipeline.downloader.__aenter__()  # type: ignore
     try:
-        queue: Set[asyncio.Task[List[Path]]] = set()
+        queue: Set[asyncio.Task[List[str]]] = set()
         while not domains_exausted or len(queue) > 0:
             # Put into queue till possible
             while len(queue) < concurrent_length and not domains_exausted:

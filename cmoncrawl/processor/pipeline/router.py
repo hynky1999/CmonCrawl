@@ -154,8 +154,6 @@ class Router(IRouter):
             all_purpose_logger.warn("No url provided, using empty string")
             url = ""
 
-
-        
         time = self._as_offset_aware(time) if time is not None else None
         for route in self.registered_routes:
             for regex in route.regexes:
