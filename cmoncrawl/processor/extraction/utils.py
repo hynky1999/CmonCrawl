@@ -239,7 +239,7 @@ def check_required(
     def inner(extracted_dict: Dict[Any, Any], metadata: PipeMetadata):
         for key, value in required_fields.items():
             if key not in extracted_dict:
-                metadata_logger.warn(
+                metadata_logger.info(
                     f"{extractor_name} failed to extract {key}",
                     extra={"domain_record": metadata.domain_record},
                 )
@@ -247,7 +247,7 @@ def check_required(
             extracted_val = extracted_dict[key]
             if value:
                 if extracted_val is None:
-                    metadata_logger.warn(
+                    metadata_logger.info(
                         f"{extractor_name}: None for key: {key} is not allowed",
                         extra={"domain_record": metadata.domain_record},
                     )
@@ -255,13 +255,13 @@ def check_required(
 
                 if non_empty:
                     if isinstance(extracted_val, str) and extracted_val == "":
-                        metadata_logger.warn(
+                        metadata_logger.info(
                             f"{extractor_name}: empty string for key: {key} is not allowed",
                             extra={"domain_record": metadata.domain_record},
                         )
                         return False
                     if isinstance(extracted_val, Sized) and len(extracted_val) == 0:
-                        metadata_logger.warn(
+                        metadata_logger.info(
                             f"{extractor_name}: empty list for key: {key} is not allowed",
                             extra={"domain_record": metadata.domain_record},
                         )

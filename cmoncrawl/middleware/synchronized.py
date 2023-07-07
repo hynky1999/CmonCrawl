@@ -1,4 +1,3 @@
-from pathlib import Path
 from typing import Any, Dict, List, Set, Tuple
 from cmoncrawl.aggregator.index_query import IndexAggregator
 from cmoncrawl.processor.pipeline.pipeline import ProcessorPipeline
@@ -95,7 +94,7 @@ async def extract(
     if hasattr(pipeline.downloader, "__aenter__"):
         await pipeline.downloader.__aenter__()  # type: ignore
     try:
-        queue: Set[asyncio.Task[List[Path]]] = set()
+        queue: Set[asyncio.Task[List[str]]] = set()
         while not domains_exausted or len(queue) > 0:
             # Put into queue till possible
             while len(queue) < concurrent_length and not domains_exausted:
@@ -120,7 +119,7 @@ async def extract(
                     break
 
                 except Exception as _:
-                    all_purpose_logger.error(f"Failed to process {task}")
+                    all_purpose_logger.error(f"Error in task {task}", exc_info=True)
                     pass
     except Exception as e:
         all_purpose_logger.error(e, exc_info=True)

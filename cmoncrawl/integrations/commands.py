@@ -11,7 +11,7 @@ from cmoncrawl.common.loggers import (
 
 def add_args(parser: argparse.ArgumentParser):
     parser.add_argument(
-        "--debug", action="store_true", default=False, help="Debug mode"
+        "--verbosity", "-v", action="count", default=0, help="Increase verbosity"
     )
     return parser
 
@@ -32,17 +32,19 @@ def get_args():
     return parser
 
 
-def setup_loggers(debug: bool):
-    if debug:
-        all_purpose_logger.setLevel(logging.DEBUG)
-        metadata_logger.setLevel(logging.DEBUG)
-    else:
-        all_purpose_logger.setLevel(logging.INFO)
-        metadata_logger.setLevel(logging.INFO)
+def setup_loggers(verbosity: int):
+    verbosity_cfg = {
+        0: logging.WARNING,
+        1: logging.INFO,
+        2: logging.DEBUG,
+    }
+    verbosity = min(verbosity, max(verbosity_cfg.keys()))
+    all_purpose_logger.setLevel(verbosity_cfg[verbosity])
+    metadata_logger.setLevel(verbosity_cfg[verbosity])
 
 
 def process_args(args: argparse.Namespace):
-    setup_loggers(args.debug)
+    setup_loggers(args.verbosity)
 
 
 def main():

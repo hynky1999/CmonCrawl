@@ -34,9 +34,15 @@ class BaseExtractor(IExtractor, ABC):
         raise_on_encoding (bool, optional): If True, the extractor will raise ValueException if it fails to decode the response. Defaults to False.
     """
 
-    def __init__(self, encoding: str | None = None, raise_on_encoding: bool = False):
+    def __init__(
+        self,
+        encoding: str | None = None,
+        raise_on_encoding: bool = False,
+        parser: str = "html.parser",
+    ):
         self.encoding = encoding
         self.raise_on_encoding = raise_on_encoding
+        self.parser = parser
 
     def filter_raw(self, response: str, metadata: PipeMetadata) -> bool:
         # If raw fails bs4 will not be used -> speed
@@ -48,16 +54,22 @@ class BaseExtractor(IExtractor, ABC):
 
     def extract(self, response: str, metadata: PipeMetadata) -> Dict[str, Any] | None:
         if self.filter_raw(response, metadata) is False:
-            metadata_logger.warn(
+            metadata_logger.info(
                 "Droped due to raw filter",
                 extra={"domain_record": metadata.domain_record},
             )
             return None
 
         article = self.preprocess(response, metadata)
-        soup = BeautifulSoup(article, "html.parser")
+        try:
+            soup = BeautifulSoup(article, self.parser)
+        except:
+            metadata_logger.error(
+                "Failed to parse soup", extra={"domain_record": metadata.domain_record}
+            )
+            return None
         if self.filter_soup(soup, metadata) is False:
-            metadata_logger.warn(
+            metadata_logger.info(
                 "Droped due to soup filter",
                 extra={"domain_record": metadata.domain_record},
             )
@@ -92,7 +104,7 @@ class BaseExtractor(IExtractor, ABC):
                 decoded = encoded.decode(encoding)
                 metadata.encoding = encoding
                 break
-            except ValueError:
+            except (LookupError, ValueError):
                 metadata_logger.warn(
                     f"Failed to decode with {encoding}",
                     extra={"domain_record": metadata.domain_record},
@@ -140,7 +152,7 @@ class HTMLExtractor(BaseExtractor):
             self.filter_non_ok
             and metadata.http_header.get("http_response_code", 200) != 200
         ):
-            metadata_logger.warning(
+            metadata_logger.info(
                 f"Status: {metadata.http_header.get('http_response_code', 0)}",
                 extra={"domain_record": metadata.domain_record},
             )
@@ -178,7 +190,7 @@ class DomainRecordExtractor(BaseExtractor):
             self.filter_non_ok
             and metadata.http_header.get("http_response_code", 200) != 200
         ):
-            metadata_logger.warning(
+            metadata_logger.info(
                 f"Status: {metadata.http_header.get('http_response_code', 0)}",
                 extra={"domain_record": metadata.domain_record},
             )

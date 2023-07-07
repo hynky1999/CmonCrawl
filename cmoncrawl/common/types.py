@@ -37,6 +37,7 @@ class PipeMetadata:
     article_data: Dict[Any, Any] = field(default_factory=dict)
     warc_header: Dict[str, Any] = field(default_factory=dict)
     http_header: Dict[str, Any] = field(default_factory=dict)
+    rec_type: str | None = None
     encoding: str = "latin-1"
     name: str | None = None
 
