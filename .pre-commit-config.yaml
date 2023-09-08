@@ -16,7 +16,6 @@ repos:
         args: [--remove-all-unused-imports, --ignore-init-module-imports, --remove-unused-variables]
         language_version: python3.11
 
-
 -   repo: https://github.com/psf/black
     rev: 23.3.0
     hooks:
