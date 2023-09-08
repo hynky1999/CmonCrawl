@@ -18,6 +18,7 @@ $ cmon download --match_type=domain --limit=1000 example.com html_output html
 ```
 This will download a first 100 html files from example.com and save them in html_output.
 
+
 #### Extractor creation
 Once you have your the files to extract, you can create your extractor.
 To do so, you need to create a new python file e.g my_extractor.py in extractors directory and add the following code:
