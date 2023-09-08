@@ -5,33 +5,9 @@
             "name": "Download",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceRoot}/download_article.py",
+            "program": "${workspaceRoot}/cmoncrawl/integrations/commands.py",
             "console": "integratedTerminal",
-            "args": ["--limit=100", "--to=2018-12-31", "idnes.cz", "Processor/denik2019"]
-        },
-        {
-            "name": "Process",
-            "type": "python",
-            "request": "launch",
-            "program": "${workspaceRoot}/process_article.py",
-            "console": "integratedTerminal",
-            "args": ["unit_tests/sites/seznamzpravyCZ/test_articles/article1.html", "./processed_articles"]
-        },
-        {
-            "name": "Processor",
-            "type": "python",
-            "request": "launch",
-            "program": "${workspaceRoot}/process_article.py",
-            "console": "integratedTerminal",
-            "args": ["unit_tests/sites/seznamzpravyCZ/test_articles/article1.html", "./processed_articles"]
-        },
-        {
-            "name": "FUN",
-            "type": "python",
-            "request": "launch",
-            "program": "${workspaceRoot}/Artemis/adjust_config.py",
-            "console": "integratedTerminal",
-            "args": ["unit_tests/sites/seznamzpravyCZ/test_articles/article1.html", "./processed_articles"]
+            "args": ["download", "idnes.cz", "out", "html"]
         },
 
     ]

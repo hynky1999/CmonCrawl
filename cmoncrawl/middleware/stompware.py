@@ -33,7 +33,7 @@ class ListnerStats:
     last_message_time: datetime = datetime.now()
 
 
-class ArtemisAggregator:
+class StompAggregator:
     """
     Aggregator that listens queries the common crawl index and sends the results to a queue
     using the stomp protocol. It the creates a queue
@@ -124,7 +124,7 @@ class ArtemisAggregator:
         conn.disconnect()  # type: ignore
 
 
-class ArtemisProcessor:
+class StompProcessor:
     """
     Processor that listens to a queues and processes the messages using a pipeline.
     When it receives a message with type enough `poisson_pill` messages, it will

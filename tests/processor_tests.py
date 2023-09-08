@@ -143,7 +143,7 @@ class OutStreamerTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_create_directory(self):
         self.outstreamer_json.max_directory_size = 3
-        self.outstreamer_json.max_file_size = 1
+        self.outstreamer_json.max_crawls_in_file = 1
         writes = [
             asyncio.create_task(self.outstreamer_json.stream(dict(), self.metadata))
             for _ in range(15)
@@ -154,7 +154,7 @@ class OutStreamerTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_create_multi_file(self):
         self.outstreamer_json.max_directory_size = 1
-        self.outstreamer_json.max_file_size = 5
+        self.outstreamer_json.max_crawls_in_file = 5
 
         writes = [
             asyncio.create_task(self.outstreamer_json.stream(dict(), self.metadata))

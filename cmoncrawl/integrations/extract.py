@@ -80,7 +80,7 @@ def add_args(subparser: Any):
     parser.add_argument(
         "--max_directory_size",
         type=int,
-        default=1000,
+        default=None,
         help="Max number of extraction files per directory",
     )
     parser.add_argument(
