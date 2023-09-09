@@ -5,33 +5,22 @@
             "name": "Download",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceRoot}/download_article.py",
+            "module": "cmoncrawl.integrations.commands",
             "console": "integratedTerminal",
-            "args": ["--limit=100", "--to=2018-12-31", "idnes.cz", "Processor/denik2019"]
+            "args": ["download", "idnes.cz", "out", "html"]
         },
         {
-            "name": "Process",
+            "name": "Extract",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceRoot}/process_article.py",
+            "module": "cmoncrawl.integrations.commands",
             "console": "integratedTerminal",
-            "args": ["unit_tests/sites/seznamzpravyCZ/test_articles/article1.html", "./processed_articles"]
-        },
-        {
-            "name": "Processor",
-            "type": "python",
-            "request": "launch",
-            "program": "${workspaceRoot}/process_article.py",
-            "console": "integratedTerminal",
-            "args": ["unit_tests/sites/seznamzpravyCZ/test_articles/article1.html", "./processed_articles"]
-        },
-        {
-            "name": "FUN",
-            "type": "python",
-            "request": "launch",
-            "program": "${workspaceRoot}/Artemis/adjust_config.py",
-            "console": "integratedTerminal",
-            "args": ["unit_tests/sites/seznamzpravyCZ/test_articles/article1.html", "./processed_articles"]
+            "args": ["extract",
+            "examples/extractor_tutorial/config.json",
+            "out_extr",
+            "out_html/1_file.jsonl",
+            "record"],
+            "justMyCode": false
         },
 
     ]

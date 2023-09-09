@@ -5,6 +5,7 @@ import multiprocessing
 from pathlib import Path
 
 from tqdm import tqdm
+from cmoncrawl.common.loggers import setup_loggers
 from cmoncrawl.common.types import ExtractConfig
 
 from cmoncrawl.processor.pipeline.downloader import DownloaderDummy, AsyncDownloader
@@ -80,7 +81,7 @@ def add_args(subparser: Any):
     parser.add_argument(
         "--max_directory_size",
         type=int,
-        default=1000,
+        default=None,
         help="Max number of extraction files per directory",
     )
     parser.add_argument(
@@ -119,7 +120,7 @@ def get_domain_records_json(
     with open(file_path, "r") as f:
         for line in tqdm(f):
             js = json.loads(line)
-            domain_record: DomainRecord = DomainRecord.schema().load(  # type: ignore
+            domain_record: DomainRecord = DomainRecord.model_validate(
                 js["domain_record"]
             )
             additional_info = js.get("additional_info", {})
@@ -133,13 +134,15 @@ def get_domain_records_html(
     url: str | None, date: datetime | None
 ) -> List[Tuple[DomainRecord, Dict[str, Any]]]:
     # Just return dummy as correct crawl will be loaded from dummy downloader
-    return [(DomainRecord("", url=url, offset=0, length=0, timestamp=date), {})]
+    return [
+        (DomainRecord(filename="", url=url, offset=0, length=0, timestamp=date), {})
+    ]
 
 
 def load_config(config_path: Path) -> ExtractConfig:
     with open(config_path, "r") as f:
         config = json.load(f)
-    return ExtractConfig.schema().load(config)  # type: ignore
+    return ExtractConfig.model_validate(config)
 
 
 def create_router(config: ExtractConfig) -> Router:
@@ -181,6 +184,7 @@ def _extract_task(
     args: argparse.Namespace,
 ):
     mode = ExtractMode(args.mode)
+    setup_loggers(args.verbosity)
 
     asyncio.run(
         extract_from_files(

@@ -1,10 +1,18 @@
 from abc import ABC, abstractmethod
-from typing import Any, Dict
+from typing import Any, Callable, Dict, List, Optional
 
 from bs4 import BeautifulSoup
 
 from cmoncrawl.common.types import PipeMetadata
 from cmoncrawl.common.loggers import metadata_logger
+from cmoncrawl.processor.extraction.filters import (
+    must_exist_filter,
+    must_not_exist_filter,
+)
+from cmoncrawl.processor.extraction.utils import (
+    combine_dicts,
+    extract_transform,
+)
 
 
 class IExtractor(ABC):
@@ -180,7 +188,7 @@ class DomainRecordExtractor(BaseExtractor):
             else "unknown"
         )
         result_dict: Dict[str, Any] = {
-            "domain_record": metadata.domain_record.to_dict()  # type: ignore Wrong type
+            "domain_record": metadata.domain_record.model_dump(mode="json")
         }
 
         return result_dict
@@ -196,3 +204,147 @@ class DomainRecordExtractor(BaseExtractor):
             )
             return False
         return True
+
+
+class PageExtractor(BaseExtractor):
+    """
+    The PageExtractor is designed to extracte specific elements from a web page,
+    while adding ability to choose when to extract the data.
+
+    Args:
+        header_css_dict (Dict[str, str]): A dictionary specifying the CSS selectors for the header elements.
+        header_extract_dict (Dict[str, List[Callable[[Any], Any]] | Callable[[Any], Any]]): A dictionary
+            specifying the extraction functions for the header elements.
+            The keys must match the keys in the header_css_dict.
+            The functions are applied in the order they are specified in the list.
+
+        content_css_selector (str): The CSS selector specifying where the content elements are located.
+        content_css_dict (Dict[str, str]): A dictionary specifying the CSS selectors for the content elements.
+            Selectors must be relative to the content_css_selector.
+
+        content_extract_dict (Dict[str, List[Callable[[Any], Any]] | Callable[[Any], Any]]): A dictionary
+            specifying the extraction functions for the content elements.
+            The keys must match the keys in the content_css_dict.
+            The functions are applied in the order they are specified in the list.
+
+        css_selectors_must_exist (List[str]): A list of CSS selectors that must exist for the extraction to proceed.
+        css_selectors_must_not_exist (List[str]): A list of CSS selectors that must not exist for the extraction to proceed.
+        allowed_domain_prefixes (List[str] | None): A list of allowed domain prefixes. If None, all domain prefixes are allowed.
+        is_valid_extraction (Callable[[Dict[Any, Any], PipeMetadata], bool]): A function that takes in the extracted data and the metadata and returns True if the extraction is valid, False otherwise.
+        encoding (str | None): The encoding to be used. If None, the default encoding is used.
+
+    Returns:
+        Dict[Any, Any] | None: A dictionary containing the extracted data, or None if the extraction failed.
+    """
+
+    def __init__(
+        self,
+        header_css_dict: Dict[str, str] = {},
+        header_extract_dict: Dict[
+            str, List[Callable[[Any], Any]] | Callable[[Any], Any]
+        ] = {},
+        content_css_selector: str = "body",
+        content_css_dict: Dict[str, str] = {},
+        content_extract_dict: Dict[
+            str, List[Callable[[Any], Any]] | Callable[[Any], Any]
+        ] = {},
+        css_selectors_must_exist: List[str] = [],
+        css_selectors_must_not_exist: List[str] = [],
+        allowed_domain_prefixes: List[str] | None = None,
+        is_valid_extraction: Optional[
+            Callable[[Dict[Any, Any], PipeMetadata], bool]
+        ] = None,
+        encoding: str | None = None,
+    ):
+        super().__init__(encoding=encoding)
+        self.header_css_dict = header_css_dict
+        self.header_extract_dict = header_extract_dict
+        self.article_css_dict = content_css_dict
+        self.article_extract_dict = content_extract_dict
+        self.article_css_selector = content_css_selector
+        self.filter_must_exist = css_selectors_must_exist
+        self.filter_must_not_exist = css_selectors_must_not_exist
+        self.filter_allowed_domain_prefixes = allowed_domain_prefixes
+        self.is_valid_extraction = is_valid_extraction
+
+    def extract(self, response: str, metadata: PipeMetadata) -> Dict[Any, Any] | None:
+        return super().extract(response, metadata)
+
+    def extract_soup(self, soup: BeautifulSoup, metadata: PipeMetadata):
+        extracted_dict = self.article_extract(soup, metadata)
+        if self.is_valid_extraction and not self.is_valid_extraction(
+            extracted_dict, metadata
+        ):
+            return None
+
+        metadata.name = (
+            metadata.domain_record.url.replace("/", "_")[:80]
+            if metadata.domain_record.url is not None
+            else "unknown"
+        )
+        extracted_dict["url"] = metadata.domain_record.url
+        extracted_dict["domain_record"] = metadata.domain_record.model_dump(mode="json")
+        return extracted_dict
+
+    def custom_filter_raw(self, response: str, metadata: PipeMetadata) -> bool:
+        return True
+
+    def custom_filter_soup(self, soup: BeautifulSoup, metadata: PipeMetadata) -> bool:
+        return True
+
+    def filter_raw(self, response: str, metadata: PipeMetadata) -> bool:
+        if metadata.http_header.get("http_response_code", 200) != 200:
+            metadata_logger.warn(
+                f"Invalid Status: {metadata.http_header.get('http_response_code', 0)}",
+                extra={"domain_record": metadata.domain_record},
+            )
+            return False
+
+        if self.custom_filter_raw(response, metadata) is False:
+            return False
+        return True
+
+    def filter_soup(self, soup: BeautifulSoup, metadata: PipeMetadata) -> bool:
+        if not must_exist_filter(soup, self.filter_must_exist):
+            return False
+
+        if not must_not_exist_filter(soup, self.filter_must_not_exist):
+            return False
+
+        if (
+            self.filter_allowed_domain_prefixes is not None
+            and isinstance(metadata.url_parsed.netloc, str)
+            and metadata.url_parsed.netloc.split(".")[0]
+            not in self.filter_allowed_domain_prefixes
+        ):
+            return False
+
+        if self.custom_filter_soup(soup, metadata) is False:
+            return False
+
+        return True
+
+    def article_extract(
+        self, soup: BeautifulSoup, metadata: PipeMetadata
+    ) -> Dict[Any, Any]:
+        extracted_head = extract_transform(
+            soup.select_one("head"), self.header_css_dict, self.header_extract_dict
+        )
+
+        extracted_page = extract_transform(
+            soup.select_one(self.article_css_selector),
+            self.article_css_dict,
+            self.article_extract_dict,
+        )
+
+        custom_extract = self.custom_extract(soup, metadata)
+
+        # merge dicts
+        extracted_dict = combine_dicts([extracted_head, extracted_page, custom_extract])
+        return extracted_dict
+
+    def custom_extract(
+        self, soup: BeautifulSoup, metadata: PipeMetadata
+    ) -> Dict[str, Any]:
+        # Allows for custom extraction of values
+        return {}

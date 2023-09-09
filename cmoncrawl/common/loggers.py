@@ -31,3 +31,14 @@ if not metadata_logger.hasHandlers():
         )
     )
     metadata_logger.addHandler(handler)
+
+
+def setup_loggers(verbosity: int):
+    verbosity_cfg = {
+        0: logging.WARNING,
+        1: logging.INFO,
+        2: logging.DEBUG,
+    }
+    verbosity = min(verbosity, max(verbosity_cfg.keys()))
+    all_purpose_logger.setLevel(verbosity_cfg[verbosity])
+    metadata_logger.setLevel(verbosity_cfg[verbosity])

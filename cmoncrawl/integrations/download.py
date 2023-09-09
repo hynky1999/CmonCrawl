@@ -94,13 +94,13 @@ def add_args(subparser: Any):
     parser.add_argument(
         "--match_type",
         type=MatchType,
-        choices=list(MatchType.__members__.values()),
+        choices=list(MatchType),
         help="Match type for the url, see cdx-api for more info",
     )
     parser.add_argument(
         "--max_directory_size",
         type=int,
-        default=1000,
+        default=None,
         help="Max number of files per directory",
     )
     parser.add_argument(

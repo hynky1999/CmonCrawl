@@ -130,7 +130,9 @@ class OutStreamerTests(unittest.IsolatedAsyncioTestCase):
         self.json_folder = Path(__file__).parent / "test_json"
         self.outstreamer_json = StreamerFileJSON(self.json_folder, 100, 100)
         self.outstreamer_html = StreamerFileHTML(self.html_folder, 5)
-        self.metadata = PipeMetadata(DomainRecord("", "", 0, 0))
+        self.metadata = PipeMetadata(
+            DomainRecord(filename="", offset=0, length=0, url="")
+        )
 
     async def test_simple_write(self):
         file = await self.outstreamer_json.stream(dict(), self.metadata)
@@ -143,7 +145,7 @@ class OutStreamerTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_create_directory(self):
         self.outstreamer_json.max_directory_size = 3
-        self.outstreamer_json.max_file_size = 1
+        self.outstreamer_json.max_crawls_in_file = 1
         writes = [
             asyncio.create_task(self.outstreamer_json.stream(dict(), self.metadata))
             for _ in range(15)
@@ -154,7 +156,7 @@ class OutStreamerTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_create_multi_file(self):
         self.outstreamer_json.max_directory_size = 1
-        self.outstreamer_json.max_file_size = 5
+        self.outstreamer_json.max_crawls_in_file = 5
 
         writes = [
             asyncio.create_task(self.outstreamer_json.stream(dict(), self.metadata))

@@ -1,6 +1,6 @@
 {
     "html.format.wrapLineLength": 80,
-    "python.formatting.provider": "black",
+    "python.formatting.provider": "none",
     "python.linting.enabled": true,
     "python.testing.unittestArgs": [
         "-v",
@@ -13,5 +13,8 @@
     "python.testing.unittestEnabled": true,
     "python.analysis.typeCheckingMode": "strict",
     "python.linting.mypyPath": "/usr/bin/mypy",
-    "cSpell.enabled": false
+    "cSpell.enabled": false,
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    }
 }

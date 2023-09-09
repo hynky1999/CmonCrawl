@@ -71,20 +71,27 @@ class BaseStreamerFile(IStreamer, ABC):
         max_retries: int = 3,
     ):
         # To create new folder
-        self.directory_size = max_directory_size
+        self.directory_size = 0
         self.max_directory_size = max_directory_size
-        self.file_size = 0
-        self.max_file_size = max_file_size
+        self.crawls_in_file = 0
+        self.max_crawls_in_file = max_file_size
         self.root = root
         self.diretory_prefix = directory_prefix
         self.directories: List[Path] = []
         self.extension = extension
         self.max_retries = max_retries
 
+        self.__create_new_folder(self.__get_new_folder_path())
+
     def __get_folder_path(self) -> Path:
+        if not self.max_directory_size:
+            return self.root
+
         return self.root / Path(f"{self.diretory_prefix}{len(self.directories)-1}")
 
     def __get_new_folder_path(self) -> Path:
+        if not self.max_directory_size:
+            return self.root
         return self.root / Path(f"{self.diretory_prefix}{len(self.directories)}")
 
     def __create_new_folder(self, folder_path: Path):
@@ -92,7 +99,7 @@ class BaseStreamerFile(IStreamer, ABC):
         self.directory_size = len(os.listdir(folder_path))
         self.directories.append(folder_path)
         all_purpose_logger.debug(
-            f"Created new folder {folder_path} with capacity {self.directory_size}/{self.max_directory_size}"
+            f"Created new folder {folder_path} with capacity {self.directory_size}/{self.max_directory_size if self.max_directory_size != 1 else 'inf'}"
         )
 
     async def clean_up(self) -> None:
@@ -114,7 +121,7 @@ class BaseStreamerFile(IStreamer, ABC):
 
     def get_file_name(self, metadata: PipeMetadata):
         name = "file"
-        if self.max_file_size == 1:
+        if self.max_crawls_in_file == 1:
             name = metadata.name or metadata.url_parsed.hostname or name
         return f"{self.directory_size}_{name}{self.extension}"
 
@@ -126,13 +133,15 @@ class BaseStreamerFile(IStreamer, ABC):
         self, extracted_data: Dict[Any, Any], metadata: PipeMetadata
     ) -> str:
         # Preemptive so we dont' have to lock
-        if self.file_size >= self.max_file_size:
-            self.file_size = 1
+        if self.crawls_in_file >= self.max_crawls_in_file:
+            self.crawls_in_file = 1
             self.directory_size += 1
         else:
-            self.file_size += 1
+            self.crawls_in_file += 1
 
-        while self.directory_size >= self.max_directory_size:
+        while (
+            self.max_directory_size and self.directory_size >= self.max_directory_size
+        ):
             all_purpose_logger.debug(
                 f"Reached capacity of folder {self.__get_folder_path()} {self.directory_size}/{self.max_directory_size}"
             )

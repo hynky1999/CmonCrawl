@@ -1,9 +1,8 @@
-from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, Iterable, List, Tuple
 from cmoncrawl.processor.pipeline.downloader import IDownloader
 from cmoncrawl.processor.pipeline.streamer import IStreamer
 from cmoncrawl.processor.pipeline.router import IRouter
-from cmoncrawl.common.types import DomainRecord
+from cmoncrawl.common.types import DomainRecord, PipeMetadata
 from cmoncrawl.common.loggers import metadata_logger
 from warcio.exceptions import ArchiveLoadFailed
 
@@ -20,7 +19,7 @@ class ProcessorPipeline:
         self, domain_record: DomainRecord | None, additional_info: Dict[str, Any]
     ):
         identifiers: List[str] = []
-        responses = []
+        responses: Iterable[Tuple[str, PipeMetadata]] = []
         try:
             responses = await self.downloader.download(domain_record)
         except ArchiveLoadFailed as e:

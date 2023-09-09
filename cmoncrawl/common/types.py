@@ -4,14 +4,27 @@ from pathlib import Path
 from typing import Any, Dict, List
 from urllib.parse import urlparse
 from dataclasses import dataclass, field
-from marshmallow import fields
+from pydantic import BaseModel, Field, validator
+from typing import Optional, List
+from datetime import datetime
 
-from dataclasses_json import dataclass_json, config
+from pydantic import BaseModel
 
 
-@dataclass_json
-@dataclass
-class DomainRecord:
+def parse_timestamp(v: Optional[Any]) -> Optional[datetime]:
+    if v is None:
+        return None
+
+    if isinstance(v, datetime):
+        return v
+
+    if isinstance(v, str):
+        return datetime.fromisoformat(v)
+
+    raise ValueError(f"Invalid timestamp: {v}")
+
+
+class DomainRecord(BaseModel):
     """
     Domain record.
     """
@@ -22,9 +35,11 @@ class DomainRecord:
     length: int
     digest: str | None = None
     encoding: str | None = None
-    timestamp: datetime | None = field(
-        metadata=config(mm_field=fields.DateTime(format="iso")), default=None
-    )
+    timestamp: Optional[datetime] = Field(None)
+
+    @validator("timestamp", pre=True)
+    def parse_timestamp(cls, v: Optional[str]) -> Optional[datetime]:
+        return parse_timestamp(v)
 
 
 @dataclass
@@ -71,36 +86,30 @@ class DomainCrawl:
 # Extractor config
 
 
-@dataclass_json
-@dataclass
-class ExtractorConfig:
+class ExtractorConfig(BaseModel):
     """
     Configuration for extractor.
     """
 
     name: str
-    since: datetime | None = field(
-        metadata=config(mm_field=fields.DateTime(format="iso")), default=None
-    )
-    to: datetime | None = field(
-        metadata=config(mm_field=fields.DateTime(format="iso")), default=None
-    )
+    since: Optional[datetime] = Field(None)
+    to: Optional[datetime] = Field(None)
+
+    @validator("since", "to", pre=True)
+    def parse_timestamp(cls, v: Optional[str]) -> Optional[datetime]:
+        return parse_timestamp(v)
 
 
-@dataclass_json
-@dataclass
-class RoutesConfig:
+class RoutesConfig(BaseModel):
     """
     Configuration for extractors.
     """
 
-    regexes: list[str] = field(default_factory=list)
-    extractors: list[ExtractorConfig] = field(default_factory=list)
+    regexes: List[str] = []
+    extractors: List[ExtractorConfig] = []
 
 
-@dataclass_json
-@dataclass
-class ExtractConfig:
+class ExtractConfig(BaseModel):
     """
     Configuration for run.
     """
@@ -118,3 +127,6 @@ class MatchType(Enum):
     PREFIX = "prefix"
     HOST = "host"
     DOMAIN = "domain"
+
+    def __str__(self):
+        return self.value

@@ -1,17 +1,18 @@
 import argparse
 import logging
-from typing import Any, Callable, Dict
+from typing import Any, Dict
 from cmoncrawl.integrations.download import add_args as add_download_args
 from cmoncrawl.integrations.extract import add_args as add_extract_args
 from cmoncrawl.common.loggers import (
     all_purpose_logger,
     metadata_logger,
+    setup_loggers,
 )
 
 
 def add_args(parser: argparse.ArgumentParser):
     parser.add_argument(
-        "--verbosity", "-v", action="count", default=0, help="Increase verbosity"
+        "--verbosity", "-v", choices=[0, 1, 2], type=int, default=1, help="Verbosity"
     )
     return parser
 
@@ -30,17 +31,6 @@ def get_args():
     )
     add_subparsers(subparser)
     return parser
-
-
-def setup_loggers(verbosity: int):
-    verbosity_cfg = {
-        0: logging.WARNING,
-        1: logging.INFO,
-        2: logging.DEBUG,
-    }
-    verbosity = min(verbosity, max(verbosity_cfg.keys()))
-    all_purpose_logger.setLevel(verbosity_cfg[verbosity])
-    metadata_logger.setLevel(verbosity_cfg[verbosity])
 
 
 def process_args(args: argparse.Namespace):

@@ -1,3 +1,4 @@
+import logging
 from typing import Any, Dict, List, Set, Tuple
 from cmoncrawl.aggregator.index_query import IndexAggregator
 from cmoncrawl.processor.pipeline.pipeline import ProcessorPipeline
@@ -68,6 +69,7 @@ async def _extract_task(
         metadata_logger.error(
             f"Failed to process {domain_record.url} with {e}",
             extra={"domain_record": domain_record},
+            exc_info=True if metadata_logger.level == logging.DEBUG else False,
         )
     return result
 
@@ -113,8 +115,7 @@ async def extract(
             done, queue = await asyncio.wait(queue, return_when=asyncio.FIRST_COMPLETED)
             for task in done:
                 try:
-                    await task
-                    total_extracted += 1
+                    total_extracted += len(await task)
                 except KeyboardInterrupt as e:
                     break
 
