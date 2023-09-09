@@ -209,7 +209,6 @@ def run_extract(args: argparse.Namespace):
         _extract_task,
         [
             (
-                # [metadata_logger.level, all_purpose_logger.level],
                 args.output_path / f"{file.stem}"
                 if args.n_proc != 1
                 else args.output_path,
