@@ -6,6 +6,7 @@ from pathlib import Path
 
 from tqdm import tqdm
 from cmoncrawl.common.types import ExtractConfig
+from cmoncrawl.common.loggers import metadata_logger, all_purpose_logger
 
 from cmoncrawl.processor.pipeline.downloader import DownloaderDummy, AsyncDownloader
 from cmoncrawl.processor.pipeline.pipeline import ProcessorPipeline
@@ -119,7 +120,7 @@ def get_domain_records_json(
     with open(file_path, "r") as f:
         for line in tqdm(f):
             js = json.loads(line)
-            domain_record: DomainRecord = DomainRecord.schema().load(  # type: ignore
+            domain_record: DomainRecord = DomainRecord.model_validate(
                 js["domain_record"]
             )
             additional_info = js.get("additional_info", {})
@@ -133,13 +134,15 @@ def get_domain_records_html(
     url: str | None, date: datetime | None
 ) -> List[Tuple[DomainRecord, Dict[str, Any]]]:
     # Just return dummy as correct crawl will be loaded from dummy downloader
-    return [(DomainRecord("", url=url, offset=0, length=0, timestamp=date), {})]
+    return [
+        (DomainRecord(filename="", url=url, offset=0, length=0, timestamp=date), {})
+    ]
 
 
 def load_config(config_path: Path) -> ExtractConfig:
     with open(config_path, "r") as f:
         config = json.load(f)
-    return ExtractConfig.schema().load(config)  # type: ignore
+    return ExtractConfig.model_validate(config)
 
 
 def create_router(config: ExtractConfig) -> Router:
@@ -175,12 +178,15 @@ async def extract_from_files(
 
 
 def _extract_task(
+    log_levels: List[int],
     output_path: Path,
     config: ExtractConfig,
     files: List[Path],
     args: argparse.Namespace,
 ):
     mode = ExtractMode(args.mode)
+    metadata_logger.setLevel(log_levels[0])
+    all_purpose_logger.setLevel(log_levels[1])
 
     asyncio.run(
         extract_from_files(
@@ -205,6 +211,7 @@ def run_extract(args: argparse.Namespace):
         _extract_task,
         [
             (
+                [metadata_logger.level, all_purpose_logger.level],
                 args.output_path / f"{file.stem}"
                 if args.n_proc != 1
                 else args.output_path,

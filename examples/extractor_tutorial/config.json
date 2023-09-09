@@ -1,16 +1,16 @@
 {
-    "extractors_path": "./Extractors",
+    "extractors_path": "./examples/extractor_tutorial/extractors",
     "routes": [
         {
             "regexes": [".*cnn.*"],
             "extractors": [{
-                "name": "my_extractor",
+                "name": "cnn_extractor",
                 "since": "2009-01-01T00:00:00+00:00",
                 "to": "2022-01-01T00:00:00+00:00"
             }]
         },
         {
-            "regexes": ["edition.bbc.*"],
+            "regexes": [".*"],
             "extractors": [{
                 "name": "bbc_extractor",
                 "since": "2022-01-01T00:00:00+00:00"

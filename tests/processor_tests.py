@@ -130,7 +130,9 @@ class OutStreamerTests(unittest.IsolatedAsyncioTestCase):
         self.json_folder = Path(__file__).parent / "test_json"
         self.outstreamer_json = StreamerFileJSON(self.json_folder, 100, 100)
         self.outstreamer_html = StreamerFileHTML(self.html_folder, 5)
-        self.metadata = PipeMetadata(DomainRecord("", "", 0, 0))
+        self.metadata = PipeMetadata(
+            DomainRecord(filename="", offset=0, length=0, url="")
+        )
 
     async def test_simple_write(self):
         file = await self.outstreamer_json.stream(dict(), self.metadata)

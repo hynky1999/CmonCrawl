@@ -24,4 +24,4 @@ class CNNExtractor(BaseExtractor):
         }
 
 
-page_extractor = CNNExtractor()
+extractor = CNNExtractor()

@@ -30,4 +30,4 @@ class BBCExtractor(PageExtractor):
         )
 
 
-page_extractor = BBCExtractor()
+extractor = BBCExtractor()

@@ -11,7 +11,7 @@ from cmoncrawl.common.loggers import (
 
 def add_args(parser: argparse.ArgumentParser):
     parser.add_argument(
-        "--verbosity", "-v", action="count", default=0, help="Increase verbosity"
+        "--verbosity", "-v", choices=[0, 1, 2], type=int, default=1, help="Verbosity"
     )
     return parser
 

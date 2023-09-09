@@ -28,7 +28,7 @@ class Extract_from_files(unittest.IsolatedAsyncioTestCase):
         cfg_path = self.base_folder / "cfg.json"
         with open(cfg_path, "r") as f:
             js = json.load(f)
-            cfg: ExtractConfig = ExtractConfig.schema(many=False).load(js)
+            cfg: ExtractConfig = ExtractConfig.model_validate(js)
 
         self.assertEqual(cfg.routes[0].extractors[0].name, "test_extractor")
 
@@ -36,7 +36,7 @@ class Extract_from_files(unittest.IsolatedAsyncioTestCase):
         cfg_path = self.base_folder / "cfg.json"
         with open(cfg_path, "r") as f:
             js = json.load(f)
-            cfg: ExtractConfig = ExtractConfig.schema(many=False).load(js)
+            cfg: ExtractConfig = ExtractConfig.model_validate(js)
         results = await extract_from_files(
             config=cfg,
             files=[self.base_folder / "files" / "file.jsonl"],
@@ -61,7 +61,7 @@ class Extract_from_files(unittest.IsolatedAsyncioTestCase):
         cfg_path = self.base_folder / "cfg.json"
         with open(cfg_path, "r") as f:
             js = json.load(f)
-            cfg: ExtractConfig = ExtractConfig.schema(many=False).load(js)
+            cfg: ExtractConfig = ExtractConfig.model_validate(js)
         results = await extract_from_files(
             config=cfg,
             files=[self.base_folder / "files" / "file.html"],

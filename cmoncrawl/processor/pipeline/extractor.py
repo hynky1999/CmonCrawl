@@ -10,7 +10,6 @@ from cmoncrawl.processor.extraction.filters import (
     must_not_exist_filter,
 )
 from cmoncrawl.processor.extraction.utils import (
-    check_required,
     combine_dicts,
     extract_transform,
 )
@@ -189,7 +188,7 @@ class DomainRecordExtractor(BaseExtractor):
             else "unknown"
         )
         result_dict: Dict[str, Any] = {
-            "domain_record": metadata.domain_record.to_dict()  # type: ignore Wrong type
+            "domain_record": metadata.domain_record.model_dump(mode="json")
         }
 
         return result_dict
@@ -280,7 +279,7 @@ class PageExtractor(BaseExtractor):
 
         metadata.name = metadata.domain_record.url.replace("/", "_")[:80]
         extracted_dict["url"] = metadata.domain_record.url
-        extracted_dict["domain_record"] = metadata.domain_record.to_dict()
+        extracted_dict["domain_record"] = metadata.domain_record.model_dump(mode="json")
         return extracted_dict
 
     def custom_filter_raw(self, response: str, metadata: PipeMetadata) -> bool:

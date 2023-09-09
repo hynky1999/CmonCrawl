@@ -4,14 +4,14 @@ from pathlib import Path
 from typing import Any, Dict, List
 from urllib.parse import urlparse
 from dataclasses import dataclass, field
-from marshmallow import fields
+from pydantic import BaseModel, Field
+from typing import Optional, List
+from datetime import datetime
 
-from dataclasses_json import dataclass_json, config
+from pydantic import BaseModel
 
 
-@dataclass_json
-@dataclass
-class DomainRecord:
+class DomainRecord(BaseModel):
     """
     Domain record.
     """
@@ -22,9 +22,7 @@ class DomainRecord:
     length: int
     digest: str | None = None
     encoding: str | None = None
-    timestamp: datetime | None = field(
-        metadata=config(mm_field=fields.DateTime(format="iso")), default=None
-    )
+    timestamp: datetime | None = None
 
 
 @dataclass
@@ -71,36 +69,26 @@ class DomainCrawl:
 # Extractor config
 
 
-@dataclass_json
-@dataclass
-class ExtractorConfig:
+class ExtractorConfig(BaseModel):
     """
     Configuration for extractor.
     """
 
     name: str
-    since: datetime | None = field(
-        metadata=config(mm_field=fields.DateTime(format="iso")), default=None
-    )
-    to: datetime | None = field(
-        metadata=config(mm_field=fields.DateTime(format="iso")), default=None
-    )
+    since: Optional[datetime] = Field(None)
+    to: Optional[datetime] = Field(None)
 
 
-@dataclass_json
-@dataclass
-class RoutesConfig:
+class RoutesConfig(BaseModel):
     """
     Configuration for extractors.
     """
 
-    regexes: list[str] = field(default_factory=list)
-    extractors: list[ExtractorConfig] = field(default_factory=list)
+    regexes: List[str] = []
+    extractors: List[ExtractorConfig] = []
 
 
-@dataclass_json
-@dataclass
-class ExtractConfig:
+class ExtractConfig(BaseModel):
     """
     Configuration for run.
     """

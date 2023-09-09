@@ -9,6 +9,18 @@
             "console": "integratedTerminal",
             "args": ["download", "idnes.cz", "out", "html"]
         },
+        {
+            "name": "Extract",
+            "type": "python",
+            "request": "launch",
+            "module": "cmoncrawl.integrations.commands",
+            "console": "integratedTerminal",
+            "args": ["extract",
+            "examples/extractor_tutorial/config.json",
+            "out_extr",
+            "out/24_https:__www.idnes.cz_.html",
+            "html"],
+        },
 
     ]
 }

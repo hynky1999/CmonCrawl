@@ -113,8 +113,7 @@ async def extract(
             done, queue = await asyncio.wait(queue, return_when=asyncio.FIRST_COMPLETED)
             for task in done:
                 try:
-                    await task
-                    total_extracted += 1
+                    total_extracted += len(await task)
                 except KeyboardInterrupt as e:
                     break
 
