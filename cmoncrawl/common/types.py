@@ -11,6 +11,19 @@ from datetime import datetime
 from pydantic import BaseModel
 
 
+def parse_timestamp(v: Optional[Any]) -> Optional[datetime]:
+    if v is None:
+        return None
+
+    if isinstance(v, datetime):
+        return v
+
+    if isinstance(v, str):
+        return datetime.fromisoformat(v)
+
+    raise ValueError(f"Invalid timestamp: {v}")
+
+
 class DomainRecord(BaseModel):
     """
     Domain record.
@@ -26,9 +39,7 @@ class DomainRecord(BaseModel):
 
     @validator("timestamp", pre=True)
     def parse_timestamp(cls, v: Optional[str]) -> Optional[datetime]:
-        if v is None:
-            return None
-        return datetime.fromisoformat(v)
+        return parse_timestamp(v)
 
 
 @dataclass
@@ -86,9 +97,7 @@ class ExtractorConfig(BaseModel):
 
     @validator("since", "to", pre=True)
     def parse_timestamp(cls, v: Optional[str]) -> Optional[datetime]:
-        if v is None:
-            return None
-        return datetime.fromisoformat(v)
+        return parse_timestamp(v)
 
 
 class RoutesConfig(BaseModel):

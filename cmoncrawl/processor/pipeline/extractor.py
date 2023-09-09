@@ -277,7 +277,11 @@ class PageExtractor(BaseExtractor):
         ):
             return None
 
-        metadata.name = metadata.domain_record.url.replace("/", "_")[:80]
+        metadata.name = (
+            metadata.domain_record.url.replace("/", "_")[:80]
+            if metadata.domain_record.url is not None
+            else "unknown"
+        )
         extracted_dict["url"] = metadata.domain_record.url
         extracted_dict["domain_record"] = metadata.domain_record.model_dump(mode="json")
         return extracted_dict
@@ -309,6 +313,7 @@ class PageExtractor(BaseExtractor):
 
         if (
             self.filter_allowed_domain_prefixes is not None
+            and isinstance(metadata.url_parsed.netloc, str)
             and metadata.url_parsed.netloc.split(".")[0]
             not in self.filter_allowed_domain_prefixes
         ):

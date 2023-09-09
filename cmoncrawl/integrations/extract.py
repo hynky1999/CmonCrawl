@@ -5,9 +5,8 @@ import multiprocessing
 from pathlib import Path
 
 from tqdm import tqdm
+from cmoncrawl.common.loggers import setup_loggers
 from cmoncrawl.common.types import ExtractConfig
-
-# from cmoncrawl.common.loggers import metadata_logger, all_purpose_logger
 
 from cmoncrawl.processor.pipeline.downloader import DownloaderDummy, AsyncDownloader
 from cmoncrawl.processor.pipeline.pipeline import ProcessorPipeline
@@ -185,8 +184,7 @@ def _extract_task(
     args: argparse.Namespace,
 ):
     mode = ExtractMode(args.mode)
-    # metadata_logger.setLevel(log_levels[0])
-    # all_purpose_logger.setLevel(log_levels[1])
+    setup_loggers(args.verbosity)
 
     asyncio.run(
         extract_from_files(

@@ -5,7 +5,7 @@
             "name": "Download",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceRoot}/cmoncrawl/integrations/commands.py",
+            "module": "cmoncrawl.integrations.commands",
             "console": "integratedTerminal",
             "args": ["download", "idnes.cz", "out", "html"]
         },
@@ -18,8 +18,8 @@
             "args": ["extract",
             "examples/extractor_tutorial/config.json",
             "out_extr",
-            "33_http:__rig.rd.labs.bbc_offices-asynchronous-large-groups.html",
-            "html"],
+            "out_html/1_file.jsonl",
+            "record"],
             "justMyCode": false
         },
 

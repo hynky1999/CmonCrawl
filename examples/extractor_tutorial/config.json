@@ -2,15 +2,15 @@
     "extractors_path": "./examples/extractor_tutorial/extractors",
     "routes": [
         {
-            "regexes": [".*cnn.*"],
+            "regexes": [".*idnes.cz.*"],
             "extractors": [{
-                "name": "cnn_extractor",
+                "name": "idnes_extractor",
                 "since": "2009-01-01",
-                "to": "2022-01-01"
+                "to": "2025-01-01"
             }]
         },
         {
-            "regexes": ["edition.bbc.*"],
+            "regexes": [".*bbc\\.com.*"],
             "extractors": [{
                 "name": "bbc_extractor",
                 "since": "2022-01-01"

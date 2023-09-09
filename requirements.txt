@@ -1,8 +1,7 @@
 aiofiles==0.8.0
 aiohttp==3.8.5
 beautifulsoup4==4.11.1
-dataclasses-json==0.5.7
-pydantic
+pydantic==2.3.0
 stomp.py==8.0.1
 tqdm==4.65.0
 warcio==1.7.4

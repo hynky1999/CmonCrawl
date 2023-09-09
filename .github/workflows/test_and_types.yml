@@ -22,7 +22,7 @@ jobs:
           cache: "pip"
 
       - name: Install dependencies
-        run: pip install -r requirements.txt  # Replace with your dependencies installation command
+        run: pip install -r requirements.test.txt  # Replace with your dependencies installation command
 
       - name: Run tests
         run: python -m unittest discover -s tests -p "*_tests.py"  # Replace with your test command
@@ -40,7 +40,7 @@ jobs:
           cache: "pip"
 
       - name: Install dependencies
-        run: pip install -r requirements.txt && pip install -r requirements-test.txt
+        run: pip install -r requirements.dev.txt
 
       - name: Lint with pyright
         run: pyright

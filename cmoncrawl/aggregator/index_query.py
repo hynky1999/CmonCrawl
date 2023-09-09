@@ -155,7 +155,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
     ):
         def should_retry(retry: int, reason: str, status: int, **args: Any):
             # if logger at least info then report every retry otherwise report every 10 retries
-            if all_purpose_logger.level <= logging.INFO or retry % 10 == 0:
+            if all_purpose_logger.level <= logging.DEBUG or retry % 10 == 0:
                 all_purpose_logger.error(
                     f"Failed to retrieve page of {domain} from {cdx_server} with reason {status}: {reason} retry: {retry + 1}/{max_retry} add_info: {args}"
                 )
