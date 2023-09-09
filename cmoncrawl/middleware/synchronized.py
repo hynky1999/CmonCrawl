@@ -68,6 +68,7 @@ async def _extract_task(
         metadata_logger.error(
             f"Failed to process {domain_record.url} with {e}",
             extra={"domain_record": domain_record},
+            exc_info=e,
         )
     return result
 

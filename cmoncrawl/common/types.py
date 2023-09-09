@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Any, Dict, List
 from urllib.parse import urlparse
 from dataclasses import dataclass, field
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validator
 from typing import Optional, List
 from datetime import datetime
 
@@ -22,7 +22,13 @@ class DomainRecord(BaseModel):
     length: int
     digest: str | None = None
     encoding: str | None = None
-    timestamp: datetime | None = None
+    timestamp: Optional[datetime] = Field(None)
+
+    @validator("timestamp", pre=True)
+    def parse_timestamp(cls, v: Optional[str]) -> Optional[datetime]:
+        if v is None:
+            return None
+        return datetime.fromisoformat(v)
 
 
 @dataclass
@@ -78,6 +84,12 @@ class ExtractorConfig(BaseModel):
     since: Optional[datetime] = Field(None)
     to: Optional[datetime] = Field(None)
 
+    @validator("since", "to", pre=True)
+    def parse_timestamp(cls, v: Optional[str]) -> Optional[datetime]:
+        if v is None:
+            return None
+        return datetime.fromisoformat(v)
+
 
 class RoutesConfig(BaseModel):
     """
@@ -106,3 +118,6 @@ class MatchType(Enum):
     PREFIX = "prefix"
     HOST = "host"
     DOMAIN = "domain"
+
+    def __str__(self):
+        return self.value

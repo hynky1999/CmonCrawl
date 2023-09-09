@@ -18,8 +18,9 @@
             "args": ["extract",
             "examples/extractor_tutorial/config.json",
             "out_extr",
-            "out/24_https:__www.idnes.cz_.html",
+            "33_http:__rig.rd.labs.bbc_offices-asynchronous-large-groups.html",
             "html"],
+            "justMyCode": false
         },
 
     ]

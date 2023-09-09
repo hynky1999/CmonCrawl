@@ -1,4 +1,3 @@
-from pathlib import Path
 from typing import Any, Dict, List
 from cmoncrawl.processor.pipeline.downloader import IDownloader
 from cmoncrawl.processor.pipeline.streamer import IStreamer

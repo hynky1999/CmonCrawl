@@ -94,7 +94,7 @@ def add_args(subparser: Any):
     parser.add_argument(
         "--match_type",
         type=MatchType,
-        choices=[e.value for e in MatchType],
+        choices=list(MatchType),
         help="Match type for the url, see cdx-api for more info",
     )
     parser.add_argument(
