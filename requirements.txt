@@ -5,3 +5,5 @@ pydantic==2.3.0
 stomp.py==8.0.1
 tqdm==4.65.0
 warcio==1.7.4
+aiocsv==1.2.4
+aioboto3==11.3.0

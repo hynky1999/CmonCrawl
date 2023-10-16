@@ -1,20 +1,89 @@
 import logging
 import sys
 from pathlib import Path
+import textwrap
+from unittest.mock import patch
+
+from cmoncrawl.aggregator.athena_query import prepare_athena_sql_query
+from cmoncrawl.aggregator.utils.athena_query_maker import (
+    crawl_query,
+    date_to_sql_format,
+    prepare_athena_sql_query,
+)
 
 sys.path.append(Path("App").absolute().as_posix())
 
 from datetime import datetime
 from typing import List
-from cmoncrawl.aggregator.utils.helpers import unify_url_id
+from cmoncrawl.aggregator.utils.helpers import get_all_CC_indexes, unify_url_id
 from cmoncrawl.common.types import DomainRecord, MatchType
 from cmoncrawl.aggregator.index_query import IndexAggregator
 import unittest
+from moto import mock_s3, mock_athena
+from cmoncrawl.aggregator.athena_query import AthenaAggregator, DomainRecord, MatchType
+from datetime import datetime
 
 
 from cmoncrawl.common.loggers import all_purpose_logger
 
 all_purpose_logger.setLevel(logging.DEBUG)
+from collections.abc import Awaitable, Callable, Iterator
+from dataclasses import dataclass
+from typing import TypeVar
+
+import aiobotocore
+import aiobotocore.endpoint
+import botocore
+
+
+T = TypeVar("T")
+R = TypeVar("R")
+
+
+@dataclass
+class _PatchedAWSReponseContent:
+    """Patched version of `botocore.awsrequest.AWSResponse.content`"""
+
+    content: bytes | Awaitable[bytes]
+
+    def __await__(self) -> Iterator[bytes]:
+        async def _generate_async() -> bytes:
+            if isinstance(self.content, Awaitable):
+                return await self.content
+            else:
+                return self.content
+
+        return _generate_async().__await__()
+
+    def decode(self, encoding: str) -> str:
+        assert isinstance(self.content, bytes)
+        return self.content.decode(encoding)
+
+
+class PatchedAWSResponse:
+    """Patched version of `botocore.awsrequest.AWSResponse`"""
+
+    def __init__(self, response: botocore.awsrequest.AWSResponse) -> None:
+        self._response = response
+        self.status_code = response.status_code
+        self.content = _PatchedAWSReponseContent(response.content)
+        self.raw = response.raw
+        if not hasattr(self.raw, "raw_headers"):
+            self.raw.raw_headers = {}
+
+
+def _factory(
+    original: Callable[[botocore.awsrequest.AWSResponse, T], Awaitable[R]]
+) -> Callable[[botocore.awsrequest.AWSResponse, T], Awaitable[R]]:
+    async def patched_convert_to_response_dict(
+        http_response: botocore.awsrequest.AWSResponse, operation_model: T
+    ) -> R:
+        return await original(PatchedAWSResponse(http_response), operation_model)  # type: ignore[arg-type]
+
+    return patched_convert_to_response_dict
+
+
+aiobotocore.endpoint.convert_to_response_dict = _factory(aiobotocore.endpoint.convert_to_response_dict)  # type: ignore[assignment]
 
 
 class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
@@ -48,9 +117,7 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(size, 5)
 
     async def test_indexer_all_CC(self):
-        indexes = await self.di.get_all_CC_indexes(
-            self.client, self.di.cc_indexes_server
-        )
+        indexes = await get_all_CC_indexes(self.client, self.di.cc_indexes_server)
         indexes = sorted(indexes)
         indexes = indexes[
             : indexes.index("https://index.commoncrawl.org/CC-MAIN-2022-27-index") + 1
@@ -155,6 +222,185 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
         ]
         for i, url in enumerate(urls):
             self.assertEquals(unify_url_id(url), urls_ids[i])
+
+
+class TestAthenaQueryCreation(unittest.IsolatedAsyncioTestCase):
+    async def asyncSetUp(self) -> None:
+        self.CC_SERVERS = [
+            "https://index.commoncrawl.org/CC-MAIN-2022-05-index",
+            "https://index.commoncrawl.org/CC-MAIN-2021-09-index",
+            "https://index.commoncrawl.org/CC-MAIN-2020-50-index",
+        ]
+
+    def test_prepare_athena_sql_query_multiple_urls(self):
+        query = prepare_athena_sql_query(
+            ["seznam.cz", "idnes.cz"],
+            datetime(2019, 1, 1),
+            datetime(2023, 12, 31),
+            self.CC_SERVERS,
+            match_type=MatchType.EXACT,
+        )
+        self.assertEqual(
+            query,
+            textwrap.dedent(
+                """\
+            SELECT cc.url,
+                    cc.fetch_time,
+                    cc.warc_filename,
+                    cc.warc_record_offset,
+                    cc.warc_record_length
+            FROM "commoncrawl"."ccindex" AS cc
+            WHERE (cc.fetch_time BETWEEN CAST('2019-01-01 00:00:00' AS TIMESTAMP) AND CAST('2023-12-31 00:00:00' AS TIMESTAMP)) AND (cc.crawl = 'CC-MAIN-2022-05' OR cc.crawl = 'CC-MAIN-2021-09' OR cc.crawl = 'CC-MAIN-2020-50') AND (cc.fetch_status = 200) AND (cc.content_mime_detected LIKE 'text/html%') AND (cc.subset = 'warc') AND ((cc.url = 'seznam.cz') OR (cc.url = 'idnes.cz'))
+            ORDER BY url;"""
+            ),
+        )
+
+    def test_prefix_match_type(self):
+        url = "arxiv.org/abs/1905.00075"
+        for prefix in ["http://", "https://", "https://www.", "", "www."]:
+            prefixed_url = f"{prefix}{url}"
+            expected_sql = "(cc.url_host_name = 'arxiv.org' OR cc.url_host_name = 'www.arxiv.org') AND (cc.url_path = '/abs/1905.00075' OR cc.url_path LIKE '/abs/1905.00075/%')"
+            self.assertEqual(
+                url_query_based_on_match_type(MatchType.PREFIX, prefixed_url),
+                expected_sql,
+            )
+
+    def test_host_match_type(self):
+        url = "arxiv.org/abs/1905.00075"
+        for prefix in ["http://", "https://", "https://www.", "", "www."]:
+            prefixed_url = f"{prefix}{url}"
+            expected_sql = (
+                "cc.url_host_name = 'arxiv.org' OR cc.url_host_name = 'www.arxiv.org'"
+            )
+            self.assertEqual(
+                url_query_based_on_match_type(MatchType.HOST, prefixed_url),
+                expected_sql,
+            )
+
+    def test_domain_match_type(self):
+        url = "arxiv.org/abs/1905.00075"
+        for prefix in ["http://", "https://", "https://www.", "", "www."]:
+            prefixed_url = f"{prefix}{url}"
+            expected_sql = (
+                "cc.url_host_name LIKE '%.arxiv.org' OR cc.url_host_name = 'arxiv.org'"
+            )
+            self.assertEqual(
+                url_query_based_on_match_type(MatchType.DOMAIN, prefixed_url),
+                expected_sql,
+            )
+
+    def test_exact_match_type(self):
+        url = "www.arxiv.org/abs/1905.00075"
+        expected_sql = "cc.url = 'www.arxiv.org/abs/1905.00075'"
+        for prefix in ["http://", "https://", "https://www.", "", "www."]:
+            prefixed_url = f"{prefix}{url}"
+            expected_sql = f"cc.url = '{prefixed_url}'"
+            self.assertEqual(
+                url_query_based_on_match_type(MatchType.EXACT, prefixed_url),
+                expected_sql,
+            )
+
+    def test_date_range_query(self):
+        self.assertEqual(url_query_date_range(None, None), "")
+
+    def test_both_dates_present(self):
+        since = datetime(2020, 1, 1)
+        to = datetime(2020, 12, 31)
+        expected = f"cc.fetch_time BETWEEN CAST('{date_to_sql_format(since)}' AS TIMESTAMP) AND CAST('{date_to_sql_format(to)}' AS TIMESTAMP)"
+        self.assertEqual(url_query_date_range(since, to), expected)
+
+    def test_only_to_date_present(self):
+        to = datetime(2020, 12, 31)
+        expected = f"cc.fetch_time <= CAST('{date_to_sql_format(to)}' AS TIMESTAMP)"
+        self.assertEqual(url_query_date_range(None, to), expected)
+
+    def test_only_since_date_present(self):
+        since = datetime(2020, 1, 1)
+        expected = f"cc.fetch_time >= CAST('{date_to_sql_format(since)}' AS TIMESTAMP)"
+        self.assertEqual(url_query_date_range(since, None), expected)
+
+    def test_crawl_query_no_date_filter(self):
+        expected = "cc.crawl = 'CC-MAIN-2022-05' OR cc.crawl = 'CC-MAIN-2021-09' OR cc.crawl = 'CC-MAIN-2020-50'"
+        self.assertEqual(crawl_query(self.CC_SERVERS, None, None), expected)
+
+    def test_crawl_query_with_since_date_filter(self):
+        # The crawl query only filters based on YEAR
+        since = datetime(2021, 12, 12)
+        expected = "cc.crawl = 'CC-MAIN-2022-05' OR cc.crawl = 'CC-MAIN-2021-09'"
+        self.assertEqual(crawl_query(self.CC_SERVERS, since, None), expected)
+
+    def test_crawl_query_with_to_date_filter(self):
+        to = datetime(2021, 12, 31)
+        expected = "cc.crawl = 'CC-MAIN-2021-09' OR cc.crawl = 'CC-MAIN-2020-50'"
+        self.assertEqual(crawl_query(self.CC_SERVERS, None, to), expected)
+
+    def test_crawl_query_with_since_and_to_date_filter(self):
+        since = datetime(2021, 1, 1)
+        to = datetime(2021, 12, 31)
+        expected = "cc.crawl = 'CC-MAIN-2021-09'"
+        self.assertEqual(crawl_query(self.CC_SERVERS, since, to), expected)
+
+
+from cmoncrawl.aggregator.athena_query import AthenaAggregator, DomainRecord, MatchType
+from datetime import datetime
+
+# class TestAthenaAggregator(unittest.IsolatedAsyncioTestCase):
+
+#     def setUp(self) -> None:
+#         self.mock_s3 = mock_s3()
+#         self.mock_s3.start()
+#         self.mock_athena = mock_athena()
+#         self.mock_athena.start()
+
+#     async def test_athena_aggregator_aopen(self):
+#         expected_CC_indexes = ["https://index.commoncrawl.org/CC-MAIN-2022-05-index"]
+#         with patch("cmoncrawl.aggregator.athena_query.get_all_CC_indexes") as mock_get_all_CC_indexes:
+#             mock_get_all_CC_indexes.return_value = expected_CC_indexes
+#             domains = ["test.com"]
+#             aggregator = AthenaAggregator(domains, bucket_name="test-bucket")
+#             await aggregator.aopen()
+
+#         self.assertEqual(aggregator.cc_servers, expected_CC_indexes)
+#         # Check that s3 bucket was created
+#         async with aggregator.aws_client.client("s3") as s3_client:
+#             response = await s3_client.list_buckets()
+#             self.assertEqual(response["Buckets"][0]["Name"], "test-bucket")
+
+#         # Check that Athena table was created
+#         async with aggregator.aws_client.client("athena") as athena_client:
+#             queries = await athena_client.list_query_executions()
+#             # We should have one query for creation and one for repair
+#             self.assertEqual(len(queries["QueryExecutionIds"]), 2)
+
+#         # Check that the s3 bucket is cleaned up
+#         async with aggregator.aws_client.client("s3") as s3_client:
+#             response = await s3_client.list_objects(Bucket="test-bucket")
+#             # No objects should be present
+#             self.assertNotIn("Contents", response)
+
+#     async def test_athena_aggregator_aclose(self):
+#         aggregator = AthenaAggregator(["test.com"])
+#         bucket_name = aggregator.bucket_name
+#         expected_CC_indexes = ["https://index.commoncrawl.org/CC-MAIN-2022-05-index"]
+#         # Open the aggregator
+#         with patch("cmoncrawl.aggregator.athena_query.get_all_CC_indexes") as mock_get_all_CC_indexes:
+#             mock_get_all_CC_indexes.return_value = expected_CC_indexes
+#             await aggregator.aopen()
+
+#         # Add some objects to the bucket
+#         async with aggregator.aws_client.client("s3") as s3_client:
+#             await s3_client.put_object(Bucket=bucket_name, Key="test1")
+#             await s3_client.put_object(Bucket=bucket_name, Key="test2")
+
+#         # Close the aggregator
+#         await aggregator.aclose()
+#         # Check that the bucket was deleted
+#         async with aggregator.aws_client.client("s3") as s3_client:
+#             response = await s3_client.list_buckets()
+#             self.assertNotIn("test-bucket", response["Buckets"])
+
+
+# TODO: Add test for athena_aggregator iterator
 
 
 if __name__ == "__main__":

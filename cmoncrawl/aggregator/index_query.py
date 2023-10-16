@@ -1,17 +1,13 @@
 from __future__ import annotations
 from collections import deque
 from datetime import datetime
-import logging
 import re
+from cmoncrawl.aggregator.utils.helpers import get_all_CC_indexes, retrieve
 
-from cmoncrawl.aggregator.utils import ndjson
 from types import TracebackType
 from typing import (
-    Any,
     AsyncIterable,
     AsyncIterator,
-    Awaitable,
-    Callable,
     Deque,
     List,
     Dict,
@@ -28,16 +24,9 @@ from cmoncrawl.common.types import (
 )
 
 from aiohttp import (
-    ClientError,
-    ClientResponse,
     ClientSession,
-    ContentTypeError,
-    ServerConnectionError,
 )
 import asyncio
-import random
-
-ALLOWED_ERR_FOR_RETRIES = [500, 502, 503, 504]
 
 
 class IndexAggregator(AsyncIterable[DomainRecord]):
@@ -98,7 +87,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         await self.client.__aenter__()
 
         if len(self.cc_servers) == 0:
-            self.cc_servers = await self.get_all_CC_indexes(
+            self.cc_servers = await get_all_CC_indexes(
                 self.client, self.cc_indexes_server
             )
         return self
@@ -142,75 +131,6 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         return await self.aclose(exc_type=exc_type, exc_val=exc_val, exc_tb=exc_tb)
 
     @staticmethod
-    async def __retrieve(
-        client: ClientSession,
-        domain: str,
-        cdx_server: str,
-        params: Dict[str, Any],
-        content_type: str,
-        max_retry: int,
-        sleep_step: int,
-        allowed_status_errors: List[int] = ALLOWED_ERR_FOR_RETRIES,
-        **args: Any,
-    ):
-        def should_retry(retry: int, reason: str, status: int, **args: Any):
-            # if logger at least info then report every retry otherwise report every 10 retries
-            if all_purpose_logger.level <= logging.DEBUG or retry % 10 == 0:
-                all_purpose_logger.error(
-                    f"Failed to retrieve page of {domain} from {cdx_server} with reason {status}: {reason} retry: {retry + 1}/{max_retry} add_info: {args}"
-                )
-            if status not in allowed_status_errors:
-                return False
-
-            return True
-
-        status = 0
-        content = None
-        reason: str | None = None
-        decode: Callable[[ClientResponse], Awaitable[Any]]
-
-        if content_type == "text/x-ndjson":
-            decode = lambda response: response.json(
-                content_type=content_type, loads=ndjson.Decoder().decode
-            )
-        elif content_type == "application/json":
-            decode = lambda response: response.json(content_type=content_type)
-        else:
-            raise ValueError(f"Unknown content type: {content_type}")
-
-        for retry in range(max_retry):
-            try:
-                all_purpose_logger.debug(
-                    f"Sending request to {cdx_server} with params: {params}, retry: {retry + 1}/{max_retry}"
-                )
-                async with client.get(cdx_server, params=params) as response:
-                    status = response.status
-                    if not response.ok:
-                        reason = str(response.reason) if response.reason else "Unknown"  # type: ignore
-                        if not should_retry(retry, reason, status, **args):
-                            break
-                    else:
-                        content = await decode(response)
-                        all_purpose_logger.info(
-                            f"Successfully retrieved page of {domain} from {cdx_server} add_info: {args}"
-                        )
-                        break
-
-            except (
-                ClientError,
-                TimeoutError,
-                ServerConnectionError,
-                ContentTypeError,
-            ) as e:
-                reason = f"{type(e)} {str(e)}"
-                status = 500
-                if not should_retry(retry, reason, status, **args):
-                    break
-
-            await asyncio.sleep(random.randint(0, (retry + 1) * sleep_step))
-        return RetrieveResponse(status, content, reason)
-
-    @staticmethod
     async def get_number_of_pages(
         client: ClientSession,
         cdx_server: str,
@@ -231,7 +151,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
 
         if page_size is not None:
             params["page_size"] = page_size
-        response = await IndexAggregator.__retrieve(
+        response = await retrieve(
             client,
             domain,
             cdx_server,
@@ -270,7 +190,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         }
         if match_type is not None:
             params["matchType"] = match_type.value
-        reponse = await IndexAggregator.__retrieve(
+        reponse = await retrieve(
             client,
             domain,
             cdx_server,
@@ -294,28 +214,6 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
                 for js in reponse.content
             ]
         return reponse
-
-    @staticmethod
-    async def get_all_CC_indexes(client: ClientSession, cdx_server: str) -> List[str]:
-        """
-        Get all CC index servers from a given CDX server
-        """
-        response = await IndexAggregator.__retrieve(
-            client=client,
-            cdx_server=cdx_server,
-            domain=cdx_server,
-            params={},
-            content_type="application/json",
-            max_retry=10,
-            sleep_step=1,
-        )
-        if response.content is None:
-            all_purpose_logger.error(
-                f"Failed to get CC servers from {cdx_server} after 10 attempts"
-            )
-            return []
-        CC_servers = [js["cdx-api"] for js in response.content]
-        return CC_servers
 
     class IndexAggregatorIterator(AsyncIterator[DomainRecord]):
         def __init__(
