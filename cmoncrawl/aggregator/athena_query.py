@@ -66,6 +66,38 @@ async def run_athena_query(
 
 
 class AthenaAggregator(AsyncIterable[DomainRecord]):
+    """
+    This class is responsible for aggregating the index files from commoncrawl using AWS Athena.
+    It is an async context manager which can then be used as an async iterator
+    which yields DomainRecord objects, found in the index files of commoncrawl.
+
+    It uses the AWS Athena to query from s3 the index files of commoncrawl.
+
+    Args:
+        domains (List[str]): A list of domains to search for.
+        cc_indexes_server (str, optional): The commoncrawl index server to use. Defaults to "http://index.commoncrawl.org/collinfo.json".
+        match_type (MatchType, optional): Match type for cdx-api. Defaults to MatchType.EXACT.
+        cc_servers (List[str], optional): A list of commoncrawl servers to use. If [], then indexes will be retrieved from the cc_indexes_server. Defaults to [].
+        since (datetime, optional): The start date for the search. Defaults to datetime.min.
+        to (datetime, optional): The end date for the search. Defaults to datetime.max.
+        limit (int, optional): The maximum number of results to return. Defaults to None.
+        prefetch_size (int, optional): The number of indexes to fetch concurrently. Defaults to 3.
+        max_retry (int, optional): The maximum number of retries for a single request. Defaults to 5.
+        extra_sql_where_clause (str, optional): Additional SQL WHERE clause to append to the Athena query. Defaults to None.
+        batch_size (int): How many crawls to query at once. Defaults to 1. If <= 0, all crawls will be queried at once.
+        aws_profile (str, optional): The AWS profile to use for Athena and S3. Defaults to "default".
+        bucket_name (str, optional): The S3 bucket to use for Athena query results. If None, a new bucket will be created. Defaults to None.
+        catalog_name (str, optional): The Athena catalog to use. Defaults to "AwsDataCatalog".
+        database_name (str, optional): The Athena database to use. Defaults to "commoncrawl".
+        table_name (str, optional): The Athena table to use. Defaults to "ccindex".
+
+    Examples:
+        >>> async with AthenaAggregator(["example.com"]) as aggregator:
+        >>>     async for domain_record in aggregator:
+        >>>         print(domain_record)
+
+    """
+
     def __init__(
         self,
         domains: List[str],
@@ -78,6 +110,7 @@ class AthenaAggregator(AsyncIterable[DomainRecord]):
         prefetch_size: int = 3,
         max_retry: int = 5,
         extra_sql_where_clause: str | None = None,
+        batch_size: int = 1,
         aws_profile: str = "default",
         bucket_name: Optional[str] = None,
         catalog_name: str = "AwsDataCatalog",
@@ -92,10 +125,12 @@ class AthenaAggregator(AsyncIterable[DomainRecord]):
         self.to = to
         self.limit = limit
         self.max_retry = max_retry
-        self.aws_profile = aws_profile
         self.extra_sql_where_clause = extra_sql_where_clause
         self.prefetch_size = prefetch_size
+        self.batch_size = batch_size
 
+        # AWS
+        self.aws_profile = aws_profile
         self.catalog_name = catalog_name
         self.database_name = database_name
         self.table_name = table_name
@@ -107,6 +142,14 @@ class AthenaAggregator(AsyncIterable[DomainRecord]):
             all_purpose_logger.info(f"Using bucket {self.bucket_name}")
         else:
             self.bucket_name = bucket_name
+
+        self.validate_args()
+
+    def validate_args(self):
+        if self.limit and self.batch_size <= 0:
+            raise ValueError(
+                "If you want to limit the number of results, batch_size must be > 0, to avoid overfetching"
+            )
 
     async def __aenter__(self) -> AthenaAggregator:
         return await self.aopen()
@@ -170,6 +213,7 @@ class AthenaAggregator(AsyncIterable[DomainRecord]):
             since: Optional[datetime],
             to: Optional[datetime],
             limit: int | None,
+            batch_size: int,
             extra_sql_where_clause: str | None,
             bucket_name: str,
             database_name: str,
@@ -178,7 +222,9 @@ class AthenaAggregator(AsyncIterable[DomainRecord]):
             self.__aws_client = aws_client
             self.__since = since
             self.__to = to
-            self.__crawls_remaining: List[str] = self.init_crawls_queue(CC_files)
+            self.__crawls_remaining: List[List[str]] = self.init_crawls_queue(
+                CC_files, batch_size
+            )
             self.__domain_records: Deque[DomainRecord] = deque()
             self.__limit = limit
             self.__match_type = match_type
@@ -191,14 +237,21 @@ class AthenaAggregator(AsyncIterable[DomainRecord]):
             self.__prefetch_queue: Set[asyncio.Task[List[DomainRecord]]] = set()
             self.__opt_prefetch_size = 5
 
-        def init_crawls_queue(self, CC_files: List[str]) -> List[str]:
+        def init_crawls_queue(
+            self, CC_files: List[str], batch_size: int
+        ) -> List[List[str]]:
             allowed_crawls = [
                 crawl_url_to_name(crawl)
                 for crawl in CC_files
                 if (self.__since is None or crawl_to_year(crawl) >= self.__since.year)
                 and (self.__to is None or crawl_to_year(crawl) <= self.__to.year)
             ]
-            return allowed_crawls
+            if batch_size <= 0:
+                return [allowed_crawls]
+            return [
+                allowed_crawls[i : i + batch_size]
+                for i in range(0, len(allowed_crawls), batch_size)
+            ]
 
         async def download_results(self, key: str) -> str:
             with tempfile.NamedTemporaryFile(suffix=".csv", delete=False) as temp_file:
@@ -263,24 +316,29 @@ class AthenaAggregator(AsyncIterable[DomainRecord]):
                     return None
 
         # TODO Tenacity for retries
-        async def __fetch_next_crawl(self, crawl: str):
+        async def __fetch_next_crawl_batch(self, crawl_batch: List[str]):
             query = prepare_athena_sql_query(
                 self.__domains,
                 self.__since,
                 self.__to,
-                [crawl],
+                crawl_batch,
                 self.__database_name,
                 self.__table_name,
                 self.__match_type,
                 self.__extra_sql_where_clause,
             )
             query_hash = hashlib.sha256(query.encode("utf-8")).hexdigest()
-            query_id = f"{crawl}-{query_hash}"
+            crawl_batch_id = (
+                crawl_batch[0]
+                if len(crawl_batch) == 1
+                else f"{crawl_batch[0]}...{crawl_batch[-1]}"
+            )
+            query_id = f"{crawl_batch_id}-{query_hash}"
             crawl_s3_key = await self.is_crawl_cached(query_id)
             if crawl_s3_key is not None:
-                all_purpose_logger.info(f"Using cached crawl {crawl}")
+                all_purpose_logger.info(f"Using cached crawl batch {crawl_batch}")
             else:
-                all_purpose_logger.info(f"Querying for crawl {crawl}")
+                all_purpose_logger.info(f"Querying for crawl batch {crawl_batch}")
                 crawl_s3_key = await self.await_athena_query(query, query_id)
 
             domain_records: List[DomainRecord] = []
@@ -303,7 +361,7 @@ class AthenaAggregator(AsyncIterable[DomainRecord]):
             ):
                 next_crawl = self.__crawls_remaining.pop(0)
                 self.__prefetch_queue.add(
-                    asyncio.create_task(self.__fetch_next_crawl(next_crawl))
+                    asyncio.create_task(self.__fetch_next_crawl_batch(next_crawl))
                 )
 
             while len(self.__prefetch_queue) > 0 and len(self.__domain_records) == 0:
@@ -346,6 +404,7 @@ class AthenaAggregator(AsyncIterable[DomainRecord]):
             self.since,
             self.to,
             self.limit,
+            self.batch_size,
             self.extra_sql_where_clause,
             self.bucket_name,
             self.database_name,
