@@ -151,10 +151,10 @@ class MatchType(Enum):
     Query: example.com/abc
 
     Macthes:
-    EXACT: (www\.)?example.com/abc
-    PREFIX: (www\.)?example.com/abc(/.*)?
-    HOST: (www\.)?example.com(/.*)?
-    DOMAIN: (.*\.)?example.com(/.*)?
+    EXACT: (www.)?example.com/abc
+    PREFIX: (www.)?example.com/abc(/.*)?
+    HOST: (www.)?example.com(/.*)?
+    DOMAIN: (.*.)?example.com(/.*)?
     """
 
     EXACT = "exact"
