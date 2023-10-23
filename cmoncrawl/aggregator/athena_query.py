@@ -33,6 +33,17 @@ QUERIES_SUBFOLDER = "queries"
 QUERIES_TMP_SUBFOLDER = "queries_tmp"
 
 
+async def remove_bucket_prefix(session: aioboto3.Session, prefix: str, folder: str):
+    # remove all query results
+    async with session.client("s3") as s3:
+        paginator = s3.get_paginator("list_objects_v2")
+        async for result in paginator.paginate(Bucket=prefix, Prefix=folder):
+            if "Contents" not in result:
+                continue
+            for file in result["Contents"]:
+                await s3.delete_object(Bucket=prefix, Key=file["Key"])
+
+
 async def run_athena_query(
     session: aioboto3.Session, query_kwargs: dict[str, Any]
 ) -> str:
@@ -169,9 +180,18 @@ class AthenaAggregator(AsyncIterable[DomainRecord]):
         # create bucket if not exists
         async with self.aws_client.client("s3") as s3:
             # Check if bucket exists
-            bucket_response = await s3.head_bucket(Bucket=self.bucket_name)
-            if bucket_response["ResponseMetadata"]["HTTPStatusCode"] != 200:
+            bucket = None
+            try:
+                bucket = await s3.head_bucket(Bucket=self.bucket_name)
+            except s3.exceptions.ClientError:
+                pass
+
+            if bucket is None:
                 await s3.create_bucket(Bucket=self.bucket_name)
+                all_purpose_logger.info(f"Created bucket {self.bucket_name}")
+            else:
+                all_purpose_logger.info(f"Using bucket {self.bucket_name}")
+
         # create database and table if not exists
         if not await commoncrawl_database_and_table_exists(
             self.aws_client, self.catalog_name, self.database_name, self.table_name
@@ -195,12 +215,7 @@ class AthenaAggregator(AsyncIterable[DomainRecord]):
 
         all_purpose_logger.info(f"Deleting bucket {self.bucket_name}")
         async with self.aws_client.client("s3") as s3:
-            # Delete the s3 bucket
-            paginator = s3.get_paginator("list_objects_v2")
-            async for result in paginator.paginate(Bucket=self.bucket_name):
-                for file in result["Contents"]:
-                    await s3.delete_object(Bucket=self.bucket_name, Key=file["Key"])
-
+            await remove_bucket_prefix(self.aws_client, self.bucket_name, "")
             await s3.delete_bucket(Bucket=self.bucket_name)
 
     class AthenaAggregatorIterator(AsyncIterator[DomainRecord]):
@@ -500,8 +515,4 @@ async def create_commoncrawl_database_and_table(
         )
     finally:
         # remove all query results
-        async with session.client("s3") as s3:
-            paginator = s3.get_paginator("list_objects_v2")
-            async for result in paginator.paginate(Bucket=s3_bucket, Prefix=prefix):
-                for file in result["Contents"]:
-                    await s3.delete_object(Bucket=s3_bucket, Key=file["Key"])
+        await remove_bucket_prefix(session, s3_bucket, prefix)

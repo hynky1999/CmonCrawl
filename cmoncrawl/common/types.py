@@ -46,6 +46,30 @@ class DomainRecord(BaseModel):
 class PipeMetadata:
     """
     Metadata for a pipe.
+
+    Attributes:
+    domain_record: DomainRecord
+        An instance of the DomainRecord class representing associated domain record,
+        eg. pointer to the WARC file.
+
+    article_data: Dict[Any, Any] = field(default_factory=dict)
+        A dictionary storing article data with keys and values of any type.
+        Those are the data extracted using Extractors.
+
+    warc_header: Dict[str, Any] = field(default_factory=dict)
+        A dictionary storing the WARC header metadata.
+
+    http_header: Dict[str, Any] = field(default_factory=dict)
+        A dictionary storing the HTTP header information.
+
+    rec_type: str | None = None
+        A string or None representing the type of record.
+
+    encoding: str = "latin-1"
+        A string representing the character encoding used for the record. The default value is "latin-1".
+
+    name: str | None = None
+        A string or None representing the name associated with the record.
     """
 
     domain_record: DomainRecord
@@ -121,6 +145,16 @@ class ExtractConfig(BaseModel):
 class MatchType(Enum):
     """
     Match type for cdx server.
+    See https://github.com/internetarchive/wayback/blob/master/wayback-cdx-server/README.md#url-match-scope
+
+    Example:
+    Query: example.com/abc
+
+    Macthes:
+    EXACT: (www\.)?example.com/abc
+    PREFIX: (www\.)?example.com/abc(/.*)?
+    HOST: (www\.)?example.com(/.*)?
+    DOMAIN: (.*\.)?example.com(/.*)?
     """
 
     EXACT = "exact"

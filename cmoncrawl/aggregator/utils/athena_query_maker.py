@@ -90,6 +90,7 @@ def prepare_athena_where_conditions(
         f"cc.subset = 'warc'",
         url_query,
     ]
+    where_conditions = [condition for condition in where_conditions if condition]
     return where_conditions
 
 

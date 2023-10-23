@@ -4,11 +4,21 @@ from pathlib import Path
 import textwrap
 from unittest.mock import patch
 
-from cmoncrawl.aggregator.athena_query import prepare_athena_sql_query
+import boto3
+from tests.utils import MySQLRecordsDB
+import aioboto3
+
+from cmoncrawl.aggregator.athena_query import (
+    QUERIES_SUBFOLDER,
+    QUERIES_TMP_SUBFOLDER,
+    prepare_athena_sql_query,
+)
 from cmoncrawl.aggregator.utils.athena_query_maker import (
     crawl_query,
     date_to_sql_format,
     prepare_athena_sql_query,
+    url_query_based_on_match_type,
+    url_query_date_range,
 )
 
 sys.path.append(Path("App").absolute().as_posix())
@@ -60,6 +70,22 @@ class _PatchedAWSReponseContent:
         return self.content.decode(encoding)
 
 
+@dataclass
+class _AsyncReader:
+    content: bytes
+
+    async def read(self, amt: int = -1) -> bytes:
+        ret_val = self.content
+        self.content = b""
+        return ret_val
+
+
+@dataclass
+class PatchedAWSResponseRaw:
+    content: _AsyncReader
+    url: str
+
+
 class PatchedAWSResponse:
     """Patched version of `botocore.awsrequest.AWSResponse`"""
 
@@ -67,7 +93,9 @@ class PatchedAWSResponse:
         self._response = response
         self.status_code = response.status_code
         self.content = _PatchedAWSReponseContent(response.content)
-        self.raw = response.raw
+        self.raw = PatchedAWSResponseRaw(
+            content=_AsyncReader(response.content), url=response.url
+        )
         if not hasattr(self.raw, "raw_headers"):
             self.raw.raw_headers = {}
 
@@ -239,6 +267,8 @@ class TestAthenaQueryCreation(unittest.IsolatedAsyncioTestCase):
             datetime(2023, 12, 31),
             self.CC_SERVERS,
             match_type=MatchType.EXACT,
+            database="commoncrawl",
+            table="ccindex",
         )
         self.assertEqual(
             query,
@@ -250,7 +280,7 @@ class TestAthenaQueryCreation(unittest.IsolatedAsyncioTestCase):
                     cc.warc_record_offset,
                     cc.warc_record_length
             FROM "commoncrawl"."ccindex" AS cc
-            WHERE (cc.fetch_time BETWEEN CAST('2019-01-01 00:00:00' AS TIMESTAMP) AND CAST('2023-12-31 00:00:00' AS TIMESTAMP)) AND (cc.crawl = 'CC-MAIN-2022-05' OR cc.crawl = 'CC-MAIN-2021-09' OR cc.crawl = 'CC-MAIN-2020-50') AND (cc.fetch_status = 200) AND (cc.content_mime_detected LIKE 'text/html%') AND (cc.subset = 'warc') AND ((cc.url = 'seznam.cz') OR (cc.url = 'idnes.cz'))
+            WHERE (cc.fetch_time BETWEEN CAST('2019-01-01 00:00:00' AS TIMESTAMP) AND CAST('2023-12-31 00:00:00' AS TIMESTAMP)) AND (cc.crawl = 'CC-MAIN-2022-05' OR cc.crawl = 'CC-MAIN-2021-09' OR cc.crawl = 'CC-MAIN-2020-50') AND (cc.fetch_status = 200) AND (cc.subset = 'warc') AND ((cc.url = 'seznam.cz') OR (cc.url = 'idnes.cz'))
             ORDER BY url;"""
             ),
         )
@@ -344,63 +374,341 @@ class TestAthenaQueryCreation(unittest.IsolatedAsyncioTestCase):
 from cmoncrawl.aggregator.athena_query import AthenaAggregator, DomainRecord, MatchType
 from datetime import datetime
 
-# class TestAthenaAggregator(unittest.IsolatedAsyncioTestCase):
 
-#     def setUp(self) -> None:
-#         self.mock_s3 = mock_s3()
-#         self.mock_s3.start()
-#         self.mock_athena = mock_athena()
-#         self.mock_athena.start()
+class TestAthenaAggregator(unittest.IsolatedAsyncioTestCase):
+    def setUp(self) -> None:
+        self.mock_s3 = mock_s3()
+        self.mock_s3.start()
+        self.mock_athena = mock_athena()
+        self.mock_athena.start()
 
-#     async def test_athena_aggregator_aopen(self):
-#         expected_CC_indexes = ["https://index.commoncrawl.org/CC-MAIN-2022-05-index"]
-#         with patch("cmoncrawl.aggregator.athena_query.get_all_CC_indexes") as mock_get_all_CC_indexes:
-#             mock_get_all_CC_indexes.return_value = expected_CC_indexes
-#             domains = ["test.com"]
-#             aggregator = AthenaAggregator(domains, bucket_name="test-bucket")
-#             await aggregator.aopen()
+    def tearDown(self) -> None:
+        self.mock_s3.stop()
+        self.mock_athena.stop()
 
-#         self.assertEqual(aggregator.cc_servers, expected_CC_indexes)
-#         # Check that s3 bucket was created
-#         async with aggregator.aws_client.client("s3") as s3_client:
-#             response = await s3_client.list_buckets()
-#             self.assertEqual(response["Buckets"][0]["Name"], "test-bucket")
+    async def test_athena_aggregator_lifecycle_existing_bucket(self):
+        expected_CC_indexes = ["https://index.commoncrawl.org/CC-MAIN-2022-05-index"]
+        async with aioboto3.Session().client("s3") as s3_client:
+            # Create a bucket called test-bucket
+            await s3_client.create_bucket(Bucket="test-bucket")
+        with patch(
+            "cmoncrawl.aggregator.athena_query.get_all_CC_indexes"
+        ) as mock_get_all_CC_indexes, patch(
+            "cmoncrawl.aggregator.athena_query.commoncrawl_database_and_table_exists"
+        ) as mock_commoncrawl_database_and_table_exists:
+            mock_commoncrawl_database_and_table_exists.return_value = False
+            mock_get_all_CC_indexes.return_value = expected_CC_indexes
+            domains = ["test.com"]
+            aggregator = AthenaAggregator(domains, bucket_name="test-bucket")
+            # Create a bucket called test-bucket
+            await aggregator.aopen()
 
-#         # Check that Athena table was created
-#         async with aggregator.aws_client.client("athena") as athena_client:
-#             queries = await athena_client.list_query_executions()
-#             # We should have one query for creation and one for repair
-#             self.assertEqual(len(queries["QueryExecutionIds"]), 2)
+        self.assertEqual(aggregator.cc_servers, expected_CC_indexes)
+        # Check that Athena table was created. BotoMock does not support metadata queries so we just check that the queries
+        # were sent to Athena
+        async with aggregator.aws_client.client("athena") as athena_client:
+            queries = await athena_client.list_query_executions()
+            # We should have one query for db creation, table creation and one for repair
+            self.assertEqual(len(queries["QueryExecutionIds"]), 3)
 
-#         # Check that the s3 bucket is cleaned up
-#         async with aggregator.aws_client.client("s3") as s3_client:
-#             response = await s3_client.list_objects(Bucket="test-bucket")
-#             # No objects should be present
-#             self.assertNotIn("Contents", response)
+        # Check that the s3 bucket is cleaned up
+        async with aggregator.aws_client.client("s3") as s3_client:
+            response = await s3_client.list_objects(Bucket="test-bucket")
+            # No objects should be present in the bucket
+            self.assertNotIn("Contents", response)
 
-#     async def test_athena_aggregator_aclose(self):
-#         aggregator = AthenaAggregator(["test.com"])
-#         bucket_name = aggregator.bucket_name
-#         expected_CC_indexes = ["https://index.commoncrawl.org/CC-MAIN-2022-05-index"]
-#         # Open the aggregator
-#         with patch("cmoncrawl.aggregator.athena_query.get_all_CC_indexes") as mock_get_all_CC_indexes:
-#             mock_get_all_CC_indexes.return_value = expected_CC_indexes
-#             await aggregator.aopen()
+        # Add arbitrary object to the bucket
+        async with aggregator.aws_client.client("s3") as s3_client:
+            await s3_client.put_object(Bucket="test-bucket", Key="test-key")
 
-#         # Add some objects to the bucket
-#         async with aggregator.aws_client.client("s3") as s3_client:
-#             await s3_client.put_object(Bucket=bucket_name, Key="test1")
-#             await s3_client.put_object(Bucket=bucket_name, Key="test2")
+        # Close the aggregator
+        await aggregator.aclose()
 
-#         # Close the aggregator
-#         await aggregator.aclose()
-#         # Check that the bucket was deleted
-#         async with aggregator.aws_client.client("s3") as s3_client:
-#             response = await s3_client.list_buckets()
-#             self.assertNotIn("test-bucket", response["Buckets"])
+        # Check that the s3 bucket is still there and was not deleted
+        async with aggregator.aws_client.client("s3") as s3_client:
+            response = await s3_client.list_buckets()
+            bucket_names = [bucket["Name"] for bucket in response["Buckets"]]
+            self.assertIn("test-bucket", bucket_names)
+
+            # Check that "test-key" is still in the "test-bucket"
+            objects = await s3_client.list_objects(Bucket="test-bucket")
+            object_keys = [obj["Key"] for obj in objects.get("Contents", [])]
+            self.assertIn("test-key", object_keys)
+
+    async def test_athena_aggregator_lifecycle_new_bucket(self):
+        expected_CC_indexes = ["https://index.commoncrawl.org/CC-MAIN-2022-05-index"]
+        with patch(
+            "cmoncrawl.aggregator.athena_query.get_all_CC_indexes"
+        ) as mock_get_all_CC_indexes, patch(
+            "cmoncrawl.aggregator.athena_query.commoncrawl_database_and_table_exists"
+        ) as mock_commoncrawl_database_and_table_exists:
+            mock_commoncrawl_database_and_table_exists.return_value = False
+            mock_get_all_CC_indexes.return_value = expected_CC_indexes
+            domains = ["test.com"]
+            aggregator = AthenaAggregator(domains)
+            # Create a bucket called test-bucket
+            await aggregator.aopen()
+
+        self.assertEqual(aggregator.cc_servers, expected_CC_indexes)
+
+        # Get bucket name
+        bucket_name = aggregator.bucket_name
+
+        # Check that s3 bucket was created
+        async with aggregator.aws_client.client("s3") as s3_client:
+            response = await s3_client.list_buckets()
+            self.assertEqual(response["Buckets"][0]["Name"], bucket_name)
+
+        # Check that Athena table was created. BotoMock does not support metadata queries so we just check that the queries
+        # were sent to Athena
+        async with aggregator.aws_client.client("athena") as athena_client:
+            queries = await athena_client.list_query_executions()
+            # We should have one query for db creation, table creation and one for repair
+            self.assertEqual(len(queries["QueryExecutionIds"]), 3)
+
+        # Check that the s3 bucket is cleaned up
+        async with aggregator.aws_client.client("s3") as s3_client:
+            response = await s3_client.list_objects(Bucket=bucket_name)
+            # No objects should be present in the bucket
+            self.assertNotIn("Contents", response)
+
+        # Add arbitrary object to the bucket
+        async with aggregator.aws_client.client("s3") as s3_client:
+            await s3_client.put_object(Bucket=bucket_name, Key="test-key")
+
+        # Close the aggregator
+        await aggregator.aclose()
+
+        # Check that bucket was deleted
+        async with aioboto3.Session().client("s3") as s3_client:
+            response = await s3_client.list_buckets()
+            bucket_names = [bucket["Name"] for bucket in response["Buckets"]]
+            self.assertNotIn(bucket_name, bucket_names)
 
 
-# TODO: Add test for athena_aggregator iterator
+class TestAthenaAggregatorIterator(unittest.IsolatedAsyncioTestCase, MySQLRecordsDB):
+    bucket_name = "test-bucket"
+
+    async def mocked_await_athena_query(self, query: str, result_name: str) -> str:
+        query = query.replace('"commoncrawl"."ccindex"', "ccindex")
+        query = query.replace("TIMESTAMP", "DATETIME")
+        with self.managed_cursor() as cursor:
+            cursor.execute(query)
+            results = cursor.fetchall()
+            results = [list(row) for row in results]
+            header = [col[0] for col in cursor.description]
+
+            # get index of fetch_time column
+            fetch_time_index = header.index("fetch_time")
+
+            # convert datetime to string
+            for row in results:
+                row[fetch_time_index] = row[fetch_time_index].strftime(
+                    "%Y-%m-%d %H:%M:%S.%f"
+                )
+        expected_result_key = f"{QUERIES_SUBFOLDER}/{result_name}.csv"
+
+        # Create a boto3 client
+        s3 = boto3.client("s3")
+
+        # Convert results to CSV format
+        header_results = [header] + results
+        csv_results = "\n".join([",".join(map(str, row)) for row in header_results])
+
+        # Write CSV results to S3
+        s3.put_object(
+            Body=csv_results, Bucket=self.bucket_name, Key=expected_result_key
+        )
+        return expected_result_key
+
+    def setUp(self) -> None:
+        self.mock_s3 = mock_s3()
+        self.mock_s3.start()
+        self.mock_athena = mock_athena()
+        self.mock_athena.start()
+        self.aws_client = aioboto3.Session()
+        # patching
+        self.mock_athena_query = patch(
+            "cmoncrawl.aggregator.athena_query.AthenaAggregator.AthenaAggregatorIterator.await_athena_query"
+        )
+        self.mock_await_athena_query = self.mock_athena_query.start()
+        self.mock_await_athena_query.side_effect = self.mocked_await_athena_query
+
+        # db
+        MySQLRecordsDB.setUp(self)
+
+    async def asyncSetUp(self):
+        # Create a bucket called test-bucket
+        async with self.aws_client.client("s3") as s3_client:
+            await s3_client.create_bucket(Bucket=self.bucket_name)
+
+    def tearDown(self) -> None:
+        self.mock_s3.stop()
+        self.mock_athena.stop()
+        self.mock_athena_query.stop()
+        MySQLRecordsDB.tearDown(self)
+
+    async def test_limit(self):
+        self.domains = ["seznam.cz"]
+        self.iterator = AthenaAggregator.AthenaAggregatorIterator(
+            aws_client=self.aws_client,
+            domains=self.domains,
+            CC_files=["https://index.commoncrawl.org/CC-MAIN-2022-05-index"],
+            since=None,
+            to=None,
+            limit=1,
+            batch_size=1,
+            match_type=MatchType.EXACT,
+            extra_sql_where_clause=None,
+            database_name="commoncrawl",
+            table_name="ccindex",
+            bucket_name=self.bucket_name,
+        )
+        records: List[DomainRecord] = []
+        async for record in self.iterator:
+            records.append(record)
+        self.assertEqual(len(records), 1)
+
+    async def test_since(self):
+        self.domains = ["seznam.cz"]
+        since = datetime(2022, 1, 2)
+        self.iterator = AthenaAggregator.AthenaAggregatorIterator(
+            aws_client=self.aws_client,
+            domains=self.domains,
+            CC_files=[
+                "https://index.commoncrawl.org/CC-MAIN-2022-05-index",
+                "https://index.commoncrawl.org/CC-MAIN-2021-05-index",
+                "https://index.commoncrawl.org/CC-MAIN-2023-09-index",
+            ],
+            since=since,
+            to=None,
+            limit=None,
+            batch_size=1,
+            match_type=MatchType.EXACT,
+            extra_sql_where_clause=None,
+            database_name="commoncrawl",
+            table_name="ccindex",
+            bucket_name=self.bucket_name,
+        )
+        records: List[DomainRecord] = []
+        async for record in self.iterator:
+            records.append(record)
+
+        self.assertEqual(len(records), 3)
+        for record in records:
+            self.assertGreaterEqual(record.timestamp, since)
+
+    async def test_to(self):
+        self.domains = ["seznam.cz"]
+        to = datetime(2022, 1, 2)
+        self.iterator = AthenaAggregator.AthenaAggregatorIterator(
+            aws_client=self.aws_client,
+            domains=self.domains,
+            CC_files=[
+                "https://index.commoncrawl.org/CC-MAIN-2022-05-index",
+                "https://index.commoncrawl.org/CC-MAIN-2021-05-index",
+                "https://index.commoncrawl.org/CC-MAIN-2023-09-index",
+            ],
+            since=None,
+            to=to,
+            limit=None,
+            batch_size=1,
+            match_type=MatchType.EXACT,
+            extra_sql_where_clause=None,
+            database_name="commoncrawl",
+            table_name="ccindex",
+            bucket_name=self.bucket_name,
+        )
+        records: List[DomainRecord] = []
+        async for record in self.iterator:
+            records.append(record)
+
+        self.assertEqual(len(records), 3)
+        for record in records:
+            self.assertLessEqual(record.timestamp, to)
+
+    async def test_batch_size_single(self):
+        self.domains = ["seznam.cz"]
+        self.iterator = AthenaAggregator.AthenaAggregatorIterator(
+            aws_client=self.aws_client,
+            domains=self.domains,
+            CC_files=[
+                "https://index.commoncrawl.org/CC-MAIN-2022-05-index",
+                "https://index.commoncrawl.org/CC-MAIN-2021-05-index",
+                "https://index.commoncrawl.org/CC-MAIN-2023-09-index",
+            ],
+            since=None,
+            to=None,
+            limit=None,
+            batch_size=1,
+            match_type=MatchType.EXACT,
+            extra_sql_where_clause=None,
+            database_name="commoncrawl",
+            table_name="ccindex",
+            bucket_name=self.bucket_name,
+        )
+        records: List[DomainRecord] = []
+        async for record in self.iterator:
+            records.append(record)
+
+        self.assertEqual(len(records), 5)
+        # Check that the mocked Athena query was called for each CC file
+        self.assertEqual(self.mock_await_athena_query.call_count, 3)
+
+    async def test_batch_size_zero(self):
+        self.domains = ["seznam.cz"]
+        self.iterator = AthenaAggregator.AthenaAggregatorIterator(
+            aws_client=self.aws_client,
+            domains=self.domains,
+            CC_files=[
+                "https://index.commoncrawl.org/CC-MAIN-2022-05-index",
+                "https://index.commoncrawl.org/CC-MAIN-2021-05-index",
+                "https://index.commoncrawl.org/CC-MAIN-2023-09-index",
+            ],
+            since=None,
+            to=None,
+            limit=None,
+            batch_size=0,
+            match_type=MatchType.EXACT,
+            extra_sql_where_clause=None,
+            database_name="commoncrawl",
+            table_name="ccindex",
+            bucket_name=self.bucket_name,
+        )
+        records: List[DomainRecord] = []
+        async for record in self.iterator:
+            records.append(record)
+
+        self.assertEqual(len(records), 5)
+        # Check that the mocked Athena query was called just once
+        self.assertEqual(self.mock_await_athena_query.call_count, 1)
+
+    async def test_extra_sql_where(self):
+        self.domains = ["seznam.cz"]
+        where_clause = "cc.fetch_status != 200"
+        self.iterator = AthenaAggregator.AthenaAggregatorIterator(
+            aws_client=self.aws_client,
+            domains=self.domains,
+            CC_files=[
+                "https://index.commoncrawl.org/CC-MAIN-2022-05-index",
+                "https://index.commoncrawl.org/CC-MAIN-2021-05-index",
+                "https://index.commoncrawl.org/CC-MAIN-2023-09-index",
+            ],
+            since=None,
+            to=None,
+            limit=None,
+            batch_size=0,
+            match_type=MatchType.EXACT,
+            extra_sql_where_clause=where_clause,
+            database_name="commoncrawl",
+            table_name="ccindex",
+            bucket_name=self.bucket_name,
+        )
+        records: List[DomainRecord] = []
+        async for record in self.iterator:
+            records.append(record)
+
+        self.assertEqual(len(records), 1)
 
 
 if __name__ == "__main__":
