@@ -3,6 +3,7 @@ import sys
 from pathlib import Path
 
 import boto3
+from cmoncrawl.aggregator.utils.constants import CC_INDEXES_SERVER
 from tests.utils import MySQLRecordsDB
 import aioboto3
 
@@ -72,7 +73,7 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(size, 5)
 
     async def test_indexer_all_CC(self):
-        indexes = await get_all_CC_indexes(self.client, self.di.cc_indexes_server)
+        indexes = await get_all_CC_indexes(self.client, CC_INDEXES_SERVER)
         indexes = sorted(indexes)
         indexes = indexes[
             : indexes.index("https://index.commoncrawl.org/CC-MAIN-2022-27-index") + 1

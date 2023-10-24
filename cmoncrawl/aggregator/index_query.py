@@ -2,6 +2,7 @@ from __future__ import annotations
 from collections import deque
 from datetime import datetime
 import re
+from cmoncrawl.aggregator.utils.constants import CC_INDEXES_SERVER
 from cmoncrawl.aggregator.utils.helpers import get_all_CC_indexes, retrieve
 
 from types import TracebackType
@@ -40,7 +41,6 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
 
     Args:
         domains (List[str]): A list of domains to search for.
-        cc_indexes_server (str, optional): The commoncrawl index server to use. Defaults to "http://index.commoncrawl.org/collinfo.json".
         match_type (MatchType, optional): Match type for cdx-api. Defaults to None.
         cc_servers (List[str], optional): A list of commoncrawl servers to use. If [], then indexes will be retrieved from the cc_indexes_server. Defaults to [].
         since (datetime, optional): The start date for the search. Defaults to datetime.min.
@@ -60,7 +60,6 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
     def __init__(
         self,
         domains: List[str],
-        cc_indexes_server: str = "http://index.commoncrawl.org/collinfo.json",
         match_type: MatchType | None = None,
         cc_servers: List[str] = [],
         since: datetime = datetime.min,
@@ -71,7 +70,6 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         sleep_step: int = 20,
     ) -> None:
         self.domains = domains
-        self.cc_indexes_server = cc_indexes_server
         self.cc_servers = cc_servers
         self.since = since
         self.to = to
@@ -87,9 +85,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         await self.client.__aenter__()
 
         if len(self.cc_servers) == 0:
-            self.cc_servers = await get_all_CC_indexes(
-                self.client, self.cc_indexes_server
-            )
+            self.cc_servers = await get_all_CC_indexes(self.client, CC_INDEXES_SERVER)
         return self
 
     async def __aenter__(self) -> IndexAggregator:

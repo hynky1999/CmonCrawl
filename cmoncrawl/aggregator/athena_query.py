@@ -14,6 +14,7 @@ from cmoncrawl.aggregator.utils.athena_query_maker import (
     crawl_url_to_name,
     prepare_athena_sql_query,
 )
+from cmoncrawl.aggregator.utils.constants import CC_INDEXES_SERVER
 from cmoncrawl.aggregator.utils.helpers import get_all_CC_indexes
 from cmoncrawl.common.loggers import all_purpose_logger
 
@@ -86,7 +87,6 @@ class AthenaAggregator(AsyncIterable[DomainRecord]):
 
     Args:
         domains (List[str]): A list of domains to search for.
-        cc_indexes_server (str, optional): The commoncrawl index server to use. Defaults to "http://index.commoncrawl.org/collinfo.json".
         match_type (MatchType, optional): Match type for cdx-api. Defaults to MatchType.EXACT.
         cc_servers (List[str], optional): A list of commoncrawl servers to use. If [], then indexes will be retrieved from the cc_indexes_server. Defaults to [].
         since (datetime, optional): The start date for the search. Defaults to datetime.min.
@@ -112,7 +112,6 @@ class AthenaAggregator(AsyncIterable[DomainRecord]):
     def __init__(
         self,
         domains: List[str],
-        cc_indexes_server: str = "http://index.commoncrawl.org/collinfo.json",
         match_type: MatchType = MatchType.EXACT,
         cc_servers: List[str] = [],
         since: datetime = datetime.min,
@@ -129,7 +128,6 @@ class AthenaAggregator(AsyncIterable[DomainRecord]):
         table_name: str = "ccindex",
     ) -> None:
         self.domains = domains
-        self.cc_indexes_server = cc_indexes_server
         self.match_type = match_type
         self.cc_servers = cc_servers
         self.since = since
@@ -174,9 +172,7 @@ class AthenaAggregator(AsyncIterable[DomainRecord]):
         )
         async with ClientSession() as client:
             if len(self.cc_servers) == 0:
-                self.cc_servers = await get_all_CC_indexes(
-                    client, self.cc_indexes_server
-                )
+                self.cc_servers = await get_all_CC_indexes(client, CC_INDEXES_SERVER)
         # create bucket if not exists
         async with self.aws_client.client("s3") as s3:
             # Check if bucket exists
