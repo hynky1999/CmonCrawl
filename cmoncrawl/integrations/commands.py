@@ -1,5 +1,4 @@
 import argparse
-import logging
 from typing import Any, Dict
 from cmoncrawl.integrations.download import add_args as add_download_args
 from cmoncrawl.integrations.extract import add_args as add_extract_args

@@ -40,7 +40,7 @@ async def query_and_extract(
                     await pipeline.process_domain_record(domain_record, {})
                     total_extracted += 1
                     processed_urls.add(unify_url_id(url))
-                except KeyboardInterrupt as e:
+                except KeyboardInterrupt:
                     break
 
                 except Exception as e:
@@ -116,12 +116,11 @@ async def extract(
             for task in done:
                 try:
                     total_extracted += len(await task)
-                except KeyboardInterrupt as e:
+                except KeyboardInterrupt:
                     break
 
-                except Exception as _:
+                except Exception:
                     all_purpose_logger.error(f"Error in task {task}", exc_info=True)
-                    pass
     except Exception as e:
         all_purpose_logger.error(e, exc_info=True)
 

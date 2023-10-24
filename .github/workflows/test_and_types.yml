@@ -38,7 +38,7 @@ jobs:
         run: cp .env.sample .env
 
       - name: Run tests
-        run: python -m unittest discover -s tests -p "athena_tests.py"  # Replace with your test command
+        run: python -m unittest discover -s tests -p "*_tests.py"  # Replace with your test command
 
   lint_and_types:
     runs-on: ubuntu-latest

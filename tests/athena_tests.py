@@ -6,7 +6,7 @@ import textwrap
 from unittest.mock import patch
 
 import boto3
-from tests.utils import MySQLRecordsDB
+from tests.utils import MySQLRecordsDB, set_up_aws_credentials_testing
 import aioboto3
 
 from cmoncrawl.aggregator.athena_query import (
@@ -120,6 +120,7 @@ class TestAthenaQueryCreation(unittest.IsolatedAsyncioTestCase):
             "https://index.commoncrawl.org/CC-MAIN-2021-09-index",
             "https://index.commoncrawl.org/CC-MAIN-2020-50-index",
         ]
+        set_up_aws_credentials_testing()
 
     def test_prepare_athena_sql_query_multiple_urls(self):
         query = prepare_athena_sql_query(
@@ -242,6 +243,7 @@ class TestAthenaAggregator(unittest.IsolatedAsyncioTestCase):
         self.mock_s3.start()
         self.mock_athena = mock_athena()
         self.mock_athena.start()
+        set_up_aws_credentials_testing()
 
     def tearDown(self) -> None:
         self.mock_s3.stop()
@@ -546,7 +548,7 @@ class TestAthenaAggregatorIterator(unittest.IsolatedAsyncioTestCase, MySQLRecord
 
     async def test_extra_sql_where(self):
         self.domains = ["seznam.cz"]
-        where_clause = "cc.fetch_status != 200"
+        where_clause = 'cc.warc_filename = "filename1"'
         self.iterator = AthenaAggregator.AthenaAggregatorIterator(
             aws_client=self.aws_client,
             domains=self.domains,

@@ -312,7 +312,7 @@ class StompProcessor:
                         extracted_num += 1
                 else:
                     all_purpose_logger.info(f"Failed to extract {message.dr.url}")
-        except Exception as e:
+        except Exception:
             pass
 
         finally:

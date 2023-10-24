@@ -4,7 +4,7 @@ from collections import deque
 from datetime import datetime
 from pathlib import Path
 import tempfile
-from typing import Any, AsyncIterable, AsyncIterator, Deque, List, Optional, Set, Tuple
+from typing import Any, AsyncIterable, AsyncIterator, Deque, List, Optional, Set
 import uuid
 import hashlib
 
@@ -122,7 +122,7 @@ class AthenaAggregator(AsyncIterable[DomainRecord]):
         max_retry: int = 5,
         extra_sql_where_clause: str | None = None,
         batch_size: int = 1,
-        aws_profile: str = "default",
+        aws_profile: Optional[str] = None,
         bucket_name: Optional[str] = None,
         catalog_name: str = "AwsDataCatalog",
         database_name: str = "commoncrawl",
