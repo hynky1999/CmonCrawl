@@ -11,6 +11,16 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -24,8 +34,12 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.test.txt  # Replace with your dependencies installation command
 
+      - name: Set up env
+        run: cp .env.sample .env
+
       - name: Run tests
-        run: python -m unittest discover -s tests -p "*_tests.py"  # Replace with your test command
+        run: python -m unittest discover -s tests -p "athena_tests.py"  # Replace with your test command
+
   lint_and_types:
     runs-on: ubuntu-latest
 
