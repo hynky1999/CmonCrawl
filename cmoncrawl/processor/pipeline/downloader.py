@@ -40,23 +40,19 @@ import asyncio
 import time
 
 
-def throttle(milliseconds: int):
-    def decorator(func):
-        last_call = 0
-        semaphore = asyncio.Semaphore(1)
+class Throttler:
+    def __init__(self, milliseconds: int):
+        self.milliseconds = milliseconds
+        self.last_call = 0
+        self.semaphore = asyncio.Semaphore(1)
 
-        async def wrapper(*args, **kwargs):
-            nonlocal last_call
-            async with semaphore:
-                elapsed = time.time() - last_call
-                if elapsed < milliseconds / 1000:
-                    await asyncio.sleep((milliseconds / 1000) - elapsed)
-                last_call = time.time()
-            return await func(*args, **kwargs)
-
-        return wrapper
-
-    return decorator
+    async def throttle(self, func, *args, **kwargs):
+        async with self.semaphore:
+            elapsed = time.time() - self.last_call
+            if elapsed < self.milliseconds / 1000:
+                await asyncio.sleep((self.milliseconds / 1000) - elapsed)
+            self.last_call = time.time()
+        return await func(*args, **kwargs)
 
 
 class DownloadError(Exception):
@@ -95,13 +91,14 @@ class AsyncDownloader(IDownloader, AsyncContextManager["AsyncDownloader"]):
         digest_verification: bool = True,
         max_retry: int = 5,
         sleep_step: int = 10,
+        max_requests_per_second: int = 100,
         encoding: str = "latin-1",
     ):
         self.digest_verification = digest_verification
         self.BASE_URL = base_url
         self.__max_retry = max_retry
         self.__sleep_step = sleep_step
-        self.semaphore = asyncio.Semaphore(1)
+        self.throttler = Throttler(int(1000 / max_requests_per_second))
         self.encoding = encoding
 
     async def aopen(self) -> AsyncDownloader:
@@ -112,7 +109,6 @@ class AsyncDownloader(IDownloader, AsyncContextManager["AsyncDownloader"]):
     async def __aenter__(self) -> AsyncDownloader:
         return await self.aopen()
 
-    @throttle(10)
     async def _download_warc(
         self, url: str, headers: dict[str, Any], domain_record: DomainRecord
     ):
@@ -153,7 +149,9 @@ class AsyncDownloader(IDownloader, AsyncContextManager["AsyncDownloader"]):
         url = f"{self.BASE_URL}{domain_record.filename}"
         for retry in range(self.__max_retry):
             try:
-                return await self._download_warc(url, headers, domain_record)
+                return await self.throttler.throttle(
+                    self._download_warc, url, headers, domain_record
+                )
             except DownloadError as e:
                 if not should_retry(retry, f"{str(e)} {type(e)}", e.status):
                     raise e
