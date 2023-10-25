@@ -60,10 +60,9 @@ def throttle(milliseconds: int):
 
 
 class DownloadError(Exception):
-    def __init__(self, reason: str, status: int, **args: str):
+    def __init__(self, reason: str, status: int):
         self.reason = reason
         self.status = status
-        self.args = args
 
 
 class IDownloader:
@@ -121,7 +120,7 @@ class AsyncDownloader(IDownloader, AsyncContextManager["AsyncDownloader"]):
         async with self.client.get(url, headers=headers) as response:
             if not response.ok:
                 reason: str = response.reason if response.reason else "Unknown"
-                raise DownloadError(reason, response.status, **response.headers)
+                raise DownloadError(reason, response.status)
             else:
                 # will be unziped, we cannot use the stream since warcio doesn't support async
                 response_bytes = await response.content.read()
@@ -156,7 +155,7 @@ class AsyncDownloader(IDownloader, AsyncContextManager["AsyncDownloader"]):
             try:
                 return await self._download_warc(url, headers, domain_record)
             except DownloadError as e:
-                if not should_retry(retry, f"{str(e)} {type(e)}", e.status, **e.args):
+                if not should_retry(retry, f"{str(e)} {type(e)}", e.status):
                     raise e
 
             except (
