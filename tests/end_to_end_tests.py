@@ -49,7 +49,9 @@ class Extract_from_files(unittest.IsolatedAsyncioTestCase):
             max_retry=1,
             sleep_step=1,
         )
-        with open(self.output_folder / "directory_0" / "0_file.jsonl") as f:
+        output_folder = Path(self.output_folder / "directory_0")
+        output_folder.mkdir(parents=True, exist_ok=True)
+        with open(output_folder / "0_file.jsonl") as f:
             lines = f.readlines()
         self.assertEqual(len(lines), 5)
         self.assertEqual(

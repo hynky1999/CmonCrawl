@@ -10,6 +10,7 @@ from types import TracebackType
 from aiohttp import ClientError, ClientSession, ContentTypeError, ServerConnectionError
 from typing import (
     IO,
+    Any,
     AsyncContextManager,
     ContextManager,
     Generator,
@@ -34,6 +35,35 @@ from warcio import ArchiveIterator
 from warcio.recordloader import ArcWarcRecord
 
 ALLOWED_ERR_FOR_RETRIES = [500, 502, 503, 504]
+
+import asyncio
+import time
+
+
+def throttle(milliseconds: int):
+    def decorator(func):
+        last_call = 0
+        semaphore = asyncio.Semaphore(1)
+
+        async def wrapper(*args, **kwargs):
+            nonlocal last_call
+            async with semaphore:
+                elapsed = time.time() - last_call
+                if elapsed < milliseconds / 1000:
+                    await asyncio.sleep((milliseconds / 1000) - elapsed)
+                last_call = time.time()
+            return await func(*args, **kwargs)
+
+        return wrapper
+
+    return decorator
+
+
+class DownloadError(Exception):
+    def __init__(self, reason: str, status: int, **args: str):
+        self.reason = reason
+        self.status = status
+        self.args = args
 
 
 class IDownloader:
@@ -72,6 +102,7 @@ class AsyncDownloader(IDownloader, AsyncContextManager["AsyncDownloader"]):
         self.BASE_URL = base_url
         self.__max_retry = max_retry
         self.__sleep_step = sleep_step
+        self.semaphore = asyncio.Semaphore(1)
         self.encoding = encoding
 
     async def aopen(self) -> AsyncDownloader:
@@ -81,6 +112,20 @@ class AsyncDownloader(IDownloader, AsyncContextManager["AsyncDownloader"]):
 
     async def __aenter__(self) -> AsyncDownloader:
         return await self.aopen()
+
+    @throttle(10)
+    async def _download_warc(
+        self, url: str, headers: dict[str, Any], domain_record: DomainRecord
+    ):
+        response_bytes = bytes()
+        async with self.client.get(url, headers=headers) as response:
+            if not response.ok:
+                reason: str = response.reason if response.reason else "Unknown"
+                raise DownloadError(reason, response.status, **response.headers)
+            else:
+                # will be unziped, we cannot use the stream since warcio doesn't support async
+                response_bytes = await response.content.read()
+                return self.unwrap(response_bytes, domain_record)
 
     async def download(self, domain_record: DomainRecord | None):
         def should_retry(retry: int, reason: str, status: int, **args: str):
@@ -109,16 +154,11 @@ class AsyncDownloader(IDownloader, AsyncContextManager["AsyncDownloader"]):
         url = f"{self.BASE_URL}{domain_record.filename}"
         for retry in range(self.__max_retry):
             try:
-                response_bytes = bytes()
-                async with self.client.get(url, headers=headers) as response:
-                    if not response.ok:
-                        reason: str = response.reason if response.reason else "Unknown"
-                        if not should_retry(retry, reason, response.status):
-                            break
-                    else:
-                        # will be unziped, we cannot use the stream since warcio doesn't support async
-                        response_bytes = await response.content.read()
-                        return self.unwrap(response_bytes, domain_record)
+                return await self._download_warc(url, headers, domain_record)
+            except DownloadError as e:
+                if not should_retry(retry, f"{str(e)} {type(e)}", e.status, **e.args):
+                    raise e
+
             except (
                 ClientError,
                 TimeoutError,
