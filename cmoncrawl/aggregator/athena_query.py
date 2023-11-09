@@ -1,27 +1,35 @@
 from __future__ import annotations
+
 import asyncio
+import hashlib
+import tempfile
+import uuid
 from collections import deque
 from datetime import datetime
 from pathlib import Path
-import tempfile
-from typing import Any, AsyncIterable, AsyncIterator, Deque, List, Optional, Set
-import uuid
-import hashlib
+from typing import (
+    Any,
+    AsyncIterable,
+    AsyncIterator,
+    Deque,
+    List,
+    Optional,
+    Set,
+)
 
+import aioboto3
 import aiofiles
+import tenacity
 from aiocsv.readers import AsyncDictReader
+from aiohttp import ClientSession
+
+from cmoncrawl.aggregator.index_query import crawl_to_year
 from cmoncrawl.aggregator.utils.athena_query_maker import (
     crawl_url_to_name,
     prepare_athena_sql_query,
 )
 from cmoncrawl.aggregator.utils.helpers import get_all_CC_indexes
 from cmoncrawl.common.loggers import all_purpose_logger
-
-from aiohttp import ClientSession
-from cmoncrawl.aggregator.index_query import crawl_to_year
-
-import aioboto3
-
 from cmoncrawl.common.types import (
     DomainCrawl,
     DomainRecord,
@@ -33,7 +41,9 @@ QUERIES_SUBFOLDER = "queries"
 QUERIES_TMP_SUBFOLDER = "queries_tmp"
 
 
-async def remove_bucket_prefix(session: aioboto3.Session, prefix: str, folder: str):
+async def remove_bucket_prefix(
+    session: aioboto3.Session, prefix: str, folder: str
+):
     # remove all query results
     async with session.client("s3") as s3:
         paginator = s3.get_paginator("list_objects_v2")
@@ -165,7 +175,9 @@ class AthenaAggregator(AsyncIterable[DomainRecord]):
     async def __aenter__(self) -> AthenaAggregator:
         return await self.aopen()
 
-    async def __aexit__(self, exc_type, exc_value, traceback) -> AthenaAggregator:
+    async def __aexit__(
+        self, exc_type, exc_value, traceback
+    ) -> AthenaAggregator:
         return await self.aclose()
 
     async def aopen(self) -> AthenaAggregator:
@@ -194,7 +206,10 @@ class AthenaAggregator(AsyncIterable[DomainRecord]):
 
         # create database and table if not exists
         if not await commoncrawl_database_and_table_exists(
-            self.aws_client, self.catalog_name, self.database_name, self.table_name
+            self.aws_client,
+            self.catalog_name,
+            self.database_name,
+            self.table_name,
         ):
             await create_commoncrawl_database_and_table(
                 self.aws_client,
@@ -249,7 +264,9 @@ class AthenaAggregator(AsyncIterable[DomainRecord]):
             self.__database_name = database_name
             self.__table_name = table_name
             self.__extra_sql_where_clause = extra_sql_where_clause
-            self.__prefetch_queue: Set[asyncio.Task[List[DomainRecord]]] = set()
+            self.__prefetch_queue: Set[
+                asyncio.Task[List[DomainRecord]]
+            ] = set()
             self.__opt_prefetch_size = 5
 
         def init_crawls_queue(
@@ -258,8 +275,13 @@ class AthenaAggregator(AsyncIterable[DomainRecord]):
             allowed_crawls = [
                 crawl_url_to_name(crawl)
                 for crawl in CC_files
-                if (self.__since is None or crawl_to_year(crawl) >= self.__since.year)
-                and (self.__to is None or crawl_to_year(crawl) <= self.__to.year)
+                if (
+                    self.__since is None
+                    or crawl_to_year(crawl) >= self.__since.year
+                )
+                and (
+                    self.__to is None or crawl_to_year(crawl) <= self.__to.year
+                )
             ]
             if batch_size <= 0:
                 return [allowed_crawls]
@@ -269,24 +291,34 @@ class AthenaAggregator(AsyncIterable[DomainRecord]):
             ]
 
         async def download_results(self, key: str) -> str:
-            with tempfile.NamedTemporaryFile(suffix=".csv", delete=False) as temp_file:
+            with tempfile.NamedTemporaryFile(
+                suffix=".csv", delete=False
+            ) as temp_file:
                 async with self.__aws_client.client("s3") as s3:
-                    await s3.download_file(self.__bucket_name, key, temp_file.name)
+                    await s3.download_file(
+                        self.__bucket_name, key, temp_file.name
+                    )
 
             return temp_file.name
 
-        async def await_athena_query(self, query: str, result_name: str) -> str:
+        async def await_athena_query(
+            self, query: str, result_name: str
+        ) -> str:
             s3_location = f"s3://{self.__bucket_name}/{QUERIES_TMP_SUBFOLDER}"
             query_execution_id = await run_athena_query(
                 self.__aws_client,
                 {
                     "QueryString": query,
-                    "QueryExecutionContext": {"Database": self.__database_name},
+                    "QueryExecutionContext": {
+                        "Database": self.__database_name
+                    },
                     "ResultConfiguration": {"OutputLocation": s3_location},
                 },
             )
             # Move file to bucket/result_name
-            query_result_key = f"{QUERIES_TMP_SUBFOLDER}/{query_execution_id}.csv"
+            query_result_key = (
+                f"{QUERIES_TMP_SUBFOLDER}/{query_execution_id}.csv"
+            )
             expected_result_key = f"{QUERIES_SUBFOLDER}/{result_name}.csv"
             async with self.__aws_client.client("s3") as s3:
                 await s3.copy_object(
@@ -351,13 +383,19 @@ class AthenaAggregator(AsyncIterable[DomainRecord]):
             query_id = f"{crawl_batch_id}-{query_hash}"
             crawl_s3_key = await self.is_crawl_cached(query_id)
             if crawl_s3_key is not None:
-                all_purpose_logger.info(f"Using cached crawl batch {crawl_batch}")
+                all_purpose_logger.info(
+                    f"Using cached crawl batch {crawl_batch}"
+                )
             else:
-                all_purpose_logger.info(f"Querying for crawl batch {crawl_batch}")
+                all_purpose_logger.info(
+                    f"Querying for crawl batch {crawl_batch}"
+                )
                 crawl_s3_key = await self.await_athena_query(query, query_id)
 
             domain_records: List[DomainRecord] = []
-            async for domain_record in self.domain_records_from_s3(crawl_s3_key):
+            async for domain_record in self.domain_records_from_s3(
+                crawl_s3_key
+            ):
                 domain_records.append(domain_record)
             return domain_records
 
@@ -376,10 +414,15 @@ class AthenaAggregator(AsyncIterable[DomainRecord]):
             ):
                 next_crawl = self.__crawls_remaining.pop(0)
                 self.__prefetch_queue.add(
-                    asyncio.create_task(self.__fetch_next_crawl_batch(next_crawl))
+                    asyncio.create_task(
+                        self.__fetch_next_crawl_batch(next_crawl)
+                    )
                 )
 
-            while len(self.__prefetch_queue) > 0 and len(self.__domain_records) == 0:
+            while (
+                len(self.__prefetch_queue) > 0
+                and len(self.__domain_records) == 0
+            ):
                 done, self.__prefetch_queue = await asyncio.wait(
                     self.__prefetch_queue, return_when="FIRST_COMPLETED"
                 )
@@ -388,7 +431,9 @@ class AthenaAggregator(AsyncIterable[DomainRecord]):
                         domain_records = task.result()
                         self.__domain_records.extend(domain_records)
                     except Exception as e:
-                        all_purpose_logger.error(f"Error during a crawl query", e)
+                        all_purpose_logger.error(
+                            f"Error during a crawl query", e
+                        )
 
         async def __anext__(self) -> DomainRecord:
             # Stop if we fetched everything or reached limit
@@ -428,7 +473,10 @@ class AthenaAggregator(AsyncIterable[DomainRecord]):
 
 
 async def commoncrawl_database_and_table_exists(
-    session: aioboto3.Session, catalog_name: str, database_name: str, table_name: str
+    session: aioboto3.Session,
+    catalog_name: str,
+    database_name: str,
+    table_name: str,
 ):
     async with session.client("athena") as athena:
         try:
@@ -443,7 +491,11 @@ async def commoncrawl_database_and_table_exists(
 
 
 async def create_commoncrawl_database_and_table(
-    session: aioboto3.Session, s3_bucket: str, catalog: str, database: str, table: str
+    session: aioboto3.Session,
+    s3_bucket: str,
+    catalog: str,
+    database: str,
+    table: str,
 ):
     prefix = f"DDL-{uuid.uuid4()}"
     results_location = f"s3://{s3_bucket}/{prefix}"

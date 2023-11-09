@@ -1,16 +1,23 @@
-import json
-from pathlib import Path
-
 import asyncio
-import unittest
+import json
 import os
 import re
+import unittest
 from datetime import datetime
-from cmoncrawl.processor.pipeline.downloader import AsyncDownloader, WarcIterator
-from cmoncrawl.processor.pipeline.extractor import HTMLExtractor
-from cmoncrawl.processor.pipeline.streamer import StreamerFileJSON, StreamerFileHTML
-from cmoncrawl.processor.pipeline.router import Router
+from pathlib import Path
+
 from cmoncrawl.common.types import DomainRecord, PipeMetadata
+from cmoncrawl.processor.pipeline.downloader import (
+    AsyncDownloader,
+    Throttler,
+    WarcIterator,
+)
+from cmoncrawl.processor.pipeline.extractor import HTMLExtractor
+from cmoncrawl.processor.pipeline.router import Router
+from cmoncrawl.processor.pipeline.streamer import (
+    StreamerFileHTML,
+    StreamerFileJSON,
+)
 
 
 class AsyncDownloaderTests(unittest.IsolatedAsyncioTestCase):
@@ -29,7 +36,32 @@ class AsyncDownloaderTests(unittest.IsolatedAsyncioTestCase):
             encoding="latin-1",
         )
         res = (await self.downloader.download(dr))[0][0]
-        self.assertIsNotNone(re.search("Provozovatelem serveru iDNES.cz je MAFRA", res))
+        self.assertIsNotNone(
+            re.search("Provozovatelem serveru iDNES.cz je MAFRA", res)
+        )
+
+    async def test_throttler(self):
+        async def dummy_download():
+            pass
+
+        # Create an instance of the Throttler
+        throttler = Throttler(1000)
+
+        # Start time
+        start_time = datetime.now()
+
+        # Call the throttled download method three times concurrently
+        await asyncio.gather(
+            throttler.throttle(dummy_download),
+            throttler.throttle(dummy_download),
+            throttler.throttle(dummy_download),
+        )
+
+        # End time
+        end_time = datetime.now()
+
+        # Check if the throttler delayed the execution by at least 2 second
+        self.assertTrue((end_time - start_time).total_seconds() >= 2)
 
     async def asyncTearDown(self) -> None:
         await self.downloader.aclose(None, None, None)
@@ -80,9 +112,9 @@ class RouterTests(unittest.TestCase):
 class ExtradctorTests(unittest.TestCase):
     def test_encoding(self):
         def create_html():
-            return "<html><body><p>test</p></body></html>".encode("latin-1").decode(
+            return "<html><body><p>test</p></body></html>".encode(
                 "latin-1"
-            )
+            ).decode("latin-1")
 
         def create_non_utf8():
             return bytes([0x81, 0x81, 0x82, 0x83]).decode("latin-1")
@@ -147,7 +179,9 @@ class OutStreamerTests(unittest.IsolatedAsyncioTestCase):
         self.outstreamer_json.max_directory_size = 3
         self.outstreamer_json.max_crawls_in_file = 1
         writes = [
-            asyncio.create_task(self.outstreamer_json.stream(dict(), self.metadata))
+            asyncio.create_task(
+                self.outstreamer_json.stream(dict(), self.metadata)
+            )
             for _ in range(15)
         ]
         await asyncio.gather(*writes)
@@ -159,20 +193,27 @@ class OutStreamerTests(unittest.IsolatedAsyncioTestCase):
         self.outstreamer_json.max_crawls_in_file = 5
 
         writes = [
-            asyncio.create_task(self.outstreamer_json.stream(dict(), self.metadata))
+            asyncio.create_task(
+                self.outstreamer_json.stream(dict(), self.metadata)
+            )
             for _ in range(5)
         ]
         await asyncio.gather(*writes)
         size = len(os.listdir(self.json_folder))
         self.assertEqual(size, 1)
         num_lines = sum(
-            1 for _ in open(self.json_folder / "directory_0" / "0_file.jsonl", "r")
+            1
+            for _ in open(
+                self.json_folder / "directory_0" / "0_file.jsonl", "r"
+            )
         )
         self.assertEqual(num_lines, 5)
 
     async def test_check_content_json(self):
         writes = [
-            asyncio.create_task(self.outstreamer_json.stream({"num": n}, self.metadata))
+            asyncio.create_task(
+                self.outstreamer_json.stream({"num": n}, self.metadata)
+            )
             for n in range(2)
         ]
         files = await asyncio.gather(*writes)

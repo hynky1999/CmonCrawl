@@ -1,52 +1,107 @@
 from __future__ import annotations
+
 import asyncio
-from datetime import datetime, timezone
 import io
 import logging
-from pathlib import Path
-import random
 import re
+from datetime import datetime, timezone
+from pathlib import Path
 from types import TracebackType
-from aiohttp import ClientError, ClientSession, ContentTypeError, ServerConnectionError
 from typing import (
     IO,
     Any,
     AsyncContextManager,
+    Callable,
     ContextManager,
+    Coroutine,
     Generator,
     Iterable,
     List,
     Optional,
     Tuple,
     Type,
+    TypeVar,
 )
-from aiofiles import open as asyncOpen
-
 
 import bs4
-from tqdm import tqdm
-
-from cmoncrawl.common.types import (
-    DomainRecord,
-    PipeMetadata,
+from aiofiles import open as asyncOpen
+from aiohttp import (
+    ClientError,
+    ClientSession,
+    ContentTypeError,
+    ServerConnectionError,
 )
-from cmoncrawl.common.loggers import metadata_logger, all_purpose_logger
+from tenacity import (
+    RetryCallState,
+    retry,
+    retry_any,
+    retry_if_exception,
+    retry_if_exception_type,
+    stop_after_attempt,
+    wait_random_exponential,
+)
+from tqdm import tqdm
 from warcio import ArchiveIterator
 from warcio.recordloader import ArcWarcRecord
 
+from cmoncrawl.common.loggers import all_purpose_logger, metadata_logger
+from cmoncrawl.common.types import DomainRecord, PipeMetadata
+
 ALLOWED_ERR_FOR_RETRIES = [500, 502, 503, 504]
 
-import asyncio
 import time
+
+
+def log_after_retry(retry_state: RetryCallState):
+    if (
+        all_purpose_logger.level <= logging.DEBUG
+        or retry_state.attempt_number % 10 == 0
+    ):
+        reason = str(retry_state.outcome.exception())
+        if not retry_state.next_action:
+            return
+
+        metadata_logger.error(
+            f"Failed to retrieve from domain_record {reason} retry: {retry_state.attempt_number+1}, waiting {retry_state.next_action.sleep} seconds",
+            extra={"domain_record": retry_state.args[0]},
+        )
+
+
+T = TypeVar("T")
 
 
 class Throttler:
     def __init__(self, milliseconds: int):
+        """
+        Initializes the Throttler class.
+
+        Args:
+            milliseconds (int): The number of milliseconds to wait between function calls.
+        """
         self.milliseconds = milliseconds
         self.last_call = 0
         self.semaphore = asyncio.Semaphore(1)
 
-    async def throttle(self, func, *args, **kwargs):
+    async def throttle(
+        self,
+        func: Callable[..., Coroutine[Any, Any, T]],
+        *args: Any,
+        **kwargs: Any,
+    ) -> T:
+        """
+        Throttles the function call.
+
+        Precondition:
+            func (Callable[..., Coroutine[Any, Any, T]]): The function to throttle. It must be a coroutine function.
+            *args (Any): The positional arguments to pass to the function.
+            **kwargs (Any): The keyword arguments to pass to the function.
+
+        Postcondition:
+            Returns the result of the throttled function call.
+
+        Returns:
+            T: The return type of the function.
+        """
         async with self.semaphore:
             elapsed = time.time() - self.last_call
             if elapsed < self.milliseconds / 1000:
@@ -123,49 +178,53 @@ class AsyncDownloader(IDownloader, AsyncContextManager["AsyncDownloader"]):
                 return self.unwrap(response_bytes, domain_record)
 
     async def download(self, domain_record: DomainRecord | None):
-        def should_retry(retry: int, reason: str, status: int, **args: str):
-            # if logger at least info than report every retry otherwise report every 10 retries
-            if all_purpose_logger.level <= logging.DEBUG or retry % 10 == 0:
-                metadata_logger.error(
-                    f"Failed to retrieve from domain_record {status}: {reason} retry: {retry+1}/{self.__max_retry} add_info: {args}",
-                    extra={"domain_record": domain_record},
-                )
-
-            if status not in ALLOWED_ERR_FOR_RETRIES:
-                return False
-
-            return True
-
         if domain_record is None:
-            raise ValueError("Async downloader needs domain record, to download")
+            raise ValueError(
+                "Async downloader needs domain record, to download"
+            )
 
         # Because someone thought having non c-like range is good idea
         # Both end/start are inclusive
         headers = {
             "Range": "bytes={}-{}".format(
-                domain_record.offset, domain_record.offset + domain_record.length - 1
+                domain_record.offset,
+                domain_record.offset + domain_record.length - 1,
             )
         }
         url = f"{self.BASE_URL}{domain_record.filename}"
-        for retry in range(self.__max_retry):
-            try:
-                return await self.throttler.throttle(
-                    self._download_warc, url, headers, domain_record
-                )
-            except DownloadError as e:
-                if not should_retry(retry, f"{str(e)} {type(e)}", e.status):
-                    raise e
 
-            except (
-                ClientError,
-                TimeoutError,
-                ServerConnectionError,
-                ContentTypeError,
-            ) as e:
-                if not should_retry(retry, f"{str(e)} {type(e)}", 500):
-                    raise e
-            await asyncio.sleep(random.randint(0, (retry + 1) * self.__sleep_step))
-        ret: List[Tuple[str, PipeMetadata]] = []
+        @retry(
+            stop=stop_after_attempt(self.__max_retry),
+            wait=wait_random_exponential(
+                multiplier=self.__sleep_step, max=120
+            ),
+            retry=retry_any(
+                retry_if_exception_type(
+                    (
+                        ClientError,
+                        TimeoutError,
+                        ServerConnectionError,
+                        ContentTypeError,
+                    )
+                ),
+                retry_if_exception(
+                    lambda e: isinstance(e, DownloadError)
+                    and e.status in ALLOWED_ERR_FOR_RETRIES
+                ),
+            ),
+            reraise=True,
+            before_sleep=log_after_retry,
+        )
+        async def download_throttled(
+            url: str, headers: dict[str, str], domain_record: DomainRecord
+        ):
+            return await self.throttler.throttle(
+                self._download_warc, url, headers, domain_record
+            )
+
+        ret: List[Tuple[str, PipeMetadata]] = await download_throttled(
+            url, headers, domain_record
+        )
         return ret
 
     def unwrap(
@@ -209,7 +268,9 @@ class AsyncDownloader(IDownloader, AsyncContextManager["AsyncDownloader"]):
         exc_val: BaseException | None,
         exc_tb: TracebackType | None = None,
     ) -> IDownloader:
-        return await self.aclose(exc_type=exc_type, exc_val=exc_val, exc_tb=exc_tb)
+        return await self.aclose(
+            exc_type=exc_type, exc_val=exc_val, exc_tb=exc_tb
+        )
 
 
 class WarcIterator(IDownloader, ContextManager["WarcIterator"]):
@@ -224,7 +285,10 @@ class WarcIterator(IDownloader, ContextManager["WarcIterator"]):
     """
 
     def __init__(
-        self, file: Path, encoding: str = "latin-1", show_progress: bool = False
+        self,
+        file: Path,
+        encoding: str = "latin-1",
+        show_progress: bool = False,
     ):
         self.file = file
         self.encoding = "latin-1"
@@ -308,7 +372,10 @@ class DownloaderDummy(IDownloader):
     """
 
     def __init__(
-        self, files: List[Path], url: str | None = None, date: datetime | None = None
+        self,
+        files: List[Path],
+        url: str | None = None,
+        date: datetime | None = None,
     ):
         self.files = files
         self.file_index = 0
