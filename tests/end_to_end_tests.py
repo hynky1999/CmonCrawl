@@ -4,8 +4,16 @@ import json
 from pathlib import Path
 import unittest
 from cmoncrawl.common.loggers import metadata_logger, all_purpose_logger
-from cmoncrawl.integrations.extract import extract_from_files, ExtractMode
+from cmoncrawl.integrations.extract import (
+    extract_from_files,
+    ExtractMode,
+    DownloadDAOname,
+)
 from cmoncrawl.common.types import ExtractConfig
+from cmoncrawl.config import AWS_PROFILE
+from cmoncrawl.processor.connectors.api import CCAPIGatewayDAO
+from cmoncrawl.processor.connectors.s3 import S3Dao
+from parameterized import parameterized
 
 
 class Extract_from_files(unittest.IsolatedAsyncioTestCase):
@@ -32,7 +40,8 @@ class Extract_from_files(unittest.IsolatedAsyncioTestCase):
 
         self.assertEqual(cfg.routes[0].extractors[0].name, "test_extractor")
 
-    async def test_extract_from_records(self):
+    @parameterized.expand([(DownloadDAOname.API,), (DownloadDAOname.S3,)])
+    async def test_extract_from_records(self, dao: DownloadDAOname):
         cfg_path = self.base_folder / "cfg.json"
         with open(cfg_path, "r") as f:
             js = json.load(f)
@@ -46,8 +55,9 @@ class Extract_from_files(unittest.IsolatedAsyncioTestCase):
             max_crawls_per_file=10,
             max_directory_size=1,
             url="",
-            max_retry=1,
-            sleep_step=1,
+            max_retry=20,
+            sleep_base=1,
+            download_method=dao,
         )
         output_folder = Path(self.output_folder / "directory_0")
         output_folder.mkdir(parents=True, exist_ok=True)
@@ -73,8 +83,9 @@ class Extract_from_files(unittest.IsolatedAsyncioTestCase):
             max_crawls_per_file=1,
             max_directory_size=10,
             url="",
-            max_retry=1,
-            sleep_step=1,
+            max_retry=20,
+            sleep_base=1.4,
+            download_method=None,
         )
         with open(self.output_folder / "directory_0" / "0_file.jsonl") as f:
             lines = f.readlines()

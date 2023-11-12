@@ -6,11 +6,9 @@ import logging
 import re
 from datetime import datetime, timezone
 from pathlib import Path
-from types import TracebackType
 from typing import (
     IO,
     Any,
-    AsyncContextManager,
     Callable,
     ContextManager,
     Coroutine,
@@ -19,23 +17,15 @@ from typing import (
     List,
     Optional,
     Tuple,
-    Type,
     TypeVar,
 )
 
 import bs4
 from aiofiles import open as asyncOpen
-from aiohttp import (
-    ClientError,
-    ClientSession,
-    ContentTypeError,
-    ServerConnectionError,
-)
 from tenacity import (
     RetryCallState,
     retry,
     retry_any,
-    retry_if_exception,
     retry_if_exception_type,
     stop_after_attempt,
     wait_random_exponential,
@@ -46,23 +36,22 @@ from warcio.recordloader import ArcWarcRecord
 
 from cmoncrawl.common.loggers import all_purpose_logger, metadata_logger
 from cmoncrawl.common.types import DomainRecord, PipeMetadata
+from cmoncrawl.processor.connectors.base import ICC_Dao, DownloadError
 
-ALLOWED_ERR_FOR_RETRIES = [500, 502, 503, 504]
 
 import time
 
 
 def log_after_retry(retry_state: RetryCallState):
-    if (
-        all_purpose_logger.level <= logging.DEBUG
-        or retry_state.attempt_number % 10 == 0
-    ):
+    retry_num = retry_state.attempt_number - 1
+    if all_purpose_logger.level <= logging.DEBUG or retry_num % 5 == 0:
         reason = str(retry_state.outcome.exception())
-        if not retry_state.next_action:
-            return
 
+        log_message = f"Failed to retrieve from domain_record {reason} retry: {retry_num}"
+        if retry_state.next_action:
+            log_message += f", waiting {retry_state.next_action.sleep} seconds"
         metadata_logger.error(
-            f"Failed to retrieve from domain_record {reason} retry: {retry_state.attempt_number+1}, waiting {retry_state.next_action.sleep} seconds",
+            log_message,
             extra={"domain_record": retry_state.args[0]},
         )
 
@@ -110,12 +99,6 @@ class Throttler:
         return await func(*args, **kwargs)
 
 
-class DownloadError(Exception):
-    def __init__(self, reason: str, status: int):
-        self.reason = reason
-        self.status = status
-
-
 class IDownloader:
     """
     Base class for all downloaders
@@ -127,7 +110,7 @@ class IDownloader:
         raise NotImplementedError()
 
 
-class AsyncDownloader(IDownloader, AsyncContextManager["AsyncDownloader"]):
+class AsyncDownloader(IDownloader):
     """
     Downloader which asynchronously downloads the the data for the domain_record
 
@@ -142,40 +125,23 @@ class AsyncDownloader(IDownloader, AsyncContextManager["AsyncDownloader"]):
 
     def __init__(
         self,
-        base_url: str = "https://data.commoncrawl.org/",
+        dao: ICC_Dao,
         digest_verification: bool = True,
         max_retry: int = 5,
-        sleep_step: int = 10,
-        max_requests_per_second: int = 100,
+        sleep_base: float = 1.5,
+        max_requests_per_second: int = 300,
         encoding: str = "latin-1",
     ):
+        if max_requests_per_second > 500:
+            logging.warning(
+                "You use more than 500 requests per second, the commoncrawl is shared resource, please be considerate"
+            )
         self.digest_verification = digest_verification
-        self.BASE_URL = base_url
+        self.download_client = dao
         self.__max_retry = max_retry
-        self.__sleep_step = sleep_step
+        self.__sleep_base = sleep_base
         self.throttler = Throttler(int(1000 / max_requests_per_second))
         self.encoding = encoding
-
-    async def aopen(self) -> AsyncDownloader:
-        self.client: ClientSession = ClientSession()
-        await self.client.__aenter__()
-        return self
-
-    async def __aenter__(self) -> AsyncDownloader:
-        return await self.aopen()
-
-    async def _download_warc(
-        self, url: str, headers: dict[str, Any], domain_record: DomainRecord
-    ):
-        response_bytes = bytes()
-        async with self.client.get(url, headers=headers) as response:
-            if not response.ok:
-                reason: str = response.reason if response.reason else "Unknown"
-                raise DownloadError(reason, response.status)
-            else:
-                # will be unziped, we cannot use the stream since warcio doesn't support async
-                response_bytes = await response.content.read()
-                return self.unwrap(response_bytes, domain_record)
 
     async def download(self, domain_record: DomainRecord | None):
         if domain_record is None:
@@ -183,47 +149,23 @@ class AsyncDownloader(IDownloader, AsyncContextManager["AsyncDownloader"]):
                 "Async downloader needs domain record, to download"
             )
 
-        # Because someone thought having non c-like range is good idea
-        # Both end/start are inclusive
-        headers = {
-            "Range": "bytes={}-{}".format(
-                domain_record.offset,
-                domain_record.offset + domain_record.length - 1,
-            )
-        }
-        url = f"{self.BASE_URL}{domain_record.filename}"
-
         @retry(
-            stop=stop_after_attempt(self.__max_retry),
-            wait=wait_random_exponential(
-                multiplier=self.__sleep_step, max=120
-            ),
+            stop=stop_after_attempt(self.__max_retry + 1),
+            wait=wait_random_exponential(exp_base=self.__sleep_base, max=120),
             retry=retry_any(
-                retry_if_exception_type(
-                    (
-                        ClientError,
-                        TimeoutError,
-                        ServerConnectionError,
-                        ContentTypeError,
-                    )
-                ),
-                retry_if_exception(
-                    lambda e: isinstance(e, DownloadError)
-                    and e.status in ALLOWED_ERR_FOR_RETRIES
-                ),
+                retry_if_exception_type((DownloadError)),
             ),
             reraise=True,
             before_sleep=log_after_retry,
         )
-        async def download_throttled(
-            url: str, headers: dict[str, str], domain_record: DomainRecord
-        ):
-            return await self.throttler.throttle(
-                self._download_warc, url, headers, domain_record
+        async def download_throttled(domain_record: DomainRecord):
+            warc_bytes: bytes = await self.throttler.throttle(
+                self.download_client.fetch, domain_record
             )
+            return self.unwrap(warc_bytes, domain_record)
 
         ret: List[Tuple[str, PipeMetadata]] = await download_throttled(
-            url, headers, domain_record
+            domain_record
         )
         return ret
 
@@ -252,25 +194,6 @@ class AsyncDownloader(IDownloader, AsyncContextManager["AsyncDownloader"]):
             for warc in ariter
         ]
         return warcs
-
-    async def aclose(
-        self,
-        exc_type: Type[BaseException] | None,
-        exc_val: BaseException | None,
-        exc_tb: TracebackType | None = None,
-    ) -> IDownloader:
-        await self.client.__aexit__(exc_type, exc_val, exc_tb)
-        return self
-
-    async def __aexit__(
-        self,
-        exc_type: Type[BaseException] | None,
-        exc_val: BaseException | None,
-        exc_tb: TracebackType | None = None,
-    ) -> IDownloader:
-        return await self.aclose(
-            exc_type=exc_type, exc_val=exc_val, exc_tb=exc_tb
-        )
 
 
 class WarcIterator(IDownloader, ContextManager["WarcIterator"]):

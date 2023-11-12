@@ -4,10 +4,15 @@ from pathlib import Path
 from typing import Any, List
 from cmoncrawl.aggregator.index_query import IndexAggregator
 from cmoncrawl.common.types import MatchType
+from cmoncrawl.integrations.utils import DAOname, get_dao
+from cmoncrawl.processor.connectors.base import ICC_Dao
 from cmoncrawl.processor.pipeline.downloader import AsyncDownloader
 from cmoncrawl.processor.pipeline.pipeline import ProcessorPipeline
 from cmoncrawl.processor.pipeline.streamer import StreamerFileHTML
-from cmoncrawl.processor.pipeline.extractor import HTMLExtractor, DomainRecordExtractor
+from cmoncrawl.processor.pipeline.extractor import (
+    HTMLExtractor,
+    DomainRecordExtractor,
+)
 from cmoncrawl.middleware.synchronized import query_and_extract
 import argparse
 import asyncio
@@ -34,8 +39,17 @@ def add_mode_args(subparser: Any):
         default=500_000,
         help="Max number of domain records per file output",
     )
+    record_parser.add_argument(
+        "--download_method",
+        type=DAOname,
+        default=DAOname.API,
+        choices=[e.value for e in DAOname],
+        help="Method of downloading warc files",
+    )
+
     html_parser = subparser.add_parser(
-        DownloadOutputFormat.HTML.value, help="Download HTML files from Common Crawl"
+        DownloadOutputFormat.HTML.value,
+        help="Download HTML files from Common Crawl",
     )
 
     html_parser.add_argument(
@@ -49,7 +63,9 @@ def add_mode_args(subparser: Any):
 
 
 def add_args(subparser: Any):
-    parser = subparser.add_parser("download", help="Download data from Common Crawl")
+    parser = subparser.add_parser(
+        "download", help="Download data from Common Crawl"
+    )
     parser.add_argument("url", type=str, help="URL to query")
     parser.add_argument("output", type=Path, help="Path to output directory")
     mode_subparser = parser.add_subparsers(
@@ -113,13 +129,16 @@ def add_args(subparser: Any):
 
 
 def url_download_prepare_router(
-    output_format: DownloadOutputFormat, filter_non_200: bool, encoding: str | None
+    output_format: DownloadOutputFormat,
+    filter_non_200: bool,
+    encoding: str | None,
 ):
     router = Router()
     match output_format:
         case DownloadOutputFormat.RECORD:
             router.load_extractor(
-                "dummy_extractor", DomainRecordExtractor(filter_non_ok=filter_non_200)
+                "dummy_extractor",
+                DomainRecordExtractor(filter_non_ok=filter_non_200),
             )
         case DownloadOutputFormat.HTML:
             router.load_extractor(
@@ -144,7 +163,33 @@ def url_download_prepare_streamer(
                 max_file_size=max_crawls_per_file,
             )
         case DownloadOutputFormat.HTML:
-            return StreamerFileHTML(root=output, max_directory_size=max_direrctory_size)
+            return StreamerFileHTML(
+                root=output, max_directory_size=max_direrctory_size
+            )
+
+
+def get_download_downloader(
+    output_format: DownloadOutputFormat,
+    max_retry: int,
+    sleep_base: float,
+    dao: ICC_Dao | None,
+):
+    match output_format:
+        case DownloadOutputFormat.HTML:
+            if dao is None:
+                raise ValueError("DAO must be specified for record extraction")
+
+            return AsyncDownloader(
+                max_retry=max_retry, sleep_base=sleep_base, dao=dao
+            )
+        case DownloadOutputFormat.RECORD:
+            # TODO This shouldn't download anything change this in future
+            if dao is None:
+                raise ValueError("DAO must be specified for record extraction")
+
+            return AsyncDownloader(
+                max_retry=max_retry, sleep_base=sleep_base, dao=dao
+            )
 
 
 async def url_download(
@@ -162,30 +207,43 @@ async def url_download(
     max_directory_size: int,
     filter_non_200: bool,
     encoding: str | None,
+    download_method: DAOname | None,
 ):
     outstreamer = url_download_prepare_streamer(
         mode, output, max_directory_size, max_crawls_per_file
     )
     router = url_download_prepare_router(mode, filter_non_200, encoding)
-    pipeline = ProcessorPipeline(
-        router, AsyncDownloader(max_retry=max_retry), outstreamer
-    )
+    dao = get_dao(download_method)
 
-    index_agg = IndexAggregator(
-        cc_servers=cc_server or [],
-        domains=[url],
-        match_type=match_type,
-        since=since,
-        to=to,
-        limit=limit,
-        max_retry=max_retry,
-        sleep_step=sleep_step,
-    )
-    await query_and_extract(index_agg, pipeline)
+    try:
+        if dao is not None:
+            await dao.__aenter__()
+
+        downloader = get_download_downloader(mode, max_retry, sleep_step, dao)
+        pipeline = ProcessorPipeline(router, downloader, outstreamer)
+        index_agg = IndexAggregator(
+            cc_servers=cc_server or [],
+            domains=[url],
+            match_type=match_type,
+            since=since,
+            to=to,
+            limit=limit,
+            max_retry=max_retry,
+            sleep_step=sleep_step,
+        )
+        await query_and_extract(index_agg, pipeline)
+    finally:
+        if dao is not None:
+            await dao.__aexit__(None, None, None)
 
 
 def run_download(args: argparse.Namespace):
     mode = DownloadOutputFormat(args.mode)
+    download_method = (
+        DAOname(args.download_method)
+        if mode == DownloadOutputFormat.RECORD
+        else None
+    )
     return asyncio.run(
         url_download(
             url=args.url,
@@ -203,6 +261,9 @@ def run_download(args: argparse.Namespace):
             else 1,
             max_directory_size=args.max_directory_size,
             filter_non_200=args.filter_non_200,
-            encoding=args.encoding if mode == DownloadOutputFormat.HTML else None,
+            encoding=args.encoding
+            if mode == DownloadOutputFormat.HTML
+            else None,
+            download_method=download_method,
         )
     )

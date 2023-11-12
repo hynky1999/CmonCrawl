@@ -5,8 +5,15 @@ import re
 import unittest
 from datetime import datetime
 from pathlib import Path
+from unittest.mock import AsyncMock
+from cmoncrawl.common.loggers import metadata_logger
+
+from aiohttp import ClientError
 
 from cmoncrawl.common.types import DomainRecord, PipeMetadata
+from cmoncrawl.processor.connectors.api import CCAPIGatewayDAO
+from cmoncrawl.processor.connectors.base import DownloadError, ICC_Dao
+from cmoncrawl.processor.connectors.s3 import S3Dao
 from cmoncrawl.processor.pipeline.downloader import (
     AsyncDownloader,
     Throttler,
@@ -18,16 +25,12 @@ from cmoncrawl.processor.pipeline.streamer import (
     StreamerFileHTML,
     StreamerFileJSON,
 )
+from cmoncrawl.config import AWS_PROFILE
 
 
 class AsyncDownloaderTests(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self) -> None:
-        self.downloader: AsyncDownloader = await AsyncDownloader(
-            digest_verification=True
-        ).aopen()
-
-    async def test_download_url(self):
-        dr = DomainRecord(
+        self.dr = DomainRecord(
             url="www.idnes.cz",
             filename="crawl-data/CC-MAIN-2022-05/segments/1642320302715.38/warc/CC-MAIN-20220121010736-20220121040736-00132.warc.gz",
             length=30698,
@@ -35,7 +38,19 @@ class AsyncDownloaderTests(unittest.IsolatedAsyncioTestCase):
             timestamp=datetime.today(),
             encoding="latin-1",
         )
-        res = (await self.downloader.download(dr))[0][0]
+
+    async def test_download_api(self):
+        async with CCAPIGatewayDAO() as connector:
+            downloader = AsyncDownloader(dao=connector, max_retry=50)
+            res = (await downloader.download(self.dr))[0][0]
+        self.assertIsNotNone(
+            re.search("Provozovatelem serveru iDNES.cz je MAFRA", res)
+        )
+
+    async def test_download_s3(self):
+        async with S3Dao(aws_profile=AWS_PROFILE) as connector:
+            downloader = AsyncDownloader(dao=connector, max_retry=50)
+            res = (await downloader.download(self.dr))[0][0]
         self.assertIsNotNone(
             re.search("Provozovatelem serveru iDNES.cz je MAFRA", res)
         )
@@ -63,8 +78,30 @@ class AsyncDownloaderTests(unittest.IsolatedAsyncioTestCase):
         # Check if the throttler delayed the execution by at least 2 second
         self.assertTrue((end_time - start_time).total_seconds() >= 2)
 
-    async def asyncTearDown(self) -> None:
-        await self.downloader.aclose(None, None, None)
+    async def test_logging(self):
+        # Create a fake client that always fails
+        fake_client = AsyncMock(spec=ICC_Dao)
+        fake_client.fetch.side_effect = DownloadError("test", 500)
+
+        downloader = AsyncDownloader(
+            max_retry=11, dao=fake_client, sleep_step=0
+        )
+
+        # Create a some domain record
+        domain_record = DomainRecord(
+            url="http://test.com",
+            filename="test",
+            offset=0,
+            length=0,
+            timestamp=datetime.now(),
+        )
+
+        # Attempt to download and expect a failure
+        with self.assertLogs(metadata_logger, level="ERROR") as mock_logging:
+            with self.assertRaises(DownloadError):
+                await downloader.download(domain_record)
+
+            self.assertEqual(len(mock_logging.output), 3)
 
 
 class WarcIteratorTests(unittest.IsolatedAsyncioTestCase):
@@ -109,7 +146,7 @@ class RouterTests(unittest.TestCase):
         self.assertEqual(c3, self.router.modules["BBB"])
 
 
-class ExtradctorTests(unittest.TestCase):
+class ExtractorTests(unittest.TestCase):
     def test_encoding(self):
         def create_html():
             return "<html><body><p>test</p></body></html>".encode(
