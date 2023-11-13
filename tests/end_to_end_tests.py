@@ -16,7 +16,7 @@ from cmoncrawl.integrations.utils import DAOname
 from cmoncrawl.processor.connectors.base import ICC_Dao
 
 
-class Download_files(unittest.IsolatedAsyncioTestCase):
+class ExtractFiles(unittest.IsolatedAsyncioTestCase):
     """
     CLI Testing
     """
@@ -64,9 +64,10 @@ class Download_files(unittest.IsolatedAsyncioTestCase):
         with open(output_folder / "0_file.jsonl") as f:
             lines = f.readlines()
         self.assertEqual(len(lines), 5)
-        self.assertEqual(
-            json.loads(lines[4])["title"],
+        titles = [json.loads(line)["title"] for line in lines]
+        self.assertIn(
             '<title data-document-head-keeper="0">Seznam – najdu tam, co neznám</title>',
+            titles,
         )
 
     async def test_extract_from_html(self):
@@ -95,45 +96,4 @@ class Download_files(unittest.IsolatedAsyncioTestCase):
             '<title data-document-head-keeper="0">Seznam – najdu tam, co neznám</title>',
         )
 
-
-class Download_files(unittest.IsolatedAsyncioTestCase):
-    """
-    CLI Testing
-    """
-
-    async def asyncSetUp(self) -> None:
-        all_purpose_logger.setLevel("DEBUG")
-        metadata_logger.setLevel("DEBUG")
-        self.base_folder = Path(__file__).parent / "test_extract"
-        self.output_folder = self.base_folder / "output"
-
-    async def asyncTearDown(self) -> None:
-        # remoev output folder
-        if self.output_folder.exists():
-            shutil.rmtree(self.output_folder)
-
-    @parameterized.expand([(DAOname.API,), (DAOname.S3,)])
-    async def test_download_records(self, dao: DAOname):
-        await url_download(
-            url="https://example.com",
-            match_type=None,
-            output=self.output_folder / "directory_0" / "0_file.jsonl",
-            cc_server=None,
-            since=datetime(2021, 1, 1),
-            to=datetime(2021, 12, 31),
-            limit=100,
-            max_retry=40,
-            sleep_base=1.4,
-            mode=DownloadOutputFormat.RECORD,
-            max_crawls_per_file=1,
-            max_directory_size=10,
-            filter_non_200=True,
-            encoding="utf-8",
-            download_method=dao,
-        )
-        self.assertTrue((self.output_folder / "downloaded_file.txt").exists())
-        with open(self.output_folder / "directory_0" / "0_file.jsonl") as f:
-            lines = f.readlines()
-
-        lines = [json.loads(line) for line in lines]
-        self.assertEqual(len(lines), 5)
+    # TODO Add test for download

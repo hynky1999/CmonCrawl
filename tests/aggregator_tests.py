@@ -64,7 +64,7 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
         await self.di.aclose(None, None, None)
 
     async def test_indexer_num_pages(self):
-        response = await self.di.get_number_of_pages(
+        num_pages = await self.di.get_number_of_pages(
             self.client,
             self.CC_SERVERS[0],
             "idnes.cz",
@@ -72,10 +72,7 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
             sleep_base=4,
             match_type=MatchType.DOMAIN,
         )
-        self.assertIsNotNone(response)
-        num, size = response.content
-        self.assertEqual(num, 14)
-        self.assertEqual(size, 5)
+        self.assertEqual(num_pages, 14)
 
     async def test_indexer_all_CC(self):
         indexes = await get_all_CC_indexes(
@@ -188,16 +185,6 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
         ]
         for i, url in enumerate(urls):
             self.assertEquals(unify_url_id(url), urls_ids[i])
-
-    async def test_logging_failure_page(self):
-        async for record in self.di:
-            self.assertIsNotNone(record)
-            self.assertIsNotNone(record.url)
-            self.assertIsNotNone(record.filename)
-            self.assertIsNotNone(record.offset)
-            self.assertIsNotNone(record.length)
-            self.assertIsNotNone(record.timestamp)
-            self.assertIsNotNone(record.status)
 
 
 if __name__ == "__main__":

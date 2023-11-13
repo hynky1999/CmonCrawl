@@ -139,7 +139,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         max_retry: int,
         sleep_base: float,
         page_size: int | None = None,
-    ):
+    ) -> int:
         params: Dict[str, str | int] = {
             "showNumPages": "true",
             "output": "json",
@@ -279,7 +279,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
                 next_crawl = self.__crawls_remaining.popleft()
 
                 try:
-                    pages = await IndexAggregator.get_number_of_pages(
+                    num_pages = await IndexAggregator.get_number_of_pages(
                         self.__client,
                         next_crawl.cdx_server,
                         next_crawl.domain,
@@ -293,10 +293,10 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
                     )
                     continue
                 all_purpose_logger.info(
-                    f"Found {pages} pages for {next_crawl.domain} from {next_crawl.cdx_server}"
+                    f"Found {num_pages} pages for {next_crawl.domain} from {next_crawl.cdx_server}"
                 )
 
-                for i in range(pages):
+                for i in range(num_pages):
                     dc = DomainCrawl(
                         next_crawl.domain, next_crawl.cdx_server, i
                     )
@@ -315,7 +315,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
                             ),
                         )
                     )
-                return pages
+                return num_pages
             return 0
 
         async def __await_next_prefetch(self):
