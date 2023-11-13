@@ -12,13 +12,11 @@ from typing import (
     List,
     Dict,
     Set,
-    Tuple,
     Type,
 )
 from cmoncrawl.common.loggers import all_purpose_logger
 from cmoncrawl.common.types import (
     DomainRecord,
-    RetrieveResponse,
     DomainCrawl,
     MatchType,
 )
@@ -48,7 +46,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         limit (int, optional): The maximum number of results to return. Defaults to None.
         max_retry (int, optional): The maximum number of retries for a single request. Defaults to 5.
         prefetch_size (int, optional): The number of indexes to fetch concurrently. Defaults to 3.
-        sleep_step (int, optional): Sleep increase time between retries. Defaults to 20.
+        sleep_base: float: The base for the exponential backoff time calculation between retries. Defaults to 1.5.
 
     Examples:
         >>> async with IndexAggregator(["example.com"]) as aggregator:
@@ -68,7 +66,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         limit: int | None = None,
         max_retry: int = 5,
         prefetch_size: int = 3,
-        sleep_step: int = 20,
+        sleep_base: float = 1.5,
     ) -> None:
         self.domains = domains
         self.cc_indexes_server = cc_indexes_server
@@ -78,7 +76,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         self.limit = limit
         self.max_retry = max_retry
         self.prefetch_size = prefetch_size
-        self.sleep_step = sleep_step
+        self.sleep_base = sleep_base
         self.match_type = match_type
         self.iterators: List[IndexAggregator.IndexAggregatorIterator] = []
 
@@ -106,7 +104,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
             limit=self.limit,
             max_retry=self.max_retry,
             prefetch_size=self.prefetch_size,
-            sleep_step=self.sleep_step,
+            sleep_base=self.sleep_base,
         )
         self.iterators.append(iterator)
         return iterator
@@ -128,7 +126,9 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         exc_val: BaseException | None,
         exc_tb: TracebackType | None = None,
     ) -> IndexAggregator:
-        return await self.aclose(exc_type=exc_type, exc_val=exc_val, exc_tb=exc_tb)
+        return await self.aclose(
+            exc_type=exc_type, exc_val=exc_val, exc_tb=exc_tb
+        )
 
     @staticmethod
     async def get_number_of_pages(
@@ -137,7 +137,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         domain: str,
         match_type: MatchType | None,
         max_retry: int,
-        sleep_step: int,
+        sleep_base: float,
         page_size: int | None = None,
     ):
         params: Dict[str, str | int] = {
@@ -153,21 +153,20 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
             params["page_size"] = page_size
         response = await retrieve(
             client,
-            domain,
             cdx_server,
             params,
             "text/x-ndjson",
             max_retry=max_retry,
-            type="num_pages",
-            sleep_step=sleep_step,
+            sleep_base=sleep_base,
+            log_additional_info={
+                "type": "num_pages",
+                "domain": domain,
+                "cdx_server": cdx_server,
+            },
         )
-        if response.content is not None:
-            pages = response.content[0].get("pages", 0)
-            page_size = response.content[0].get("pageSize", 0)
-            response.content = pages, page_size
-            all_purpose_logger.info(f"Got {pages} pages for {domain}")
+        pages = response[0].get("pages", 0)
 
-        return response
+        return pages
 
     @staticmethod
     async def get_captured_responses(
@@ -176,11 +175,11 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         domain: str,
         match_type: MatchType | None,
         max_retry: int,
-        sleep_step: int,
+        sleep_base: float,
         page: int,
         since: datetime = datetime.min,
         to: datetime = datetime.max,
-    ):
+    ) -> List[DomainRecord]:
         params: Dict[str, str | int] = {
             "output": "json",
             "page": page,
@@ -190,30 +189,43 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         }
         if match_type is not None:
             params["matchType"] = match_type.value
-        reponse = await retrieve(
-            client,
-            domain,
-            cdx_server,
-            params,
-            "text/x-ndjson",
-            max_retry=max_retry,
-            sleep_step=sleep_step,
-            page=page,
+        try:
+            reponse = await retrieve(
+                client,
+                cdx_server,
+                params,
+                "text/x-ndjson",
+                max_retry=max_retry,
+                sleep_base=sleep_base,
+                log_additional_info={
+                    "type": "page",
+                    "domain": domain,
+                    "page": page,
+                    "cdx_server": cdx_server,
+                },
+            )
+        except Exception as e:
+            all_purpose_logger.error(
+                f"Failed to retrieve page {page} for {domain} from {cdx_server} with reason {e}"
+            )
+            return []
+
+        domain_records = [
+            DomainRecord(
+                filename=js.get("filename", 0),
+                offset=int(js.get("offset", 0)),
+                length=int(js.get("length", 0)),
+                url=js.get("url", ""),
+                encoding=js.get("encoding"),
+                digest=js.get("digest", None),
+                timestamp=timestamp_to_datetime(js["timestamp"]),
+            )
+            for js in reponse
+        ]
+        all_purpose_logger.info(
+            f"Found {len(domain_records)} domain records for {domain} on page {page} from {cdx_server}"
         )
-        if reponse.content is not None:
-            reponse.content = [
-                DomainRecord(
-                    filename=js.get("filename", 0),
-                    offset=int(js.get("offset", 0)),
-                    length=int(js.get("length", 0)),
-                    url=js.get("url", ""),
-                    encoding=js.get("encoding"),
-                    digest=js.get("digest", None),
-                    timestamp=timestamp_to_datetime(js["timestamp"]),
-                )
-                for js in reponse.content
-            ]
-        return reponse
+        return domain_records
 
     class IndexAggregatorIterator(AsyncIterator[DomainRecord]):
         def __init__(
@@ -227,21 +239,18 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
             limit: int | None,
             max_retry: int,
             prefetch_size: int,
-            # time sleeping lineary increases with failed attempts
-            sleep_step: int,
+            sleep_base: float,
         ):
             self.__client = client
             self.__opt_prefetch_size = prefetch_size
             self.__domain_records: Deque[DomainRecord] = deque()
-            self.prefetch_queue: Set[
-                asyncio.Task[Tuple[RetrieveResponse, DomainCrawl]]
-            ] = set()
+            self.prefetch_queue: Set[asyncio.Task[List[DomainRecord]]] = set()
             self.__since = since
             self.__to = to
             self.__limit = limit
             self.__max_retry = max_retry
             self.__total = 0
-            self.__sleep_step = sleep_step
+            self.__sleep_base = sleep_base
             self.__match_type = match_type
 
             self.__crawls_remaining = self.init_crawls_queue(domains, CC_files)
@@ -249,6 +258,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         def init_crawls_queue(
             self, domains: List[str], CC_files: List[str]
         ) -> Deque[DomainCrawl]:
+            # TODO Be smarter about this, The last -XX determines the week in the year
             return deque(
                 [
                     DomainCrawl(cdx_server=crawl, domain=domain, page=0)
@@ -268,23 +278,42 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
             while len(self.__crawls_remaining) > 0:
                 next_crawl = self.__crawls_remaining.popleft()
 
-                retr = await IndexAggregator.get_number_of_pages(
-                    self.__client,
-                    next_crawl.cdx_server,
-                    next_crawl.domain,
-                    match_type=self.__match_type,
-                    max_retry=self.__max_retry,
-                    sleep_step=self.__sleep_step,
+                try:
+                    pages = await IndexAggregator.get_number_of_pages(
+                        self.__client,
+                        next_crawl.cdx_server,
+                        next_crawl.domain,
+                        match_type=self.__match_type,
+                        max_retry=self.__max_retry,
+                        sleep_base=self.__sleep_base,
+                    )
+                except Exception as e:
+                    all_purpose_logger.error(
+                        f"Failed to retrieve number of pages for {next_crawl.domain} from {next_crawl.cdx_server} with reason {e}"
+                    )
+                    continue
+                all_purpose_logger.info(
+                    f"Found {pages} pages for {next_crawl.domain} from {next_crawl.cdx_server}"
                 )
-                if retr.content is None:
-                    # Failed to retrieve it
-                    return await self.__prefetch_next_crawl()
-                pages = retr.content[0]
 
                 for i in range(pages):
-                    dc = DomainCrawl(next_crawl.domain, next_crawl.cdx_server, i)
+                    dc = DomainCrawl(
+                        next_crawl.domain, next_crawl.cdx_server, i
+                    )
                     self.prefetch_queue.add(
-                        asyncio.create_task(self.__fetch_next_dc(dc))
+                        asyncio.create_task(
+                            IndexAggregator.get_captured_responses(
+                                self.__client,
+                                dc.cdx_server,
+                                dc.domain,
+                                match_type=self.__match_type,
+                                page=dc.page,
+                                since=self.__since,
+                                to=self.__to,
+                                max_retry=self.__max_retry,
+                                sleep_base=self.__sleep_base,
+                            ),
+                        )
                     )
                 return pages
             return 0
@@ -304,20 +333,16 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
             ):
                 await self.__prefetch_next_crawl()
 
-            while len(self.prefetch_queue) > 0 and len(self.__domain_records) == 0:
+            while (
+                len(self.prefetch_queue) > 0
+                and len(self.__domain_records) == 0
+            ):
                 done, self.prefetch_queue = await asyncio.wait(
                     self.prefetch_queue, return_when="FIRST_COMPLETED"
                 )
                 for task in done:
-                    response, dc = task.result()
-
-                    if response.content is not None:
-                        self.__domain_records.extend(response.content)
-                        all_purpose_logger.info(
-                            f"Found {len(response.content)} records for {dc.domain} of {dc.cdx_server}"
-                        )
-
-            # Nothing more to prefetch
+                    response = task.result()
+                    self.__domain_records.extend(response)
 
         async def __anext__(self) -> DomainRecord:
             # Stop if we fetched everything or reached limit

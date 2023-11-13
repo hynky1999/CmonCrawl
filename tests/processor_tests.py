@@ -7,6 +7,7 @@ from datetime import datetime
 from pathlib import Path
 from unittest.mock import AsyncMock
 from cmoncrawl.common.loggers import metadata_logger
+from cmoncrawl.config import CONFIG
 
 from aiohttp import ClientError
 
@@ -25,7 +26,6 @@ from cmoncrawl.processor.pipeline.streamer import (
     StreamerFileHTML,
     StreamerFileJSON,
 )
-from cmoncrawl.config import AWS_PROFILE
 
 
 class AsyncDownloaderTests(unittest.IsolatedAsyncioTestCase):
@@ -48,7 +48,7 @@ class AsyncDownloaderTests(unittest.IsolatedAsyncioTestCase):
         )
 
     async def test_download_s3(self):
-        async with S3Dao(aws_profile=AWS_PROFILE) as connector:
+        async with S3Dao(aws_profile=CONFIG.AWS_PROFILE) as connector:
             downloader = AsyncDownloader(dao=connector, max_retry=50)
             res = (await downloader.download(self.dr))[0][0]
         self.assertIsNotNone(
@@ -84,7 +84,9 @@ class AsyncDownloaderTests(unittest.IsolatedAsyncioTestCase):
         fake_client.fetch.side_effect = DownloadError("test", 500)
 
         downloader = AsyncDownloader(
-            max_retry=11, dao=fake_client, sleep_step=0
+            max_retry=11,
+            dao=fake_client,
+            sleep_base=0,
         )
 
         # Create a some domain record

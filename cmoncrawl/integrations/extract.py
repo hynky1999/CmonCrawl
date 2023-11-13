@@ -9,9 +9,10 @@ from cmoncrawl.common.loggers import setup_loggers
 from cmoncrawl.common.types import ExtractConfig
 from cmoncrawl.integrations.utils import DAOname, get_dao
 from cmoncrawl.processor.connectors.base import ICC_Dao
+from cmoncrawl.config import CONFIG
 
 from cmoncrawl.processor.pipeline.downloader import (
-    DownloaderDummy,
+    DownloaderLocalFiles,
     AsyncDownloader,
 )
 from cmoncrawl.processor.pipeline.pipeline import ProcessorPipeline
@@ -46,7 +47,7 @@ def add_mode_args(subparser: Any):
         "--download_method",
         type=DAOname,
         default=DAOname.API,
-        choices=[e.value for e in DAOname],
+        choices=[e for e in DAOname],
         help="Method of downloading warc files",
     )
 
@@ -127,7 +128,7 @@ def get_extract_downloader(
 ):
     match mode:
         case ExtractMode.HTML:
-            return DownloaderDummy(files_path, url, date)
+            return DownloaderLocalFiles(files_path, url, date)
         case ExtractMode.RECORD:
             if dao is None:
                 raise ValueError("DAO must be specified for record extraction")
@@ -228,7 +229,10 @@ def _extract_task(
     download_method = (
         DAOname(args.download_method) if args.download_method else None
     )
+
+    # We have to setup loggers / aws in each process
     setup_loggers(args.verbosity)
+    CONFIG.update_from_cli(args)
 
     asyncio.run(
         extract_from_files(

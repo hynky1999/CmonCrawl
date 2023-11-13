@@ -28,7 +28,11 @@ from cmoncrawl.common.types import DomainRecord, MatchType
 from cmoncrawl.aggregator.index_query import IndexAggregator
 import unittest
 from moto import mock_s3, mock_athena
-from cmoncrawl.aggregator.athena_query import AthenaAggregator, DomainRecord, MatchType
+from cmoncrawl.aggregator.athena_query import (
+    AthenaAggregator,
+    DomainRecord,
+    MatchType,
+)
 from datetime import datetime
 
 
@@ -43,12 +47,14 @@ import botocore
 
 class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self) -> None:
-        self.CC_SERVERS = ["https://index.commoncrawl.org/CC-MAIN-2022-05-index"]
+        self.CC_SERVERS = [
+            "https://index.commoncrawl.org/CC-MAIN-2022-05-index"
+        ]
         self.di = await IndexAggregator(
             ["idnes.cz"],
             cc_servers=self.CC_SERVERS,
             max_retry=100,
-            sleep_step=10,
+            sleep_base=10,
             prefetch_size=1,
             match_type=MatchType.DOMAIN,
         ).aopen()
@@ -63,7 +69,7 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
             self.CC_SERVERS[0],
             "idnes.cz",
             max_retry=20,
-            sleep_step=4,
+            sleep_base=4,
             match_type=MatchType.DOMAIN,
         )
         self.assertIsNotNone(response)
@@ -72,10 +78,15 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(size, 5)
 
     async def test_indexer_all_CC(self):
-        indexes = await get_all_CC_indexes(self.client, self.di.cc_indexes_server)
+        indexes = await get_all_CC_indexes(
+            self.client, self.di.cc_indexes_server
+        )
         indexes = sorted(indexes)
         indexes = indexes[
-            : indexes.index("https://index.commoncrawl.org/CC-MAIN-2022-27-index") + 1
+            : indexes.index(
+                "https://index.commoncrawl.org/CC-MAIN-2022-27-index"
+            )
+            + 1
         ]
         self.assertEqual(len(indexes), 89)
 
@@ -112,7 +123,7 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
             to=datetime(2022, 1, 10),
             limit=None,
             max_retry=10,
-            sleep_step=4,
+            sleep_base=4,
             prefetch_size=2,
             match_type=MatchType.DOMAIN,
         )
@@ -177,6 +188,16 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
         ]
         for i, url in enumerate(urls):
             self.assertEquals(unify_url_id(url), urls_ids[i])
+
+    async def test_logging_failure_page(self):
+        async for record in self.di:
+            self.assertIsNotNone(record)
+            self.assertIsNotNone(record.url)
+            self.assertIsNotNone(record.filename)
+            self.assertIsNotNone(record.offset)
+            self.assertIsNotNone(record.length)
+            self.assertIsNotNone(record.timestamp)
+            self.assertIsNotNone(record.status)
 
 
 if __name__ == "__main__":

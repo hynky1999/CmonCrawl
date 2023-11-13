@@ -90,9 +90,7 @@ class RetrieveResponse:
     Response from retrieve.
     """
 
-    status: int
     content: Any
-    reason: None | str
 
 
 @dataclass

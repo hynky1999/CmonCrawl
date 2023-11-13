@@ -49,7 +49,9 @@ def log_after_retry(retry_state: RetryCallState):
 
         log_message = f"Failed to retrieve from domain_record {reason} retry: {retry_num}"
         if retry_state.next_action:
-            log_message += f", waiting {retry_state.next_action.sleep} seconds"
+            log_message += (
+                f", waiting {round(retry_state.next_action.sleep, 2)} seconds"
+            )
         metadata_logger.error(
             log_message,
             extra={"domain_record": retry_state.args[0]},
@@ -118,7 +120,7 @@ class AsyncDownloader(IDownloader):
         base_url (str, optional): Base url where to download data from. Defaults to "https://data.commoncrawl.org/".
         digest_verification (bool, optional): Whether to verify the digest of the downloaded data. Defaults to True.
         max_retry (int, optional): Maximum number of retries. Defaults to 5.
-        sleep_step (int, optional): Sleep increase time between retries. Defaults to 10.
+        sleep_base (float, optional): Base sleep time for exponential backoff in retries. Defaults to 1.5.
         encoding: Default encoding to be used
 
     """
@@ -282,14 +284,14 @@ class WarcIterator(IDownloader, ContextManager["WarcIterator"]):
         return warcs
 
 
-class DownloaderDummy(IDownloader):
+class DownloaderLocalFiles(IDownloader):
     """
-    Dummy downloader for testing
-    It doesn't download anything but return files passed in the constructor
+    Local file downloader and metadata extractor for testing
+    It doesn't download anything but passes local files further in the pipeline
     and extracts metadata from the file
 
     Args:
-        files (List[Path]): List of files to return
+        files (List[Path]): List of local files to pass
         url (str, optional): Url to use for metadata. Defaults to None.
         date (datetime, optional): Date to add to metadata. Defaults to None.
     """
@@ -307,15 +309,15 @@ class DownloaderDummy(IDownloader):
 
     async def download(self, domain_record: DomainRecord | None):
         if self.file_index >= len(self.files):
-            raise IndexError("No more files to download")
+            raise IndexError("No more files to pass")
 
         async with asyncOpen(self.files[self.file_index], "r") as f:
             content = await f.read()
-        metadata = self.mine_metadata(content, self.files[self.file_index])
+        metadata = self.extract_metadata(content, self.files[self.file_index])
         self.file_index += 1
         return [(content, metadata)]
 
-    def mine_metadata(self, content: str, file_path: Path):
+    def extract_metadata(self, content: str, file_path: Path):
         bs4_article = bs4.BeautifulSoup(content, "html.parser")
         url = self.url
         if url is None:
@@ -369,3 +371,36 @@ class DownloaderDummy(IDownloader):
             url = url[0]
         all_purpose_logger.debug(f"Found url: {url}")
         return url
+
+
+class DummyDownloader(IDownloader):
+    """
+    A dummy downloader class that does not perform any actual downloading. It simply adds an empty string as the content
+    and passes the domain record further into the pipeline.
+    """
+
+    async def download(self, domain_record: DomainRecord | None):
+        """
+        Downloads the content for the given domain record.
+
+        Args:
+            domain_record (DomainRecord | None): The domain record to download.
+
+        Returns:
+            List[Tuple[str, PipeMetadata]]: A list containing a single tuple with an empty string as the first element
+                and the pipe metadata as the second element.
+        """
+        if domain_record is None:
+            raise ValueError(
+                "Dummy downloader needs domain record to pass it further"
+            )
+
+        return [
+            (
+                "",
+                PipeMetadata(
+                    domain_record=domain_record,
+                    encoding="utf-8",
+                ),
+            )
+        ]

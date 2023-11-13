@@ -1,5 +1,6 @@
 import argparse
 from typing import Any, Dict
+from cmoncrawl.config import CONFIG
 from cmoncrawl.integrations.download import add_args as add_download_args
 from cmoncrawl.integrations.extract import add_args as add_extract_args
 from cmoncrawl.common.loggers import (
@@ -11,8 +12,20 @@ from cmoncrawl.common.loggers import (
 
 def add_args(parser: argparse.ArgumentParser):
     parser.add_argument(
-        "--verbosity", "-v", choices=[0, 1, 2], type=int, default=1, help="Verbosity"
+        "--verbosity",
+        "-v",
+        choices=[0, 1, 2],
+        type=int,
+        default=1,
+        help="Verbosity",
     )
+    parser.add_argument(
+        "--aws_profile",
+        type=str,
+        default=None,
+        help="AWS profile to use for AWS calls (Athena, S3)",
+    )
+
     return parser
 
 
@@ -34,6 +47,7 @@ def get_args():
 
 def process_args(args: argparse.Namespace):
     setup_loggers(args.verbosity)
+    CONFIG.update_from_cli(args)
 
 
 def main():

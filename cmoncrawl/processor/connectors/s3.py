@@ -1,5 +1,7 @@
 from typing import Any
 from cmoncrawl.common.types import DomainRecord
+from botocore.config import Config
+
 
 import aioboto3
 from botocore.exceptions import NoCredentialsError
@@ -39,11 +41,18 @@ class S3Dao(ICC_Dao):
         self.client = None
 
     async def __aenter__(self) -> "S3Dao":
-        self.client = await aioboto3.Session(profile_name=self.aws_profile).client("s3").__aenter__()  # type: ignore
+        # We handle the retries ourselves, so we disable the botocore retries
+        config = Config(
+            retries={
+                "max_attempts": 1,
+            }
+        )
+        self.client = await aioboto3.Session(profile_name=self.aws_profile).client("s3", config=config).__aenter__()  # type: ignore
         return self
 
     async def __aexit__(self, exc_type: Any, exc: Any, tb: Any) -> None:
-        await self.client.__aexit__(exc_type, exc, tb)  # type: ignore
+        if self.client is not None:
+            await self.client.__aexit__(exc_type, exc, tb)  # type: ignore
 
     async def fetch(self, domain_record: DomainRecord) -> bytes:
         """

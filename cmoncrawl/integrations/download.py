@@ -6,7 +6,10 @@ from cmoncrawl.aggregator.index_query import IndexAggregator
 from cmoncrawl.common.types import MatchType
 from cmoncrawl.integrations.utils import DAOname, get_dao
 from cmoncrawl.processor.connectors.base import ICC_Dao
-from cmoncrawl.processor.pipeline.downloader import AsyncDownloader
+from cmoncrawl.processor.pipeline.downloader import (
+    AsyncDownloader,
+    DummyDownloader,
+)
 from cmoncrawl.processor.pipeline.pipeline import ProcessorPipeline
 from cmoncrawl.processor.pipeline.streamer import StreamerFileHTML
 from cmoncrawl.processor.pipeline.extractor import (
@@ -39,13 +42,6 @@ def add_mode_args(subparser: Any):
         default=500_000,
         help="Max number of domain records per file output",
     )
-    record_parser.add_argument(
-        "--download_method",
-        type=DAOname,
-        default=DAOname.API,
-        choices=[e.value for e in DAOname],
-        help="Method of downloading warc files",
-    )
 
     html_parser = subparser.add_parser(
         DownloadOutputFormat.HTML.value,
@@ -57,6 +53,13 @@ def add_mode_args(subparser: Any):
         type=str,
         default=None,
         help="Force usage of specified encoding is possible",
+    )
+    html_parser.add_argument(
+        "--download_method",
+        type=DAOname,
+        default=DAOname.API,
+        choices=[e for e in DAOname],
+        help="Method for downloading warc files from Common Crawl, it only applies to HTML download",
     )
 
     return subparser
@@ -101,10 +104,10 @@ def add_args(subparser: Any):
         help="Max number of retries for a request, when the requests are failing increase this number",
     )
     parser.add_argument(
-        "--sleep_step",
+        "--sleep_base",
         type=int,
-        default=4,
-        help="Number of increased second to add to sleep time between each failed download attempt, increase this number if the server tell you to slow down",
+        default=1.5,
+        help="Base sleep time for exponential backoff in case of request failure.",
     )
     # Add option to output to either json or html
     parser.add_argument(
@@ -183,13 +186,7 @@ def get_download_downloader(
                 max_retry=max_retry, sleep_base=sleep_base, dao=dao
             )
         case DownloadOutputFormat.RECORD:
-            # TODO This shouldn't download anything change this in future
-            if dao is None:
-                raise ValueError("DAO must be specified for record extraction")
-
-            return AsyncDownloader(
-                max_retry=max_retry, sleep_base=sleep_base, dao=dao
-            )
+            return DummyDownloader()
 
 
 async def url_download(
@@ -201,7 +198,7 @@ async def url_download(
     to: datetime,
     limit: int,
     max_retry: int,
-    sleep_step: int,
+    sleep_base: float,
     mode: DownloadOutputFormat,
     max_crawls_per_file: int,
     max_directory_size: int,
@@ -219,7 +216,7 @@ async def url_download(
         if dao is not None:
             await dao.__aenter__()
 
-        downloader = get_download_downloader(mode, max_retry, sleep_step, dao)
+        downloader = get_download_downloader(mode, max_retry, sleep_base, dao)
         pipeline = ProcessorPipeline(router, downloader, outstreamer)
         index_agg = IndexAggregator(
             cc_servers=cc_server or [],
@@ -229,7 +226,7 @@ async def url_download(
             to=to,
             limit=limit,
             max_retry=max_retry,
-            sleep_step=sleep_step,
+            sleep_base=sleep_base,
         )
         await query_and_extract(index_agg, pipeline)
     finally:
@@ -241,7 +238,7 @@ def run_download(args: argparse.Namespace):
     mode = DownloadOutputFormat(args.mode)
     download_method = (
         DAOname(args.download_method)
-        if mode == DownloadOutputFormat.RECORD
+        if mode == DownloadOutputFormat.HTML
         else None
     )
     return asyncio.run(
@@ -254,7 +251,7 @@ def run_download(args: argparse.Namespace):
             to=args.to,
             limit=args.limit,
             max_retry=args.max_retry,
-            sleep_step=args.sleep_step,
+            sleep_base=args.sleep_base,
             mode=mode,
             max_crawls_per_file=args.max_crawls_per_file
             if mode == DownloadOutputFormat.RECORD
