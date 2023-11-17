@@ -121,6 +121,7 @@ class AsyncDownloader(IDownloader):
         digest_verification (bool, optional): Whether to verify the digest of the downloaded data. Defaults to True.
         max_retry (int, optional): Maximum number of retries. Defaults to 5.
         sleep_base (float, optional): Base sleep time for exponential backoff in retries. Defaults to 1.5.
+        max_requests_per_second (int, optional): Maximum number of requests per second. Defaults to 30, please be respectful to others
         encoding: Default encoding to be used
 
     """
@@ -131,7 +132,7 @@ class AsyncDownloader(IDownloader):
         digest_verification: bool = True,
         max_retry: int = 5,
         sleep_base: float = 1.5,
-        max_requests_per_second: int = 300,
+        max_requests_per_second: int = 30,
         encoding: str = "latin-1",
     ):
         if max_requests_per_second > 500:

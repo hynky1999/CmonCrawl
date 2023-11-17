@@ -98,7 +98,7 @@ class AthenaAggregator(AsyncIterable[DomainRecord]):
         domains (List[str]): A list of domains to search for.
         cc_indexes_server (str, optional): The commoncrawl index server to use. Defaults to "http://index.commoncrawl.org/collinfo.json".
         match_type (MatchType, optional): Match type for cdx-api. Defaults to MatchType.EXACT.
-        cc_servers (List[str], optional): A list of commoncrawl servers to use. If [], then indexes will be retrieved from the cc_indexes_server. Defaults to [].
+        cc_servers (List[str], optional): A list of commoncrawl servers to use. If [], then indexes will be retrieved from the cc_indexes_server. Defaults to []. Example: ["https://index.commoncrawl.org/CC-MAIN-2021-04-index"]
         since (datetime, optional): The start date for the search. Defaults to datetime.min.
         to (datetime, optional): The end date for the search. Defaults to datetime.max.
         limit (int, optional): The maximum number of results to return. Defaults to None.
@@ -128,7 +128,7 @@ class AthenaAggregator(AsyncIterable[DomainRecord]):
         since: datetime = datetime.min,
         to: datetime = datetime.max,
         limit: int | None = None,
-        prefetch_size: int = 3,
+        prefetch_size: int = 2,
         max_retry: int = 5,
         extra_sql_where_clause: str | None = None,
         batch_size: int = 1,
@@ -243,6 +243,8 @@ class AthenaAggregator(AsyncIterable[DomainRecord]):
             since: Optional[datetime],
             to: Optional[datetime],
             limit: int | None,
+            prefetch_size: int,
+            max_retry: int,
             batch_size: int,
             extra_sql_where_clause: str | None,
             bucket_name: str,
@@ -267,7 +269,8 @@ class AthenaAggregator(AsyncIterable[DomainRecord]):
             self.__prefetch_queue: Set[
                 asyncio.Task[List[DomainRecord]]
             ] = set()
-            self.__opt_prefetch_size = 5
+            self.__prefetch_size = prefetch_size
+            self.__max_retry = max_retry
 
         def init_crawls_queue(
             self, CC_files: List[str], batch_size: int
@@ -362,7 +365,6 @@ class AthenaAggregator(AsyncIterable[DomainRecord]):
                 except s3.exceptions.ClientError:
                     return None
 
-        # TODO Tenacity for retries
         async def __fetch_next_crawl_batch(self, crawl_batch: List[str]):
             query = prepare_athena_sql_query(
                 self.__domains,
@@ -403,19 +405,28 @@ class AthenaAggregator(AsyncIterable[DomainRecord]):
             """
             Gets the next athen result and adds it to the prefetch queue
             """
+
             # Wait for the next prefetch to finish
             # Don't prefetch if limit is set to avoid overfetching
+            @tenacity.retry(
+                stop=tenacity.stop_after_attempt(self.__max_retry),
+                wait=tenacity.wait_random_exponential(max=100, multiplier=10),
+                reraise=True,
+            )
+            async def fetch_next_crawl_with_retry(next_crawl: List[str]):
+                return await self.__fetch_next_crawl_batch(next_crawl)
+
             while len(self.__crawls_remaining) > 0 and (
                 len(self.__prefetch_queue) == 0
                 or (
                     self.__limit is None
-                    and len(self.__prefetch_queue) <= self.__opt_prefetch_size
+                    and len(self.__prefetch_queue) <= self.__prefetch_size
                 )
             ):
                 next_crawl = self.__crawls_remaining.pop(0)
                 self.__prefetch_queue.add(
                     asyncio.create_task(
-                        self.__fetch_next_crawl_batch(next_crawl)
+                        fetch_next_crawl_with_retry(next_crawl)
                     )
                 )
 
@@ -464,6 +475,8 @@ class AthenaAggregator(AsyncIterable[DomainRecord]):
             self.since,
             self.to,
             self.limit,
+            self.max_retry,
+            self.prefetch_size,
             self.batch_size,
             self.extra_sql_where_clause,
             self.bucket_name,
