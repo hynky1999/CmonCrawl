@@ -1,18 +1,25 @@
-from dataclasses import dataclass
 import logging
 import sys
-from pathlib import Path
 import textwrap
+import unittest
+from dataclasses import dataclass
+from datetime import datetime
+from pathlib import Path
+from typing import Awaitable, Callable, Iterator, List, TypeVar
 from unittest.mock import patch
 
-import boto3
-from tests.utils import MySQLRecordsDB, set_up_aws_credentials_testing
 import aioboto3
+import aiobotocore
+import aiobotocore.endpoint
+import boto3
+import botocore
+from moto import mock_athena, mock_s3
 
 from cmoncrawl.aggregator.athena_query import (
     QUERIES_SUBFOLDER,
-    QUERIES_TMP_SUBFOLDER,
-    prepare_athena_sql_query,
+    AthenaAggregator,
+    DomainRecord,
+    MatchType,
 )
 from cmoncrawl.aggregator.utils.athena_query_maker import (
     crawl_query,
@@ -21,26 +28,10 @@ from cmoncrawl.aggregator.utils.athena_query_maker import (
     url_query_based_on_match_type,
     url_query_date_range,
 )
+from cmoncrawl.common.loggers import all_purpose_logger
+from tests.utils import MySQLRecordsDB, set_up_aws_credentials_testing
 
 sys.path.append(Path("App").absolute().as_posix())
-
-from datetime import datetime
-from typing import Awaitable, Callable, Iterator, List, TypeVar
-from cmoncrawl.aggregator.utils.helpers import get_all_CC_indexes, unify_url_id
-from cmoncrawl.common.types import DomainRecord, MatchType
-from cmoncrawl.aggregator.index_query import IndexAggregator
-import unittest
-from moto import mock_s3, mock_athena
-from cmoncrawl.aggregator.athena_query import AthenaAggregator, DomainRecord, MatchType
-from datetime import datetime
-
-
-from cmoncrawl.common.loggers import all_purpose_logger
-
-
-import aiobotocore
-import aiobotocore.endpoint
-import botocore
 
 all_purpose_logger.setLevel(logging.DEBUG)
 
@@ -110,7 +101,9 @@ def _factory(
     return patched_convert_to_response_dict
 
 
-aiobotocore.endpoint.convert_to_response_dict = _factory(aiobotocore.endpoint.convert_to_response_dict)  # type: ignore[assignment]
+aiobotocore.endpoint.convert_to_response_dict = _factory(
+    aiobotocore.endpoint.convert_to_response_dict
+)  # type: ignore[assignment]
 
 
 class TestAthenaQueryCreation(unittest.IsolatedAsyncioTestCase):
@@ -231,10 +224,6 @@ class TestAthenaQueryCreation(unittest.IsolatedAsyncioTestCase):
         to = datetime(2021, 12, 31)
         expected = "cc.crawl = 'CC-MAIN-2021-09'"
         self.assertEqual(crawl_query(self.CC_SERVERS, since, to), expected)
-
-
-from cmoncrawl.aggregator.athena_query import AthenaAggregator, DomainRecord, MatchType
-from datetime import datetime
 
 
 class TestAthenaAggregator(unittest.IsolatedAsyncioTestCase):

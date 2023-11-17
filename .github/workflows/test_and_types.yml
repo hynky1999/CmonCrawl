@@ -38,7 +38,7 @@ jobs:
         run: cp .env.sample .env
 
       - name: Run tests
-        run: python -m unittest discover -s tests -p "*_tests.py"  # Replace with your test command
+        run: make test
 
   lint_and_types:
     runs-on: ubuntu-latest
@@ -56,8 +56,8 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.dev.txt
 
-      - name: Lint with pyright
-        run: pyright
+      - name: Format
+        run: make format
 
-      - name: Lint with black
-        run: black -t py310 --check .
+      - name: Lint
+        run: make lint

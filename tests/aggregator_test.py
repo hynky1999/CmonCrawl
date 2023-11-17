@@ -1,55 +1,22 @@
 import logging
-import sys
-from pathlib import Path
-
-import boto3
-from tests.utils import MySQLRecordsDB
-import aioboto3
-
-from cmoncrawl.aggregator.athena_query import (
-    QUERIES_SUBFOLDER,
-    QUERIES_TMP_SUBFOLDER,
-    prepare_athena_sql_query,
-)
-from cmoncrawl.aggregator.utils.athena_query_maker import (
-    crawl_query,
-    date_to_sql_format,
-    prepare_athena_sql_query,
-    url_query_based_on_match_type,
-    url_query_date_range,
-)
-
-sys.path.append(Path("App").absolute().as_posix())
-
+import unittest
 from datetime import datetime
 from typing import List
-from cmoncrawl.aggregator.utils.helpers import get_all_CC_indexes, unify_url_id
-from cmoncrawl.common.types import DomainRecord, MatchType
-from cmoncrawl.aggregator.index_query import IndexAggregator
-import unittest
-from moto import mock_s3, mock_athena
+
 from cmoncrawl.aggregator.athena_query import (
-    AthenaAggregator,
     DomainRecord,
     MatchType,
 )
-from datetime import datetime
-
-
+from cmoncrawl.aggregator.index_query import IndexAggregator
+from cmoncrawl.aggregator.utils.helpers import get_all_CC_indexes, unify_url_id
 from cmoncrawl.common.loggers import all_purpose_logger
 
 all_purpose_logger.setLevel(logging.DEBUG)
 
-import aiobotocore
-import aiobotocore.endpoint
-import botocore
-
 
 class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self) -> None:
-        self.CC_SERVERS = [
-            "https://index.commoncrawl.org/CC-MAIN-2022-05-index"
-        ]
+        self.CC_SERVERS = ["https://index.commoncrawl.org/CC-MAIN-2022-05-index"]
         self.di = await IndexAggregator(
             ["idnes.cz"],
             cc_servers=self.CC_SERVERS,
@@ -75,15 +42,10 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(num_pages, 14)
 
     async def test_indexer_all_CC(self):
-        indexes = await get_all_CC_indexes(
-            self.client, self.di.cc_indexes_server
-        )
+        indexes = await get_all_CC_indexes(self.client, self.di.cc_indexes_server)
         indexes = sorted(indexes)
         indexes = indexes[
-            : indexes.index(
-                "https://index.commoncrawl.org/CC-MAIN-2022-27-index"
-            )
-            + 1
+            : indexes.index("https://index.commoncrawl.org/CC-MAIN-2022-27-index") + 1
         ]
         self.assertEqual(len(indexes), 89)
 

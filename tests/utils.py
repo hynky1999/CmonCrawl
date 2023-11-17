@@ -1,8 +1,9 @@
-from contextlib import contextmanager
 import os
+import unittest
+from contextlib import contextmanager
+
 import MySQLdb
 from dotenv import load_dotenv
-import unittest
 
 
 class MySQLRecordsDB(unittest.TestCase):

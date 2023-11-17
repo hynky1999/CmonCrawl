@@ -1,31 +1,29 @@
-from datetime import datetime
-from enum import Enum
+import argparse
+import asyncio
 import json
 import multiprocessing
+from datetime import datetime
+from enum import Enum
 from pathlib import Path
+from typing import Any, Dict, List, Tuple
 
 from tqdm import tqdm
-from cmoncrawl.common.loggers import setup_loggers
-from cmoncrawl.common.types import ExtractConfig
-from cmoncrawl.integrations.utils import DAOname, get_dao
-from cmoncrawl.processor.connectors.base import ICC_Dao
-from cmoncrawl.config import CONFIG
 
+from cmoncrawl.common.loggers import setup_loggers
+from cmoncrawl.common.types import DomainRecord, ExtractConfig
+from cmoncrawl.config import CONFIG
+from cmoncrawl.integrations.utils import DAOname, get_dao
+from cmoncrawl.middleware.synchronized import extract
+from cmoncrawl.processor.connectors.base import ICC_Dao
 from cmoncrawl.processor.pipeline.downloader import (
-    DownloaderLocalFiles,
     AsyncDownloader,
+    DownloaderLocalFiles,
 )
 from cmoncrawl.processor.pipeline.pipeline import ProcessorPipeline
-from cmoncrawl.middleware.synchronized import extract
-import argparse
-from typing import Any, Dict, List, Tuple
-import asyncio
+from cmoncrawl.processor.pipeline.router import Router
 from cmoncrawl.processor.pipeline.streamer import (
     StreamerFileJSON,
 )
-
-from cmoncrawl.processor.pipeline.router import Router
-from cmoncrawl.common.types import DomainRecord
 
 
 class ExtractMode(Enum):
@@ -85,9 +83,7 @@ def add_args(subparser: Any):
         type=Path,
         help="Path to config file containing extraction rules",
     )
-    parser.add_argument(
-        "output_path", type=Path, help="Path to output directory"
-    )
+    parser.add_argument("output_path", type=Path, help="Path to output directory")
     parser.add_argument(
         "files", nargs="+", type=Path, help="Files to extract data from"
     )
@@ -133,9 +129,7 @@ def get_extract_downloader(
             if dao is None:
                 raise ValueError("DAO must be specified for record extraction")
 
-            return AsyncDownloader(
-                max_retry=max_retry, sleep_base=sleep_base, dao=dao
-            )
+            return AsyncDownloader(max_retry=max_retry, sleep_base=sleep_base, dao=dao)
 
 
 def get_domain_records_json(
@@ -161,9 +155,7 @@ def get_domain_records_html(
     # Just return dummy as correct crawl will be loaded from dummy downloader
     return [
         (
-            DomainRecord(
-                filename="", url=url, offset=0, length=0, timestamp=date
-            ),
+            DomainRecord(filename="", url=url, offset=0, length=0, timestamp=date),
             {},
         )
     ]
@@ -196,9 +188,7 @@ async def extract_from_files(
     download_method: DAOname | None,
 ):
     router = create_router(config)
-    outstreamer = StreamerFileJSON(
-        output_path, max_directory_size, max_crawls_per_file
-    )
+    outstreamer = StreamerFileJSON(output_path, max_directory_size, max_crawls_per_file)
     dao = get_dao(download_method)
     try:
         if dao is not None:
@@ -226,9 +216,7 @@ def _extract_task(
     args: argparse.Namespace,
 ):
     mode = ExtractMode(args.mode)
-    download_method = (
-        DAOname(args.download_method) if args.download_method else None
-    )
+    download_method = DAOname(args.download_method) if args.download_method else None
 
     # We have to setup loggers / aws in each process
     setup_loggers(args.verbosity)

@@ -1,13 +1,13 @@
 import argparse
 from typing import Any, Dict
+
+from cmoncrawl.common.loggers import (
+    all_purpose_logger,
+    setup_loggers,
+)
 from cmoncrawl.config import CONFIG
 from cmoncrawl.integrations.download import add_args as add_download_args
 from cmoncrawl.integrations.extract import add_args as add_extract_args
-from cmoncrawl.common.loggers import (
-    all_purpose_logger,
-    metadata_logger,
-    setup_loggers,
-)
 
 
 def add_args(parser: argparse.ArgumentParser):

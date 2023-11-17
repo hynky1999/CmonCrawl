@@ -1,8 +1,9 @@
 from typing import Any, Callable, Dict, List, Sized
+
 from bs4 import Tag
 
-from cmoncrawl.common.types import PipeMetadata
 from cmoncrawl.common.loggers import metadata_logger
+from cmoncrawl.common.types import PipeMetadata
 
 """
  Whole point of these functions is that is possible to use them

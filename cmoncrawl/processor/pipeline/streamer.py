@@ -1,17 +1,18 @@
-from abc import ABC, abstractmethod
 import asyncio
 import json
-from pathlib import Path
+import os
 import random
+from abc import ABC, abstractmethod
+from pathlib import Path
 from typing import Any, Dict, List
 from xmlrpc.client import Boolean
+
+from aiofiles import open as asyncOpen
+
+from cmoncrawl.common.loggers import all_purpose_logger, metadata_logger
 from cmoncrawl.common.types import (
     PipeMetadata,
 )
-from cmoncrawl.common.loggers import all_purpose_logger, metadata_logger
-from aiofiles import open as asyncOpen
-
-import os
 
 """
 All classes defined here should only modify how are the data streamed out.
