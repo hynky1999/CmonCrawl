@@ -31,7 +31,11 @@ from cmoncrawl.common.types import DomainRecord, MatchType
 from cmoncrawl.aggregator.index_query import IndexAggregator
 import unittest
 from moto import mock_s3, mock_athena
-from cmoncrawl.aggregator.athena_query import AthenaAggregator, DomainRecord, MatchType
+from cmoncrawl.aggregator.athena_query import (
+    AthenaAggregator,
+    DomainRecord,
+    MatchType,
+)
 from datetime import datetime
 
 
@@ -161,9 +165,7 @@ class TestAthenaQueryCreation(unittest.IsolatedAsyncioTestCase):
         url = "arxiv.org/abs/1905.00075"
         for prefix in ["http://", "https://", "https://www.", "", "www."]:
             prefixed_url = f"{prefix}{url}"
-            expected_sql = (
-                "cc.url_host_name = 'arxiv.org' OR cc.url_host_name = 'www.arxiv.org'"
-            )
+            expected_sql = "cc.url_host_name = 'arxiv.org' OR cc.url_host_name = 'www.arxiv.org'"
             self.assertEqual(
                 url_query_based_on_match_type(MatchType.HOST, prefixed_url),
                 expected_sql,
@@ -173,9 +175,7 @@ class TestAthenaQueryCreation(unittest.IsolatedAsyncioTestCase):
         url = "arxiv.org/abs/1905.00075"
         for prefix in ["http://", "https://", "https://www.", "", "www."]:
             prefixed_url = f"{prefix}{url}"
-            expected_sql = (
-                "cc.url_host_name LIKE '%.arxiv.org' OR cc.url_host_name = 'arxiv.org'"
-            )
+            expected_sql = "cc.url_host_name LIKE '%.arxiv.org' OR cc.url_host_name = 'arxiv.org'"
             self.assertEqual(
                 url_query_based_on_match_type(MatchType.DOMAIN, prefixed_url),
                 expected_sql,
@@ -203,7 +203,9 @@ class TestAthenaQueryCreation(unittest.IsolatedAsyncioTestCase):
 
     def test_only_to_date_present(self):
         to = datetime(2020, 12, 31)
-        expected = f"cc.fetch_time <= CAST('{date_to_sql_format(to)}' AS TIMESTAMP)"
+        expected = (
+            f"cc.fetch_time <= CAST('{date_to_sql_format(to)}' AS TIMESTAMP)"
+        )
         self.assertEqual(url_query_date_range(None, to), expected)
 
     def test_only_since_date_present(self):
@@ -218,12 +220,16 @@ class TestAthenaQueryCreation(unittest.IsolatedAsyncioTestCase):
     def test_crawl_query_with_since_date_filter(self):
         # The crawl query only filters based on YEAR
         since = datetime(2021, 12, 12)
-        expected = "cc.crawl = 'CC-MAIN-2022-05' OR cc.crawl = 'CC-MAIN-2021-09'"
+        expected = (
+            "cc.crawl = 'CC-MAIN-2022-05' OR cc.crawl = 'CC-MAIN-2021-09'"
+        )
         self.assertEqual(crawl_query(self.CC_SERVERS, since, None), expected)
 
     def test_crawl_query_with_to_date_filter(self):
         to = datetime(2021, 12, 31)
-        expected = "cc.crawl = 'CC-MAIN-2021-09' OR cc.crawl = 'CC-MAIN-2020-50'"
+        expected = (
+            "cc.crawl = 'CC-MAIN-2021-09' OR cc.crawl = 'CC-MAIN-2020-50'"
+        )
         self.assertEqual(crawl_query(self.CC_SERVERS, None, to), expected)
 
     def test_crawl_query_with_since_and_to_date_filter(self):
@@ -233,7 +239,11 @@ class TestAthenaQueryCreation(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(crawl_query(self.CC_SERVERS, since, to), expected)
 
 
-from cmoncrawl.aggregator.athena_query import AthenaAggregator, DomainRecord, MatchType
+from cmoncrawl.aggregator.athena_query import (
+    AthenaAggregator,
+    DomainRecord,
+    MatchType,
+)
 from datetime import datetime
 
 
@@ -250,7 +260,9 @@ class TestAthenaAggregator(unittest.IsolatedAsyncioTestCase):
         self.mock_athena.stop()
 
     async def test_athena_aggregator_lifecycle_existing_bucket(self):
-        expected_CC_indexes = ["https://index.commoncrawl.org/CC-MAIN-2022-05-index"]
+        expected_CC_indexes = [
+            "https://index.commoncrawl.org/CC-MAIN-2022-05-index"
+        ]
         async with aioboto3.Session().client("s3") as s3_client:
             # Create a bucket called test-bucket
             await s3_client.create_bucket(Bucket="test-bucket")
@@ -299,7 +311,9 @@ class TestAthenaAggregator(unittest.IsolatedAsyncioTestCase):
             self.assertIn("test-key", object_keys)
 
     async def test_athena_aggregator_lifecycle_new_bucket(self):
-        expected_CC_indexes = ["https://index.commoncrawl.org/CC-MAIN-2022-05-index"]
+        expected_CC_indexes = [
+            "https://index.commoncrawl.org/CC-MAIN-2022-05-index"
+        ]
         with patch(
             "cmoncrawl.aggregator.athena_query.get_all_CC_indexes"
         ) as mock_get_all_CC_indexes, patch(
@@ -349,10 +363,14 @@ class TestAthenaAggregator(unittest.IsolatedAsyncioTestCase):
             self.assertNotIn(bucket_name, bucket_names)
 
 
-class TestAthenaAggregatorIterator(unittest.IsolatedAsyncioTestCase, MySQLRecordsDB):
+class TestAthenaAggregatorIterator(
+    unittest.IsolatedAsyncioTestCase, MySQLRecordsDB
+):
     bucket_name = "test-bucket"
 
-    async def mocked_await_athena_query(self, query: str, result_name: str) -> str:
+    async def mocked_await_athena_query(
+        self, query: str, result_name: str
+    ) -> str:
         query = query.replace('"commoncrawl"."ccindex"', "ccindex")
         query = query.replace("TIMESTAMP", "DATETIME")
         with self.managed_cursor() as cursor:
@@ -376,7 +394,9 @@ class TestAthenaAggregatorIterator(unittest.IsolatedAsyncioTestCase, MySQLRecord
 
         # Convert results to CSV format
         header_results = [header] + results
-        csv_results = "\n".join([",".join(map(str, row)) for row in header_results])
+        csv_results = "\n".join(
+            [",".join(map(str, row)) for row in header_results]
+        )
 
         # Write CSV results to S3
         s3.put_object(
@@ -395,7 +415,9 @@ class TestAthenaAggregatorIterator(unittest.IsolatedAsyncioTestCase, MySQLRecord
             "cmoncrawl.aggregator.athena_query.AthenaAggregator.AthenaAggregatorIterator.await_athena_query"
         )
         self.mock_await_athena_query = self.mock_athena_query.start()
-        self.mock_await_athena_query.side_effect = self.mocked_await_athena_query
+        self.mock_await_athena_query.side_effect = (
+            self.mocked_await_athena_query
+        )
 
         # db
         MySQLRecordsDB.setUp(self)
@@ -420,6 +442,8 @@ class TestAthenaAggregatorIterator(unittest.IsolatedAsyncioTestCase, MySQLRecord
             since=None,
             to=None,
             limit=1,
+            max_retry=1,
+            prefetch_size=1,
             batch_size=1,
             match_type=MatchType.EXACT,
             extra_sql_where_clause=None,
@@ -444,6 +468,8 @@ class TestAthenaAggregatorIterator(unittest.IsolatedAsyncioTestCase, MySQLRecord
                 "https://index.commoncrawl.org/CC-MAIN-2023-09-index",
             ],
             since=since,
+            prefetch_size=1,
+            max_retry=1,
             to=None,
             limit=None,
             batch_size=1,
@@ -475,6 +501,8 @@ class TestAthenaAggregatorIterator(unittest.IsolatedAsyncioTestCase, MySQLRecord
             since=None,
             to=to,
             limit=None,
+            max_retry=1,
+            prefetch_size=1,
             batch_size=1,
             match_type=MatchType.EXACT,
             extra_sql_where_clause=None,
@@ -504,6 +532,8 @@ class TestAthenaAggregatorIterator(unittest.IsolatedAsyncioTestCase, MySQLRecord
             to=None,
             limit=None,
             batch_size=1,
+            max_retry=1,
+            prefetch_size=1,
             match_type=MatchType.EXACT,
             extra_sql_where_clause=None,
             database_name="commoncrawl",
@@ -531,6 +561,8 @@ class TestAthenaAggregatorIterator(unittest.IsolatedAsyncioTestCase, MySQLRecord
             since=None,
             to=None,
             limit=None,
+            max_retry=0,
+            prefetch_size=1,
             batch_size=0,
             match_type=MatchType.EXACT,
             extra_sql_where_clause=None,
@@ -561,6 +593,8 @@ class TestAthenaAggregatorIterator(unittest.IsolatedAsyncioTestCase, MySQLRecord
             to=None,
             limit=None,
             batch_size=0,
+            max_retry=1,
+            prefetch_size=1,
             match_type=MatchType.EXACT,
             extra_sql_where_clause=where_clause,
             database_name="commoncrawl",
