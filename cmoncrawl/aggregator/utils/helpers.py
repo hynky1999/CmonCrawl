@@ -5,14 +5,20 @@ from urllib.parse import urlparse
 
 from aiohttp import (
     ClientError,
-    ClientResponse,
     ClientSession,
     ContentTypeError,
     ServerConnectionError,
 )
+from tenacity import (
+    RetryCallState,
+    retry,
+    retry_if_exception_type,
+    stop_after_attempt,
+    wait_random_exponential,
+)
+
 from cmoncrawl.aggregator.utils import ndjson
 from cmoncrawl.common.loggers import all_purpose_logger
-from cmoncrawl.common.types import RetrieveResponse
 
 ALLOWED_ERR_FOR_RETRIES = [500, 502, 503, 504]
 
@@ -49,9 +55,7 @@ def unify_url_id(url: str):
     return f"{netloc}{path_processed}"
 
 
-async def get_all_CC_indexes(
-    client: ClientSession, cdx_server: str
-) -> list[str]:
+async def get_all_CC_indexes(client: ClientSession, cdx_server: str) -> list[str]:
     """
     Get all CC index servers from a given CDX server
     """
@@ -75,15 +79,6 @@ async def get_all_CC_indexes(
         return []
     CC_servers = [js["cdx-api"] for js in response]
     return CC_servers
-
-
-from tenacity import (
-    RetryCallState,
-    retry,
-    retry_if_exception_type,
-    stop_after_attempt,
-    wait_random_exponential,
-)
 
 
 def log_after_retry(retry_state: RetryCallState):
@@ -119,9 +114,7 @@ async def retrieve(
 ):
     @retry(
         stop=stop_after_attempt(max_retry + 1),
-        wait=wait_random_exponential(
-            multiplier=1, exp_base=sleep_base, max=120
-        ),
+        wait=wait_random_exponential(multiplier=1, exp_base=sleep_base, max=120),
         retry=retry_if_exception_type(DownloadError),
         reraise=True,
         before_sleep=log_after_retry,
@@ -154,13 +147,9 @@ async def retrieve(
                             loads=ndjson.Decoder().decode,
                         )
                     elif content_type == "application/json":
-                        content = await response.json(
-                            content_type=content_type
-                        )
+                        content = await response.json(content_type=content_type)
                     else:
-                        raise ValueError(
-                            f"Unknown content type: {content_type}"
-                        )
+                        raise ValueError(f"Unknown content type: {content_type}")
         except (
             ClientError,
             TimeoutError,

@@ -1,12 +1,15 @@
 from cmoncrawl.common.types import DomainRecord
 from cmoncrawl.processor.dao.base import DownloadError, ICC_Dao
+from typing import Any
+
 from aiohttp import (
     ClientError,
     ClientSession,
     ContentTypeError,
     ServerConnectionError,
 )
-from typing import Any
+
+from cmoncrawl.common.types import DomainRecord
 
 BASE_URL = "https://data.commoncrawl.org/"
 ALLOWED_ERR_FOR_RETRIES = [500, 502, 503, 504]
@@ -63,9 +66,7 @@ class CCAPIGatewayDAO(ICC_Dao):
         try:
             async with self.client.get(url, headers=headers) as response:
                 if not response.ok:
-                    reason: str = (
-                        str(response.reason) if response.reason else "Unknown"
-                    )
+                    reason: str = str(response.reason) if response.reason else "Unknown"
                     if response.status in ALLOWED_ERR_FOR_RETRIES:
                         raise DownloadError(reason, response.status)
 

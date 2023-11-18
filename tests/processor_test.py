@@ -6,11 +6,8 @@ import unittest
 from datetime import datetime
 from pathlib import Path
 from unittest.mock import AsyncMock
+
 from cmoncrawl.common.loggers import metadata_logger
-from cmoncrawl.config import CONFIG
-
-from aiohttp import ClientError
-
 from cmoncrawl.common.types import DomainRecord, PipeMetadata
 from cmoncrawl.processor.dao.api import CCAPIGatewayDAO
 from cmoncrawl.processor.dao.base import DownloadError, ICC_Dao
@@ -43,17 +40,13 @@ class AsyncDownloaderTests(unittest.IsolatedAsyncioTestCase):
         async with CCAPIGatewayDAO() as connector:
             downloader = AsyncDownloader(dao=connector, max_retry=50)
             res = (await downloader.download(self.dr))[0][0]
-        self.assertIsNotNone(
-            re.search("Provozovatelem serveru iDNES.cz je MAFRA", res)
-        )
+        self.assertIsNotNone(re.search("Provozovatelem serveru iDNES.cz je MAFRA", res))
 
     async def test_download_s3(self):
         async with S3Dao(aws_profile=CONFIG.AWS_PROFILE) as connector:
             downloader = AsyncDownloader(dao=connector, max_retry=50)
             res = (await downloader.download(self.dr))[0][0]
-        self.assertIsNotNone(
-            re.search("Provozovatelem serveru iDNES.cz je MAFRA", res)
-        )
+        self.assertIsNotNone(re.search("Provozovatelem serveru iDNES.cz je MAFRA", res))
 
     async def test_throttler(self):
         async def dummy_download():
@@ -151,9 +144,9 @@ class RouterTests(unittest.TestCase):
 class ExtractorTests(unittest.TestCase):
     def test_encoding(self):
         def create_html():
-            return "<html><body><p>test</p></body></html>".encode(
+            return "<html><body><p>test</p></body></html>".encode("latin-1").decode(
                 "latin-1"
-            ).decode("latin-1")
+            )
 
         def create_non_utf8():
             return bytes([0x81, 0x81, 0x82, 0x83]).decode("latin-1")
@@ -218,9 +211,7 @@ class OutStreamerTests(unittest.IsolatedAsyncioTestCase):
         self.outstreamer_json.max_directory_size = 3
         self.outstreamer_json.max_crawls_in_file = 1
         writes = [
-            asyncio.create_task(
-                self.outstreamer_json.stream(dict(), self.metadata)
-            )
+            asyncio.create_task(self.outstreamer_json.stream(dict(), self.metadata))
             for _ in range(15)
         ]
         await asyncio.gather(*writes)
@@ -232,27 +223,20 @@ class OutStreamerTests(unittest.IsolatedAsyncioTestCase):
         self.outstreamer_json.max_crawls_in_file = 5
 
         writes = [
-            asyncio.create_task(
-                self.outstreamer_json.stream(dict(), self.metadata)
-            )
+            asyncio.create_task(self.outstreamer_json.stream(dict(), self.metadata))
             for _ in range(5)
         ]
         await asyncio.gather(*writes)
         size = len(os.listdir(self.json_folder))
         self.assertEqual(size, 1)
         num_lines = sum(
-            1
-            for _ in open(
-                self.json_folder / "directory_0" / "0_file.jsonl", "r"
-            )
+            1 for _ in open(self.json_folder / "directory_0" / "0_file.jsonl", "r")
         )
         self.assertEqual(num_lines, 5)
 
     async def test_check_content_json(self):
         writes = [
-            asyncio.create_task(
-                self.outstreamer_json.stream({"num": n}, self.metadata)
-            )
+            asyncio.create_task(self.outstreamer_json.stream({"num": n}, self.metadata))
             for n in range(2)
         ]
         files = await asyncio.gather(*writes)

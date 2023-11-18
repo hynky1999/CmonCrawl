@@ -1,12 +1,14 @@
+import asyncio
 import logging
 from typing import Any, Dict, List, Set, Tuple
-from cmoncrawl.aggregator.index_query import IndexAggregator
-from cmoncrawl.processor.pipeline.pipeline import ProcessorPipeline
-from cmoncrawl.common.types import DomainRecord
-from cmoncrawl.common.loggers import all_purpose_logger, metadata_logger
-from cmoncrawl.aggregator.utils.helpers import unify_url_id
+
 from tqdm import tqdm
-import asyncio
+
+from cmoncrawl.aggregator.index_query import IndexAggregator
+from cmoncrawl.aggregator.utils.helpers import unify_url_id
+from cmoncrawl.common.loggers import all_purpose_logger, metadata_logger
+from cmoncrawl.common.types import DomainRecord
+from cmoncrawl.processor.pipeline.pipeline import ProcessorPipeline
 
 
 async def query_and_extract(
@@ -34,10 +36,7 @@ async def query_and_extract(
         async with index_agg:
             async for domain_record in index_agg:
                 url = domain_record.url or ""
-                if (
-                    filter_non_unique_url
-                    and unify_url_id(url) in processed_urls
-                ):
+                if filter_non_unique_url and unify_url_id(url) in processed_urls:
                     continue
                 try:
                     await pipeline.process_domain_record(domain_record, {})
@@ -65,9 +64,7 @@ async def _extract_task(
 ):
     result = []
     try:
-        result = await pipeline.process_domain_record(
-            domain_record, additional_info
-        )
+        result = await pipeline.process_domain_record(domain_record, additional_info)
     except KeyboardInterrupt as e:
         raise e
     except Exception as e:
@@ -113,15 +110,11 @@ async def extract(
 
                 queue.add(
                     asyncio.create_task(
-                        _extract_task(
-                            next_domain_record, additional_info, pipeline
-                        )
+                        _extract_task(next_domain_record, additional_info, pipeline)
                     )
                 )
 
-            done, queue = await asyncio.wait(
-                queue, return_when=asyncio.FIRST_COMPLETED
-            )
+            done, queue = await asyncio.wait(queue, return_when=asyncio.FIRST_COMPLETED)
             for task in done:
                 try:
                     total_extracted += len(await task)
@@ -129,9 +122,7 @@ async def extract(
                     break
 
                 except Exception:
-                    all_purpose_logger.error(
-                        f"Error in task {task}", exc_info=True
-                    )
+                    all_purpose_logger.error(f"Error in task {task}", exc_info=True)
     except Exception as e:
         all_purpose_logger.error(e, exc_info=True)
 

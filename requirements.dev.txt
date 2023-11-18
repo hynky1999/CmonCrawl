@@ -9,3 +9,4 @@ nbsphinx
 myst_parser
 sphinx_copybutton
 sphinx_rtd_theme
+ruff==0.1.5

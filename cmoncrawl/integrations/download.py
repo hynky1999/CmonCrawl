@@ -1,29 +1,29 @@
+import argparse
+import asyncio
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
 from typing import Any, List
+
 from cmoncrawl.aggregator.index_query import IndexAggregator
 from cmoncrawl.common.types import MatchType
 from cmoncrawl.integrations.utils import DAOname, get_dao
 from cmoncrawl.processor.dao.base import ICC_Dao
+from cmoncrawl.middleware.synchronized import query_and_extract
 from cmoncrawl.processor.pipeline.downloader import (
     AsyncDownloader,
     DummyDownloader,
 )
-from cmoncrawl.processor.pipeline.pipeline import ProcessorPipeline
-from cmoncrawl.processor.pipeline.streamer import StreamerFileHTML
 from cmoncrawl.processor.pipeline.extractor import (
-    HTMLExtractor,
     DomainRecordExtractor,
+    HTMLExtractor,
 )
-from cmoncrawl.middleware.synchronized import query_and_extract
-import argparse
-import asyncio
+from cmoncrawl.processor.pipeline.pipeline import ProcessorPipeline
+from cmoncrawl.processor.pipeline.router import Router
 from cmoncrawl.processor.pipeline.streamer import (
+    StreamerFileHTML,
     StreamerFileJSON,
 )
-
-from cmoncrawl.processor.pipeline.router import Router
 
 
 class DownloadOutputFormat(Enum):
@@ -66,9 +66,7 @@ def add_mode_args(subparser: Any):
 
 
 def add_args(subparser: Any):
-    parser = subparser.add_parser(
-        "download", help="Download data from Common Crawl"
-    )
+    parser = subparser.add_parser("download", help="Download data from Common Crawl")
     parser.add_argument("url", type=str, help="URL to query")
     parser.add_argument("output", type=Path, help="Path to output directory")
     mode_subparser = parser.add_subparsers(
@@ -166,9 +164,7 @@ def url_download_prepare_streamer(
                 max_file_size=max_crawls_per_file,
             )
         case DownloadOutputFormat.HTML:
-            return StreamerFileHTML(
-                root=output, max_directory_size=max_direrctory_size
-            )
+            return StreamerFileHTML(root=output, max_directory_size=max_direrctory_size)
 
 
 def get_download_downloader(
@@ -182,9 +178,7 @@ def get_download_downloader(
             if dao is None:
                 raise ValueError("DAO must be specified for record extraction")
 
-            return AsyncDownloader(
-                max_retry=max_retry, sleep_base=sleep_base, dao=dao
-            )
+            return AsyncDownloader(max_retry=max_retry, sleep_base=sleep_base, dao=dao)
         case DownloadOutputFormat.RECORD:
             return DummyDownloader()
 
@@ -237,9 +231,7 @@ async def url_download(
 def run_download(args: argparse.Namespace):
     mode = DownloadOutputFormat(args.mode)
     download_method = (
-        DAOname(args.download_method)
-        if mode == DownloadOutputFormat.HTML
-        else None
+        DAOname(args.download_method) if mode == DownloadOutputFormat.HTML else None
     )
     return asyncio.run(
         url_download(
@@ -258,9 +250,7 @@ def run_download(args: argparse.Namespace):
             else 1,
             max_directory_size=args.max_directory_size,
             filter_non_200=args.filter_non_200,
-            encoding=args.encoding
-            if mode == DownloadOutputFormat.HTML
-            else None,
+            encoding=args.encoding if mode == DownloadOutputFormat.HTML else None,
             download_method=download_method,
         )
     )

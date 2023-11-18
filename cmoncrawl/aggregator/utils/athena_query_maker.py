@@ -1,7 +1,8 @@
-from datetime import datetime
 import textwrap
+from datetime import datetime
 from typing import List, Optional
 from urllib.parse import urlparse
+
 from cmoncrawl.aggregator.index_query import crawl_to_year
 from cmoncrawl.common.types import MatchType
 
@@ -80,14 +81,14 @@ def prepare_athena_where_conditions(
     urls_with_type_query = [
         f"({url_query_based_on_match_type(match_type, url)})" for url in urls
     ]
-    url_query = f" OR ".join(urls_with_type_query)
+    url_query = " OR ".join(urls_with_type_query)
     allowed_crawls_query = crawl_query(crawl_urls, since, to)
     date_query = url_query_date_range(since, to)
     where_conditions = [
         date_query,
         allowed_crawls_query,
-        f"cc.fetch_status = 200",
-        f"cc.subset = 'warc'",
+        "cc.fetch_status = 200",
+        "cc.subset = 'warc'",
         url_query,
     ]
     where_conditions = [condition for condition in where_conditions if condition]

@@ -1,14 +1,11 @@
+from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 from urllib.parse import urlparse
-from dataclasses import dataclass, field
-from pydantic import BaseModel, Field, validator
-from typing import Optional, List
-from datetime import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, validator
 
 
 def parse_timestamp(v: Optional[Any]) -> Optional[datetime]:

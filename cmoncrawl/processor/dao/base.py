@@ -1,4 +1,5 @@
 from typing import Any, AsyncContextManager, Optional
+
 from cmoncrawl.common.types import DomainRecord
 
 

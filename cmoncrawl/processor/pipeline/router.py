@@ -1,23 +1,23 @@
-from abc import ABC, abstractmethod
-from datetime import datetime, timezone
 import importlib.util
 import os
-from pathlib import Path
-import sys
 import re
+import sys
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
+from datetime import datetime, timezone
+from pathlib import Path
 from types import ModuleType
 from typing import Dict, List, Union
 
-from cmoncrawl.processor.pipeline.extractor import IExtractor
-from cmoncrawl.common.types import (
-    RoutesConfig,
-    PipeMetadata,
-)
 from cmoncrawl.common.loggers import (
-    metadata_logger,
     all_purpose_logger,
+    metadata_logger,
 )
+from cmoncrawl.common.types import (
+    PipeMetadata,
+    RoutesConfig,
+)
+from cmoncrawl.processor.pipeline.extractor import IExtractor
 
 
 @dataclass

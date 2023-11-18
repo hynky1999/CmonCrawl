@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
-from cmoncrawl.processor.pipeline.extractor import BaseExtractor
-from cmoncrawl.common.types import PipeMetadata
 
+from cmoncrawl.common.types import PipeMetadata
+from cmoncrawl.processor.pipeline.extractor import BaseExtractor
 
 NAME = "AAA"
 

@@ -1,19 +1,17 @@
-import shutil
-from datetime import datetime
 import json
-from pathlib import Path
+import shutil
 import unittest
-from cmoncrawl.common.loggers import metadata_logger, all_purpose_logger
-from cmoncrawl.integrations.download import DownloadOutputFormat, url_download
-from cmoncrawl.integrations.extract import (
-    extract_from_files,
-    ExtractMode,
-)
-from cmoncrawl.common.types import ExtractConfig
+from datetime import datetime
+from pathlib import Path
+
 from parameterized import parameterized
 
+from cmoncrawl.common.types import ExtractConfig
+from cmoncrawl.integrations.extract import (
+    ExtractMode,
+    extract_from_files,
+)
 from cmoncrawl.integrations.utils import DAOname
-from cmoncrawl.processor.dao.base import ICC_Dao
 
 
 class ExtractFiles(unittest.IsolatedAsyncioTestCase):
@@ -22,8 +20,6 @@ class ExtractFiles(unittest.IsolatedAsyncioTestCase):
     """
 
     async def asyncSetUp(self) -> None:
-        all_purpose_logger.setLevel("DEBUG")
-        metadata_logger.setLevel("DEBUG")
         self.base_folder = Path(__file__).parent / "test_extract"
         self.output_folder = self.base_folder / "output"
 
@@ -56,7 +52,7 @@ class ExtractFiles(unittest.IsolatedAsyncioTestCase):
             max_directory_size=1,
             url="",
             max_retry=40,
-            sleep_base=1,
+            sleep_base=1.4,
             download_method=dao,
         )
         output_folder = Path(self.output_folder / "directory_0")

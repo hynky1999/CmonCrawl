@@ -1,5 +1,5 @@
-from cmoncrawl.processor.pipeline.extractor import PageExtractor
 from cmoncrawl.processor.extraction.utils import check_required, get_text_transform
+from cmoncrawl.processor.pipeline.extractor import PageExtractor
 
 
 class BBCExtractor(PageExtractor):
