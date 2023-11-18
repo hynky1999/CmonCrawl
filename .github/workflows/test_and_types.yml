@@ -40,11 +40,11 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.test.txt  # Replace with your dependencies installation command
 
-      - name: Unset AWS Profile
-        run: unset AWS_PROFILE
-
       - name: Set up env
         run: cp .env.sample .env
+
+      - name: Unset AWS Profile
+        run: unset AWS_PROFILE # Unset AWS_PROFILE to use AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
 
       - name: Run tests
         run: make test
