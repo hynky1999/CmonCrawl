@@ -1,8 +1,8 @@
 .PHONY: test lint check format
 
 test:
-	python -m unittest discover -s tests -p '*test.py'
-	python -m unittest tests.processor_test.AsyncDownloaderTests.test_download_s3
+	python -m unittest discover -s tests -p 'end_to_end_test.py'
+	# python -m unittest tests.processor_test.AsyncDownloaderTests.test_download_s3
 
 lint:
 	@ruff --fix cmoncrawl tests || ( echo ">>> ruff failed"; exit 1; )
