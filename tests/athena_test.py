@@ -92,11 +92,6 @@ def _factory(
     return patched_convert_to_response_dict
 
 
-aiobotocore.endpoint.convert_to_response_dict = _factory(
-    aiobotocore.endpoint.convert_to_response_dict
-)  # type: ignore[assignment]
-
-
 class TestAthenaQueryCreation(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self) -> None:
         self.CC_SERVERS = [
@@ -104,6 +99,17 @@ class TestAthenaQueryCreation(unittest.IsolatedAsyncioTestCase):
             "https://index.commoncrawl.org/CC-MAIN-2021-09-index",
             "https://index.commoncrawl.org/CC-MAIN-2020-50-index",
         ]
+        self.old_convert_to_response_dict = (
+            aiobotocore.endpoint.convert_to_response_dict
+        )
+        aiobotocore.endpoint.convert_to_response_dict = _factory(
+            aiobotocore.endpoint.convert_to_response_dict
+        )  # type: ignore[assignment]
+
+    async def asyncTearDown(self) -> None:
+        aiobotocore.endpoint.convert_to_response_dict = (
+            self.old_convert_to_response_dict
+        )
 
     def test_prepare_athena_sql_query_multiple_urls(self):
         query = prepare_athena_sql_query(
@@ -222,10 +228,19 @@ class TestAthenaAggregator(unittest.IsolatedAsyncioTestCase):
         self.mock_s3.start()
         self.mock_athena = mock_athena()
         self.mock_athena.start()
+        self.old_convert_to_response_dict = (
+            aiobotocore.endpoint.convert_to_response_dict
+        )
+        aiobotocore.endpoint.convert_to_response_dict = _factory(
+            aiobotocore.endpoint.convert_to_response_dict
+        )  # type: ignore[assignment]
 
     def tearDown(self) -> None:
         self.mock_s3.stop()
         self.mock_athena.stop()
+        aiobotocore.endpoint.convert_to_response_dict = (
+            self.old_convert_to_response_dict
+        )
 
     async def test_athena_aggregator_lifecycle_existing_bucket(self):
         expected_CC_indexes = ["https://index.commoncrawl.org/CC-MAIN-2022-05-index"]
@@ -374,6 +389,12 @@ class TestAthenaAggregatorIterator(unittest.IsolatedAsyncioTestCase, MySQLRecord
         )
         self.mock_await_athena_query = self.mock_athena_query.start()
         self.mock_await_athena_query.side_effect = self.mocked_await_athena_query
+        self.old_convert_to_response_dict = (
+            aiobotocore.endpoint.convert_to_response_dict
+        )
+        aiobotocore.endpoint.convert_to_response_dict = _factory(
+            aiobotocore.endpoint.convert_to_response_dict
+        )  # type: ignore[assignment]
 
         # db
         MySQLRecordsDB.setUp(self)
@@ -388,6 +409,9 @@ class TestAthenaAggregatorIterator(unittest.IsolatedAsyncioTestCase, MySQLRecord
         self.mock_athena.stop()
         self.mock_athena_query.stop()
         MySQLRecordsDB.tearDown(self)
+        aiobotocore.endpoint.convert_to_response_dict = (
+            self.old_convert_to_response_dict
+        )
 
     async def test_limit(self):
         self.domains = ["seznam.cz"]
