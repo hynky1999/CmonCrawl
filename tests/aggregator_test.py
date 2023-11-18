@@ -142,7 +142,7 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
             "idnes.cz/ahoj",
         ]
         for i, url in enumerate(urls):
-            self.assertEquals(unify_url_id(url), urls_ids[i])
+            self.assertEqual(unify_url_id(url), urls_ids[i])
 
 
 if __name__ == "__main__":

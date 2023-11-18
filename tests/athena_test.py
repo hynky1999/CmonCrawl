@@ -25,7 +25,7 @@ from cmoncrawl.aggregator.utils.athena_query_maker import (
     url_query_based_on_match_type,
     url_query_date_range,
 )
-from tests.utils import MySQLRecordsDB, set_up_aws_credentials_testing
+from tests.utils import MySQLRecordsDB
 
 T = TypeVar("T")
 R = TypeVar("R")
@@ -104,7 +104,6 @@ class TestAthenaQueryCreation(unittest.IsolatedAsyncioTestCase):
             "https://index.commoncrawl.org/CC-MAIN-2021-09-index",
             "https://index.commoncrawl.org/CC-MAIN-2020-50-index",
         ]
-        set_up_aws_credentials_testing()
 
     def test_prepare_athena_sql_query_multiple_urls(self):
         query = prepare_athena_sql_query(
@@ -223,7 +222,6 @@ class TestAthenaAggregator(unittest.IsolatedAsyncioTestCase):
         self.mock_s3.start()
         self.mock_athena = mock_athena()
         self.mock_athena.start()
-        set_up_aws_credentials_testing()
 
     def tearDown(self) -> None:
         self.mock_s3.stop()

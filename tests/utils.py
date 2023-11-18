@@ -131,13 +131,3 @@ class MySQLRecordsDB(unittest.TestCase):
     def tearDown(self):
         self.remove_db()
         self.db.close()
-
-
-def set_up_aws_credentials_testing():
-    import os
-
-    os.environ["AWS_ACCESS_KEY_ID"] = "testing"
-    os.environ["AWS_SECRET_ACCESS_KEY"] = "testing"
-    os.environ["AWS_SECURITY_TOKEN"] = "testing"
-    os.environ["AWS_SESSION_TOKEN"] = "testing"
-    os.environ["AWS_DEFAULT_REGION"] = "us-east-1"

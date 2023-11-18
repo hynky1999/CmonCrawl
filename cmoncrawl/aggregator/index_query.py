@@ -365,22 +365,6 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
             for task in self.prefetch_queue:
                 task.cancel()
 
-        async def __fetch_next_dc(self, dc: DomainCrawl):
-            return (
-                await IndexAggregator.get_captured_responses(
-                    self.__client,
-                    dc.cdx_server,
-                    dc.domain,
-                    match_type=self.__match_type,
-                    page=dc.page,
-                    since=self.__since,
-                    to=self.__to,
-                    max_retry=self.__max_retry,
-                    sleep_step=self.__sleep_step,
-                ),
-                dc,
-            )
-
 
 def to_timestamp_format(date: datetime):
     return date.strftime("%Y%m%d%H%M%S")
