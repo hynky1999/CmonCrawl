@@ -1,10 +1,7 @@
-import logging
-import sys
 import textwrap
 import unittest
 from dataclasses import dataclass
 from datetime import datetime
-from pathlib import Path
 from typing import Awaitable, Callable, Iterator, List, TypeVar
 from unittest.mock import patch
 
@@ -28,13 +25,7 @@ from cmoncrawl.aggregator.utils.athena_query_maker import (
     url_query_based_on_match_type,
     url_query_date_range,
 )
-from cmoncrawl.common.loggers import all_purpose_logger
 from tests.utils import MySQLRecordsDB, set_up_aws_credentials_testing
-
-sys.path.append(Path("App").absolute().as_posix())
-
-all_purpose_logger.setLevel(logging.DEBUG)
-
 
 T = TypeVar("T")
 R = TypeVar("R")

@@ -1,4 +1,3 @@
-import logging
 import unittest
 from datetime import datetime
 from typing import List
@@ -9,9 +8,6 @@ from cmoncrawl.aggregator.athena_query import (
 )
 from cmoncrawl.aggregator.index_query import IndexAggregator
 from cmoncrawl.aggregator.utils.helpers import get_all_CC_indexes, unify_url_id
-from cmoncrawl.common.loggers import all_purpose_logger
-
-all_purpose_logger.setLevel(logging.DEBUG)
 
 
 class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
@@ -21,7 +17,7 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
             ["idnes.cz"],
             cc_servers=self.CC_SERVERS,
             max_retry=100,
-            sleep_base=10,
+            sleep_base=1.4,
             prefetch_size=1,
             match_type=MatchType.DOMAIN,
         ).aopen()
@@ -36,7 +32,7 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
             self.CC_SERVERS[0],
             "idnes.cz",
             max_retry=20,
-            sleep_base=4,
+            sleep_base=1.4,
             match_type=MatchType.DOMAIN,
         )
         self.assertEqual(num_pages, 14)

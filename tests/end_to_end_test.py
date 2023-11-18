@@ -6,7 +6,6 @@ from pathlib import Path
 
 from parameterized import parameterized
 
-from cmoncrawl.common.loggers import all_purpose_logger, metadata_logger
 from cmoncrawl.common.types import ExtractConfig
 from cmoncrawl.integrations.extract import (
     ExtractMode,
@@ -21,8 +20,6 @@ class ExtractFiles(unittest.IsolatedAsyncioTestCase):
     """
 
     async def asyncSetUp(self) -> None:
-        all_purpose_logger.setLevel("DEBUG")
-        metadata_logger.setLevel("DEBUG")
         self.base_folder = Path(__file__).parent / "test_extract"
         self.output_folder = self.base_folder / "output"
 
@@ -55,7 +52,7 @@ class ExtractFiles(unittest.IsolatedAsyncioTestCase):
             max_directory_size=1,
             url="",
             max_retry=40,
-            sleep_base=1,
+            sleep_base=1.4,
             download_method=dao,
         )
         output_folder = Path(self.output_folder / "directory_0")
