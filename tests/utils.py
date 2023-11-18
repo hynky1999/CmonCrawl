@@ -1,7 +1,12 @@
 import os
 import unittest
 from contextlib import contextmanager
+from dataclasses import dataclass
+from typing import Awaitable, Callable, Iterator, TypeVar
 
+import aiobotocore
+import aiobotocore.endpoint
+import botocore
 import MySQLdb
 from dotenv import load_dotenv
 
@@ -131,3 +136,108 @@ class MySQLRecordsDB(unittest.TestCase):
     def tearDown(self):
         self.remove_db()
         self.db.close()
+
+
+# Moto3 for aioboto3
+T = TypeVar("T")
+R = TypeVar("R")
+
+
+@dataclass
+class _PatchedAWSReponseContent:
+    """Patched version of `botocore.awsrequest.AWSResponse.content`"""
+
+    content: bytes | Awaitable[bytes]
+
+    def __await__(self) -> Iterator[bytes]:
+        async def _generate_async() -> bytes:
+            if isinstance(self.content, Awaitable):
+                return await self.content
+            else:
+                return self.content
+
+        return _generate_async().__await__()
+
+    def decode(self, encoding: str) -> str:
+        assert isinstance(self.content, bytes)
+        return self.content.decode(encoding)
+
+
+@dataclass
+class _AsyncReader:
+    content: bytes
+
+    async def read(self, amt: int = -1) -> bytes:
+        ret_val = self.content
+        self.content = b""
+        return ret_val
+
+
+@dataclass
+class PatchedAWSResponseRaw:
+    content: _AsyncReader
+    url: str
+
+
+class PatchedAWSResponse:
+    """Patched version of `botocore.awsrequest.AWSResponse`"""
+
+    def __init__(self, response: botocore.awsrequest.AWSResponse) -> None:
+        self._response = response
+        self.status_code = response.status_code
+        self.content = _PatchedAWSReponseContent(response.content)
+        self.raw = PatchedAWSResponseRaw(
+            content=_AsyncReader(response.content), url=response.url
+        )
+        if not hasattr(self.raw, "raw_headers"):
+            self.raw.raw_headers = {}
+
+
+def _factory(
+    original: Callable[[botocore.awsrequest.AWSResponse, T], Awaitable[R]]
+) -> Callable[[botocore.awsrequest.AWSResponse, T], Awaitable[R]]:
+    async def patched_convert_to_response_dict(
+        http_response: botocore.awsrequest.AWSResponse, operation_model: T
+    ) -> R:
+        return await original(PatchedAWSResponse(http_response), operation_model)  # type: ignore[arg-type]
+
+    return patched_convert_to_response_dict
+
+
+class MotoMock(unittest.TestCase):
+    mocked_envs = [
+        "AWS_ACCESS_KEY_ID",
+        "AWS_SECRET_ACCESS_KEY",
+        "AWS_SECURITY_TOKEN",
+        "AWS_SESSION_TOKEN",
+        "AWS_DEFAULT_REGION",
+    ]
+
+    def setUp(self) -> None:
+        self.old_environ = {
+            env: os.environ.get(env, None)
+            for env in self.mocked_envs
+            if env in os.environ
+        }
+
+        for env in self.mocked_envs:
+            os.environ[env] = "testing"
+        os.environ["AWS_DEFAULT_REGION"] = "us-east-1"
+
+        self.old_convert_to_response_dict = (
+            aiobotocore.endpoint.convert_to_response_dict
+        )
+        aiobotocore.endpoint.convert_to_response_dict = _factory(
+            aiobotocore.endpoint.convert_to_response_dict
+        )  # type: ignore[assignment]
+
+    def tearDown(self) -> None:
+        for env in self.mocked_envs:
+            if self.old_environ[env] is None:
+                del os.environ[env]
+            else:
+                os.environ[env] = self.old_environ[env]
+
+        aiobotocore.endpoint.convert_to_response_dict = (
+            self.old_convert_to_response_dict
+        )  # type: ignore[assignment]
