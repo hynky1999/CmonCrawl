@@ -1,18 +1,18 @@
-from dataclasses import dataclass
-import logging
-import sys
-from pathlib import Path
 import textwrap
+import unittest
+from datetime import datetime
+from typing import List
 from unittest.mock import patch
 
-import boto3
-from tests.utils import MySQLRecordsDB, set_up_aws_credentials_testing
 import aioboto3
+import boto3
+from moto import mock_athena, mock_s3
 
 from cmoncrawl.aggregator.athena_query import (
     QUERIES_SUBFOLDER,
-    QUERIES_TMP_SUBFOLDER,
-    prepare_athena_sql_query,
+    AthenaAggregator,
+    DomainRecord,
+    MatchType,
 )
 from cmoncrawl.aggregator.utils.athena_query_maker import (
     crawl_query,
@@ -21,106 +21,22 @@ from cmoncrawl.aggregator.utils.athena_query_maker import (
     url_query_based_on_match_type,
     url_query_date_range,
 )
-
-sys.path.append(Path("App").absolute().as_posix())
-
-from datetime import datetime
-from typing import Awaitable, Callable, Iterator, List, TypeVar
-from cmoncrawl.aggregator.utils.helpers import get_all_CC_indexes, unify_url_id
-from cmoncrawl.common.types import DomainRecord, MatchType
-from cmoncrawl.aggregator.index_query import IndexAggregator
-import unittest
-from moto import mock_s3, mock_athena
-from cmoncrawl.aggregator.athena_query import AthenaAggregator, DomainRecord, MatchType
-from datetime import datetime
+from tests.utils import MotoMock, MySQLRecordsDB
 
 
-from cmoncrawl.common.loggers import all_purpose_logger
+class TestAthenaQueryCreation(unittest.IsolatedAsyncioTestCase, MotoMock):
+    def setUp(self) -> None:
+        MotoMock.setUp(self)
 
-
-import aiobotocore
-import aiobotocore.endpoint
-import botocore
-
-all_purpose_logger.setLevel(logging.DEBUG)
-
-
-T = TypeVar("T")
-R = TypeVar("R")
-
-
-@dataclass
-class _PatchedAWSReponseContent:
-    """Patched version of `botocore.awsrequest.AWSResponse.content`"""
-
-    content: bytes | Awaitable[bytes]
-
-    def __await__(self) -> Iterator[bytes]:
-        async def _generate_async() -> bytes:
-            if isinstance(self.content, Awaitable):
-                return await self.content
-            else:
-                return self.content
-
-        return _generate_async().__await__()
-
-    def decode(self, encoding: str) -> str:
-        assert isinstance(self.content, bytes)
-        return self.content.decode(encoding)
-
-
-@dataclass
-class _AsyncReader:
-    content: bytes
-
-    async def read(self, amt: int = -1) -> bytes:
-        ret_val = self.content
-        self.content = b""
-        return ret_val
-
-
-@dataclass
-class PatchedAWSResponseRaw:
-    content: _AsyncReader
-    url: str
-
-
-class PatchedAWSResponse:
-    """Patched version of `botocore.awsrequest.AWSResponse`"""
-
-    def __init__(self, response: botocore.awsrequest.AWSResponse) -> None:
-        self._response = response
-        self.status_code = response.status_code
-        self.content = _PatchedAWSReponseContent(response.content)
-        self.raw = PatchedAWSResponseRaw(
-            content=_AsyncReader(response.content), url=response.url
-        )
-        if not hasattr(self.raw, "raw_headers"):
-            self.raw.raw_headers = {}
-
-
-def _factory(
-    original: Callable[[botocore.awsrequest.AWSResponse, T], Awaitable[R]]
-) -> Callable[[botocore.awsrequest.AWSResponse, T], Awaitable[R]]:
-    async def patched_convert_to_response_dict(
-        http_response: botocore.awsrequest.AWSResponse, operation_model: T
-    ) -> R:
-        return await original(PatchedAWSResponse(http_response), operation_model)  # type: ignore[arg-type]
-
-    return patched_convert_to_response_dict
-
-
-aiobotocore.endpoint.convert_to_response_dict = _factory(aiobotocore.endpoint.convert_to_response_dict)  # type: ignore[assignment]
-
-
-class TestAthenaQueryCreation(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self) -> None:
         self.CC_SERVERS = [
             "https://index.commoncrawl.org/CC-MAIN-2022-05-index",
             "https://index.commoncrawl.org/CC-MAIN-2021-09-index",
             "https://index.commoncrawl.org/CC-MAIN-2020-50-index",
         ]
-        set_up_aws_credentials_testing()
+
+    def tearDown(self) -> None:
+        return MotoMock.tearDown(self)
 
     def test_prepare_athena_sql_query_multiple_urls(self):
         query = prepare_athena_sql_query(
@@ -233,19 +149,16 @@ class TestAthenaQueryCreation(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(crawl_query(self.CC_SERVERS, since, to), expected)
 
 
-from cmoncrawl.aggregator.athena_query import AthenaAggregator, DomainRecord, MatchType
-from datetime import datetime
-
-
-class TestAthenaAggregator(unittest.IsolatedAsyncioTestCase):
-    def setUp(self) -> None:
+class TestAthenaAggregator(unittest.IsolatedAsyncioTestCase, MotoMock):
+    def setUp(self) -> None:  #         MotoMock.setUp(self)
+        MotoMock.setUp(self)
         self.mock_s3 = mock_s3()
         self.mock_s3.start()
         self.mock_athena = mock_athena()
         self.mock_athena.start()
-        set_up_aws_credentials_testing()
 
     def tearDown(self) -> None:
+        MotoMock.tearDown(self)
         self.mock_s3.stop()
         self.mock_athena.stop()
 
@@ -349,8 +262,37 @@ class TestAthenaAggregator(unittest.IsolatedAsyncioTestCase):
             self.assertNotIn(bucket_name, bucket_names)
 
 
-class TestAthenaAggregatorIterator(unittest.IsolatedAsyncioTestCase, MySQLRecordsDB):
+class TestAthenaAggregatorIterator(
+    unittest.IsolatedAsyncioTestCase, MySQLRecordsDB, MotoMock
+):
     bucket_name = "test-bucket"
+
+    def setUp(self) -> None:
+        MotoMock.setUp(self)
+        MySQLRecordsDB.setUp(self)
+        self.mock_s3 = mock_s3()
+        self.mock_s3.start()
+        self.mock_athena = mock_athena()
+        self.mock_athena.start()
+        self.aws_client = aioboto3.Session()
+        # patching
+        self.mock_athena_query = patch(
+            "cmoncrawl.aggregator.athena_query.AthenaAggregator.AthenaAggregatorIterator.await_athena_query"
+        )
+        self.mock_await_athena_query = self.mock_athena_query.start()
+        self.mock_await_athena_query.side_effect = self.mocked_await_athena_query
+
+    async def asyncSetUp(self):
+        # Create a bucket called test-bucket
+        async with self.aws_client.client("s3") as s3_client:
+            await s3_client.create_bucket(Bucket=self.bucket_name)
+
+    def tearDown(self) -> None:
+        MotoMock.tearDown(self)
+        MySQLRecordsDB.tearDown(self)
+        self.mock_s3.stop()
+        self.mock_athena.stop()
+        self.mock_athena_query.stop()
 
     async def mocked_await_athena_query(self, query: str, result_name: str) -> str:
         query = query.replace('"commoncrawl"."ccindex"', "ccindex")
@@ -383,33 +325,6 @@ class TestAthenaAggregatorIterator(unittest.IsolatedAsyncioTestCase, MySQLRecord
             Body=csv_results, Bucket=self.bucket_name, Key=expected_result_key
         )
         return expected_result_key
-
-    def setUp(self) -> None:
-        self.mock_s3 = mock_s3()
-        self.mock_s3.start()
-        self.mock_athena = mock_athena()
-        self.mock_athena.start()
-        self.aws_client = aioboto3.Session()
-        # patching
-        self.mock_athena_query = patch(
-            "cmoncrawl.aggregator.athena_query.AthenaAggregator.AthenaAggregatorIterator.await_athena_query"
-        )
-        self.mock_await_athena_query = self.mock_athena_query.start()
-        self.mock_await_athena_query.side_effect = self.mocked_await_athena_query
-
-        # db
-        MySQLRecordsDB.setUp(self)
-
-    async def asyncSetUp(self):
-        # Create a bucket called test-bucket
-        async with self.aws_client.client("s3") as s3_client:
-            await s3_client.create_bucket(Bucket=self.bucket_name)
-
-    def tearDown(self) -> None:
-        self.mock_s3.stop()
-        self.mock_athena.stop()
-        self.mock_athena_query.stop()
-        MySQLRecordsDB.tearDown(self)
 
     async def test_limit(self):
         self.domains = ["seznam.cz"]

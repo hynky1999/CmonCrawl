@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import AsyncMock, MagicMock
-from aiohttp import ClientSession
-from cmoncrawl.aggregator.utils.helpers import retrieve, all_purpose_logger
+
+from cmoncrawl.aggregator.utils.helpers import all_purpose_logger, retrieve
 
 
 class TestRetrieve(unittest.IsolatedAsyncioTestCase):
@@ -32,9 +32,7 @@ class TestRetrieve(unittest.IsolatedAsyncioTestCase):
             )
 
         # Assert
-        expected_log_message = (
-            f"Sending request to {cdx_server} with params: {params}"
-        )
+        expected_log_message = f"Sending request to {cdx_server} with params: {params}"
         self.assertEqual(expected_log_message, cm.records[0].message)
 
     async def test_failure_logging(self):
@@ -67,9 +65,7 @@ class TestRetrieve(unittest.IsolatedAsyncioTestCase):
                 )
             except Exception:
                 expected_log_message = f"Failed to retrieve from {cdx_server} with reason: 'DownloadError: Fail 500', retry: 10"
-                expect_additional_info = f"additional info: {{'test': 'test'}}"
+                expect_additional_info = "additional info: {'test': 'test'}"
                 self.assertEqual(len(cm.records), 3)
                 self.assertIn(expected_log_message, cm.records[2].message)
-                self.assertIn(
-                    str(expect_additional_info), cm.records[2].message
-                )
+                self.assertIn(str(expect_additional_info), cm.records[2].message)

@@ -4,6 +4,7 @@ import asyncio
 import io
 import logging
 import re
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import (
@@ -36,10 +37,7 @@ from warcio.recordloader import ArcWarcRecord
 
 from cmoncrawl.common.loggers import all_purpose_logger, metadata_logger
 from cmoncrawl.common.types import DomainRecord, PipeMetadata
-from cmoncrawl.processor.connectors.base import ICC_Dao, DownloadError
-
-
-import time
+from cmoncrawl.processor.connectors.base import DownloadError, ICC_Dao
 
 
 def log_after_retry(retry_state: RetryCallState):
@@ -47,7 +45,9 @@ def log_after_retry(retry_state: RetryCallState):
     if all_purpose_logger.level <= logging.DEBUG or retry_num % 5 == 0:
         reason = str(retry_state.outcome.exception())
 
-        log_message = f"Failed to retrieve from domain_record {reason} retry: {retry_num}"
+        log_message = (
+            f"Failed to retrieve from domain_record {reason} retry: {retry_num}"
+        )
         if retry_state.next_action:
             log_message += (
                 f", waiting {round(retry_state.next_action.sleep, 2)} seconds"
@@ -147,9 +147,7 @@ class AsyncDownloader(IDownloader):
 
     async def download(self, domain_record: DomainRecord | None):
         if domain_record is None:
-            raise ValueError(
-                "Async downloader needs domain record, to download"
-            )
+            raise ValueError("Async downloader needs domain record, to download")
 
         @retry(
             stop=stop_after_attempt(self.__max_retry + 1),
@@ -166,16 +164,16 @@ class AsyncDownloader(IDownloader):
             )
             return self.unwrap(warc_bytes, domain_record)
 
-        ret: List[Tuple[str, PipeMetadata]] = await download_throttled(
-            domain_record
-        )
+        ret: List[Tuple[str, PipeMetadata]] = await download_throttled(domain_record)
         return ret
 
     def unwrap(
         self, response: bytes, domain_record: DomainRecord
     ) -> List[Tuple[str, PipeMetadata]]:
         ariter = ArchiveIterator(
-            io.BytesIO(response), check_digests="raise", arc2warc=True  # type: ignore wrong typing in package
+            io.BytesIO(response),
+            check_digests="raise",
+            arc2warc=True,  # type: ignore wrong typing in package
         )
         encoding = self.encoding
         warcs: List[Tuple[str, PipeMetadata]] = [
@@ -240,14 +238,18 @@ class WarcIterator(IDownloader, ContextManager["WarcIterator"]):
         if not self.file_context:
             raise Exception("Context not initialized")
         ariter = ArchiveIterator(
-            self.file_context, check_digests="raise", arc2warc=True  # type: ignore wrong typing in package
+            self.file_context,
+            check_digests="raise",
+            arc2warc=True,  # type: ignore wrong typing in package
         )
         if self.show_progress:
             all_purpose_logger.info(f"Calculating length of {self.file.name}")
             length = sum(
                 1
                 for _ in ArchiveIterator(
-                    self.file_context, check_digests="raise", arc2warc=True  # type: ignore wrong typing in package
+                    self.file_context,
+                    check_digests="raise",
+                    arc2warc=True,  # type: ignore wrong typing in package
                 )
             )
             ariter = tqdm(ariter, total=length)
@@ -391,9 +393,7 @@ class DummyDownloader(IDownloader):
                 and the pipe metadata as the second element.
         """
         if domain_record is None:
-            raise ValueError(
-                "Dummy downloader needs domain record to pass it further"
-            )
+            raise ValueError("Dummy downloader needs domain record to pass it further")
 
         return [
             (

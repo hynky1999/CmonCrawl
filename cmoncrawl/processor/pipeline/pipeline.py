@@ -1,10 +1,12 @@
 from typing import Any, Dict, Iterable, List, Tuple
-from cmoncrawl.processor.pipeline.downloader import IDownloader
-from cmoncrawl.processor.pipeline.streamer import IStreamer
-from cmoncrawl.processor.pipeline.router import IRouter
-from cmoncrawl.common.types import DomainRecord, PipeMetadata
-from cmoncrawl.common.loggers import metadata_logger
+
 from warcio.exceptions import ArchiveLoadFailed
+
+from cmoncrawl.common.loggers import metadata_logger
+from cmoncrawl.common.types import DomainRecord, PipeMetadata
+from cmoncrawl.processor.pipeline.downloader import IDownloader
+from cmoncrawl.processor.pipeline.router import IRouter
+from cmoncrawl.processor.pipeline.streamer import IStreamer
 
 
 class ProcessorPipeline:

@@ -7,7 +7,7 @@
             "request": "launch",
             "module": "cmoncrawl.integrations.commands",
             "console": "integratedTerminal",
-            "args": ["download", "idnes.cz", "out", "html"]
+            "args": ["download", "--limit=4" ,"idnes.cz", "out", "record"]
         },
         {
             "name": "Extract",

@@ -1,30 +1,31 @@
 from __future__ import annotations
+
+import asyncio
+import re
 from collections import deque
 from datetime import datetime
-import re
-from cmoncrawl.aggregator.utils.helpers import get_all_CC_indexes, retrieve
-
 from types import TracebackType
 from typing import (
     AsyncIterable,
     AsyncIterator,
     Deque,
-    List,
     Dict,
+    List,
     Set,
     Type,
-)
-from cmoncrawl.common.loggers import all_purpose_logger
-from cmoncrawl.common.types import (
-    DomainRecord,
-    DomainCrawl,
-    MatchType,
 )
 
 from aiohttp import (
     ClientSession,
 )
-import asyncio
+
+from cmoncrawl.aggregator.utils.helpers import get_all_CC_indexes, retrieve
+from cmoncrawl.common.loggers import all_purpose_logger
+from cmoncrawl.common.types import (
+    DomainCrawl,
+    DomainRecord,
+    MatchType,
+)
 
 
 class IndexAggregator(AsyncIterable[DomainRecord]):
@@ -126,9 +127,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         exc_val: BaseException | None,
         exc_tb: TracebackType | None = None,
     ) -> IndexAggregator:
-        return await self.aclose(
-            exc_type=exc_type, exc_val=exc_val, exc_tb=exc_tb
-        )
+        return await self.aclose(exc_type=exc_type, exc_val=exc_val, exc_tb=exc_tb)
 
     @staticmethod
     async def get_number_of_pages(
@@ -297,9 +296,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
                 )
 
                 for i in range(num_pages):
-                    dc = DomainCrawl(
-                        next_crawl.domain, next_crawl.cdx_server, i
-                    )
+                    dc = DomainCrawl(next_crawl.domain, next_crawl.cdx_server, i)
                     self.prefetch_queue.add(
                         asyncio.create_task(
                             IndexAggregator.get_captured_responses(
@@ -333,10 +330,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
             ):
                 await self.__prefetch_next_crawl()
 
-            while (
-                len(self.prefetch_queue) > 0
-                and len(self.__domain_records) == 0
-            ):
+            while len(self.prefetch_queue) > 0 and len(self.__domain_records) == 0:
                 done, self.prefetch_queue = await asyncio.wait(
                     self.prefetch_queue, return_when="FIRST_COMPLETED"
                 )
@@ -370,22 +364,6 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         def clean(self):
             for task in self.prefetch_queue:
                 task.cancel()
-
-        async def __fetch_next_dc(self, dc: DomainCrawl):
-            return (
-                await IndexAggregator.get_captured_responses(
-                    self.__client,
-                    dc.cdx_server,
-                    dc.domain,
-                    match_type=self.__match_type,
-                    page=dc.page,
-                    since=self.__since,
-                    to=self.__to,
-                    max_retry=self.__max_retry,
-                    sleep_step=self.__sleep_step,
-                ),
-                dc,
-            )
 
 
 def to_timestamp_format(date: datetime):

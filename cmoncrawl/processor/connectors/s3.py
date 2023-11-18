@@ -1,13 +1,11 @@
 from typing import Any
-from cmoncrawl.common.types import DomainRecord
-from botocore.config import Config
-
 
 import aioboto3
-from botocore.exceptions import NoCredentialsError
-
-from cmoncrawl.processor.connectors.base import DownloadError, ICC_Dao
+from botocore.config import Config
 from botocore.exceptions import ClientError
+
+from cmoncrawl.common.types import DomainRecord
+from cmoncrawl.processor.connectors.base import DownloadError, ICC_Dao
 
 
 class S3Dao(ICC_Dao):
@@ -47,7 +45,11 @@ class S3Dao(ICC_Dao):
                 "max_attempts": 1,
             }
         )
-        self.client = await aioboto3.Session(profile_name=self.aws_profile).client("s3", config=config).__aenter__()  # type: ignore
+        self.client = (
+            await aioboto3.Session(profile_name=self.aws_profile)
+            .client("s3", config=config)
+            .__aenter__()
+        )  # type: ignore
         return self
 
     async def __aexit__(self, exc_type: Any, exc: Any, tb: Any) -> None:
