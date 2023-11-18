@@ -214,11 +214,7 @@ class MotoMock(unittest.TestCase):
     ]
 
     def setUp(self) -> None:
-        self.old_environ = {
-            env: os.environ.get(env, None)
-            for env in self.mocked_envs
-            if env in os.environ
-        }
+        self.old_environ = {env: os.environ.get(env, None) for env in self.mocked_envs}
 
         for env in self.mocked_envs:
             os.environ[env] = "testing"

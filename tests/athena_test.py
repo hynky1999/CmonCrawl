@@ -25,16 +25,18 @@ from tests.utils import MotoMock, MySQLRecordsDB
 
 
 class TestAthenaQueryCreation(unittest.IsolatedAsyncioTestCase, MotoMock):
+    def setUp(self) -> None:
+        MotoMock.setUp(self)
+
     async def asyncSetUp(self) -> None:
         self.CC_SERVERS = [
             "https://index.commoncrawl.org/CC-MAIN-2022-05-index",
             "https://index.commoncrawl.org/CC-MAIN-2021-09-index",
             "https://index.commoncrawl.org/CC-MAIN-2020-50-index",
         ]
-        MotoMock.setUp(self)
 
-    async def asyncTearDown(self) -> None:
-        MotoMock.tearDown(self)
+    def tearDown(self) -> None:
+        return MotoMock.tearDown(self)
 
     def test_prepare_athena_sql_query_multiple_urls(self):
         query = prepare_athena_sql_query(
@@ -148,7 +150,7 @@ class TestAthenaQueryCreation(unittest.IsolatedAsyncioTestCase, MotoMock):
 
 
 class TestAthenaAggregator(unittest.IsolatedAsyncioTestCase, MotoMock):
-    def setUp(self) -> None:
+    def setUp(self) -> None:  #         MotoMock.setUp(self)
         MotoMock.setUp(self)
         self.mock_s3 = mock_s3()
         self.mock_s3.start()
