@@ -5,7 +5,7 @@ from typing import Any, List
 from cmoncrawl.aggregator.index_query import IndexAggregator
 from cmoncrawl.common.types import MatchType
 from cmoncrawl.integrations.utils import DAOname, get_dao
-from cmoncrawl.processor.connectors.base import ICC_Dao
+from cmoncrawl.processor.dao.base import ICC_Dao
 from cmoncrawl.processor.pipeline.downloader import (
     AsyncDownloader,
     DummyDownloader,
@@ -106,7 +106,7 @@ def add_args(subparser: Any):
     parser.add_argument(
         "--sleep_base",
         type=int,
-        default=1.5,
+        default=1.3,
         help="Base sleep time for exponential backoff in case of request failure.",
     )
     # Add option to output to either json or html

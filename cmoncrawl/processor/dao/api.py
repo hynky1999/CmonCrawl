@@ -1,5 +1,5 @@
 from cmoncrawl.common.types import DomainRecord
-from cmoncrawl.processor.connectors.base import DownloadError, ICC_Dao
+from cmoncrawl.processor.dao.base import DownloadError, ICC_Dao
 from aiohttp import (
     ClientError,
     ClientSession,

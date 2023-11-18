@@ -13,7 +13,7 @@ from cmoncrawl.common.types import ExtractConfig
 from parameterized import parameterized
 
 from cmoncrawl.integrations.utils import DAOname
-from cmoncrawl.processor.connectors.base import ICC_Dao
+from cmoncrawl.processor.dao.base import ICC_Dao
 
 
 class ExtractFiles(unittest.IsolatedAsyncioTestCase):

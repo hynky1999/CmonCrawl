@@ -12,9 +12,9 @@ from cmoncrawl.config import CONFIG
 from aiohttp import ClientError
 
 from cmoncrawl.common.types import DomainRecord, PipeMetadata
-from cmoncrawl.processor.connectors.api import CCAPIGatewayDAO
-from cmoncrawl.processor.connectors.base import DownloadError, ICC_Dao
-from cmoncrawl.processor.connectors.s3 import S3Dao
+from cmoncrawl.processor.dao.api import CCAPIGatewayDAO
+from cmoncrawl.processor.dao.base import DownloadError, ICC_Dao
+from cmoncrawl.processor.dao.s3 import S3Dao
 from cmoncrawl.processor.pipeline.downloader import (
     AsyncDownloader,
     Throttler,

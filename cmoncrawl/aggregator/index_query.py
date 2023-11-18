@@ -15,6 +15,7 @@ from typing import (
     Type,
 )
 from cmoncrawl.common.loggers import all_purpose_logger
+from cmoncrawl.common.throttling import Throttler
 from cmoncrawl.common.types import (
     DomainRecord,
     DomainCrawl,
@@ -67,6 +68,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         max_retry: int = 5,
         prefetch_size: int = 3,
         sleep_base: float = 1.5,
+        max_requests_per_second: int = 20,
     ) -> None:
         self.domains = domains
         self.cc_indexes_server = cc_indexes_server
@@ -79,6 +81,7 @@ class IndexAggregator(AsyncIterable[DomainRecord]):
         self.sleep_base = sleep_base
         self.match_type = match_type
         self.iterators: List[IndexAggregator.IndexAggregatorIterator] = []
+        self.throttler = Throttler(int(1000 / max_requests_per_second))
 
     async def aopen(self) -> IndexAggregator:
         self.client: ClientSession = ClientSession()

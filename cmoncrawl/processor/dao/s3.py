@@ -6,7 +6,7 @@ from botocore.config import Config
 import aioboto3
 from botocore.exceptions import NoCredentialsError
 
-from cmoncrawl.processor.connectors.base import DownloadError, ICC_Dao
+from cmoncrawl.processor.dao.base import DownloadError, ICC_Dao
 from botocore.exceptions import ClientError
 
 

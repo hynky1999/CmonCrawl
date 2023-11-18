@@ -8,7 +8,7 @@ from tqdm import tqdm
 from cmoncrawl.common.loggers import setup_loggers
 from cmoncrawl.common.types import ExtractConfig
 from cmoncrawl.integrations.utils import DAOname, get_dao
-from cmoncrawl.processor.connectors.base import ICC_Dao
+from cmoncrawl.processor.dao.base import ICC_Dao
 from cmoncrawl.config import CONFIG
 
 from cmoncrawl.processor.pipeline.downloader import (
@@ -54,7 +54,7 @@ def add_mode_args(subparser: Any):
     record_parser.add_argument(
         "--sleep_base",
         type=float,
-        default=1.5,
+        default=1.3,
         help="Base value for exponential backoff between failed requests",
     )
 

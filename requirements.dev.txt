@@ -4,3 +4,8 @@ pre-commit
 black==23.3.0
 pyright==1.1.309
 boto3-stubs==1.28.62
+sphinx==7.2.6
+nbsphinx
+myst_parser
+sphinx_copybutton
+sphinx_rtd_theme

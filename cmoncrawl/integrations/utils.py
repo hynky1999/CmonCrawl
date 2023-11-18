@@ -1,8 +1,8 @@
 from enum import Enum
 from cmoncrawl.config import CONFIG
 
-from cmoncrawl.processor.connectors.api import CCAPIGatewayDAO
-from cmoncrawl.processor.connectors.s3 import S3Dao
+from cmoncrawl.processor.dao.api import CCAPIGatewayDAO
+from cmoncrawl.processor.dao.s3 import S3Dao
 
 
 class DAOname(Enum):
