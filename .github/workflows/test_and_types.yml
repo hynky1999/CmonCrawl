@@ -40,6 +40,9 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.test.txt  # Replace with your dependencies installation command
 
+      - name: Unset AWS Profile
+        run: unset AWS_PROFILE
+
       - name: Set up env
         run: cp .env.sample .env
 
