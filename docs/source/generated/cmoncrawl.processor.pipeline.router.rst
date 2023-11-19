@@ -15,12 +15,14 @@ cmoncrawl.processor.pipeline.router
    
    .. rubric:: Classes
 
-   .. autosummary::
-      :toctree:
-   
-      IRouter
-      Route
-      Router
+   .. autoclass:: IRouter
+      :members:
+
+   .. autoclass:: Route
+      :members:
+
+   .. autoclass:: Router
+      :members:
    
    
 

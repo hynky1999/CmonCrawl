@@ -1,5 +1,3 @@
-from cmoncrawl.common.types import DomainRecord
-from cmoncrawl.processor.dao.base import DownloadError, ICC_Dao
 from typing import Any
 
 from aiohttp import (
@@ -10,6 +8,7 @@ from aiohttp import (
 )
 
 from cmoncrawl.common.types import DomainRecord
+from cmoncrawl.processor.dao.base import DownloadError, ICC_Dao
 
 BASE_URL = "https://data.commoncrawl.org/"
 ALLOWED_ERR_FOR_RETRIES = [500, 502, 503, 504]
@@ -26,15 +25,13 @@ class CCAPIGatewayDAO(ICC_Dao):
 
     Methods:
         aopen: Asynchronously opens a connection to the API Gateway.
-        __aenter__: Asynchronously enters a context manager and returns the DAO instance.
         aclose: Asynchronously closes the connection to the API Gateway.
-        __aexit__: Asynchronously exits a context manager.
         fetch: Asynchronously fetches data for a given domain record.
 
     Example usage:
-        dao = CCAPIGatewayDAO()
-        async with dao:
-            data = await dao.fetch(domain_record)
+        >>> dao = CCAPIGatewayDAO()
+        >>> async with dao:
+        >>>     data = await dao.fetch(domain_record)
     """
 
     def __init__(self, base_url: str = BASE_URL):

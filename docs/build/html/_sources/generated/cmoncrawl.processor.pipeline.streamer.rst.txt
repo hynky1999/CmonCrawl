@@ -15,16 +15,20 @@ cmoncrawl.processor.pipeline.streamer
    
    .. rubric:: Classes
 
-   .. autosummary::
-      :toctree:
-   
-      BaseStreamerFile
-      IStreamer
-      StreamerDummy
-      StreamerFileHTML
-      StreamerFileJSON
-   
-   
+   .. autoclass:: BaseStreamerFile
+      :members:
+
+   .. autoclass:: IStreamer
+      :members:
+
+   .. autoclass:: MemoryStreamer
+      :members:
+
+   .. autoclass:: StreamerFileHTML
+      :members:
+
+   .. autoclass:: StreamerFileJSON
+      :members:
 
    
    

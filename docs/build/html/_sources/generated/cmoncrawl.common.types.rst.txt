@@ -9,24 +9,41 @@ cmoncrawl.common.types
 
    
    
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      parse_timestamp
+   
    
 
    
    
    .. rubric:: Classes
 
-   .. autosummary::
-      :toctree:
-   
-      DomainCrawl
-      DomainRecord
-      ExtractConfig
-      ExtractorConfig
-      PipeMetadata
-      RetrieveResponse
-      RoutesConfig
-   
-   
+   .. autoclass:: DomainCrawl
+      :members:
+
+   .. autoclass:: DomainRecord
+      :members:
+
+   .. autoclass:: ExtractConfig
+      :members:
+
+   .. autoclass:: ExtractorConfig
+      :members:
+
+   .. autoclass:: MatchType
+      :members:
+
+   .. autoclass:: PipeMetadata
+      :members:
+
+   .. autoclass:: RetrieveResponse
+      :members:
+
+   .. autoclass:: RoutesConfig
+      :members:
 
    
    

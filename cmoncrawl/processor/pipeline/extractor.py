@@ -24,7 +24,6 @@ class IExtractor(ABC):
     def extract(self, response: str, metadata: PipeMetadata) -> Dict[str, Any] | None:
         """
         Extracts the data from the response, if the extractor fails to extract the data it should return None
-        return None
 
         Args:
             response (str): response from the downloader

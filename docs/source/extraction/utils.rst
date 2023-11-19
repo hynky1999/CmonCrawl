@@ -16,12 +16,8 @@ Filtering
 Extraction
 ----------
 
--- `check_required`: Creates a function that checks if all the required fileds
-    are present in the extracted data
+-- `check_required`: Creates a function that checks if all the required fileds are present in the extracted data
 
--- `chain_transform`: Creates a function that chains multiple transformation function,
-    if any return None, the chain is broken and None is returned.
-    Especially usefull with soup select etc...
+-- `chain_transform`: Creates a function that chains multiple transformation function, if any return None, the chain is broken and None is returned.  Especially usefull with soup select etc...
 
--- `extract_transform`: Creates a function that extracts the data from the soup
-    tag using the css selector and transforms it using your transformation functions.
+-- `extract_transform`: Creates a function that extracts the data from the soup tag using the css selector and transforms it using your transformation functions.

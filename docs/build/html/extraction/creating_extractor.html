@@ -1,508 +1,157 @@
-
 <!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
-    <title>Custom Extractor &#8212; CmonCrawl 1.0.0 documentation</title>
-    
-  <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
-
-    
-  <link rel="stylesheet"
-    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
-
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    
-  <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
-
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Extractor types &mdash; CmonCrawl 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../_static/copybutton.js?v=f281be69"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Extractor config file" href="config_file.html" />
-    <link rel="prev" title="Extraction" href="index.html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="en">
-    
+    <link rel="prev" title="Extraction" href="index.html" /> 
+</head>
 
-    <!-- Google Analytics -->
-    
-  </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
-<!-- Checkboxes to toggle the left sidebar -->
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
-<label class="overlay overlay-navbar" for="__navigation">
-    <div class="visually-hidden">Toggle navigation sidebar</div>
-</label>
-<!-- Checkboxes to toggle the in-page toc -->
-<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
-<label class="overlay overlay-pagetoc" for="__page-toc">
-    <div class="visually-hidden">Toggle in-page Table of Contents</div>
-</label>
-<!-- Headers at the top -->
-<div class="announcement header-item noprint"></div>
-<div class="header header-item noprint"></div>
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
 
-    
-    <div class="container-fluid" id="banner"></div>
-
-    
-
-    <div class="container-xl">
-      <div class="row">
           
-<!-- Sidebar -->
-<div class="bd-sidebar noprint" id="site-navigation">
-    <div class="bd-sidebar__content">
-        <div class="bd-sidebar__top"><div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="../index.html">
-      
-      
-      
-      <h1 class="site-logo" id="site-title">CmonCrawl 1.0.0 documentation</h1>
-      
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
-        <p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Contents:
- </span>
-</p>
-<ul class="current nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../usage.html">
-   Usage
-  </a>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../cli/index.html">
-   Command Line Interface
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
-  <label for="toctree-checkbox-1">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../cli/cli.html">
-     Command Line Interface
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../cli/download.html">
-     Command Line Download
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../cli/extract.html">
-     Command line Extract
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 current active has-children">
-  <a class="reference internal" href="index.html">
-   Extraction
-  </a>
-  <input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
-  <label for="toctree-checkbox-2">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul class="current">
-   <li class="toctree-l2 current active">
-    <a class="current reference internal" href="#">
-     Custom Extractor
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="config_file.html">
-     Extractor config file
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="utils.html">
-     Extraction utils
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../prog_guide/index.html">
-   Programming Guide
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
-  <label for="toctree-checkbox-3">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../prog_guide/overview.html">
-     Programming Guide
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../prog_guide/pip.html">
-     Custom Pipeline
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../misc/index.html">
-   Miscellaneous
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
-  <label for="toctree-checkbox-4">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../misc/domain_record.html">
-     Domain Record
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../api.html">
-   API
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
-  <label for="toctree-checkbox-5">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../generated/cmoncrawl.html">
-     cmoncrawl
-    </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
-    <label for="toctree-checkbox-6">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul>
-     <li class="toctree-l3 has-children">
-      <a class="reference internal" href="../generated/cmoncrawl.aggregator.html">
-       cmoncrawl.aggregator
-      </a>
-      <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
-      <label for="toctree-checkbox-7">
-       <i class="fas fa-chevron-down">
-       </i>
-      </label>
-      <ul>
-       <li class="toctree-l4">
-        <a class="reference internal" href="../generated/cmoncrawl.aggregator.index_query.html">
-         cmoncrawl.aggregator.index_query
-        </a>
-       </li>
-       <li class="toctree-l4">
-        <a class="reference internal" href="../generated/cmoncrawl.aggregator.utils.html">
-         cmoncrawl.aggregator.utils
-        </a>
-       </li>
-      </ul>
-     </li>
-     <li class="toctree-l3 has-children">
-      <a class="reference internal" href="../generated/cmoncrawl.common.html">
-       cmoncrawl.common
-      </a>
-      <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
-      <label for="toctree-checkbox-8">
-       <i class="fas fa-chevron-down">
-       </i>
-      </label>
-      <ul>
-       <li class="toctree-l4">
-        <a class="reference internal" href="../generated/cmoncrawl.common.loggers.html">
-         cmoncrawl.common.loggers
-        </a>
-       </li>
-       <li class="toctree-l4">
-        <a class="reference internal" href="../generated/cmoncrawl.common.types.html">
-         cmoncrawl.common.types
-        </a>
-       </li>
-      </ul>
-     </li>
-     <li class="toctree-l3 has-children">
-      <a class="reference internal" href="../generated/cmoncrawl.processor.html">
-       cmoncrawl.processor
-      </a>
-      <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
-      <label for="toctree-checkbox-9">
-       <i class="fas fa-chevron-down">
-       </i>
-      </label>
-      <ul>
-       <li class="toctree-l4">
-        <a class="reference internal" href="../generated/cmoncrawl.processor.extraction.html">
-         cmoncrawl.processor.extraction
-        </a>
-       </li>
-       <li class="toctree-l4">
-        <a class="reference internal" href="../generated/cmoncrawl.processor.pipeline.html">
-         cmoncrawl.processor.pipeline
-        </a>
-       </li>
-      </ul>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
+          
+          <a href="../index.html" class="icon icon-home">
+            CmonCrawl
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli/index.html">Command Line Interface</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Extraction</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Extractor types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extractor-definition">Extractor Definition</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#example-1">Example 1.</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#baseextractor">BaseExtractor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#extraction">Extraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#filtering">Filtering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-2">Example 2.</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="config_file.html">Extractor config file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Extraction utils</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../prog_guide/index.html">Programming Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/index.html">Miscellaneous</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
 </ul>
 
-    </div>
-</nav></div>
-        <div class="bd-sidebar__bottom">
-             <!-- To handle the deprecated key -->
-            
-            <div class="navbar_extra_footer">
-            Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
-            </div>
-            
         </div>
-    </div>
-    <div id="rtd-footer-container"></div>
-</div>
-
-
-          
-
-
-          
-<!-- A tiny helper pixel to detect if we've scrolled -->
-<div class="sbt-scroll-pixel-helper"></div>
-<!-- Main content -->
-<div class="col py-0 content-container">
-    
-    <div class="header-article row sticky-top noprint">
-        
-
-
-
-<div class="col py-1 d-flex header-article-main">
-    <div class="header-article__left">
-        
-        <label for="__navigation"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="right"
-title="Toggle navigation"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-bars"></i>
-  </span>
-
-</label>
-
-        
-    </div>
-    <div class="header-article__right">
-<button onclick="toggleFullScreen()"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="bottom"
-title="Fullscreen mode"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-expand"></i>
-  </span>
-
-</button>
-
-<div class="menu-dropdown menu-dropdown-download-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Download this page">
-      <i class="fas fa-download"></i>
-  </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="../_sources/extraction/creating_extractor.rst.txt"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Download source file"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-file"></i>
-  </span>
-<span class="headerbtn__text-container">.rst</span>
-</a>
-
-      </li>
-      
-      <li>
-        
-<button onclick="printPdf(this)"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="left"
-title="Print to PDF"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-file-pdf"></i>
-  </span>
-<span class="headerbtn__text-container">.pdf</span>
-</button>
-
-      </li>
-      
-    </ul>
-  </div>
-</div>
-<label for="__page-toc"
-  class="headerbtn headerbtn-page-toc"
-  
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-list"></i>
-  </span>
-
-</label>
-
-    </div>
-</div>
-
-<!-- Table of contents -->
-<div class="col-md-3 bd-toc show noprint">
-    <div class="tocsection onthispage pt-5 pb-3">
-        <i class="fas fa-list"></i> Contents
-    </div>
-    <nav id="bd-toc-nav" aria-label="Page">
-        <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#baseextractor">
-   BaseExtractor
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#extraction">
-   Extraction
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#filtering">
-   Filtering
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#example">
-   Example
-  </a>
- </li>
-</ul>
-
+      </div>
     </nav>
-</div>
-    </div>
-    <div class="article row">
-        <div class="col pl-md-3 pl-lg-5 content-container">
-            <!-- Table of contents that is only displayed when printing the page -->
-            <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Custom Extractor</h1>
-                <!-- Table of contents -->
-                <div id="print-main-content">
-                    <div id="jb-print-toc">
-                        
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#baseextractor">
-   BaseExtractor
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#extraction">
-   Extraction
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#filtering">
-   Filtering
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#example">
-   Example
-  </a>
- </li>
-</ul>
 
-                        </nav>
-                    </div>
-                </div>
-            </div>
-            <main id="main-content" role="main">
-                
-              <div>
-                
-  <section id="custom-extractor">
-<span id="extractors"></span><h1>Custom Extractor<a class="headerlink" href="#custom-extractor" title="Permalink to this heading">#</a></h1>
-<p>All the extractors that are used within CLI must implement the <a class="reference internal" href="../generated/cmoncrawl.processor.pipeline.extractor.IExtractor.html#cmoncrawl.processor.pipeline.extractor.IExtractor" title="cmoncrawl.processor.pipeline.extractor.IExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">cmoncrawl.processor.pipeline.extractor.IExtractor</span></code></a> class.</p>
-<p>However for most of the use cases, you will use the <a class="reference internal" href="../generated/cmoncrawl.processor.pipeline.extractor.BaseExtractor.html#cmoncrawl.processor.pipeline.extractor.BaseExtractor" title="cmoncrawl.processor.pipeline.extractor.BaseExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">cmoncrawl.processor.pipeline.extractor.BaseExtractor</span></code></a> class.</p>
-<section id="baseextractor">
-<h2>BaseExtractor<a class="headerlink" href="#baseextractor" title="Permalink to this heading">#</a></h2>
-<p>The <cite>BaseExtractor`</cite> assumes you will want to use parsed HTML using
-<a class="reference external" href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/">BeautifulSoup</a>. Thus the only method you need to implement is the <cite>extract_soup</cite> method.</p>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CmonCrawl</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Extraction</a></li>
+      <li class="breadcrumb-item active">Extractor types</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/extraction/creating_extractor.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="extractor-types">
+<span id="extractors"></span><h1>Extractor types<a class="headerlink" href="#extractor-types" title="Link to this heading"></a></h1>
+<p>All the extractors you will write must implement the <a class="reference internal" href="../generated/cmoncrawl.processor.pipeline.extractor.html#cmoncrawl.processor.pipeline.extractor.IExtractor" title="cmoncrawl.processor.pipeline.extractor.IExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">cmoncrawl.processor.pipeline.extractor.IExtractor</span></code></a> class.
+If you choose to implement it directly, you will have to implement the <code class="docutils literal notranslate"><span class="pre">extract</span></code> method.
+In the method you are provided with the HTML page as a string and crawl Medatata. You then define what data you want to extract from HTML as dictionary or None if you want
+to discard the HTML.</p>
+<p>While the interface is simple it doesn’t handle encoding problems or filtering.
+If you want to parse the HTML using <code class="docutils literal notranslate"><span class="pre">bs4</span></code> and then extract the data you can use either:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../generated/cmoncrawl.processor.pipeline.extractor.html#cmoncrawl.processor.pipeline.extractor.BaseExtractor" title="cmoncrawl.processor.pipeline.extractor.BaseExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">cmoncrawl.processor.pipeline.extractor.BaseExtractor</span></code></a>, which parses the HTML using <code class="docutils literal notranslate"><span class="pre">bs4</span></code> and resolves encoding issues</p></li>
+<li><p><a class="reference internal" href="../generated/cmoncrawl.processor.pipeline.extractor.html#cmoncrawl.processor.pipeline.extractor.PageExtractor" title="cmoncrawl.processor.pipeline.extractor.PageExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">cmoncrawl.processor.pipeline.extractor.PageExtractor</span></code></a>, in which you just define CSS selectors to use and function which transform the data from selectors</p></li>
+</ul>
 </section>
+<section id="extractor-definition">
+<h1>Extractor Definition<a class="headerlink" href="#extractor-definition" title="Link to this heading"></a></h1>
+<p>In order to register you extractor, you must define each extractor in
+separate file and you must initialize the extractor in that file to variable
+named <cite>extractor</cite>.</p>
+<section id="example-1">
+<h2>Example 1.<a class="headerlink" href="#example-1" title="Link to this heading"></a></h2>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">extractor.py</span><a class="headerlink" href="#id1" title="Link to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># You can either use the NAME variable to define name,</span>
+<span class="c1"># otherwise the name will be inherited from the file name</span>
+<span class="n">NAME</span><span class="o">=</span><span class="s1">&#39;title_extractor&#39;</span>
+
+<span class="kn">from</span> <span class="nn">cmoncrawl.processor.pipeline.extractor</span> <span class="kn">import</span> <span class="n">IExtractor</span>
+<span class="kn">from</span> <span class="nn">cmoncrawl.common.types</span> <span class="kn">import</span> <span class="n">PipeMetadata</span>
+
+<span class="k">class</span> <span class="nc">MyExtractor</span><span class="p">(</span><span class="n">IExtractor</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">extract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="n">PipeMetadata</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;My title&quot;</span><span class="p">}</span>
+
+<span class="n">extractor</span> <span class="o">=</span> <span class="n">MyExtractor</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="baseextractor">
+<h1>BaseExtractor<a class="headerlink" href="#baseextractor" title="Link to this heading"></a></h1>
+<p>The <cite>BaseExtractor`</cite> assumes you will want to use parsed HTML using
+<a class="reference external" href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/">BeautifulSoup</a>
+Thus the only method you need to implement is the <cite>extract_soup</cite> method.</p>
 <section id="extraction">
-<h2>Extraction<a class="headerlink" href="#extraction" title="Permalink to this heading">#</a></h2>
+<h2>Extraction<a class="headerlink" href="#extraction" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p><cite>extract_soup</cite> method</p></li>
 </ul>
-<p>It takes a BeautifulSoup object and crawl metadata (see <a class="reference internal" href="../generated/cmoncrawl.common.types.PipeMetadata.html#cmoncrawl.common.types.PipeMetadata" title="cmoncrawl.common.types.PipeMetadata"><code class="xref py py-class docutils literal notranslate"><span class="pre">cmoncrawl.common.types.PipeMetadata</span></code></a>) and must return
+<p>It takes a BeautifulSoup object and crawl metadata (see <a class="reference internal" href="../generated/cmoncrawl.common.types.html#cmoncrawl.common.types.PipeMetadata" title="cmoncrawl.common.types.PipeMetadata"><code class="xref py py-class docutils literal notranslate"><span class="pre">cmoncrawl.common.types.PipeMetadata</span></code></a>) and must return
 a dictionary of extracted data or None if the page should not be extacted, for example if you haven’t found all the data you need.</p>
 <p>Additionaly, you might want to filter the pages you don’t want to
 extract. For this, you have two options:</p>
 </section>
 <section id="filtering">
-<h2>Filtering<a class="headerlink" href="#filtering" title="Permalink to this heading">#</a></h2>
+<h2>Filtering<a class="headerlink" href="#filtering" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p><cite>filter_raw</cite> method</p></li>
 </ul>
@@ -513,13 +162,12 @@ decide based on raw HTML, this is the most efficient way to filter pages, as now
 </ul>
 <p>This method take the BeautifulSoup object and crawl metadata and must return True if the page should be extracted or False otherwise.</p>
 <p>Finally your file must create the said extractor and name it <cite>extractor</cite>.</p>
-<p>You can also set <cite>NAME</cite> variable to a string that will be used to name the extractor, otherwise the name of file without extension will be used.</p>
 </section>
-<section id="example">
-<h2>Example<a class="headerlink" href="#example" title="Permalink to this heading">#</a></h2>
+<section id="example-2">
+<h2>Example 2.<a class="headerlink" href="#example-2" title="Link to this heading"></a></h2>
 <p>Here is an example of an extractor that will extract the title of the page.</p>
-<div class="literal-block-wrapper docutils container" id="id1">
-<div class="code-block-caption"><span class="caption-text">ext.py</span><a class="headerlink" href="#id1" title="Permalink to this code">#</a></div>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">ext.py</span><a class="headerlink" href="#id2" title="Link to this code"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cmoncrawl.processor.pipeline.extractor</span> <span class="kn">import</span> <span class="n">BaseExtractor</span>
 <span class="kn">from</span> <span class="nn">cmoncrawl.common.types</span> <span class="kn">import</span> <span class="n">PipeMetadata</span>
 
@@ -535,56 +183,40 @@ decide based on raw HTML, this is the most efficient way to filter pages, as now
 </pre></div>
 </div>
 </div>
-<p>Now in <span class="xref std std-ref">config_file</span> you would refer to this extractor as <cite>title</cite>.
+<p>Now in <a class="reference internal" href="config_file.html#extractor-config"><span class="std std-ref">Extractor config file</span></a> you would refer to this extractor as <cite>title_extractor</cite>.
 If you would’t set the <cite>NAME</cite> variable, you would refer to it as <cite>ext</cite>.</p>
 </section>
 </section>
 
 
-              </div>
-              
-            </main>
-            <footer class="footer-article noprint">
-                
-    <!-- Previous / next buttons -->
-<div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="index.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Extraction</p>
-        </div>
-    </a>
-    <a class='right-next' id="next-link" href="config_file.html" title="next page">
-    <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Extractor config file</p>
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Extraction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="config_file.html" class="btn btn-neutral float-right" title="Extractor config file" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-    <i class="fas fa-angle-right"></i>
-    </a>
-</div>
-            </footer>
-        </div>
-    </div>
-    <div class="footer-content row">
-        <footer class="col footer"><p>
-  
-    By Hynek Kydlíček<br/>
-  
-      &copy; Copyright 2022, Hynek Kydlíček.<br/>
-</p>
-        </footer>
-    </div>
-    
-</div>
 
+  <hr/>
 
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Hynek Kydlíček.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
       </div>
-    </div>
-  
-  <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
 
-
-  </body>
+</body>
 </html>

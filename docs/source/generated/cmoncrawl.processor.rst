@@ -27,6 +27,7 @@ cmoncrawl.processor
    :toctree:
    :recursive:
 
+   cmoncrawl.processor.dao
    cmoncrawl.processor.extraction
    cmoncrawl.processor.pipeline
 

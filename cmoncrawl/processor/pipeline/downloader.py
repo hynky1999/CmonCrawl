@@ -3,7 +3,6 @@ from __future__ import annotations
 import io
 import logging
 import re
-import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import (
@@ -31,11 +30,9 @@ from warcio import ArchiveIterator
 from warcio.recordloader import ArcWarcRecord
 
 from cmoncrawl.common.loggers import all_purpose_logger, metadata_logger
-from cmoncrawl.common.types import DomainRecord, PipeMetadata
-from cmoncrawl.processor.dao.base import ICC_Dao, DownloadError
-
-
 from cmoncrawl.common.throttling import Throttler
+from cmoncrawl.common.types import DomainRecord, PipeMetadata
+from cmoncrawl.processor.dao.base import DownloadError, ICC_Dao
 
 
 def log_after_retry(retry_state: RetryCallState):

@@ -32,7 +32,7 @@ you must format them into follwoing json format
             "filename": "crawl.warc.gz",
             "offset": 123,
             "length": 456,
-            "digest: "sha1:1234567890abcdef",
+            "digest": "sha1:1234567890abcdef",
             "encoding": "utf-8",
             "timestamp": "2018-01-01T00:00:00Z"
         },
@@ -44,13 +44,12 @@ you must format them into follwoing json format
     }
 
 Each such json must be on a separate line in a file.
-You don't have to provide all the fields, only ```url``, ```filename```,
-```offset``` and ```length``` are required.
+You don't have to provide all the fields, only ``url``, ``filename``,
+``offset`` and ``length`` are required.
 The Athena SQL keys are:
-```u.url, cc.warc_filename, cc.warc_record_offset, cc.warc_record_length, cc.content_digest, cc.fetch_time```
+``u.url, cc.warc_filename, cc.warc_record_offset, cc.warc_record_length, cc.content_digest, cc.fetch_time``
 
 
-
-The ```additional_info``` field is optional and can contain any additional
+The ``additional_info`` field is optional and can contain any additional
 information. It will be added to extracted fields as is. It's usefull
 when you for example want to add to which set the url belongs to.

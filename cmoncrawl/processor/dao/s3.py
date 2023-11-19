@@ -1,13 +1,11 @@
 from typing import Any
 
 import aioboto3
-from botocore.exceptions import NoCredentialsError
-
-from cmoncrawl.processor.dao.base import DownloadError, ICC_Dao
 from botocore.config import Config
 from botocore.exceptions import ClientError
 
 from cmoncrawl.common.types import DomainRecord
+from cmoncrawl.processor.dao.base import DownloadError, ICC_Dao
 
 
 class S3Dao(ICC_Dao):

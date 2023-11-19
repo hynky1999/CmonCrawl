@@ -5,11 +5,13 @@ from enum import Enum
 from pathlib import Path
 from typing import Any, List
 
-from cmoncrawl.aggregator.index_query import IndexAggregator
+from cmoncrawl.aggregator.athena_query import AthenaAggregator
+from cmoncrawl.aggregator.gateway_query import GatewayAggregator
 from cmoncrawl.common.types import MatchType
+from cmoncrawl.config import CONFIG
 from cmoncrawl.integrations.utils import DAOname, get_dao
-from cmoncrawl.processor.dao.base import ICC_Dao
 from cmoncrawl.middleware.synchronized import query_and_extract
+from cmoncrawl.processor.dao.base import ICC_Dao
 from cmoncrawl.processor.pipeline.downloader import (
     AsyncDownloader,
     DummyDownloader,
@@ -29,6 +31,17 @@ from cmoncrawl.processor.pipeline.streamer import (
 class DownloadOutputFormat(Enum):
     RECORD = "record"
     HTML = "html"
+
+    def __str__(self):
+        return self.value
+
+
+class Aggregator(Enum):
+    ATHENA = "athena"
+    GATEWAY = "gateway"
+
+    def __str__(self):
+        return self.value
 
 
 def add_mode_args(subparser: Any):
@@ -58,7 +71,7 @@ def add_mode_args(subparser: Any):
         "--download_method",
         type=DAOname,
         default=DAOname.API,
-        choices=[e for e in DAOname],
+        choices=list(DAOname),
         help="Method for downloading warc files from Common Crawl, it only applies to HTML download",
     )
 
@@ -67,10 +80,12 @@ def add_mode_args(subparser: Any):
 
 def add_args(subparser: Any):
     parser = subparser.add_parser("download", help="Download data from Common Crawl")
-    parser.add_argument("url", type=str, help="URL to query")
     parser.add_argument("output", type=Path, help="Path to output directory")
     mode_subparser = parser.add_subparsers(
         dest="mode", required=True, help="Download mode"
+    )
+    parser.add_argument(
+        "urls", type=str, nargs="+", help="URLs to download, e.g. www.bcc.cz."
     )
     mode_subparser = add_mode_args(mode_subparser)
     parser.add_argument(
@@ -113,6 +128,7 @@ def add_args(subparser: Any):
         type=MatchType,
         choices=list(MatchType),
         help="Match type for the url, see cdx-api for more info",
+        default=MatchType.EXACT,
     )
     parser.add_argument(
         "--max_directory_size",
@@ -125,6 +141,19 @@ def add_args(subparser: Any):
         action="store_true",
         default=True,
         help="Filter out non 200 status code",
+    )
+    parser.add_argument(
+        "--aggregator",
+        type=Aggregator,
+        choices=list(Aggregator),
+        help="Athena is fast, but cost a few dollars, Gateway is incredibly slow, but free",
+        default=Aggregator.GATEWAY,
+    )
+    parser.add_argument(
+        "--s3_bucket",
+        type=str,
+        default=None,
+        help="S3 bucket to use for Athena. If set, the query results will be stored in the bucket and reused for later queries. Make sure to delete the bucket afterwards.",
     )
     parser.set_defaults(func=run_download)
 
@@ -183,9 +212,62 @@ def get_download_downloader(
             return DummyDownloader()
 
 
+def get_aggregator(
+    aggregator: Aggregator,
+    cc_servers: List[str] | None,
+    urls: list[str],
+    match_type: MatchType,
+    since: datetime,
+    to: datetime,
+    limit: int,
+    max_retry: int,
+    sleep_base: float,
+    s3_bucket: str | None,
+) -> GatewayAggregator | AthenaAggregator:
+    if len(urls) == 0:
+        raise ValueError("At least one URL must be specified")
+    if limit <= 0:
+        raise ValueError("'limit' must be greater than 0")
+    if max_retry <= 0:
+        raise ValueError("'max_retry' must be greater than 0")
+    if sleep_base <= 0:
+        raise ValueError("'sleep_base' must be greater than 0")
+
+    match aggregator:
+        case Aggregator.GATEWAY:
+            if s3_bucket is not None:
+                raise ValueError(
+                    "S3 bucket can be specified only for Athena aggregator"
+                )
+
+            return GatewayAggregator(
+                cc_servers=cc_servers,
+                urls=urls,
+                match_type=match_type,
+                since=since,
+                to=to,
+                limit=limit,
+                max_retry=max_retry,
+                sleep_base=sleep_base,
+            )
+        case Aggregator.ATHENA:
+            return AthenaAggregator(
+                cc_servers=cc_servers,
+                urls=urls,
+                match_type=match_type,
+                since=since,
+                to=to,
+                limit=limit,
+                max_retry=max_retry,
+                sleep_base=sleep_base,
+                bucket_name=s3_bucket,
+                aws_profile=CONFIG.AWS_PROFILE,
+            )
+
+
 async def url_download(
-    url: str,
-    match_type: MatchType | None,
+    urls: list[str],
+    match_type: MatchType,
     output: Path,
     cc_server: List[str] | None,
     since: datetime,
@@ -199,12 +281,26 @@ async def url_download(
     filter_non_200: bool,
     encoding: str | None,
     download_method: DAOname | None,
+    aggregator_type: Aggregator,
+    s3_bucket: str | None,
 ):
     outstreamer = url_download_prepare_streamer(
         mode, output, max_directory_size, max_crawls_per_file
     )
     router = url_download_prepare_router(mode, filter_non_200, encoding)
     dao = get_dao(download_method)
+    aggregator = get_aggregator(
+        aggregator_type,
+        cc_server,
+        urls,
+        match_type,
+        since,
+        to,
+        limit,
+        max_retry,
+        sleep_base,
+        s3_bucket,
+    )
 
     try:
         if dao is not None:
@@ -212,17 +308,7 @@ async def url_download(
 
         downloader = get_download_downloader(mode, max_retry, sleep_base, dao)
         pipeline = ProcessorPipeline(router, downloader, outstreamer)
-        index_agg = IndexAggregator(
-            cc_servers=cc_server or [],
-            domains=[url],
-            match_type=match_type,
-            since=since,
-            to=to,
-            limit=limit,
-            max_retry=max_retry,
-            sleep_base=sleep_base,
-        )
-        await query_and_extract(index_agg, pipeline)
+        await query_and_extract(aggregator, pipeline)
     finally:
         if dao is not None:
             await dao.__aexit__(None, None, None)
@@ -230,12 +316,13 @@ async def url_download(
 
 def run_download(args: argparse.Namespace):
     mode = DownloadOutputFormat(args.mode)
-    download_method = (
-        DAOname(args.download_method) if mode == DownloadOutputFormat.HTML else None
+    encoding = args.encoding if mode == DownloadOutputFormat.HTML else None
+    max_crawls_per_file = (
+        args.max_crawls_per_file if mode == DownloadOutputFormat.RECORD else 1
     )
     return asyncio.run(
         url_download(
-            url=args.url,
+            urls=args.urls,
             match_type=args.match_type,
             output=args.output,
             cc_server=args.cc_server,
@@ -245,12 +332,12 @@ def run_download(args: argparse.Namespace):
             max_retry=args.max_retry,
             sleep_base=args.sleep_base,
             mode=mode,
-            max_crawls_per_file=args.max_crawls_per_file
-            if mode == DownloadOutputFormat.RECORD
-            else 1,
+            max_crawls_per_file=max_crawls_per_file,
+            encoding=encoding,
+            aggregator_type=args.aggregator,
             max_directory_size=args.max_directory_size,
             filter_non_200=args.filter_non_200,
-            encoding=args.encoding if mode == DownloadOutputFormat.HTML else None,
-            download_method=download_method,
+            download_method=args.download_method,
+            s3_bucket=args.s3_bucket,
         )
     )

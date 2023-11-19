@@ -58,8 +58,7 @@ class TestAthenaQueryCreation(unittest.IsolatedAsyncioTestCase, MotoMock):
                     cc.warc_record_offset,
                     cc.warc_record_length
             FROM "commoncrawl"."ccindex" AS cc
-            WHERE (cc.fetch_time BETWEEN CAST('2019-01-01 00:00:00' AS TIMESTAMP) AND CAST('2023-12-31 00:00:00' AS TIMESTAMP)) AND (cc.crawl = 'CC-MAIN-2022-05' OR cc.crawl = 'CC-MAIN-2021-09' OR cc.crawl = 'CC-MAIN-2020-50') AND (cc.fetch_status = 200) AND (cc.subset = 'warc') AND ((cc.url = 'seznam.cz') OR (cc.url = 'idnes.cz'))
-            ORDER BY url;"""
+            WHERE (cc.fetch_time BETWEEN CAST('2019-01-01 00:00:00' AS TIMESTAMP) AND CAST('2023-12-31 00:00:00' AS TIMESTAMP)) AND (cc.crawl = 'CC-MAIN-2022-05' OR cc.crawl = 'CC-MAIN-2021-09' OR cc.crawl = 'CC-MAIN-2020-50') AND (cc.fetch_status = 200) AND (cc.subset = 'warc') AND ((cc.url = 'seznam.cz') OR (cc.url = 'idnes.cz'));"""
             ),
         )
 
@@ -170,7 +169,7 @@ class TestAthenaAggregator(unittest.IsolatedAsyncioTestCase, MotoMock):
         with patch(
             "cmoncrawl.aggregator.athena_query.get_all_CC_indexes"
         ) as mock_get_all_CC_indexes, patch(
-            "cmoncrawl.aggregator.athena_query.commoncrawl_database_and_table_exists"
+            "cmoncrawl.aggregator.athena_query.AthenaAggregator._AthenaAggregator__commoncrawl_database_and_table_exists"
         ) as mock_commoncrawl_database_and_table_exists:
             mock_commoncrawl_database_and_table_exists.return_value = False
             mock_get_all_CC_indexes.return_value = expected_CC_indexes
@@ -216,7 +215,7 @@ class TestAthenaAggregator(unittest.IsolatedAsyncioTestCase, MotoMock):
         with patch(
             "cmoncrawl.aggregator.athena_query.get_all_CC_indexes"
         ) as mock_get_all_CC_indexes, patch(
-            "cmoncrawl.aggregator.athena_query.commoncrawl_database_and_table_exists"
+            "cmoncrawl.aggregator.athena_query.AthenaAggregator._AthenaAggregator__commoncrawl_database_and_table_exists"
         ) as mock_commoncrawl_database_and_table_exists:
             mock_commoncrawl_database_and_table_exists.return_value = False
             mock_get_all_CC_indexes.return_value = expected_CC_indexes
@@ -277,7 +276,7 @@ class TestAthenaAggregatorIterator(
         self.aws_client = aioboto3.Session()
         # patching
         self.mock_athena_query = patch(
-            "cmoncrawl.aggregator.athena_query.AthenaAggregator.AthenaAggregatorIterator.await_athena_query"
+            "cmoncrawl.aggregator.athena_query.AthenaAggregator.AthenaAggregatorIterator._AthenaAggregatorIterator__await_athena_query"
         )
         self.mock_await_athena_query = self.mock_athena_query.start()
         self.mock_await_athena_query.side_effect = self.mocked_await_athena_query
@@ -327,11 +326,11 @@ class TestAthenaAggregatorIterator(
         return expected_result_key
 
     async def test_limit(self):
-        self.domains = ["seznam.cz"]
+        self.urls = ["seznam.cz"]
         self.iterator = AthenaAggregator.AthenaAggregatorIterator(
             aws_client=self.aws_client,
-            domains=self.domains,
-            CC_files=["https://index.commoncrawl.org/CC-MAIN-2022-05-index"],
+            urls=self.urls,
+            cc_servers=["https://index.commoncrawl.org/CC-MAIN-2022-05-index"],
             since=None,
             to=None,
             limit=1,
@@ -341,6 +340,9 @@ class TestAthenaAggregatorIterator(
             database_name="commoncrawl",
             table_name="ccindex",
             bucket_name=self.bucket_name,
+            prefetch_size=1,
+            sleep_base=1.2,
+            max_retry=1,
         )
         records: List[DomainRecord] = []
         async for record in self.iterator:
@@ -348,12 +350,12 @@ class TestAthenaAggregatorIterator(
         self.assertEqual(len(records), 1)
 
     async def test_since(self):
-        self.domains = ["seznam.cz"]
+        self.urls = ["seznam.cz"]
         since = datetime(2022, 1, 2)
         self.iterator = AthenaAggregator.AthenaAggregatorIterator(
             aws_client=self.aws_client,
-            domains=self.domains,
-            CC_files=[
+            urls=self.urls,
+            cc_servers=[
                 "https://index.commoncrawl.org/CC-MAIN-2022-05-index",
                 "https://index.commoncrawl.org/CC-MAIN-2021-05-index",
                 "https://index.commoncrawl.org/CC-MAIN-2023-09-index",
@@ -367,6 +369,9 @@ class TestAthenaAggregatorIterator(
             database_name="commoncrawl",
             table_name="ccindex",
             bucket_name=self.bucket_name,
+            prefetch_size=1,
+            sleep_base=1.2,
+            max_retry=1,
         )
         records: List[DomainRecord] = []
         async for record in self.iterator:
@@ -377,12 +382,12 @@ class TestAthenaAggregatorIterator(
             self.assertGreaterEqual(record.timestamp, since)
 
     async def test_to(self):
-        self.domains = ["seznam.cz"]
+        self.urls = ["seznam.cz"]
         to = datetime(2022, 1, 2)
         self.iterator = AthenaAggregator.AthenaAggregatorIterator(
             aws_client=self.aws_client,
-            domains=self.domains,
-            CC_files=[
+            urls=self.urls,
+            cc_servers=[
                 "https://index.commoncrawl.org/CC-MAIN-2022-05-index",
                 "https://index.commoncrawl.org/CC-MAIN-2021-05-index",
                 "https://index.commoncrawl.org/CC-MAIN-2023-09-index",
@@ -396,6 +401,9 @@ class TestAthenaAggregatorIterator(
             database_name="commoncrawl",
             table_name="ccindex",
             bucket_name=self.bucket_name,
+            prefetch_size=1,
+            sleep_base=1.2,
+            max_retry=1,
         )
         records: List[DomainRecord] = []
         async for record in self.iterator:
@@ -406,11 +414,11 @@ class TestAthenaAggregatorIterator(
             self.assertLessEqual(record.timestamp, to)
 
     async def test_batch_size_single(self):
-        self.domains = ["seznam.cz"]
+        self.urls = ["seznam.cz"]
         self.iterator = AthenaAggregator.AthenaAggregatorIterator(
             aws_client=self.aws_client,
-            domains=self.domains,
-            CC_files=[
+            urls=self.urls,
+            cc_servers=[
                 "https://index.commoncrawl.org/CC-MAIN-2022-05-index",
                 "https://index.commoncrawl.org/CC-MAIN-2021-05-index",
                 "https://index.commoncrawl.org/CC-MAIN-2023-09-index",
@@ -424,6 +432,9 @@ class TestAthenaAggregatorIterator(
             database_name="commoncrawl",
             table_name="ccindex",
             bucket_name=self.bucket_name,
+            prefetch_size=1,
+            sleep_base=1.2,
+            max_retry=1,
         )
         records: List[DomainRecord] = []
         async for record in self.iterator:
@@ -434,11 +445,11 @@ class TestAthenaAggregatorIterator(
         self.assertEqual(self.mock_await_athena_query.call_count, 3)
 
     async def test_batch_size_zero(self):
-        self.domains = ["seznam.cz"]
+        self.urls = ["seznam.cz"]
         self.iterator = AthenaAggregator.AthenaAggregatorIterator(
             aws_client=self.aws_client,
-            domains=self.domains,
-            CC_files=[
+            urls=self.urls,
+            cc_servers=[
                 "https://index.commoncrawl.org/CC-MAIN-2022-05-index",
                 "https://index.commoncrawl.org/CC-MAIN-2021-05-index",
                 "https://index.commoncrawl.org/CC-MAIN-2023-09-index",
@@ -452,6 +463,9 @@ class TestAthenaAggregatorIterator(
             database_name="commoncrawl",
             table_name="ccindex",
             bucket_name=self.bucket_name,
+            prefetch_size=1,
+            sleep_base=1.2,
+            max_retry=1,
         )
         records: List[DomainRecord] = []
         async for record in self.iterator:
@@ -462,12 +476,12 @@ class TestAthenaAggregatorIterator(
         self.assertEqual(self.mock_await_athena_query.call_count, 1)
 
     async def test_extra_sql_where(self):
-        self.domains = ["seznam.cz"]
+        self.urls = ["seznam.cz"]
         where_clause = 'cc.warc_filename = "filename1"'
         self.iterator = AthenaAggregator.AthenaAggregatorIterator(
             aws_client=self.aws_client,
-            domains=self.domains,
-            CC_files=[
+            urls=self.urls,
+            cc_servers=[
                 "https://index.commoncrawl.org/CC-MAIN-2022-05-index",
                 "https://index.commoncrawl.org/CC-MAIN-2021-05-index",
                 "https://index.commoncrawl.org/CC-MAIN-2023-09-index",
@@ -481,6 +495,9 @@ class TestAthenaAggregatorIterator(
             database_name="commoncrawl",
             table_name="ccindex",
             bucket_name=self.bucket_name,
+            prefetch_size=1,
+            sleep_base=1.2,
+            max_retry=1,
         )
         records: List[DomainRecord] = []
         async for record in self.iterator:

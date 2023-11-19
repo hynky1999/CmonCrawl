@@ -8,7 +8,7 @@ from stomp import Connection, ConnectionListener
 from stomp.exception import StompException
 from stomp.utils import Frame
 
-from cmoncrawl.aggregator.index_query import IndexAggregator
+from cmoncrawl.aggregator.gateway_query import GatewayAggregator
 from cmoncrawl.aggregator.utils.helpers import unify_url_id
 from cmoncrawl.common.loggers import all_purpose_logger
 from cmoncrawl.common.types import DomainRecord
@@ -52,7 +52,7 @@ class StompAggregator:
         queue_host: str,
         queue_port: int,
         url: str,
-        index_agg: IndexAggregator,
+        index_agg: GatewayAggregator,
         heartbeat: int = 10000,
     ):
         self.queue_host = queue_host

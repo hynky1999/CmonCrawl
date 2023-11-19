@@ -9,6 +9,7 @@ from unittest.mock import AsyncMock
 
 from cmoncrawl.common.loggers import metadata_logger
 from cmoncrawl.common.types import DomainRecord, PipeMetadata
+from cmoncrawl.config import CONFIG
 from cmoncrawl.processor.dao.api import CCAPIGatewayDAO
 from cmoncrawl.processor.dao.base import DownloadError, ICC_Dao
 from cmoncrawl.processor.dao.s3 import S3Dao
