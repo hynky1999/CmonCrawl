@@ -28,13 +28,12 @@ from cmoncrawl.aggregator.utils.athena_query_maker import (
     crawl_url_to_name,
     prepare_athena_sql_query,
 )
+from cmoncrawl.aggregator.utils.constants import CC_INDEXES_SERVER
 from cmoncrawl.aggregator.utils.helpers import (
     get_all_CC_indexes,
     remove_bucket_prefix,
     run_athena_query,
 )
-from cmoncrawl.aggregator.utils.constants import CC_INDEXES_SERVER
-from cmoncrawl.aggregator.utils.helpers import get_all_CC_indexes
 from cmoncrawl.common.loggers import all_purpose_logger
 from cmoncrawl.common.types import (
     DomainRecord,

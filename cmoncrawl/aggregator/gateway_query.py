@@ -3,7 +3,6 @@ from __future__ import annotations
 import asyncio
 from collections import deque
 from datetime import datetime
-from cmoncrawl.aggregator.utils.constants import CC_INDEXES_SERVER
 from types import TracebackType
 from typing import (
     AsyncIterator,
@@ -20,6 +19,7 @@ from aiohttp import (
 )
 
 from cmoncrawl.aggregator.base import IAggregator
+from cmoncrawl.aggregator.utils.constants import CC_INDEXES_SERVER
 from cmoncrawl.aggregator.utils.helpers import (
     crawl_to_year,
     get_all_CC_indexes,
