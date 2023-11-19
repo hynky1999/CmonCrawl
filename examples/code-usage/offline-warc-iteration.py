@@ -3,13 +3,14 @@ from pathlib import Path
 from typing import Any, Dict
 
 from bs4 import BeautifulSoup
+
+from cmoncrawl.common.loggers import all_purpose_logger, metadata_logger
 from cmoncrawl.common.types import PipeMetadata
 from cmoncrawl.processor.pipeline.downloader import WarcIterator
-from cmoncrawl.processor.pipeline.pipeline import ProcessorPipeline
-from cmoncrawl.processor.pipeline.streamer import IStreamer
-from cmoncrawl.processor.pipeline.router import Router
 from cmoncrawl.processor.pipeline.extractor import BaseExtractor
-from cmoncrawl.common.loggers import metadata_logger, all_purpose_logger
+from cmoncrawl.processor.pipeline.pipeline import ProcessorPipeline
+from cmoncrawl.processor.pipeline.router import Router
+from cmoncrawl.processor.pipeline.streamer import IStreamer
 
 # Make sure you have cmoncrawl >= 1.0.3 installed
 

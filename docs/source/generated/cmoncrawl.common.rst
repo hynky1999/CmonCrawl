@@ -28,5 +28,6 @@ cmoncrawl.common
    :recursive:
 
    cmoncrawl.common.loggers
+   cmoncrawl.common.throttling
    cmoncrawl.common.types
 

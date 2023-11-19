@@ -1,14 +1,11 @@
+from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 from urllib.parse import urlparse
-from dataclasses import dataclass, field
-from pydantic import BaseModel, Field, validator
-from typing import Optional, List
-from datetime import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, validator
 
 
 def parse_timestamp(v: Optional[Any]) -> Optional[datetime]:
@@ -90,9 +87,7 @@ class RetrieveResponse:
     Response from retrieve.
     """
 
-    status: int
     content: Any
-    reason: None | str
 
 
 @dataclass
@@ -101,7 +96,7 @@ class DomainCrawl:
     Domain crawl.
     """
 
-    domain: str = ""
+    url: str = ""
     cdx_server: str = ""
     page: int = 0
 
@@ -150,7 +145,7 @@ class MatchType(Enum):
     Example:
     Query: example.com/abc
 
-    Macthes:
+    Matches:
     EXACT: (www.)?example.com/abc
     PREFIX: (www.)?example.com/abc(/.*)?
     HOST: (www.)?example.com(/.*)?

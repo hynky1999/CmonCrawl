@@ -1,16 +1,18 @@
+import asyncio
 import logging
 from typing import Any, Dict, List, Set, Tuple
-from cmoncrawl.aggregator.index_query import IndexAggregator
-from cmoncrawl.processor.pipeline.pipeline import ProcessorPipeline
-from cmoncrawl.common.types import DomainRecord
-from cmoncrawl.common.loggers import all_purpose_logger, metadata_logger
-from cmoncrawl.aggregator.utils.helpers import unify_url_id
+
 from tqdm import tqdm
-import asyncio
+
+from cmoncrawl.aggregator.base import IAggregator
+from cmoncrawl.aggregator.utils.helpers import unify_url_id
+from cmoncrawl.common.loggers import all_purpose_logger, metadata_logger
+from cmoncrawl.common.types import DomainRecord
+from cmoncrawl.processor.pipeline.pipeline import ProcessorPipeline
 
 
 async def query_and_extract(
-    index_agg: IndexAggregator,
+    index_agg: IAggregator,
     pipeline: ProcessorPipeline,
     filter_non_unique_url: bool = False,
 ):
@@ -28,29 +30,22 @@ async def query_and_extract(
     processed_urls: Set[str] = set()
     total_extracted: int = 0
 
-    if hasattr(pipeline.downloader, "__aenter__"):
-        await pipeline.downloader.__aenter__()  # type: ignore
-    try:
-        async with index_agg:
-            async for domain_record in index_agg:
-                url = domain_record.url or ""
-                if filter_non_unique_url and unify_url_id(url) in processed_urls:
-                    continue
-                try:
-                    await pipeline.process_domain_record(domain_record, {})
-                    total_extracted += 1
-                    processed_urls.add(unify_url_id(url))
-                except KeyboardInterrupt:
-                    break
+    async with index_agg:
+        async for domain_record in index_agg:
+            url = domain_record.url or ""
+            if filter_non_unique_url and unify_url_id(url) in processed_urls:
+                continue
+            try:
+                await pipeline.process_domain_record(domain_record, {})
+                total_extracted += 1
+                processed_urls.add(unify_url_id(url))
+            except KeyboardInterrupt:
+                break
 
-                except Exception as e:
-                    all_purpose_logger.error(
-                        f"Failed to process {domain_record.url} with {e}"
-                    )
-
-    finally:
-        if hasattr(pipeline.downloader, "__aexit__"):
-            await pipeline.downloader.__aexit__(None, None, None)  # type: ignore
+            except Exception as e:
+                all_purpose_logger.error(
+                    f"Failed to process {domain_record.url} with {e}"
+                )
     all_purpose_logger.info(f"Extracted {total_extracted} urls")
     return processed_urls
 
@@ -77,7 +72,7 @@ async def _extract_task(
 async def extract(
     records: List[Tuple[DomainRecord, Dict[str, Any]]],
     pipeline: ProcessorPipeline,
-    concurrent_length: int = 20,
+    concurrent_length: int = 5,
 ):
     """
     Extracts the records using the pipeline, with at most `concurrent_length`
@@ -87,7 +82,7 @@ async def extract(
         records (List[Tuple[DomainRecord, Dict[str, Any]]]): List of records to process and additional info
         pipeline (ProcessorPipeline): Pipeline to use
         concurrent_length (int, optional): Number of concurrent records to process.
-            Defaults to 20.
+            Defaults to 5.
 
     """
     domain_records_iterator = iter(tqdm(records))

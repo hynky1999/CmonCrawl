@@ -1,25 +1,29 @@
-from datetime import datetime
-from enum import Enum
+import argparse
+import asyncio
 import json
 import multiprocessing
+from datetime import datetime
+from enum import Enum
 from pathlib import Path
+from typing import Any, Dict, List, Tuple
 
 from tqdm import tqdm
-from cmoncrawl.common.loggers import setup_loggers
-from cmoncrawl.common.types import ExtractConfig
 
-from cmoncrawl.processor.pipeline.downloader import DownloaderDummy, AsyncDownloader
-from cmoncrawl.processor.pipeline.pipeline import ProcessorPipeline
+from cmoncrawl.common.loggers import setup_loggers
+from cmoncrawl.common.types import DomainRecord, ExtractConfig
+from cmoncrawl.config import CONFIG
+from cmoncrawl.integrations.utils import DAOname, get_dao
 from cmoncrawl.middleware.synchronized import extract
-import argparse
-from typing import Any, Dict, List, Tuple
-import asyncio
+from cmoncrawl.processor.dao.base import ICC_Dao
+from cmoncrawl.processor.pipeline.downloader import (
+    AsyncDownloader,
+    DownloaderLocalFiles,
+)
+from cmoncrawl.processor.pipeline.pipeline import ProcessorPipeline
+from cmoncrawl.processor.pipeline.router import Router
 from cmoncrawl.processor.pipeline.streamer import (
     StreamerFileJSON,
 )
-
-from cmoncrawl.processor.pipeline.router import Router
-from cmoncrawl.common.types import DomainRecord
 
 
 class ExtractMode(Enum):
@@ -32,13 +36,24 @@ def add_mode_args(subparser: Any):
         ExtractMode.RECORD.value, help="Extract data from jsonl record files"
     )
     record_parser.add_argument(
-        "--max_retry", type=int, default=30, help="Max number of warc download attempts"
+        "--max_retry",
+        type=int,
+        default=30,
+        help="Max number of warc download attempts",
     )
     record_parser.add_argument(
-        "--sleep_step",
-        type=int,
-        default=4,
-        help="Number of increased second to add to sleep time between each failed download attempt",
+        "--download_method",
+        type=DAOname,
+        default=DAOname.API,
+        choices=list(DAOname),
+        help="Method of downloading warc files",
+    )
+
+    record_parser.add_argument(
+        "--sleep_base",
+        type=float,
+        default=1.3,
+        help="Base value for exponential backoff between failed requests",
     )
 
     html_parser = subparser.add_parser(
@@ -70,9 +85,6 @@ def add_args(subparser: Any):
     )
     parser.add_argument("output_path", type=Path, help="Path to output directory")
     parser.add_argument(
-        "files", nargs="+", type=Path, help="Files to extract data from"
-    )
-    parser.add_argument(
         "--max_crawls_per_file",
         type=int,
         default=500_000,
@@ -95,6 +107,9 @@ def add_args(subparser: Any):
         dest="mode", required=True, help="Extraction mode"
     )
     mode_subparser = add_mode_args(mode_subparser)
+    parser.add_argument(
+        "files", nargs="+", type=Path, help="Files to extract data from"
+    )
     parser.set_defaults(func=run_extract)
 
 
@@ -104,13 +119,17 @@ def get_extract_downloader(
     url: str | None,
     date: datetime | None,
     max_retry: int,
-    sleep_step: int,
+    sleep_base: float,
+    dao: ICC_Dao | None,
 ):
     match mode:
         case ExtractMode.HTML:
-            return DownloaderDummy(files_path, url, date)
+            return DownloaderLocalFiles(files_path, url, date)
         case ExtractMode.RECORD:
-            return AsyncDownloader(max_retry=max_retry, sleep_step=sleep_step)
+            if dao is None:
+                raise ValueError("DAO must be specified for record extraction")
+
+            return AsyncDownloader(max_retry=max_retry, sleep_base=sleep_base, dao=dao)
 
 
 def get_domain_records_json(
@@ -135,7 +154,10 @@ def get_domain_records_html(
 ) -> List[Tuple[DomainRecord, Dict[str, Any]]]:
     # Just return dummy as correct crawl will be loaded from dummy downloader
     return [
-        (DomainRecord(filename="", url=url, offset=0, length=0, timestamp=date), {})
+        (
+            DomainRecord(filename="", url=url, offset=0, length=0, timestamp=date),
+            {},
+        )
     ]
 
 
@@ -162,19 +184,29 @@ async def extract_from_files(
     max_directory_size: int,
     max_crawls_per_file: int,
     max_retry: int,
-    sleep_step: int,
+    sleep_base: float,
+    download_method: DAOname | None,
 ):
     router = create_router(config)
-    downloader = get_extract_downloader(mode, files, url, date, max_retry, sleep_step)
     outstreamer = StreamerFileJSON(output_path, max_directory_size, max_crawls_per_file)
-    pipeline = ProcessorPipeline(router, downloader, outstreamer)
-    for path in files:
-        match mode:
-            case ExtractMode.RECORD:
-                records = get_domain_records_json(path)
-            case ExtractMode.HTML:
-                records = get_domain_records_html(url, date)
-        await extract(records, pipeline)
+    dao = get_dao(download_method)
+    try:
+        if dao is not None:
+            await dao.__aenter__()
+        downloader = get_extract_downloader(
+            mode, files, url, date, max_retry, sleep_base, dao
+        )
+        pipeline = ProcessorPipeline(router, downloader, outstreamer)
+        for path in files:
+            match mode:
+                case ExtractMode.RECORD:
+                    records = get_domain_records_json(path)
+                case ExtractMode.HTML:
+                    records = get_domain_records_html(url, date)
+            await extract(records, pipeline)
+    finally:
+        if dao is not None:
+            await dao.__aexit__(None, None, None)
 
 
 def _extract_task(
@@ -184,7 +216,11 @@ def _extract_task(
     args: argparse.Namespace,
 ):
     mode = ExtractMode(args.mode)
+    download_method = DAOname(args.download_method) if args.download_method else None
+
+    # We have to setup loggers / aws in each process
     setup_loggers(args.verbosity)
+    CONFIG.update_from_cli(args)
 
     asyncio.run(
         extract_from_files(
@@ -197,7 +233,8 @@ def _extract_task(
             max_directory_size=args.max_directory_size,
             max_crawls_per_file=args.max_crawls_per_file,
             max_retry=args.max_retry if mode == ExtractMode.RECORD else 0,
-            sleep_step=args.sleep_step if mode == ExtractMode.RECORD else 0,
+            sleep_base=args.sleep_base if mode == ExtractMode.RECORD else 0,
+            download_method=download_method,
         )
     )
 

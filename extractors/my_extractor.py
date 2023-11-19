@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+
 from cmoncrawl.common.types import PipeMetadata
 from cmoncrawl.processor.pipeline.extractor import BaseExtractor
 

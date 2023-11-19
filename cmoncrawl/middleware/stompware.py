@@ -1,22 +1,18 @@
-from datetime import datetime
-import json
-from typing import List
-
-from cmoncrawl.aggregator.index_query import IndexAggregator
-from cmoncrawl.common.loggers import all_purpose_logger
 import asyncio
+import json
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from typing import Dict, List, Set, Tuple
-from cmoncrawl.aggregator.utils.helpers import unify_url_id
-
 
 from stomp import Connection, ConnectionListener
-from stomp.utils import Frame
 from stomp.exception import StompException
+from stomp.utils import Frame
+
+from cmoncrawl.aggregator.gateway_query import GatewayAggregator
+from cmoncrawl.aggregator.utils.helpers import unify_url_id
+from cmoncrawl.common.loggers import all_purpose_logger
 from cmoncrawl.common.types import DomainRecord
 from cmoncrawl.processor.pipeline.pipeline import ProcessorPipeline
-
 
 DUPL_ID_HEADER = "_AMQ_DUPL_ID"
 
@@ -56,7 +52,7 @@ class StompAggregator:
         queue_host: str,
         queue_port: int,
         url: str,
-        index_agg: IndexAggregator,
+        index_agg: GatewayAggregator,
         heartbeat: int = 10000,
     ):
         self.queue_host = queue_host
@@ -71,7 +67,7 @@ class StompAggregator:
             heartbeats=(self.heartbeat, self.heartbeat),
         )
         conn.connect(login="producer", passcode="producer", wait=True)  # type: ignore
-        all_purpose_logger.info(f"Connected to queue")
+        all_purpose_logger.info("Connected to queue")
         return conn
 
     async def aggregate(self, filter_duplicates: bool = True):

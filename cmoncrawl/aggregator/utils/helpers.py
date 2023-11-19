@@ -1,22 +1,39 @@
 import asyncio
 import logging
-import random
 import re
-from typing import Any, Awaitable, Callable
+from datetime import datetime
+from typing import Any
 from urllib.parse import urlparse
 
+import aioboto3
 from aiohttp import (
     ClientError,
-    ClientResponse,
     ClientSession,
     ContentTypeError,
     ServerConnectionError,
 )
+from tenacity import (
+    RetryCallState,
+    retry,
+    retry_if_exception_type,
+    stop_after_attempt,
+    wait_random_exponential,
+)
+
 from cmoncrawl.aggregator.utils import ndjson
 from cmoncrawl.common.loggers import all_purpose_logger
-from cmoncrawl.common.types import RetrieveResponse
 
 ALLOWED_ERR_FOR_RETRIES = [500, 502, 503, 504]
+
+
+class DownloadError(Exception):
+    def __init__(self, reason: str, status: int):
+        self.reason = reason
+        self.status = status
+
+    def __str__(self) -> str:
+        return f"DownloadError: {self.reason} {self.status}"
+
 
 ext_sub = re.compile(r"\.html|\.jpg|\.png|\.zip")
 multiple_slash = re.compile(r"/")
@@ -45,78 +62,97 @@ async def get_all_CC_indexes(client: ClientSession, cdx_server: str) -> list[str
     """
     Get all CC index servers from a given CDX server
     """
-    response = await retrieve(
-        client=client,
-        cdx_server=cdx_server,
-        domain=cdx_server,
-        params={},
-        content_type="application/json",
-        max_retry=10,
-        sleep_step=1,
-    )
-    if response.content is None:
+    try:
+        response = await retrieve(
+            client=client,
+            cdx_server=cdx_server,
+            params={},
+            content_type="application/json",
+            max_retry=10,
+            sleep_base=1.4,
+            log_additional_info={
+                "type": "CC index servers fetch",
+                "cdx_server": cdx_server,
+            },
+        )
+    except Exception as e:
         all_purpose_logger.error(
-            f"Failed to get CC servers from {cdx_server} after 10 attempts"
+            f"Failed to get CC servers from {cdx_server} with reason: {e}"
         )
         return []
-    CC_servers = [js["cdx-api"] for js in response.content]
+    CC_servers = [js["cdx-api"] for js in response]
     return CC_servers
+
+
+def log_after_retry(retry_state: RetryCallState):
+    retry_num = retry_state.attempt_number - 1
+    if all_purpose_logger.level <= logging.DEBUG or retry_num % 5 == 0:
+        reason = str(retry_state.outcome.exception())
+        cdx_server = retry_state.kwargs.get("cdx_server", "")
+        log_additional_info = retry_state.kwargs.get("log_additional_info", {})
+
+        log_message = f"Failed to retrieve from {cdx_server} with reason: '{reason}', retry: {retry_num}"
+        if retry_state.next_action:
+            log_message += (
+                f", waiting {round(retry_state.next_action.sleep, 2)} seconds"
+            )
+
+        if log_additional_info:
+            log_message += f", additional info: {log_additional_info}"
+
+        all_purpose_logger.error(
+            log_message,
+        )
 
 
 async def retrieve(
     client: ClientSession,
-    domain: str,
     cdx_server: str,
     params: dict[str, Any],
     content_type: str,
     max_retry: int,
-    sleep_step: int,
+    sleep_base: float,
     allowed_status_errors: list[int] = ALLOWED_ERR_FOR_RETRIES,
-    **args: Any,
+    log_additional_info: dict[str, Any] = {},  # type: ignore
 ):
-    def should_retry(retry: int, reason: str, status: int, **args: Any):
-        # if logger at least info then report every retry otherwise report every 10 retries
-        if all_purpose_logger.level <= logging.DEBUG or retry % 10 == 0:
-            all_purpose_logger.error(
-                f"Failed to retrieve page of {domain} from {cdx_server} with reason {status}: {reason} retry: {retry + 1}/{max_retry} add_info: {args}"
-            )
-        if status not in allowed_status_errors:
-            return False
-
-        return True
-
-    status = 0
-    content = None
-    reason: str | None = None
-    decode: Callable[[ClientResponse], Awaitable[Any]]
-
-    if content_type == "text/x-ndjson":
-        decode = lambda response: response.json(
-            content_type=content_type, loads=ndjson.Decoder().decode
+    @retry(
+        stop=stop_after_attempt(max_retry + 1),
+        wait=wait_random_exponential(multiplier=5, exp_base=sleep_base, max=120),
+        retry=retry_if_exception_type(DownloadError),
+        reraise=True,
+        before_sleep=log_after_retry,
+    )
+    async def _retrieve(
+        client: ClientSession,
+        cdx_server: str,
+        params: dict[str, Any],
+        content_type: str,
+        allowed_status_errors: list[int],
+        log_additional_info: dict[str, Any],
+    ):
+        all_purpose_logger.debug(
+            f"Sending request to {cdx_server} with params: {params}"
         )
-    elif content_type == "application/json":
-        decode = lambda response: response.json(content_type=content_type)
-    else:
-        raise ValueError(f"Unknown content type: {content_type}")
-
-    for retry in range(max_retry):
         try:
-            all_purpose_logger.debug(
-                f"Sending request to {cdx_server} with params: {params}, retry: {retry + 1}/{max_retry}"
-            )
             async with client.get(cdx_server, params=params) as response:
                 status = response.status
                 if not response.ok:
                     reason = str(response.reason) if response.reason else "Unknown"  # type: ignore
-                    if not should_retry(retry, reason, status, **args):
-                        break
-                else:
-                    content = await decode(response)
-                    all_purpose_logger.info(
-                        f"Successfully retrieved page of {domain} from {cdx_server} add_info: {args}"
+                    if status in allowed_status_errors:
+                        raise DownloadError(reason, status)
+                    raise ValueError(
+                        f"Failed to download {cdx_server} with status {status} and reason {reason}"
                     )
-                    break
-
+                else:
+                    if content_type == "text/x-ndjson":
+                        content = await response.json(
+                            content_type=content_type,
+                            loads=ndjson.Decoder().decode,
+                        )
+                    elif content_type == "application/json":
+                        content = await response.json(content_type=content_type)
+                    else:
+                        raise ValueError(f"Unknown content type: {content_type}")
         except (
             ClientError,
             TimeoutError,
@@ -125,8 +161,73 @@ async def retrieve(
         ) as e:
             reason = f"{type(e)} {str(e)}"
             status = 500
-            if not should_retry(retry, reason, status, **args):
+            raise DownloadError(reason, status)
+
+        return content
+
+    return await _retrieve(
+        client=client,
+        cdx_server=cdx_server,
+        params=params,
+        content_type=content_type,
+        allowed_status_errors=allowed_status_errors,
+        log_additional_info=log_additional_info,
+    )
+
+
+def crawl_to_year(crawl: str) -> int:
+    year = re.search(r"(?:MAIN-)(\d{4})", crawl)
+    if year is None:
+        raise ValueError(f"Invalid crawl {crawl}")
+
+    return int(year.groups()[0])
+
+
+def to_timestamp_format(date: datetime):
+    return date.strftime("%Y%m%d%H%M%S")
+
+
+def timestamp_to_datetime(timestamp: str) -> datetime:
+    return datetime.strptime(timestamp, "%Y%m%d%H%M%S")
+
+
+async def remove_bucket_prefix(session: aioboto3.Session, prefix: str, folder: str):
+    # remove all query results
+    async with session.client("s3") as s3:
+        paginator = s3.get_paginator("list_objects_v2")
+        async for result in paginator.paginate(Bucket=prefix, Prefix=folder):
+            if "Contents" not in result:
+                continue
+            for file in result["Contents"]:
+                await s3.delete_object(Bucket=prefix, Key=file["Key"])
+
+
+async def run_athena_query(
+    session: aioboto3.Session, query_kwargs: dict[str, Any]
+) -> str:
+    async with session.client(
+        "athena",
+        region_name=session.region_name
+        if session.region_name is not None
+        else "us-east-1",
+    ) as athena:
+        query_result = await athena.start_query_execution(
+            **query_kwargs,
+        )
+        if query_result["ResponseMetadata"]["HTTPStatusCode"] != 200:
+            raise Exception(f"Athena query failed: {query_result}")
+
+        query_execution_id = query_result["QueryExecutionId"]
+        while True:
+            response = await athena.get_query_execution(
+                QueryExecutionId=query_execution_id
+            )
+            status = response["QueryExecution"]["Status"]["State"]
+            if status in ["FAILED", "CANCELLED"]:
+                raise Exception(f"Athena query failed: {response}")
+
+            if status == "SUCCEEDED":
                 break
 
-        await asyncio.sleep(random.randint(0, (retry + 1) * sleep_step))
-    return RetrieveResponse(status, content, reason)
+            await asyncio.sleep(5)
+    return query_execution_id

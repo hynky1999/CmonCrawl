@@ -2,3 +2,4 @@
 python-dotenv==1.0.0
 moto==4.2.5
 mysqlclient==2.2.0
+parameterized==0.9.0

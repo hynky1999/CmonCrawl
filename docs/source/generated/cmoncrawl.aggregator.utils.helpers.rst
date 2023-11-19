@@ -13,6 +13,9 @@ cmoncrawl.aggregator.utils.helpers
 
    .. autosummary::
    
+      get_all_CC_indexes
+      log_after_retry
+      retrieve
       unify_url_id
    
    
@@ -22,6 +25,12 @@ cmoncrawl.aggregator.utils.helpers
    
 
    
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+   
+      DownloadError
    
    
 

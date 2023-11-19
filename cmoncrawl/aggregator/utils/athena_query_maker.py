@@ -1,8 +1,9 @@
-from datetime import datetime
 import textwrap
+from datetime import datetime
 from typing import List, Optional
 from urllib.parse import urlparse
-from cmoncrawl.aggregator.index_query import crawl_to_year
+
+from cmoncrawl.aggregator.utils.helpers import crawl_to_year
 from cmoncrawl.common.types import MatchType
 
 
@@ -80,14 +81,14 @@ def prepare_athena_where_conditions(
     urls_with_type_query = [
         f"({url_query_based_on_match_type(match_type, url)})" for url in urls
     ]
-    url_query = f" OR ".join(urls_with_type_query)
+    url_query = " OR ".join(urls_with_type_query)
     allowed_crawls_query = crawl_query(crawl_urls, since, to)
     date_query = url_query_date_range(since, to)
     where_conditions = [
         date_query,
         allowed_crawls_query,
-        f"cc.fetch_status = 200",
-        f"cc.subset = 'warc'",
+        "cc.fetch_status = 200",
+        "cc.subset = 'warc'",
         url_query,
     ]
     where_conditions = [condition for condition in where_conditions if condition]
@@ -121,8 +122,7 @@ def prepare_athena_sql_query(
                 cc.warc_record_offset,
                 cc.warc_record_length
         FROM "{database}"."{table}" AS cc
-        WHERE {where_conditions_query}
-        ORDER BY url;"""
+        WHERE {where_conditions_query};"""
     )
     return query
 
@@ -134,3 +134,7 @@ def get_name(
     match_type: MatchType = MatchType.EXACT,
 ):
     return f"{'-'.join(urls)}-{since.strftime('%Y%m%d')}-{until.strftime('%Y%m%d')}-{match_type.name}"
+
+
+def to_timestamp_format(date: datetime):
+    return date.strftime("%Y%m%d%H%M%S")

@@ -3,8 +3,8 @@ from typing import Any, Callable, Dict, List, Optional
 
 from bs4 import BeautifulSoup
 
-from cmoncrawl.common.types import PipeMetadata
 from cmoncrawl.common.loggers import metadata_logger
+from cmoncrawl.common.types import PipeMetadata
 from cmoncrawl.processor.extraction.filters import (
     must_exist_filter,
     must_not_exist_filter,
@@ -24,7 +24,6 @@ class IExtractor(ABC):
     def extract(self, response: str, metadata: PipeMetadata) -> Dict[str, Any] | None:
         """
         Extracts the data from the response, if the extractor fails to extract the data it should return None
-        return None
 
         Args:
             response (str): response from the downloader
@@ -71,7 +70,7 @@ class BaseExtractor(IExtractor, ABC):
         article = self.preprocess(response, metadata)
         try:
             soup = BeautifulSoup(article, self.parser)
-        except:
+        except Exception:
             metadata_logger.error(
                 "Failed to parse soup", extra={"domain_record": metadata.domain_record}
             )
