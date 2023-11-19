@@ -1,0 +1,31 @@
+name: Sphinx docs to gh-pages
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  sphinx_docs_to_gh-pages:
+    runs-on: ubuntu-latest
+    name: Sphinx docs to gh-pages
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.dev.txt
+      - name: Running the Sphinx to gh-pages Action
+        uses: uibcdf/action-sphinx-docs-to-gh-pages@v1.1.0
+        with:
+          branch: main
+          dir_docs: docs/source
+          sphinxapiopts: '--separate -o . ../'
+          sphinxapiexclude: '../*setup* ../*.ipynb'
+          sphinxopts: ''

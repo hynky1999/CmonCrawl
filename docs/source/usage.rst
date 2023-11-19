@@ -36,9 +36,7 @@ Additionaly, the CommonCrawl provides two ways to to query the data:
 1. CommonCrawl Index - Free, but more limited and incrdibly slow.
 2. AWS Athena - Paid, but much faster, you can use SQL to query the data.
 
-The library supports all of these methods. We recommend using S3/AWS Athena combination. Refer to the image referenced as :ref:`when_to_use_this_library` for more details.
-
-.. _when_to_use_this_library:
+The library supports all of these methods. We recommend using S3/AWS Athena combination. Refer to the following image to see the differences:
 
 .. image:: ../source/images/when_to_use.drawio.png
    :alt: When to use this library
