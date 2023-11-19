@@ -1,4 +1,6 @@
 name: Sphinx docs to gh-pages
+env:
+  PYTHON_VERSION: "3.10"
 
 on:
   pull_request:
