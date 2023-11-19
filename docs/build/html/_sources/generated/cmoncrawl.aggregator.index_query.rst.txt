@@ -24,7 +24,6 @@ cmoncrawl.aggregator.index\_query
    .. rubric:: Classes
 
    .. autosummary::
-      :toctree:
    
       IndexAggregator
    

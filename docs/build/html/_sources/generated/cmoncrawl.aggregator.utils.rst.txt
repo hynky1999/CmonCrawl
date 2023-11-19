@@ -27,6 +27,7 @@ cmoncrawl.aggregator.utils
    :toctree:
    :recursive:
 
+   cmoncrawl.aggregator.utils.athena_query_maker
    cmoncrawl.aggregator.utils.helpers
-   cmoncrawl.aggregator.utils.ndjson_decoder
+   cmoncrawl.aggregator.utils.ndjson
 

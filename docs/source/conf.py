@@ -10,9 +10,9 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
+import os
+import sys
+sys.path.insert(0, os.path.abspath('../../'))
 
 
 # -- Project information -----------------------------------------------------
@@ -40,6 +40,7 @@ extensions = [
     "nbsphinx",
     "myst_parser",
     "sphinx_copybutton",
+    "sphinx_rtd_theme",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -50,6 +51,7 @@ templates_path = ["_templates"]
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
+
 
 # use language set by highlight directive if no language is set by role
 inline_highlight_respect_highlight = False
@@ -68,5 +70,10 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = "sphinx_book_theme"
+html_theme = "sphinx_rtd_theme"
 autosummary_generate_overwrite = False
+
+
+
+# Make sure sections are unique
+autosectionlabel_prefix_document = True

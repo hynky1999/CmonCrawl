@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import List, Optional
 from urllib.parse import urlparse
 
-from cmoncrawl.aggregator.index_query import crawl_to_year
+from cmoncrawl.aggregator.utils.helpers import crawl_to_year
 from cmoncrawl.common.types import MatchType
 
 
@@ -122,8 +122,7 @@ def prepare_athena_sql_query(
                 cc.warc_record_offset,
                 cc.warc_record_length
         FROM "{database}"."{table}" AS cc
-        WHERE {where_conditions_query}
-        ORDER BY url;"""
+        WHERE {where_conditions_query};"""
     )
     return query
 
@@ -135,3 +134,7 @@ def get_name(
     match_type: MatchType = MatchType.EXACT,
 ):
     return f"{'-'.join(urls)}-{since.strftime('%Y%m%d')}-{until.strftime('%Y%m%d')}-{match_type.name}"
+
+
+def to_timestamp_format(date: datetime):
+    return date.strftime("%Y%m%d%H%M%S")

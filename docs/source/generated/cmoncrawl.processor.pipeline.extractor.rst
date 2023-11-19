@@ -15,15 +15,21 @@ cmoncrawl.processor.pipeline.extractor
    
    .. rubric:: Classes
 
-   .. autosummary::
-      :toctree:
-   
-      BaseExtractor
-      DomainRecordExtractor
-      HTMLExtractor
-      IExtractor
-   
-   
+   .. autoclass:: BaseExtractor
+      :members:
+
+   .. autoclass:: DomainRecordExtractor
+      :members:
+
+   .. autoclass:: HTMLExtractor
+      :members:
+
+   .. autoclass:: IExtractor
+      :members:
+
+   .. autoclass:: PageExtractor
+      :members:
+
 
    
    

@@ -1,24 +1,18 @@
 from __future__ import annotations
 
-import asyncio
 import io
 import logging
 import re
-import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import (
     IO,
-    Any,
-    Callable,
     ContextManager,
-    Coroutine,
     Generator,
     Iterable,
     List,
     Optional,
     Tuple,
-    TypeVar,
 )
 
 import bs4
@@ -36,8 +30,9 @@ from warcio import ArchiveIterator
 from warcio.recordloader import ArcWarcRecord
 
 from cmoncrawl.common.loggers import all_purpose_logger, metadata_logger
+from cmoncrawl.common.throttling import Throttler
 from cmoncrawl.common.types import DomainRecord, PipeMetadata
-from cmoncrawl.processor.connectors.base import DownloadError, ICC_Dao
+from cmoncrawl.processor.dao.base import DownloadError, ICC_Dao
 
 
 def log_after_retry(retry_state: RetryCallState):
@@ -58,49 +53,6 @@ def log_after_retry(retry_state: RetryCallState):
         )
 
 
-T = TypeVar("T")
-
-
-class Throttler:
-    def __init__(self, milliseconds: int):
-        """
-        Initializes the Throttler class.
-
-        Args:
-            milliseconds (int): The number of milliseconds to wait between function calls.
-        """
-        self.milliseconds = milliseconds
-        self.last_call = 0
-        self.semaphore = asyncio.Semaphore(1)
-
-    async def throttle(
-        self,
-        func: Callable[..., Coroutine[Any, Any, T]],
-        *args: Any,
-        **kwargs: Any,
-    ) -> T:
-        """
-        Throttles the function call.
-
-        Precondition:
-            func (Callable[..., Coroutine[Any, Any, T]]): The function to throttle. It must be a coroutine function.
-            *args (Any): The positional arguments to pass to the function.
-            **kwargs (Any): The keyword arguments to pass to the function.
-
-        Postcondition:
-            Returns the result of the throttled function call.
-
-        Returns:
-            T: The return type of the function.
-        """
-        async with self.semaphore:
-            elapsed = time.time() - self.last_call
-            if elapsed < self.milliseconds / 1000:
-                await asyncio.sleep((self.milliseconds / 1000) - elapsed)
-            self.last_call = time.time()
-        return await func(*args, **kwargs)
-
-
 class IDownloader:
     """
     Base class for all downloaders
@@ -117,12 +69,12 @@ class AsyncDownloader(IDownloader):
     Downloader which asynchronously downloads the the data for the domain_record
 
     Args:
-        base_url (str, optional): Base url where to download data from. Defaults to "https://data.commoncrawl.org/".
+        dao (ICC_Dao): Data access object to use for downloading
         digest_verification (bool, optional): Whether to verify the digest of the downloaded data. Defaults to True.
         max_retry (int, optional): Maximum number of retries. Defaults to 5.
         sleep_base (float, optional): Base sleep time for exponential backoff in retries. Defaults to 1.5.
+        max_requests_per_second (int, optional): Maximum number of requests per second. Defaults to 20.
         encoding: Default encoding to be used
-
     """
 
     def __init__(
@@ -130,8 +82,8 @@ class AsyncDownloader(IDownloader):
         dao: ICC_Dao,
         digest_verification: bool = True,
         max_retry: int = 5,
-        sleep_base: float = 1.5,
-        max_requests_per_second: int = 300,
+        sleep_base: float = 1.3,
+        max_requests_per_second: int = 20,
         encoding: str = "latin-1",
     ):
         if max_requests_per_second > 500:
@@ -151,7 +103,9 @@ class AsyncDownloader(IDownloader):
 
         @retry(
             stop=stop_after_attempt(self.__max_retry + 1),
-            wait=wait_random_exponential(exp_base=self.__sleep_base, max=120),
+            wait=wait_random_exponential(
+                exp_base=self.__sleep_base, max=120, multiplier=5
+            ),
             retry=retry_any(
                 retry_if_exception_type((DownloadError)),
             ),

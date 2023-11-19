@@ -1,14 +1,3 @@
-Programming Guide
-==========================
-
-This section provides a brief overview of the project. It should give you
-and idea of how to create your custom extraction pipeline.
-
-.. note:
-    You probably don't need to read this if you just want to use the utility.
-    This is for people who want to create their own extraction pipeline.
-
-
 How to extract from Common Crawl (theory)
 =========================================
 
@@ -46,7 +35,7 @@ Thus in order to download an page we query the index to get link to respective W
 Since there are multiples of the indexes we should query all of them to make sure we don't miss the page.
 With the link to the WARC and offset and length we can continue to another step. 
 
-All this is handled by :py:class:`cmoncrawl.aggregator.index_query.IndexAggregator`. But for basic use you will not need to use it directly.
+All this is handled by :py:class:`cmoncrawl.aggregator.gateway_query.GatewayAggregator`. But for basic use you will not need to use it directly.
 
 
 =====================
@@ -54,7 +43,10 @@ All this is handled by :py:class:`cmoncrawl.aggregator.index_query.IndexAggregat
 =====================
 The Processor node than downloads the url and related information from queue and downloads the appropriate WARC file.
 This step is handled by :py:mod:`cmoncrawl.processor.pipeline.downloader.AsyncDownloader`.
-It simply downloads and extracts the page from the WARC file.
+It simply downloads and extracts the page from the WARC file. For downloading we use two data access objects (DAOs, :py:class:`cmoncrawl.processor.dao.base.ICC_Dao`):
+
+- :py:class:`cmoncrawl.processor.dao.s3`, which downloads the file from AWS S3 directly
+- :py:class:`cmoncrawl.processor.dao.api`, which downloads the file through CommonCrawl API Gateway.
 
 
 ===================
@@ -94,8 +86,11 @@ The way the file is saved is defined by streamers.
 All of the currently implemented streamers are derived from :py:class:`cmoncrawl.processor.pipeline.streamer.BaseStreamerFile`.
 Which defined how are the files saved, but the content parsing is left to the derived classes.
 
-Currently we support 2 streamers, one for json (:py:class:`cmoncrawl.processor.pipeline.streamer.StreamerFileJSON`) and one for html (:py:class:`cmoncrawl.processor.pipeline.streamer.StreamerFileHTML`).
-The json one creates a json per line output, and outputs all extracted data.
-The html one creates a html file (assuming the html is defined in extracted data['html']).
+Currently we support 2 streamers:
+
+- JSON (:py:class:`cmoncrawl.processor.pipeline.streamer.StreamerFileJSON`) and one for html (:py:class:`cmoncrawl.processor.pipeline.streamer.StreamerFileHTML`), which creates a json per line output, and outputs all extracted data
+- HTML (:py:class:`cmoncrawl.processor.pipeline.streamer.StreamerFileHTML`), which creates a html file (assuming the html is defined in extracted data['html']).
+
+If you want to debug you might want to use :py:class:`cmoncrawl.processor.pipeline.streamer.MemoryStreamer` which outputs the data to memory instead of file.
 
 If you would like different format you can create your own saver by inheriting from :py:class:`cmoncrawl.processor.pipeline.streamer.IStreamer` and then changing pipeline creation with your new outstreamer.

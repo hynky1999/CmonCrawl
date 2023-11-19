@@ -96,7 +96,7 @@ class DomainCrawl:
     Domain crawl.
     """
 
-    domain: str = ""
+    url: str = ""
     cdx_server: str = ""
     page: int = 0
 
@@ -145,7 +145,7 @@ class MatchType(Enum):
     Example:
     Query: example.com/abc
 
-    Macthes:
+    Matches:
     EXACT: (www.)?example.com/abc
     PREFIX: (www.)?example.com/abc(/.*)?
     HOST: (www.)?example.com(/.*)?

@@ -14,7 +14,7 @@ from cmoncrawl.common.types import DomainRecord, ExtractConfig
 from cmoncrawl.config import CONFIG
 from cmoncrawl.integrations.utils import DAOname, get_dao
 from cmoncrawl.middleware.synchronized import extract
-from cmoncrawl.processor.connectors.base import ICC_Dao
+from cmoncrawl.processor.dao.base import ICC_Dao
 from cmoncrawl.processor.pipeline.downloader import (
     AsyncDownloader,
     DownloaderLocalFiles,
@@ -45,14 +45,14 @@ def add_mode_args(subparser: Any):
         "--download_method",
         type=DAOname,
         default=DAOname.API,
-        choices=[e for e in DAOname],
+        choices=list(DAOname),
         help="Method of downloading warc files",
     )
 
     record_parser.add_argument(
         "--sleep_base",
         type=float,
-        default=1.5,
+        default=1.3,
         help="Base value for exponential backoff between failed requests",
     )
 
@@ -85,9 +85,6 @@ def add_args(subparser: Any):
     )
     parser.add_argument("output_path", type=Path, help="Path to output directory")
     parser.add_argument(
-        "files", nargs="+", type=Path, help="Files to extract data from"
-    )
-    parser.add_argument(
         "--max_crawls_per_file",
         type=int,
         default=500_000,
@@ -110,6 +107,9 @@ def add_args(subparser: Any):
         dest="mode", required=True, help="Extraction mode"
     )
     mode_subparser = add_mode_args(mode_subparser)
+    parser.add_argument(
+        "files", nargs="+", type=Path, help="Files to extract data from"
+    )
     parser.set_defaults(func=run_extract)
 
 

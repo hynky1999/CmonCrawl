@@ -1,8 +1,11 @@
+import asyncio
 import logging
 import re
+from datetime import datetime
 from typing import Any
 from urllib.parse import urlparse
 
+import aioboto3
 from aiohttp import (
     ClientError,
     ClientSession,
@@ -114,7 +117,7 @@ async def retrieve(
 ):
     @retry(
         stop=stop_after_attempt(max_retry + 1),
-        wait=wait_random_exponential(multiplier=1, exp_base=sleep_base, max=120),
+        wait=wait_random_exponential(multiplier=5, exp_base=sleep_base, max=120),
         retry=retry_if_exception_type(DownloadError),
         reraise=True,
         before_sleep=log_after_retry,
@@ -170,3 +173,61 @@ async def retrieve(
         allowed_status_errors=allowed_status_errors,
         log_additional_info=log_additional_info,
     )
+
+
+def crawl_to_year(crawl: str) -> int:
+    year = re.search(r"(?:MAIN-)(\d{4})", crawl)
+    if year is None:
+        raise ValueError(f"Invalid crawl {crawl}")
+
+    return int(year.groups()[0])
+
+
+def to_timestamp_format(date: datetime):
+    return date.strftime("%Y%m%d%H%M%S")
+
+
+def timestamp_to_datetime(timestamp: str) -> datetime:
+    return datetime.strptime(timestamp, "%Y%m%d%H%M%S")
+
+
+async def remove_bucket_prefix(session: aioboto3.Session, prefix: str, folder: str):
+    # remove all query results
+    async with session.client("s3") as s3:
+        paginator = s3.get_paginator("list_objects_v2")
+        async for result in paginator.paginate(Bucket=prefix, Prefix=folder):
+            if "Contents" not in result:
+                continue
+            for file in result["Contents"]:
+                await s3.delete_object(Bucket=prefix, Key=file["Key"])
+
+
+async def run_athena_query(
+    session: aioboto3.Session, query_kwargs: dict[str, Any]
+) -> str:
+    async with session.client(
+        "athena",
+        region_name=session.region_name
+        if session.region_name is not None
+        else "us-east-1",
+    ) as athena:
+        query_result = await athena.start_query_execution(
+            **query_kwargs,
+        )
+        if query_result["ResponseMetadata"]["HTTPStatusCode"] != 200:
+            raise Exception(f"Athena query failed: {query_result}")
+
+        query_execution_id = query_result["QueryExecutionId"]
+        while True:
+            response = await athena.get_query_execution(
+                QueryExecutionId=query_execution_id
+            )
+            status = response["QueryExecution"]["Status"]["State"]
+            if status in ["FAILED", "CANCELLED"]:
+                raise Exception(f"Athena query failed: {response}")
+
+            if status == "SUCCEEDED":
+                break
+
+            await asyncio.sleep(5)
+    return query_execution_id

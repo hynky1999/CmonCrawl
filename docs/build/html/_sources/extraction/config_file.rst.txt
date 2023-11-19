@@ -2,11 +2,16 @@
 
 Extractor config file
 ==========================
+In many cases you will want to use more than single extractor.
+Imagine if you crawl two news websites which have completely different structure
+and you want to extract the article. You can achieve this by using the Extractor config file.
+
+The extractor config file, defines what extractor should be used for a given HTML file.
+You can leverage datetime of the crawl and url to specify which extractor should be used.
 
 Structure
 ---------
 
-In order to specify which extractor to use, you need to create a config
 The structure is following:
 
 .. code-block:: json
@@ -29,7 +34,7 @@ The structure is following:
             },
             {
                 "regexes": ["another_regex"],
-                "....": "....
+                "....": "...."
             }
         ]
     }
@@ -41,20 +46,20 @@ The ``extractors_path`` is the path to the folder where the extractors are locat
     The extractors_path is relative to the current working directory.
 
 
-The ``routes`` is a list of routes. Each route is a dictionary with the following keys:
+The ``routes`` defined a list of possible extractors and conditions we can route to. Each route is a dictionary with the following keys:
 
 * ``regexes``: a list of regexes. At least one regex must match the url, for this route to be used.
-* ``extractors``: a list of extractors that will be used to extract the data from the url.
+* ``extractors``: a list of extractors that will be used to extract the data from the url. The first extractor for which ``since`` < record_date < ``to`` is used.
 
 
 Each extractor has the following keys:
 
 * ``name``: the name of the extractor. This is the name of the python file without the .py extension, you can also set NAME variable in the extractor file to override this.
-* ``since`` [optional] : The starting crawl date for which the extractor is valid.  It must be full iso date string (e.g. 2009-01-01T00:00:00+00:00)
+* ``since`` [optional] : The starting crawl date for which the extractor is valid (e.g. 2009-01-01)
 * ``to`` [optional] : The ending crawl date for which the extractor is valid.  Format is the same as for ``since``.
 
 .. note::
-    If ``since`` and ``to`` are not specified, the extractor will be used for all crawls.
+    If ``since`` and ``to`` are not specified, the extractor will match for all crawls for that route.
 
 
 Example
@@ -81,11 +86,11 @@ and the following config:
                 "regexes": [".*cmon.cz.*"],
                 "extractors": [{
                     "name": "a_extractor",
-                    "to": "2010-01-01T00:00:00+00:00"
+                    "to": "2010-01-01"
                 },
                 {
                     "name": "a_extractor2",
-                    "since": "2010-01-01T00:00:00+00:00"
+                    "since": "2010-01-01"
                 }
                 ]
             },

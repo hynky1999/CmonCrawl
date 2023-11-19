@@ -16,9 +16,9 @@ cmoncrawl.processor.pipeline.pipeline
    .. rubric:: Classes
 
    .. autosummary::
-      :toctree:
    
       ProcessorPipeline
+      :members:
    
    
 
