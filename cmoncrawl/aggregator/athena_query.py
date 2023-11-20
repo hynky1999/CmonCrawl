@@ -28,6 +28,7 @@ from cmoncrawl.aggregator.utils.athena_query_maker import (
     crawl_url_to_name,
     prepare_athena_sql_query,
 )
+from cmoncrawl.aggregator.utils.constants import CC_INDEXES_SERVER
 from cmoncrawl.aggregator.utils.helpers import (
     get_all_CC_indexes,
     remove_bucket_prefix,
@@ -79,7 +80,6 @@ class AthenaAggregator(IAggregator):
     def __init__(
         self,
         urls: List[str],
-        cc_indexes_server: str = "http://index.commoncrawl.org/collinfo.json",
         match_type: MatchType = MatchType.EXACT,
         cc_servers: Optional[List[str]] = None,
         since: datetime = datetime.min,
@@ -97,7 +97,6 @@ class AthenaAggregator(IAggregator):
         table_name: str = "ccindex",
     ) -> None:
         self.urls = urls
-        self.cc_indexes_server = cc_indexes_server
         self.match_type = match_type
         self.cc_servers = cc_servers
         self.since = since
@@ -143,9 +142,7 @@ class AthenaAggregator(IAggregator):
         )
         async with ClientSession() as client:
             if not self.cc_servers:
-                self.cc_servers = await get_all_CC_indexes(
-                    client, self.cc_indexes_server
-                )
+                self.cc_servers = await get_all_CC_indexes(client, CC_INDEXES_SERVER)
         # create bucket if not exists
         async with self.aws_client.client("s3") as s3:
             # Check if bucket exists

@@ -7,6 +7,7 @@ from cmoncrawl.aggregator.athena_query import (
     MatchType,
 )
 from cmoncrawl.aggregator.gateway_query import GatewayAggregator
+from cmoncrawl.aggregator.utils.constants import CC_INDEXES_SERVER
 from cmoncrawl.aggregator.utils.helpers import get_all_CC_indexes, unify_url_id
 
 
@@ -38,7 +39,7 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(num_pages, 14)
 
     async def test_indexer_all_CC(self):
-        indexes = await get_all_CC_indexes(self.client, self.di.cc_indexes_server)
+        indexes = await get_all_CC_indexes(self.client, CC_INDEXES_SERVER)
         indexes = sorted(indexes)
         indexes = indexes[
             : indexes.index("https://index.commoncrawl.org/CC-MAIN-2022-27-index") + 1
