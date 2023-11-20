@@ -1,8 +1,19 @@
 ## CommonCrawl Extractor with great versatility
+[Documentation](https://hynky1999.github.io/CmonCrawl/)
 
 ### Why is this solution better than others ?
 Unlike all other commoncrawl extractors, this project allows creation of custom extractors with high level of modularity.
-Unlike getting records from CmonCrawl index using Amazon's Athena this solution is completely free of cost :)
+It supports all ways to access the CommonCrawl:
+For quering:
+- [x] AWS Athena
+- [x] CommonCrawl Index API
+
+For download:
+- [x] S3
+- [x] CommonCrawl API
+
+, while being wrapped in very easy to use CLI. While CLI is easier to get started we also provide ways how to use the library
+directly from python.
 
 ### Installation
 #### From PyPi
@@ -26,7 +37,7 @@ To create them you need an example html files you want to extract.
 You can use the following command to get html files from the CommonCrawl dataset:
 
 ```bash
-$ cmon download --match_type=domain --limit=100 example.com html_output html
+$ cmon download --match_type=domain --limit=100 html_output html example.com
 ```
 This will download a first 100 html files from example.com and save them in html_output.
 
@@ -95,7 +106,7 @@ In our case the config would look like this:
 To test the extraction, you can use the following command:
 
 ```bash
-$ cmon extract config.json extracted_output html_output/*.html html
+$ cmon extract config.json extracted_output html html_output/*.html
 ```
 
 ### Crawl the sites
@@ -106,7 +117,7 @@ To do this you will proceed in two steps:
 To do this, you can use the following command:
 
 ```bash
-cmon download --match_type=domain --limit=100000 example.com dr_output record
+cmon download --match_type=domain --limit=100000 dr_output record example.com
 ```
 
 This will download the first 100000 records from example.com and save them in dr_output. By default it saves 100_000 records per file, you can change this with the --max_crawls_per_file option.
@@ -115,7 +126,7 @@ This will download the first 100000 records from example.com and save them in dr
 Once you have the records, you can use the following command to extract them:
 
 ```bash
-$ cmon extract --n_proc=4 config.json extracted_output dr_output/*.jsonl record
+$ cmon extract --n_proc=4 config.json extracted_output record dr_output/*.jsonl
 ```
 
 Note that you can use the --n_proc option to specify the number of processes to use for the extraction. Multiprocessing is done on file level, so if you have just one file it will not be used.
