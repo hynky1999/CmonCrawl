@@ -1,4 +1,5 @@
 ## CommonCrawl Extractor with great versatility
+[Documentation](https://hynky1999.github.io/CmonCrawl/)
 
 ### Why is this solution better than others ?
 Unlike all other commoncrawl extractors, this project allows creation of custom extractors with high level of modularity.
