@@ -19,6 +19,7 @@ from aiohttp import (
 )
 
 from cmoncrawl.aggregator.base import IAggregator
+from cmoncrawl.aggregator.utils.constants import CC_INDEXES_SERVER
 from cmoncrawl.aggregator.utils.helpers import (
     crawl_to_year,
     get_all_CC_indexes,
@@ -67,7 +68,6 @@ class GatewayAggregator(IAggregator):
     def __init__(
         self,
         urls: List[str],
-        cc_indexes_server: str = "http://index.commoncrawl.org/collinfo.json",
         match_type: MatchType = MatchType.EXACT,
         cc_servers: Optional[List[str]] = None,
         since: datetime = datetime.min,
@@ -79,7 +79,6 @@ class GatewayAggregator(IAggregator):
         max_requests_per_second: int = 20,
     ) -> None:
         self.urls = urls
-        self.cc_indexes_server = cc_indexes_server
         self.cc_servers = cc_servers
         self.since = since
         self.to = to
@@ -96,9 +95,7 @@ class GatewayAggregator(IAggregator):
         await self.client.__aenter__()
 
         if not self.cc_servers:
-            self.cc_servers = await get_all_CC_indexes(
-                self.client, self.cc_indexes_server
-            )
+            self.cc_servers = await get_all_CC_indexes(self.client, CC_INDEXES_SERVER)
         return self
 
     async def __aenter__(self) -> GatewayAggregator:
