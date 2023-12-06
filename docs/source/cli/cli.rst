@@ -31,10 +31,10 @@ Examples
     cmon download --match_type=domain --limit=100 html_output html example.com
 
     # Take the domain records downloaded using the first command and extracts them using your extractors
-    cmon extract config.json extracted_output record dr_output/*.jsonl
+    cmon extract config.json extracted_output dr_output/*.jsonl record
 
     # Take the htmls downloaded using the second command and extracts them using your extractors
-    cmon extract config.json extracted_output html html_output/*.html
+    cmon extract config.json extracted_output html_output/*.html html
 
 
 
