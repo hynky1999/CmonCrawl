@@ -37,7 +37,7 @@ To create them you need an example html files you want to extract.
 You can use the following command to get html files from the CommonCrawl dataset:
 
 ```bash
-$ cmon download --match_type=domain --limit=100 html_output html example.com
+$ cmon download --match_type=domain --limit=100 html_output example.com html
 ```
 This will download a first 100 html files from example.com and save them in html_output.
 
@@ -106,7 +106,7 @@ In our case the config would look like this:
 To test the extraction, you can use the following command:
 
 ```bash
-$ cmon extract config.json extracted_output html html_output/*.html
+$ cmon extract config.json extracted_output html_output/*.html html
 ```
 
 ### Crawl the sites
@@ -117,16 +117,16 @@ To do this you will proceed in two steps:
 To do this, you can use the following command:
 
 ```bash
-cmon download --match_type=domain --limit=100000 dr_output record example.com
+cmon download --match_type=domain --limit=100 dr_output example.com record
 ```
 
-This will download the first 100000 records from example.com and save them in dr_output. By default it saves 100_000 records per file, you can change this with the --max_crawls_per_file option.
+This will download the first 100 records from example.com and save them in dr_output. By default it saves 100_000 records per file, you can change this with the --max_crawls_per_file option.
 
 #### 2. Extract the records
 Once you have the records, you can use the following command to extract them:
 
 ```bash
-$ cmon extract --n_proc=4 config.json extracted_output record dr_output/*.jsonl
+$ cmon extract --n_proc=4 config.json extracted_output dr_output/*.jsonl record
 ```
 
 Note that you can use the --n_proc option to specify the number of processes to use for the extraction. Multiprocessing is done on file level, so if you have just one file it will not be used.
