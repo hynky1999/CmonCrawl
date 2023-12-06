@@ -102,14 +102,14 @@ def add_args(subparser: Any):
         default=1,
         help="Number of processes to use for extraction. The paralelization is on file level, thus for single file it's useless to use more than one process.",
     )
+    parser.add_argument(
+        "files", nargs="+", type=Path, help="Files to extract data from"
+    )
 
     mode_subparser = parser.add_subparsers(
         dest="mode", required=True, help="Extraction mode"
     )
     mode_subparser = add_mode_args(mode_subparser)
-    parser.add_argument(
-        "files", nargs="+", type=Path, help="Files to extract data from"
-    )
     parser.set_defaults(func=run_extract)
 
 
@@ -216,11 +216,21 @@ def _extract_task(
     args: argparse.Namespace,
 ):
     mode = ExtractMode(args.mode)
-    download_method = DAOname(args.download_method) if args.download_method else None
 
     # We have to setup loggers / aws in each process
     setup_loggers(args.verbosity)
     CONFIG.update_from_cli(args)
+
+    # HTML exlusives
+    url = args.url if mode == ExtractMode.HTML else None
+    date = args.date if mode == ExtractMode.HTML else None
+
+    # Record exclusives
+    max_retry = args.max_retry if mode == ExtractMode.RECORD else 0
+    sleep_base = args.sleep_base if mode == ExtractMode.RECORD else 0
+    download_method = (
+        DAOname(args.download_method) if mode == ExtractMode.RECORD else None
+    )
 
     asyncio.run(
         extract_from_files(
@@ -228,12 +238,12 @@ def _extract_task(
             config=config,
             files=files,
             mode=mode,
-            url=args.url if mode == ExtractMode.HTML else None,
-            date=args.date if mode == ExtractMode.HTML else None,
+            url=url,
+            date=date,
             max_directory_size=args.max_directory_size,
             max_crawls_per_file=args.max_crawls_per_file,
-            max_retry=args.max_retry if mode == ExtractMode.RECORD else 0,
-            sleep_base=args.sleep_base if mode == ExtractMode.RECORD else 0,
+            max_retry=max_retry,
+            sleep_base=sleep_base,
             download_method=download_method,
         )
     )

@@ -77,10 +77,10 @@ Examples
 .. code-block:: bash
 
     # Take the domain records downloaded using the first command and extracts them using your extractors
-    cmon extract config.json extracted_output record --max_retry 100 --download_method=gateway --sleep_base 1.3 dr_output/*.jsonl 
+    cmon extract config.json extracted_output dr_output/*.jsonl record --max_retry 100 --download_method=gateway --sleep_base 1.3 
 
     # Take the htmls downloaded using the second command and extracts them using your extractors
-    cmon extract config.json extracted_output html --date 2021-01-01 --url https://www.example.com html_output/*.html
+    cmon extract config.json extracted_output html_output/*.html html --date 2021-01-01 --url https://www.example.com
 
 When you are going to build the extractors, you will appreciate that you can specify
 what the URL of the HTML file is and what the date of the extraction is. This is because 

@@ -81,13 +81,9 @@ def add_mode_args(subparser: Any):
 def add_args(subparser: Any):
     parser = subparser.add_parser("download", help="Download data from Common Crawl")
     parser.add_argument("output", type=Path, help="Path to output directory")
-    mode_subparser = parser.add_subparsers(
-        dest="mode", required=True, help="Download mode"
-    )
     parser.add_argument(
         "urls", type=str, nargs="+", help="URLs to download, e.g. www.bcc.cz."
     )
-    mode_subparser = add_mode_args(mode_subparser)
     parser.add_argument(
         "--limit", type=int, default=5, help="Max number of urls to download"
     )
@@ -155,6 +151,10 @@ def add_args(subparser: Any):
         default=None,
         help="S3 bucket to use for Athena. If set, the query results will be stored in the bucket and reused for later queries. Make sure to delete the bucket afterwards.",
     )
+    mode_subparser = parser.add_subparsers(
+        dest="mode", required=True, help="Download mode"
+    )
+    mode_subparser = add_mode_args(mode_subparser)
     parser.set_defaults(func=run_download)
 
 
@@ -316,9 +316,14 @@ async def url_download(
 
 def run_download(args: argparse.Namespace):
     mode = DownloadOutputFormat(args.mode)
-    encoding = args.encoding if mode == DownloadOutputFormat.HTML else None
+    # Record exlusives
     max_crawls_per_file = (
         args.max_crawls_per_file if mode == DownloadOutputFormat.RECORD else 1
+    )
+    # HTML exlusives
+    encoding = args.encoding if mode == DownloadOutputFormat.HTML else None
+    download_method = (
+        DAOname(args.download_method) if mode == DownloadOutputFormat.HTML else None
     )
     return asyncio.run(
         url_download(
@@ -337,7 +342,7 @@ def run_download(args: argparse.Namespace):
             aggregator_type=args.aggregator,
             max_directory_size=args.max_directory_size,
             filter_non_200=args.filter_non_200,
-            download_method=args.download_method,
+            download_method=download_method,
             s3_bucket=args.s3_bucket,
         )
     )
