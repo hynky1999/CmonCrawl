@@ -4,6 +4,7 @@
 ### Why is this solution better than others ?
 Unlike all other commoncrawl extractors, this project allows creation of custom extractors with high level of modularity.
 It supports all ways to access the CommonCrawl:
+
 For quering:
 - [x] AWS Athena
 - [x] CommonCrawl Index API
@@ -12,8 +13,7 @@ For download:
 - [x] S3
 - [x] CommonCrawl API
 
-, while being wrapped in very easy to use CLI. While CLI is easier to get started we also provide ways how to use the library
-directly from python.
+The utility is accessible both using CLI or as simple SDK, based on your preferences.
 
 ### Installation
 #### From PyPi
