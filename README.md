@@ -2,11 +2,12 @@
 
 
 ## CommonCrawl Extractor with great versatility
+![Build](https://github.com/hynky1999/CmonCrawl/actions/workflows/release.yml/badge.svg)
 ![Tests](https://github.com/hynky1999/CmonCrawl/actions/workflows/test_and_types.yml/badge.svg)
+[![Documentation](https://github.com/hynky1999/CmonCrawl/actions/workflows/sphinx_build.yml/badge.svg)](https://hynky1999.github.io/CmonCrawl/)
+
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![Python Version](https://img.shields.io/badge/python-3.11-blue.svg)
-
-[![Documentation](https://github.com/hynky1999/CmonCrawl/actions/workflows/sphinx_build.yml/badge.svg)](https://hynky1999.github.io/CmonCrawl/)
 [![PyPI](https://img.shields.io/badge/pypi-package-blue.svg)](https://pypi.org/project/cmoncrawl/)
 
 Unlock the full potential of CommonCrawl data with `CmonCrawl`, the most versatile extractor that offers unparalleled modularity and ease of use.
