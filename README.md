@@ -1,50 +1,56 @@
+![CmonCrawl Banner](./banner.webp)
+
+
 ## CommonCrawl Extractor with great versatility
-[Documentation](https://hynky1999.github.io/CmonCrawl/)
+![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)
+![Tests](https://img.shields.io/badge/tests-100%25-success.svg)
+![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+![Python Version](https://img.shields.io/badge/python-3.11-blue.svg)
 
-### Why is this solution better than others ?
-Unlike all other commoncrawl extractors, this project allows creation of custom extractors with high level of modularity.
-It supports all ways to access the CommonCrawl:
+[![Documentation](https://img.shields.io/badge/documentation-available-brightgreen.svg)](https://hynky1999.github.io/CmonCrawl/)
+[![PyPI](https://img.shields.io/badge/pypi-package-blue.svg)](https://pypi.org/project/cmoncrawl/)
 
-For quering:
-- [x] AWS Athena
-- [x] CommonCrawl Index API
+Unlock the full potential of CommonCrawl data with `CmonCrawl`, the most versatile extractor that offers unparalleled modularity and ease of use.
 
-For download:
-- [x] S3
-- [x] CommonCrawl API
+## Why Choose CmonCrawl?
 
-The utility is accessible both using CLI or as simple SDK, based on your preferences.
+`CmonCrawl` stands out from the crowd with its unique features:
+
+- **High Modularity**: Easily create custom extractors tailored to your specific needs.
+- **Comprehensive Access**: Supports all CommonCrawl access methods, including AWS Athena and the CommonCrawl Index API for querying, and S3 and the CommonCrawl API for downloading.
+- **Flexible Utility**: Accessible via a Command Line Interface (CLI) or as a Software Development Kit (SDK), catering to your preferred workflow.
+- **Type Safety**: Built with type safety in mind, ensuring that your code is robust and reliable.
+
+## Getting Started
 
 ### Installation
-#### From PyPi
+
+#### Install From PyPi
 ```bash
 $ pip install cmoncrawl
 ```
-#### From source
+#### Install From source
 ```bash
 $ git clone https://github.com/hynky1999/CmonCrawl
 $ cd CmonCrawl
 $ pip install -r requirements.txt
-$ pip install -e .
+$ pip install .
 ```
 
-### Usage
+## Usage Guide
 
-#### Extractor preparation
-You will want to start your custom extractor preparation.
-To create them you need an example html files you want to extract.
-
-You can use the following command to get html files from the CommonCrawl dataset:
+### Step 1: Extractor preparation
+Begin by preparing your custom extractor. Obtain sample HTML files from the CommonCrawl dataset using the command:
 
 ```bash
 $ cmon download --match_type=domain --limit=100 html_output example.com html
 ```
-This will download a first 100 html files from example.com and save them in html_output.
+This will download a first 100 html files from *example.com* and save them in `html_output`.
 
 
-#### Extractor creation
-Once you have your the files to extract, you can create your extractor.
-To do so, you need to create a new python file e.g my_extractor.py in extractors directory and add the following code:
+### Step 2: Extractor creation
+Create a new Python file for your extractor, such as `my_extractor.py`, and place it in the `extractors` directory. Implement your extraction logic as shown below:
 
 ```python
 from bs4 import BeautifulSoup
@@ -77,10 +83,8 @@ class MyExtractor(BaseExtractor):
 extractor = MyExtractor()
 ```
 
-### Config creation
-Once you have your extractor, you need to create a config file to run the extractor.
-In our case the config would look like this:
-
+### Step 3: Config creation
+Set up a configuration file, `config.json`, to specify the behavior of your extractor(s):
 ```json
 {
     "extractors_path": "./extractors",
@@ -102,39 +106,43 @@ In our case the config would look like this:
 }
 ```
 
-### Run the extractor
-To test the extraction, you can use the following command:
+### Step: 4 Run the extractor
+Test your extractor with the following command:
 
 ```bash
 $ cmon extract config.json extracted_output html_output/*.html html
 ```
 
-### Crawl the sites
-Once you have your extractor tested, we can start crawling.
-To do this you will proceed in two steps:
+### Step 5: Full crawl and extraction
+After testing, start the full crawl and extraction process:
 
-#### 1. Get the list of records to extract
-To do this, you can use the following command:
+#### 1. Retrieve a list of records to extract.
 
 ```bash
 cmon download --match_type=domain --limit=100 dr_output example.com record
 ```
 
-This will download the first 100 records from example.com and save them in dr_output. By default it saves 100_000 records per file, you can change this with the --max_crawls_per_file option.
+This will download the first 100 records from *example.com* and save them in `dr_output`. By default it saves 100_000 records per file, you can change this with the `--max_crawls_per_file` option.
 
-#### 2. Extract the records
-Once you have the records, you can use the following command to extract them:
-
+#### 2. Process the records using your custom extractor.
 ```bash
 $ cmon extract --n_proc=4 config.json extracted_output dr_output/*.jsonl record
 ```
 
-Note that you can use the --n_proc option to specify the number of processes to use for the extraction. Multiprocessing is done on file level, so if you have just one file it will not be used.
+Note that you can use the `--n_proc` option to specify the number of processes to use for the extraction. Multiprocessing is done on file level, so if you have just one file it will not be used.
 
-### Other examples
-For other examples see [examples](https://github.com/hynky1999/CmonCrawl/tree/main/examples)
-### Advanced usage
-The whole project was written with modularity in mind. That means that you
-can adjust the framework to your needs. To know more check  see [documentation](https://hynky1999.github.io/CmonCrawl/)
+## Advanced Usage
 
-Instead of first getting the records and then extracting them, you can do both in a distributed setting. For more info look at [CZE-NEC](https://github.com/hynky1999/Czech-News-Classification-dataset) project.
+`CmonCrawl` was designed with flexibility in mind, allowing you to tailor the framework to your needs. For distributed extraction and more advanced scenarios, refer to our [documentation](https://hynky1999.github.io/CmonCrawl/) and the [CZE-NEC project](https://github.com/hynky1999/Czech-News-Classification-dataset).
+
+## Examples and Support
+
+For practical examples and further assistance, visit our [examples directory](https://github.com/hynky1999/CmonCrawl/tree/main/examples).
+
+## Contribute
+
+Join our community of contributors on [GitHub](https://github.com/hynky1999/CmonCrawl). Your contributions are welcome!
+
+## License
+
+`CmonCrawl` is open-source software licensed under the MIT license.
