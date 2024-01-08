@@ -1,4 +1,4 @@
-name: Sphinx docs to gh-pages
+name: Documentation
 env:
   PYTHON_VERSION: "3.10"
 
