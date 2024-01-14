@@ -42,6 +42,12 @@ def add_mode_args(subparser: Any):
         help="Max number of warc download attempts",
     )
     record_parser.add_argument(
+        "--max_requests_per_second",
+        type=int,
+        default=10,
+        help="Max number of requests per second",
+    )
+    record_parser.add_argument(
         "--download_method",
         type=DAOname,
         default=DAOname.API,
@@ -119,6 +125,7 @@ def get_extract_downloader(
     url: str | None,
     date: datetime | None,
     max_retry: int,
+    max_requests_per_second: int,
     sleep_base: float,
     dao: ICC_Dao | None,
 ):
@@ -129,7 +136,12 @@ def get_extract_downloader(
             if dao is None:
                 raise ValueError("DAO must be specified for record extraction")
 
-            return AsyncDownloader(max_retry=max_retry, sleep_base=sleep_base, dao=dao)
+            return AsyncDownloader(
+                max_retry=max_retry,
+                sleep_base=sleep_base,
+                dao=dao,
+                max_requests_per_second=max_requests_per_second,
+            )
 
 
 def get_domain_records_json(
@@ -184,6 +196,7 @@ async def extract_from_files(
     max_directory_size: int,
     max_crawls_per_file: int,
     max_retry: int,
+    max_requests_per_second: int,
     sleep_base: float,
     download_method: DAOname | None,
 ):
@@ -194,7 +207,7 @@ async def extract_from_files(
         if dao is not None:
             await dao.__aenter__()
         downloader = get_extract_downloader(
-            mode, files, url, date, max_retry, sleep_base, dao
+            mode, files, url, date, max_retry, max_requests_per_second, sleep_base, dao
         )
         pipeline = ProcessorPipeline(router, downloader, outstreamer)
         for path in files:
@@ -228,6 +241,9 @@ def _extract_task(
     # Record exclusives
     max_retry = args.max_retry if mode == ExtractMode.RECORD else 0
     sleep_base = args.sleep_base if mode == ExtractMode.RECORD else 0
+    max_requests_per_second = (
+        args.max_requests_per_second if mode == ExtractMode.RECORD else 0
+    )
     download_method = (
         DAOname(args.download_method) if mode == ExtractMode.RECORD else None
     )
@@ -243,6 +259,7 @@ def _extract_task(
             max_directory_size=args.max_directory_size,
             max_crawls_per_file=args.max_crawls_per_file,
             max_retry=max_retry,
+            max_requests_per_second=max_requests_per_second,
             sleep_base=sleep_base,
             download_method=download_method,
         )
