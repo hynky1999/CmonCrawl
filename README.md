@@ -130,6 +130,20 @@ $ cmon extract --n_proc=4 config.json extracted_output dr_output/*.jsonl record
 
 Note that you can use the `--n_proc` option to specify the number of processes to use for the extraction. Multiprocessing is done on file level, so if you have just one file it will not be used.
 
+## Handling CommonCrawl Errors
+
+Encountering a high number of error responses usually indicates excessive request rates. To mitigate this, consider the following strategies in order:
+
+1. **Switch to S3 Access**: Instead of using the API Gateway, opt for S3 access which allows for higher request rates.
+2. **Regulate Request Rate**: The total requests per second are determined by the formula `n_proc * max_requests_per_process`. To reduce the request rate:
+   - Decrease the number of processes (`n_proc`).
+   - Reduce the maximum requests per process (`max_requests_per_process`).
+
+   Aim to maintain the total request rate below 40 per second.
+3. **Adjust Retry Settings**: If errors persist:
+   - Increase `max_retry` to ensure eventual data retrieval.
+   - Set a higher `sleep_base` to prevent API overuse and to respect rate limits.
+
 ## Advanced Usage
 
 `CmonCrawl` was designed with flexibility in mind, allowing you to tailor the framework to your needs. For distributed extraction and more advanced scenarios, refer to our [documentation](https://hynky1999.github.io/CmonCrawl/) and the [CZE-NEC project](https://github.com/hynky1999/Czech-News-Classification-dataset).
