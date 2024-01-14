@@ -62,6 +62,9 @@ Record arguments
 --sleep_base SLEEP_BASE
    Base value for exponential backoff between failed requests.
 
+--max_requests_per_second MAX_REQUESTS_PER_SECOND
+   Max number of requests per second.
+
 Html arguments
 --------------
 

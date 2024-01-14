@@ -118,6 +118,12 @@ def add_args(subparser: Any):
         default=1.3,
         help="Base sleep time for exponential backoff in case of request failure.",
     )
+    parser.add_argument(
+        "--max_requests_per_second",
+        type=int,
+        default=10,
+        help="Max number of requests per second",
+    )
     # Add option to output to either json or html
     parser.add_argument(
         "--match_type",
@@ -200,6 +206,7 @@ def get_download_downloader(
     output_format: DownloadOutputFormat,
     max_retry: int,
     sleep_base: float,
+    max_requests_per_second: int,
     dao: ICC_Dao | None,
 ):
     match output_format:
@@ -207,7 +214,12 @@ def get_download_downloader(
             if dao is None:
                 raise ValueError("DAO must be specified for record extraction")
 
-            return AsyncDownloader(max_retry=max_retry, sleep_base=sleep_base, dao=dao)
+            return AsyncDownloader(
+                max_retry=max_retry,
+                sleep_base=sleep_base,
+                dao=dao,
+                max_requests_per_second=max_requests_per_second,
+            )
         case DownloadOutputFormat.RECORD:
             return DummyDownloader()
 
@@ -222,6 +234,7 @@ def get_aggregator(
     limit: int,
     max_retry: int,
     sleep_base: float,
+    max_requests_per_second: int,
     s3_bucket: str | None,
 ) -> GatewayAggregator | AthenaAggregator:
     if len(urls) == 0:
@@ -249,6 +262,7 @@ def get_aggregator(
                 limit=limit,
                 max_retry=max_retry,
                 sleep_base=sleep_base,
+                max_requests_per_second=max_requests_per_second,
             )
         case Aggregator.ATHENA:
             return AthenaAggregator(
@@ -275,6 +289,7 @@ async def url_download(
     limit: int,
     max_retry: int,
     sleep_base: float,
+    max_requests_per_second: int,
     mode: DownloadOutputFormat,
     max_crawls_per_file: int,
     max_directory_size: int,
@@ -299,6 +314,7 @@ async def url_download(
         limit,
         max_retry,
         sleep_base,
+        max_requests_per_second,
         s3_bucket,
     )
 
@@ -306,7 +322,9 @@ async def url_download(
         if dao is not None:
             await dao.__aenter__()
 
-        downloader = get_download_downloader(mode, max_retry, sleep_base, dao)
+        downloader = get_download_downloader(
+            mode, max_retry, sleep_base, max_requests_per_second, dao
+        )
         pipeline = ProcessorPipeline(router, downloader, outstreamer)
         await query_and_extract(aggregator, pipeline)
     finally:
@@ -319,6 +337,9 @@ def run_download(args: argparse.Namespace):
     # Record exlusives
     max_crawls_per_file = (
         args.max_crawls_per_file if mode == DownloadOutputFormat.RECORD else 1
+    )
+    max_requests_per_second = (
+        args.max_requests_per_second if mode == DownloadOutputFormat.RECORD else 0
     )
     # HTML exlusives
     encoding = args.encoding if mode == DownloadOutputFormat.HTML else None
@@ -336,6 +357,7 @@ def run_download(args: argparse.Namespace):
             limit=args.limit,
             max_retry=args.max_retry,
             sleep_base=args.sleep_base,
+            max_requests_per_second=max_requests_per_second,
             mode=mode,
             max_crawls_per_file=max_crawls_per_file,
             encoding=encoding,

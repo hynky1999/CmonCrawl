@@ -43,6 +43,9 @@ Options
 --sleep_base SLEEP_BASE
    Base sleep time for exponential backoff in case of request failure.
 
+--max_requests_per_second MAX_REQUESTS_PER_SECOND
+   Max number of requests per second.
+
 --match_type MATCH_TYPE
    One of exact, prefix, host, domain
    Match type for the URL. Refer to cdx-api for more information.
