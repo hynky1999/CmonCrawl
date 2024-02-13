@@ -338,9 +338,6 @@ def run_download(args: argparse.Namespace):
     max_crawls_per_file = (
         args.max_crawls_per_file if mode == DownloadOutputFormat.RECORD else 1
     )
-    max_requests_per_second = (
-        args.max_requests_per_second if mode == DownloadOutputFormat.RECORD else 1
-    )
     # HTML exlusives
     encoding = args.encoding if mode == DownloadOutputFormat.HTML else None
     download_method = (
@@ -357,7 +354,7 @@ def run_download(args: argparse.Namespace):
             limit=args.limit,
             max_retry=args.max_retry,
             sleep_base=args.sleep_base,
-            max_requests_per_second=max_requests_per_second,
+            max_requests_per_second=args.max_requests_per_second,
             mode=mode,
             max_crawls_per_file=max_crawls_per_file,
             encoding=encoding,
