@@ -132,6 +132,10 @@ Note that you can use the `--n_proc` option to specify the number of processes t
 
 ## Handling CommonCrawl Errors
 
+Before implementing any of the strategies to mitigate high error responses, it is crucial to first check the status of the CommonCrawl gateway and S3 buckets. This can provide valuable insights into any ongoing performance issues that might be affecting your access rates. Consult the CommonCrawl status page for the latest updates on performance issues: [Oct-Nov 2023 Performance Issues](https://commoncrawl.org/blog/oct-nov-2023-performance-issues).
+
+![CommonCrawl Performance](https://assets-global.website-files.com/647b1c7a9990bad2048d3711/6554fda9c869f5af56e22cea_cf-week.png)
+
 Encountering a high number of error responses usually indicates excessive request rates. To mitigate this, consider the following strategies in order:
 
 1. **Switch to S3 Access**: Instead of using the API Gateway, opt for S3 access which allows for higher request rates.
