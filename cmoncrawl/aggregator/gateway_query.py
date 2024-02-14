@@ -116,6 +116,7 @@ class GatewayAggregator(IAggregator):
             max_retry=self.max_retry,
             prefetch_size=self.prefetch_size,
             sleep_base=self.sleep_base,
+            throttler=self.throttler,
         )
         self.iterators.append(iterator)
         return iterator
@@ -146,6 +147,7 @@ class GatewayAggregator(IAggregator):
         match_type: MatchType | None,
         max_retry: int,
         sleep_base: float,
+        throttler: Throttler,
         page_size: int | None = None,
     ) -> int:
         params: Dict[str, str | int] = {
@@ -166,6 +168,7 @@ class GatewayAggregator(IAggregator):
             "text/x-ndjson",
             max_retry=max_retry,
             sleep_base=sleep_base,
+            throttler=throttler,
             log_additional_info={
                 "type": "num_pages",
                 "domain": domain,
@@ -185,6 +188,7 @@ class GatewayAggregator(IAggregator):
         max_retry: int,
         sleep_base: float,
         page: int,
+        throttler: Throttler,
         since: datetime = datetime.min,
         to: datetime = datetime.max,
     ) -> List[DomainRecord]:
@@ -205,6 +209,7 @@ class GatewayAggregator(IAggregator):
                 "text/x-ndjson",
                 max_retry=max_retry,
                 sleep_base=sleep_base,
+                throttler=throttler,
                 log_additional_info={
                     "type": "page",
                     "domain": domain,
@@ -248,6 +253,7 @@ class GatewayAggregator(IAggregator):
             max_retry: int,
             prefetch_size: int,
             sleep_base: float,
+            throttler: Throttler,
         ):
             self.__client = client
             self.__opt_prefetch_size = prefetch_size
@@ -260,6 +266,7 @@ class GatewayAggregator(IAggregator):
             self.__total = 0
             self.__sleep_base = sleep_base
             self.__match_type = match_type
+            self.__throttler = throttler
 
             self.__crawls_remaining = self.init_crawls_queue(urls, CC_files)
 
@@ -294,6 +301,7 @@ class GatewayAggregator(IAggregator):
                         match_type=self.__match_type,
                         max_retry=self.__max_retry,
                         sleep_base=self.__sleep_base,
+                        throttler=self.__throttler,
                     )
                 except Exception as e:
                     all_purpose_logger.error(
@@ -318,6 +326,7 @@ class GatewayAggregator(IAggregator):
                                 to=self.__to,
                                 max_retry=self.__max_retry,
                                 sleep_base=self.__sleep_base,
+                                throttler=self.__throttler,
                             ),
                         )
                     )
