@@ -9,6 +9,7 @@ from cmoncrawl.aggregator.athena_query import (
 from cmoncrawl.aggregator.gateway_query import GatewayAggregator
 from cmoncrawl.aggregator.utils.constants import CC_INDEXES_SERVER
 from cmoncrawl.aggregator.utils.helpers import get_all_CC_indexes, unify_url_id
+from cmoncrawl.common.throttling import Throttler
 
 
 class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
@@ -23,6 +24,7 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
             match_type=MatchType.DOMAIN,
         ).aopen()
         self.client = self.di.client
+        self.throttler = Throttler(1)
 
     async def asyncTearDown(self) -> None:
         await self.di.aclose(None, None, None)
@@ -35,6 +37,7 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
             max_retry=20,
             sleep_base=1.4,
             match_type=MatchType.DOMAIN,
+            throttler=self.throttler,
         )
         self.assertEqual(num_pages, 14)
 
@@ -82,6 +85,7 @@ class TestIndexerAsync(unittest.IsolatedAsyncioTestCase):
             sleep_base=4,
             prefetch_size=2,
             match_type=MatchType.DOMAIN,
+            throttler=self.throttler,
         )
         self.assertIsNotNone(self.di.cc_servers)
         # Generates only for 2020
