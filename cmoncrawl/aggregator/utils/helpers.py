@@ -22,6 +22,7 @@ from tenacity import (
 
 from cmoncrawl.aggregator.utils import ndjson
 from cmoncrawl.common.loggers import all_purpose_logger
+from cmoncrawl.common.throttling import Throttler
 
 ALLOWED_ERR_FOR_RETRIES = [500, 502, 503, 504]
 
@@ -114,6 +115,7 @@ async def retrieve(
     sleep_base: float,
     allowed_status_errors: list[int] = ALLOWED_ERR_FOR_RETRIES,
     log_additional_info: dict[str, Any] = {},  # type: ignore
+    throttler: Throttler | None = None,
 ):
     @retry(
         stop=stop_after_attempt(max_retry + 1),
@@ -122,7 +124,7 @@ async def retrieve(
         reraise=True,
         before_sleep=log_after_retry,
     )
-    async def _retrieve(
+    async def _retrieve_with_throttling(
         client: ClientSession,
         cdx_server: str,
         params: dict[str, Any],
@@ -133,39 +135,46 @@ async def retrieve(
         all_purpose_logger.debug(
             f"Sending request to {cdx_server} with params: {params}"
         )
-        try:
-            async with client.get(cdx_server, params=params) as response:
-                status = response.status
-                if not response.ok:
-                    reason = str(response.reason) if response.reason else "Unknown"  # type: ignore
-                    if status in allowed_status_errors:
-                        raise DownloadError(reason, status)
-                    raise ValueError(
-                        f"Failed to download {cdx_server} with status {status} and reason {reason}"
-                    )
-                else:
-                    if content_type == "text/x-ndjson":
-                        content = await response.json(
-                            content_type=content_type,
-                            loads=ndjson.Decoder().decode,
+
+        async def _request():
+            try:
+                async with client.get(cdx_server, params=params) as response:
+                    status = response.status
+                    if not response.ok:
+                        reason = str(response.reason) if response.reason else "Unknown"  # type: ignore
+                        if status in allowed_status_errors:
+                            raise DownloadError(reason, status)
+                        raise ValueError(
+                            f"Failed to download {cdx_server} with status {status} and reason {reason}"
                         )
-                    elif content_type == "application/json":
-                        content = await response.json(content_type=content_type)
                     else:
-                        raise ValueError(f"Unknown content type: {content_type}")
-        except (
-            ClientError,
-            TimeoutError,
-            ServerConnectionError,
-            ContentTypeError,
-        ) as e:
-            reason = f"{type(e)} {str(e)}"
-            status = 500
-            raise DownloadError(reason, status)
+                        if content_type == "text/x-ndjson":
+                            content = await response.json(
+                                content_type=content_type,
+                                loads=ndjson.Decoder().decode,
+                            )
+                        elif content_type == "application/json":
+                            content = await response.json(content_type=content_type)
+                        else:
+                            raise ValueError(f"Unknown content type: {content_type}")
+            except (
+                ClientError,
+                TimeoutError,
+                ServerConnectionError,
+                ContentTypeError,
+            ) as e:
+                reason = f"{type(e)} {str(e)}"
+                status = 500
+                raise DownloadError(reason, status)
 
-        return content
+            return content
 
-    return await _retrieve(
+        if throttler is not None:
+            return await throttler.throttle(_request)
+        else:
+            return await _request()
+
+    return await _retrieve_with_throttling(
         client=client,
         cdx_server=cdx_server,
         params=params,
