@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cmoncrawl.common.types &mdash; CmonCrawl 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../_static/copybutton.js?v=f281be69"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="cmoncrawl.config" href="cmoncrawl.config.html" />
+    <link rel="prev" title="cmoncrawl.common.throttling" href="cmoncrawl.common.throttling.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            CmonCrawl
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli/index.html">Command Line Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extraction/index.html">Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../prog_guide/index.html">Programming Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/index.html">Miscellaneous</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="cmoncrawl.html">cmoncrawl</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cmoncrawl.aggregator.html">cmoncrawl.aggregator</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="cmoncrawl.common.html">cmoncrawl.common</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="cmoncrawl.common.loggers.html">cmoncrawl.common.loggers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cmoncrawl.common.throttling.html">cmoncrawl.common.throttling</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">cmoncrawl.common.types</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cmoncrawl.config.html">cmoncrawl.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cmoncrawl.integrations.html">cmoncrawl.integrations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cmoncrawl.middleware.html">cmoncrawl.middleware</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cmoncrawl.processor.html">cmoncrawl.processor</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CmonCrawl</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../api.html">API</a></li>
+          <li class="breadcrumb-item"><a href="cmoncrawl.html">cmoncrawl</a></li>
+          <li class="breadcrumb-item"><a href="cmoncrawl.common.html">cmoncrawl.common</a></li>
+      <li class="breadcrumb-item active">cmoncrawl.common.types</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/generated/cmoncrawl.common.types.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-cmoncrawl.common.types">
+<span id="cmoncrawl-common-types"></span><h1>cmoncrawl.common.types<a class="headerlink" href="#module-cmoncrawl.common.types" title="Link to this heading"></a></h1>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_timestamp</span></code>(v)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Classes</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="cmoncrawl.common.types.DomainCrawl">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cmoncrawl.common.types.</span></span><span class="sig-name descname"><span class="pre">DomainCrawl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cdx_server</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">page</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cmoncrawl.common.types.DomainCrawl" title="Link to this definition"></a></dt>
+<dd><p>Domain crawl.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cmoncrawl.common.types.DomainRecord">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cmoncrawl.common.types.</span></span><span class="sig-name descname"><span class="pre">DomainRecord</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">digest</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cmoncrawl.common.types.DomainRecord" title="Link to this definition"></a></dt>
+<dd><p>Domain record.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cmoncrawl.common.types.DomainRecord.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#cmoncrawl.common.types.DomainRecord.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cmoncrawl.common.types.DomainRecord.model_fields">
+<span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">FieldInfo</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'digest':</span> <span class="pre">FieldInfo(annotation=Union[str,</span> <span class="pre">NoneType],</span> <span class="pre">required=False),</span> <span class="pre">'encoding':</span> <span class="pre">FieldInfo(annotation=Union[str,</span> <span class="pre">NoneType],</span> <span class="pre">required=False),</span> <span class="pre">'filename':</span> <span class="pre">FieldInfo(annotation=str,</span> <span class="pre">required=True),</span> <span class="pre">'length':</span> <span class="pre">FieldInfo(annotation=int,</span> <span class="pre">required=True),</span> <span class="pre">'offset':</span> <span class="pre">FieldInfo(annotation=int,</span> <span class="pre">required=True),</span> <span class="pre">'timestamp':</span> <span class="pre">FieldInfo(annotation=Union[datetime,</span> <span class="pre">NoneType],</span> <span class="pre">required=False),</span> <span class="pre">'url':</span> <span class="pre">FieldInfo(annotation=Union[str,</span> <span class="pre">NoneType],</span> <span class="pre">required=True)}</span></em><a class="headerlink" href="#cmoncrawl.common.types.DomainRecord.model_fields" title="Link to this definition"></a></dt>
+<dd><p>Metadata about the fields defined on the model,
+mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo].</p>
+<p>This replaces <cite>Model.__fields__</cite> from Pydantic V1.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cmoncrawl.common.types.ExtractConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cmoncrawl.common.types.</span></span><span class="sig-name descname"><span class="pre">ExtractConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extractors_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">routes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#cmoncrawl.common.types.RoutesConfig" title="cmoncrawl.common.types.RoutesConfig"><span class="pre">RoutesConfig</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cmoncrawl.common.types.ExtractConfig" title="Link to this definition"></a></dt>
+<dd><p>Configuration for run.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cmoncrawl.common.types.ExtractConfig.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#cmoncrawl.common.types.ExtractConfig.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cmoncrawl.common.types.ExtractConfig.model_fields">
+<span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">FieldInfo</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'extractors_path':</span> <span class="pre">FieldInfo(annotation=Path,</span> <span class="pre">required=True),</span> <span class="pre">'routes':</span> <span class="pre">FieldInfo(annotation=List[RoutesConfig],</span> <span class="pre">required=True)}</span></em><a class="headerlink" href="#cmoncrawl.common.types.ExtractConfig.model_fields" title="Link to this definition"></a></dt>
+<dd><p>Metadata about the fields defined on the model,
+mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo].</p>
+<p>This replaces <cite>Model.__fields__</cite> from Pydantic V1.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cmoncrawl.common.types.ExtractorConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cmoncrawl.common.types.</span></span><span class="sig-name descname"><span class="pre">ExtractorConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">since</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cmoncrawl.common.types.ExtractorConfig" title="Link to this definition"></a></dt>
+<dd><p>Configuration for extractor.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cmoncrawl.common.types.ExtractorConfig.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#cmoncrawl.common.types.ExtractorConfig.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cmoncrawl.common.types.ExtractorConfig.model_fields">
+<span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">FieldInfo</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'name':</span> <span class="pre">FieldInfo(annotation=str,</span> <span class="pre">required=True),</span> <span class="pre">'since':</span> <span class="pre">FieldInfo(annotation=Union[datetime,</span> <span class="pre">NoneType],</span> <span class="pre">required=False),</span> <span class="pre">'to':</span> <span class="pre">FieldInfo(annotation=Union[datetime,</span> <span class="pre">NoneType],</span> <span class="pre">required=False)}</span></em><a class="headerlink" href="#cmoncrawl.common.types.ExtractorConfig.model_fields" title="Link to this definition"></a></dt>
+<dd><p>Metadata about the fields defined on the model,
+mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo].</p>
+<p>This replaces <cite>Model.__fields__</cite> from Pydantic V1.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cmoncrawl.common.types.MatchType">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cmoncrawl.common.types.</span></span><span class="sig-name descname"><span class="pre">MatchType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cmoncrawl.common.types.MatchType" title="Link to this definition"></a></dt>
+<dd><p>Match type for cdx server.
+See <a class="reference external" href="https://github.com/internetarchive/wayback/blob/master/wayback-cdx-server/README.md#url-match-scope">https://github.com/internetarchive/wayback/blob/master/wayback-cdx-server/README.md#url-match-scope</a></p>
+<p>Example:
+Query: example.com/abc</p>
+<p>Matches:
+EXACT: (www.)?example.com/abc
+PREFIX: (www.)?example.com/abc(/.*)?
+HOST: (www.)?example.com(/.*)?
+DOMAIN: (.*.)?example.com(/.*)?</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cmoncrawl.common.types.PipeMetadata">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cmoncrawl.common.types.</span></span><span class="sig-name descname"><span class="pre">PipeMetadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">domain_record:</span> <span class="pre">~cmoncrawl.common.types.DomainRecord</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">article_data:</span> <span class="pre">~typing.Dict[~typing.Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">~typing.Any]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warc_header:</span> <span class="pre">~typing.Dict[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">~typing.Any]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">http_header:</span> <span class="pre">~typing.Dict[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">~typing.Any]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rec_type:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'latin-1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cmoncrawl.common.types.PipeMetadata" title="Link to this definition"></a></dt>
+<dd><p>Metadata for a pipe.</p>
+<p>Attributes:
+domain_record: DomainRecord</p>
+<blockquote>
+<div><p>An instance of the DomainRecord class representing associated domain record,
+eg. pointer to the WARC file.</p>
+</div></blockquote>
+<dl class="simple">
+<dt>article_data: Dict[Any, Any] = field(default_factory=dict)</dt><dd><p>A dictionary storing article data with keys and values of any type.
+Those are the data extracted using Extractors.</p>
+</dd>
+<dt>warc_header: Dict[str, Any] = field(default_factory=dict)</dt><dd><p>A dictionary storing the WARC header metadata.</p>
+</dd>
+<dt>http_header: Dict[str, Any] = field(default_factory=dict)</dt><dd><p>A dictionary storing the HTTP header information.</p>
+</dd>
+<dt>rec_type: str | None = None</dt><dd><p>A string or None representing the type of record.</p>
+</dd>
+<dt>encoding: str = “latin-1”</dt><dd><p>A string representing the character encoding used for the record. The default value is “latin-1”.</p>
+</dd>
+<dt>name: str | None = None</dt><dd><p>A string or None representing the name associated with the record.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cmoncrawl.common.types.RetrieveResponse">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cmoncrawl.common.types.</span></span><span class="sig-name descname"><span class="pre">RetrieveResponse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cmoncrawl.common.types.RetrieveResponse" title="Link to this definition"></a></dt>
+<dd><p>Response from retrieve.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cmoncrawl.common.types.RoutesConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cmoncrawl.common.types.</span></span><span class="sig-name descname"><span class="pre">RoutesConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regexes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extractors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#cmoncrawl.common.types.ExtractorConfig" title="cmoncrawl.common.types.ExtractorConfig"><span class="pre">ExtractorConfig</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cmoncrawl.common.types.RoutesConfig" title="Link to this definition"></a></dt>
+<dd><p>Configuration for extractors.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cmoncrawl.common.types.RoutesConfig.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#cmoncrawl.common.types.RoutesConfig.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cmoncrawl.common.types.RoutesConfig.model_fields">
+<span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">FieldInfo</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'extractors':</span> <span class="pre">FieldInfo(annotation=List[ExtractorConfig],</span> <span class="pre">required=False,</span> <span class="pre">default=[]),</span> <span class="pre">'regexes':</span> <span class="pre">FieldInfo(annotation=List[str],</span> <span class="pre">required=False,</span> <span class="pre">default=[])}</span></em><a class="headerlink" href="#cmoncrawl.common.types.RoutesConfig.model_fields" title="Link to this definition"></a></dt>
+<dd><p>Metadata about the fields defined on the model,
+mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo].</p>
+<p>This replaces <cite>Model.__fields__</cite> from Pydantic V1.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cmoncrawl.common.throttling.html" class="btn btn-neutral float-left" title="cmoncrawl.common.throttling" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cmoncrawl.config.html" class="btn btn-neutral float-right" title="cmoncrawl.config" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Hynek Kydlíček.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

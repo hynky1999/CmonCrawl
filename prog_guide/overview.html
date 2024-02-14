@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How to extract from Common Crawl (theory) &mdash; CmonCrawl 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../_static/copybutton.js?v=f281be69"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="How to extract from Common Crawl (practice)" href="practice.html" />
+    <link rel="prev" title="Programming Guide" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            CmonCrawl
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli/index.html">Command Line Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extraction/index.html">Extraction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Programming Guide</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">How to extract from Common Crawl (theory)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#querying-commoncrawl">1. Querying CommonCrawl</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#downloading-a-file">2. Downloading a file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#choose-extractor">3. Choose extractor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#filtering-out-the-web-page">4. Filtering out the web page</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#extract-fields-from-the-page">5. Extract fields from the page</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#file-saving">6. File saving</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="practice.html">How to extract from Common Crawl (practice)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/index.html">Miscellaneous</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CmonCrawl</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Programming Guide</a></li>
+      <li class="breadcrumb-item active">How to extract from Common Crawl (theory)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/prog_guide/overview.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="how-to-extract-from-common-crawl-theory">
+<h1>How to extract from Common Crawl (theory)<a class="headerlink" href="#how-to-extract-from-common-crawl-theory" title="Link to this heading"></a></h1>
+<p>The process of getting one parsed web page from CommonCrawl can be described as a pipeline.</p>
+<ol class="arabic simple">
+<li><p>Query CommmonCrawl to find a link to a file that contains the web page we want.</p></li>
+<li><p>Download a file</p></li>
+<li><p>Choose parser for the web page</p></li>
+<li><p>Filter out the web page if not matching the conditions</p></li>
+<li><p>Extract fields from the page</p></li>
+<li><p>Save the fields to a file</p></li>
+</ol>
+<p>The first step is handled by <cite>Aggregator</cite> while the rest is handled by <cite>Processor</cite>.</p>
+<section id="querying-commoncrawl">
+<h2>1. Querying CommonCrawl<a class="headerlink" href="#querying-commoncrawl" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>what WARC File how</dt><dd><p><a class="reference external" href="https://en.wikipedia.org/wiki/Web_ARChive">WARC</a> is a file format that is used for storing multitudes of web resources.
+In our case these files contain a bunch of downloaded web pages and their metadata.
+It’s possible to get only part of the file by specifying the offset in file and length of the part we want.</p>
+</dd>
+<dt>what</dt><dd><p>Common Crawl Index</p>
+</dd>
+<dt>how</dt><dd><p>A CommonCrawl index is a collection which maps crawled urls to WARC file which contain the crawl of that url.</p>
+</dd>
+</dl>
+<p>Every month a CommonCrawl releases a new index which contains all links to web pages that were crawled that month.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>It is important to understand that even if the index was released in a certain month, it can contain the links to web pages that might be older.</p>
+</div>
+<p>Thus in order to download an page we query the index to get link to respective WARC file, offset and length of page.
+Since there are multiples of the indexes we should query all of them to make sure we don’t miss the page.
+With the link to the WARC and offset and length we can continue to another step.</p>
+<p>All this is handled by <a class="reference internal" href="../generated/cmoncrawl.aggregator.gateway_query.html#cmoncrawl.aggregator.gateway_query.GatewayAggregator" title="cmoncrawl.aggregator.gateway_query.GatewayAggregator"><code class="xref py py-class docutils literal notranslate"><span class="pre">cmoncrawl.aggregator.gateway_query.GatewayAggregator</span></code></a>. But for basic use you will not need to use it directly.</p>
+</section>
+<section id="downloading-a-file">
+<h2>2. Downloading a file<a class="headerlink" href="#downloading-a-file" title="Link to this heading"></a></h2>
+<p>The Processor node than downloads the url and related information from queue and downloads the appropriate WARC file.
+This step is handled by <a class="reference internal" href="../generated/cmoncrawl.processor.pipeline.downloader.html#cmoncrawl.processor.pipeline.downloader.AsyncDownloader" title="cmoncrawl.processor.pipeline.downloader.AsyncDownloader"><code class="xref py py-mod docutils literal notranslate"><span class="pre">cmoncrawl.processor.pipeline.downloader.AsyncDownloader</span></code></a>.
+It simply downloads and extracts the page from the WARC file. For downloading we use two data access objects (DAOs, <a class="reference internal" href="../generated/cmoncrawl.processor.dao.base.html#cmoncrawl.processor.dao.base.ICC_Dao" title="cmoncrawl.processor.dao.base.ICC_Dao"><code class="xref py py-class docutils literal notranslate"><span class="pre">cmoncrawl.processor.dao.base.ICC_Dao</span></code></a>):</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../generated/cmoncrawl.processor.dao.s3.html#module-cmoncrawl.processor.dao.s3" title="cmoncrawl.processor.dao.s3"><code class="xref py py-class docutils literal notranslate"><span class="pre">cmoncrawl.processor.dao.s3</span></code></a>, which downloads the file from AWS S3 directly</p></li>
+<li><p><a class="reference internal" href="../generated/cmoncrawl.processor.dao.api.html#module-cmoncrawl.processor.dao.api" title="cmoncrawl.processor.dao.api"><code class="xref py py-class docutils literal notranslate"><span class="pre">cmoncrawl.processor.dao.api</span></code></a>, which downloads the file through CommonCrawl API Gateway.</p></li>
+</ul>
+</section>
+<section id="choose-extractor">
+<h2>3. Choose extractor<a class="headerlink" href="#choose-extractor" title="Link to this heading"></a></h2>
+<p>Once the page is downloaded we first need to choose a extractor for it.
+Extractors are dynamically loaded based on definitions in <a class="reference internal" href="../extraction/config_file.html#extractor-config"><span class="std std-ref">Extractor config file</span></a>.
+All loaded processors are then matched against the url and crawl date and first matching is used.
+This functionality is handled by <a class="reference internal" href="../generated/cmoncrawl.processor.pipeline.router.html#cmoncrawl.processor.pipeline.router.Router" title="cmoncrawl.processor.pipeline.router.Router"><code class="xref py py-class docutils literal notranslate"><span class="pre">cmoncrawl.processor.pipeline.router.Router</span></code></a>.</p>
+<p>For development of extractors refer to <a class="reference internal" href="../extraction/creating_extractor.html#extractors"><span class="std std-ref">Extractor types</span></a>.</p>
+</section>
+<section id="filtering-out-the-web-page">
+<h2>4. Filtering out the web page<a class="headerlink" href="#filtering-out-the-web-page" title="Link to this heading"></a></h2>
+<p>Once the extractor is chosen the filtering function is used to either drop or pass a page.
+In order to filter your you can use either <code class="xref py py-meth docutils literal notranslate"><span class="pre">cmoncrawl.processor.pipeline.extractor.BaseExtractor.filter_raw()</span></code> for
+filtering based on raw html pages (fast). Or wait for conversion to soup and then filter using
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">cmoncrawl.processor.pipeline.extractor.BaseExtractor.filter_soup()</span></code> (slow).</p>
+</section>
+<section id="extract-fields-from-the-page">
+<h2>5. Extract fields from the page<a class="headerlink" href="#extract-fields-from-the-page" title="Link to this heading"></a></h2>
+<p>The extracting function defined by the extractor is used to extract the fields from the page.
+Just extract the values and return them in dict.</p>
+</section>
+<section id="file-saving">
+<h2>6. File saving<a class="headerlink" href="#file-saving" title="Link to this heading"></a></h2>
+<p>With the field extracted we need to save them to a file.
+By default the fields are saved in json file.
+The way the file is saved is defined by streamers.
+All of the currently implemented streamers are derived from <a class="reference internal" href="../generated/cmoncrawl.processor.pipeline.streamer.html#cmoncrawl.processor.pipeline.streamer.BaseStreamerFile" title="cmoncrawl.processor.pipeline.streamer.BaseStreamerFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">cmoncrawl.processor.pipeline.streamer.BaseStreamerFile</span></code></a>.
+Which defined how are the files saved, but the content parsing is left to the derived classes.</p>
+<p>Currently we support 2 streamers:</p>
+<ul class="simple">
+<li><p>JSON (<a class="reference internal" href="../generated/cmoncrawl.processor.pipeline.streamer.html#cmoncrawl.processor.pipeline.streamer.StreamerFileJSON" title="cmoncrawl.processor.pipeline.streamer.StreamerFileJSON"><code class="xref py py-class docutils literal notranslate"><span class="pre">cmoncrawl.processor.pipeline.streamer.StreamerFileJSON</span></code></a>) and one for html (<a class="reference internal" href="../generated/cmoncrawl.processor.pipeline.streamer.html#cmoncrawl.processor.pipeline.streamer.StreamerFileHTML" title="cmoncrawl.processor.pipeline.streamer.StreamerFileHTML"><code class="xref py py-class docutils literal notranslate"><span class="pre">cmoncrawl.processor.pipeline.streamer.StreamerFileHTML</span></code></a>), which creates a json per line output, and outputs all extracted data</p></li>
+<li><p>HTML (<a class="reference internal" href="../generated/cmoncrawl.processor.pipeline.streamer.html#cmoncrawl.processor.pipeline.streamer.StreamerFileHTML" title="cmoncrawl.processor.pipeline.streamer.StreamerFileHTML"><code class="xref py py-class docutils literal notranslate"><span class="pre">cmoncrawl.processor.pipeline.streamer.StreamerFileHTML</span></code></a>), which creates a html file (assuming the html is defined in extracted data[‘html’]).</p></li>
+</ul>
+<p>If you want to debug you might want to use <a class="reference internal" href="../generated/cmoncrawl.processor.pipeline.streamer.html#cmoncrawl.processor.pipeline.streamer.MemoryStreamer" title="cmoncrawl.processor.pipeline.streamer.MemoryStreamer"><code class="xref py py-class docutils literal notranslate"><span class="pre">cmoncrawl.processor.pipeline.streamer.MemoryStreamer</span></code></a> which outputs the data to memory instead of file.</p>
+<p>If you would like different format you can create your own saver by inheriting from <a class="reference internal" href="../generated/cmoncrawl.processor.pipeline.streamer.html#cmoncrawl.processor.pipeline.streamer.IStreamer" title="cmoncrawl.processor.pipeline.streamer.IStreamer"><code class="xref py py-class docutils literal notranslate"><span class="pre">cmoncrawl.processor.pipeline.streamer.IStreamer</span></code></a> and then changing pipeline creation with your new outstreamer.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Programming Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="practice.html" class="btn btn-neutral float-right" title="How to extract from Common Crawl (practice)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Hynek Kydlíček.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

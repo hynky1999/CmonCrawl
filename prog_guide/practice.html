@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How to extract from Common Crawl (practice) &mdash; CmonCrawl 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../_static/copybutton.js?v=f281be69"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Miscellaneous" href="../misc/index.html" />
+    <link rel="prev" title="How to extract from Common Crawl (theory)" href="overview.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            CmonCrawl
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli/index.html">Command Line Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extraction/index.html">Extraction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Programming Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="overview.html">How to extract from Common Crawl (theory)</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">How to extract from Common Crawl (practice)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline">Pipeline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#simulatenous-querying-and-extracting">Simulatenous querying and extracting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#query-records-and-then-extract">Query records and then extract</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#distributed-simulatenous-high-throughput-querying-and-extracting">Distributed Simulatenous high-throughput querying and extracting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#be-cooperative">Be cooperative</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../misc/index.html">Miscellaneous</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CmonCrawl</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Programming Guide</a></li>
+      <li class="breadcrumb-item active">How to extract from Common Crawl (practice)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/prog_guide/practice.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="how-to-extract-from-common-crawl-practice">
+<span id="custom-pipeline"></span><h1>How to extract from Common Crawl (practice)<a class="headerlink" href="#how-to-extract-from-common-crawl-practice" title="Link to this heading"></a></h1>
+<p>Since we now know what steps should we do in order to extract data from Common Crawl and
+how they map to <code class="docutils literal notranslate"><span class="pre">cmoncrawl</span></code> primitives, let’s now see how to do it in practice.</p>
+<section id="pipeline">
+<h2>Pipeline<a class="headerlink" href="#pipeline" title="Link to this heading"></a></h2>
+<p>We already know how to get the domain records and we also know how to download, extract and save the data.
+The pipeline allows use to combine all but the first step into single object that can be used to extract data from Common Crawl.</p>
+<p>To create a pipeline simply initialize <code class="xref py py-class docutils literal notranslate"><span class="pre">cmoncrawl.processor.pipeline.pipeline.ProcessorPipeline</span></code> with Downloader, Router and Streamer.
+You can then call it’s <code class="xref py py-meth docutils literal notranslate"><span class="pre">cmoncrawl.processor.pipeline.pipeline.ProcessorPipeline.process_domain_record()</span></code> method with the query and it will run the whole pipeline for single domain record.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The exceptions are not handled by the pipeline and are passed to the caller, to handle them as you wish.</p>
+</div>
+</section>
+<section id="simulatenous-querying-and-extracting">
+<h2>Simulatenous querying and extracting<a class="headerlink" href="#simulatenous-querying-and-extracting" title="Link to this heading"></a></h2>
+<p>Now all we need to resolve is how t effectively connect querying index and download/extracting (pipeline) data.
+One way is to query index and whenever we get a domain record, we can pass it to the pipeline, this is exactly how
+<code class="xref py py-func docutils literal notranslate"><span class="pre">cmoncrawl.integrations.middleware.synchronized.query_and_extract()</span></code> works. This works great when we use Gateway DAO,
+as the querying index takes about the same time as downloading/extracting. This is how we can do it:</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">Simultaneously query and extract data from Common Crawl</span><a class="headerlink" href="#id1" title="Link to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<span class="kn">from</span> <span class="nn">cmoncrawl.aggregator.gateway_query</span> <span class="kn">import</span> <span class="n">GatewayAggregator</span>
+<span class="kn">from</span> <span class="nn">cmoncrawl.processor.pipeline.extractor</span> <span class="kn">import</span> <span class="n">BaseExtractor</span>
+<span class="kn">from</span> <span class="nn">cmoncrawl.processor.pipeline.pipeline</span> <span class="kn">import</span> <span class="n">ProcessorPipeline</span>
+<span class="kn">from</span> <span class="nn">cmoncrawl.processor.pipeline.downloader</span> <span class="kn">import</span> <span class="n">AsyncDownloader</span>
+<span class="kn">from</span> <span class="nn">cmoncrawl.processor.pipeline.router</span> <span class="kn">import</span> <span class="n">Router</span>
+<span class="kn">from</span> <span class="nn">cmoncrawl.processor.pipeline.streamer</span> <span class="kn">import</span> <span class="n">StreamerFileJSON</span>
+<span class="kn">from</span> <span class="nn">cmoncrawl.common.loggers</span> <span class="kn">import</span> <span class="n">all_purpose_logger</span>
+<span class="kn">from</span> <span class="nn">cmoncrawl.common.types</span> <span class="kn">import</span> <span class="n">MatchType</span><span class="p">,</span> <span class="n">PipeMetadata</span>
+<span class="kn">from</span> <span class="nn">cmoncrawl.middleware.synchronized</span> <span class="kn">import</span> <span class="n">query_and_extract</span>
+<span class="kn">from</span> <span class="nn">cmoncrawl.processor.dao.s3</span> <span class="kn">import</span> <span class="n">S3Dao</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+
+<span class="k">class</span> <span class="nc">YourCustomExtractor</span><span class="p">(</span><span class="n">BaseExtractor</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">extract_soup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">soup</span><span class="p">:</span> <span class="n">BeautifulSoup</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="n">PipeMetadata</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Dummy&quot;</span><span class="p">}</span>
+
+<span class="n">your_custom_extractor</span> <span class="o">=</span> <span class="n">YourCustomExtractor</span><span class="p">()</span>
+
+<span class="c1"># We register our custom extractor to the router</span>
+<span class="n">router</span> <span class="o">=</span> <span class="n">Router</span><span class="p">()</span>
+<span class="n">router</span><span class="o">.</span><span class="n">load_extractor</span><span class="p">(</span><span class="s2">&quot;ext&quot;</span><span class="p">,</span> <span class="n">your_custom_extractor</span><span class="p">)</span>
+<span class="n">router</span><span class="o">.</span><span class="n">register_route</span><span class="p">(</span><span class="s2">&quot;ext&quot;</span><span class="p">,</span> <span class="s2">&quot;.*bbc.com.*&quot;</span><span class="p">)</span>
+<span class="n">streamer</span> <span class="o">=</span> <span class="n">StreamerFileJSON</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;extracted&quot;</span><span class="p">),</span> <span class="n">max_directory_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">max_file_size</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+
+<span class="k">async</span> <span class="k">with</span> <span class="n">S3Dao</span><span class="p">(</span><span class="n">aws_profile</span><span class="o">=</span><span class="s2">&quot;dev&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">dao</span><span class="p">:</span>
+    <span class="n">downloader</span> <span class="o">=</span> <span class="n">AsyncDownloader</span><span class="p">(</span><span class="n">dao</span><span class="p">)</span>
+    <span class="n">pipeline</span> <span class="o">=</span> <span class="n">ProcessorPipeline</span><span class="p">(</span><span class="n">downloader</span><span class="o">=</span><span class="n">downloader</span><span class="p">,</span> <span class="n">router</span><span class="o">=</span><span class="n">router</span><span class="p">,</span> <span class="n">outstreamer</span><span class="o">=</span><span class="n">streamer</span><span class="p">)</span>
+
+    <span class="n">index_agg</span> <span class="o">=</span> <span class="n">GatewayAggregator</span><span class="p">(</span>
+        <span class="n">urls</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;bbc.com&quot;</span><span class="p">],</span>
+        <span class="n">match_type</span><span class="o">=</span><span class="n">MatchType</span><span class="o">.</span><span class="n">DOMAIN</span><span class="p">,</span>
+        <span class="n">limit</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">processed_urls</span> <span class="o">=</span> <span class="k">await</span> <span class="n">query_and_extract</span><span class="p">(</span><span class="n">index_agg</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="query-records-and-then-extract">
+<h2>Query records and then extract<a class="headerlink" href="#query-records-and-then-extract" title="Link to this heading"></a></h2>
+<p>The otherway is to query index for all records and download/extract them afterwards. This approach works
+great with Athena as the query takes around 1-2 minutes. With this approach we can than abuse both multiprocessing to process
+and asyncio queues to download the data faster. This is how we can do it:</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">Query and extract data from Common Crawl</span><a class="headerlink" href="#id2" title="Link to this code"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cmoncrawl.aggregator.athena_query</span> <span class="kn">import</span> <span class="n">AthenaAggregator</span>
+<span class="kn">from</span> <span class="nn">cmoncrawl.common.types</span> <span class="kn">import</span> <span class="n">MatchType</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<span class="kn">from</span> <span class="nn">cmoncrawl.aggregator.gateway_query</span> <span class="kn">import</span> <span class="n">GatewayAggregator</span>
+<span class="kn">from</span> <span class="nn">cmoncrawl.processor.pipeline.extractor</span> <span class="kn">import</span> <span class="n">BaseExtractor</span>
+<span class="kn">from</span> <span class="nn">cmoncrawl.processor.pipeline.pipeline</span> <span class="kn">import</span> <span class="n">ProcessorPipeline</span>
+<span class="kn">from</span> <span class="nn">cmoncrawl.processor.pipeline.downloader</span> <span class="kn">import</span> <span class="n">AsyncDownloader</span>
+<span class="kn">from</span> <span class="nn">cmoncrawl.processor.pipeline.router</span> <span class="kn">import</span> <span class="n">Router</span>
+<span class="kn">from</span> <span class="nn">cmoncrawl.processor.pipeline.streamer</span> <span class="kn">import</span> <span class="n">StreamerFileJSON</span>
+<span class="kn">from</span> <span class="nn">cmoncrawl.common.loggers</span> <span class="kn">import</span> <span class="n">all_purpose_logger</span>
+<span class="kn">from</span> <span class="nn">cmoncrawl.common.types</span> <span class="kn">import</span> <span class="n">MatchType</span><span class="p">,</span> <span class="n">PipeMetadata</span>
+<span class="kn">from</span> <span class="nn">cmoncrawl.middleware.synchronized</span> <span class="kn">import</span> <span class="n">extract</span>
+<span class="kn">from</span> <span class="nn">cmoncrawl.processor.dao.s3</span> <span class="kn">import</span> <span class="n">S3Dao</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="c1"># Query</span>
+<span class="n">records</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">async</span> <span class="k">with</span> <span class="n">AthenaAggregator</span><span class="p">(</span><span class="n">urls</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;bbc.com&quot;</span><span class="p">],</span>
+    <span class="n">match_type</span><span class="o">=</span><span class="n">MatchType</span><span class="o">.</span><span class="n">DOMAIN</span><span class="p">,</span>
+    <span class="n">limit</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+    <span class="n">bucket_name</span><span class="o">=</span><span class="s2">&quot;test-dev-cmoncrawl&quot;</span><span class="p">,</span>
+    <span class="n">aws_profile</span><span class="o">=</span><span class="s2">&quot;dev&quot;</span>
+<span class="p">)</span> <span class="k">as</span> <span class="n">agg</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">agg</span><span class="p">:</span>
+        <span class="n">records</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+
+<span class="c1">#Then extract</span>
+
+
+
+<span class="k">class</span> <span class="nc">YourCustomExtractor</span><span class="p">(</span><span class="n">BaseExtractor</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">extract_soup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">soup</span><span class="p">:</span> <span class="n">BeautifulSoup</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="n">PipeMetadata</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Dummy&quot;</span><span class="p">}</span>
+
+<span class="n">your_custom_extractor</span> <span class="o">=</span> <span class="n">YourCustomExtractor</span><span class="p">()</span>
+
+<span class="c1"># We register our custom extractor to the router</span>
+<span class="n">router</span> <span class="o">=</span> <span class="n">Router</span><span class="p">()</span>
+<span class="n">router</span><span class="o">.</span><span class="n">load_extractor</span><span class="p">(</span><span class="s2">&quot;ext&quot;</span><span class="p">,</span> <span class="n">your_custom_extractor</span><span class="p">)</span>
+<span class="n">router</span><span class="o">.</span><span class="n">register_route</span><span class="p">(</span><span class="s2">&quot;ext&quot;</span><span class="p">,</span> <span class="s2">&quot;.*bbc.com.*&quot;</span><span class="p">)</span>
+<span class="n">streamer</span> <span class="o">=</span> <span class="n">StreamerFileJSON</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;extracted&quot;</span><span class="p">),</span> <span class="n">max_directory_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">max_file_size</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+
+<span class="k">async</span> <span class="k">with</span> <span class="n">S3Dao</span><span class="p">(</span><span class="n">aws_profile</span><span class="o">=</span><span class="s2">&quot;dev&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">dao</span><span class="p">:</span>
+    <span class="n">downloader</span> <span class="o">=</span> <span class="n">AsyncDownloader</span><span class="p">(</span><span class="n">dao</span><span class="p">)</span>
+    <span class="n">pipeline</span> <span class="o">=</span> <span class="n">ProcessorPipeline</span><span class="p">(</span><span class="n">downloader</span><span class="o">=</span><span class="n">downloader</span><span class="p">,</span> <span class="n">router</span><span class="o">=</span><span class="n">router</span><span class="p">,</span> <span class="n">outstreamer</span><span class="o">=</span><span class="n">streamer</span><span class="p">)</span>
+
+    <span class="n">index_agg</span> <span class="o">=</span> <span class="n">GatewayAggregator</span><span class="p">(</span>
+        <span class="n">urls</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;bbc.com&quot;</span><span class="p">],</span>
+        <span class="n">match_type</span><span class="o">=</span><span class="n">MatchType</span><span class="o">.</span><span class="n">DOMAIN</span><span class="p">,</span>
+        <span class="n">limit</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">processed_urls</span> <span class="o">=</span> <span class="k">await</span> <span class="n">extract</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">records</span><span class="o">=</span><span class="p">[(</span><span class="n">rec</span><span class="p">,</span> <span class="p">{})</span> <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">records</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<p>To leverage multiprocessing, simply divide the records into n chunks and for each chunk initialize a new process.</p>
+</section>
+<section id="distributed-simulatenous-high-throughput-querying-and-extracting">
+<h2>Distributed Simulatenous high-throughput querying and extracting<a class="headerlink" href="#distributed-simulatenous-high-throughput-querying-and-extracting" title="Link to this heading"></a></h2>
+<p>Lastly you can leverage <a class="reference internal" href="../generated/cmoncrawl.middleware.stompware.html#cmoncrawl.middleware.stompware.StompAggregator" title="cmoncrawl.middleware.stompware.StompAggregator"><code class="xref py py-class docutils literal notranslate"><span class="pre">cmoncrawl.middleware.stompware.StompAggregator</span></code></a> to query and send data to queue using stomp protocol,
+and simulatenous retrieve the data from the queue and extract it using <a class="reference internal" href="../generated/cmoncrawl.middleware.stompware.html#cmoncrawl.middleware.stompware.StompProcessor" title="cmoncrawl.middleware.stompware.StompProcessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">cmoncrawl.middleware.stompware.StompProcessor</span></code></a>.</p>
+</section>
+<section id="be-cooperative">
+<h2>Be cooperative<a class="headerlink" href="#be-cooperative" title="Link to this heading"></a></h2>
+<p>If you plan to use multiprocessing or distributed approach, please try to be nice to others and limit the number of requests
+at Downloader/Aggregator accordingly.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="overview.html" class="btn btn-neutral float-left" title="How to extract from Common Crawl (theory)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../misc/index.html" class="btn btn-neutral float-right" title="Miscellaneous" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Hynek Kydlíček.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Athena &mdash; CmonCrawl 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../_static/copybutton.js?v=f281be69"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Domain Record" href="domain_record.html" />
+    <link rel="prev" title="Miscellaneous" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            CmonCrawl
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli/index.html">Command Line Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extraction/index.html">Extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../prog_guide/index.html">Programming Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Miscellaneous</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Athena</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#caching">Caching</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="domain_record.html">Domain Record</a></li>
+<li class="toctree-l2"><a class="reference internal" href="domain_record.html#domain-record-jsonl-format">Domain Record JSONL format</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CmonCrawl</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Miscellaneous</a></li>
+      <li class="breadcrumb-item active">Athena</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/misc/athena.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="athena">
+<h1>Athena<a class="headerlink" href="#athena" title="Link to this heading"></a></h1>
+<p>AWS Athena is an interactive query service that makes it easy to analyze data in Amazon S3 using standard SQL.
+Athena is serverless, so there is no infrastructure to manage, and you pay only for the queries that you run.
+Athena is easy to use. Simply point to your data in Amazon S3, define the schema, and start querying using standard SQL.
+Most results are delivered within seconds. With Athena, there’s no need for complex ETL jobs to prepare your data for analysis.
+This makes it easy for anyone with SQL skills to quickly analyze large-scale datasets.</p>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h2>
+<p>In order to use the athena module, you must have AWS account with following credentials:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CommoncrawlDB&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                </span><span class="s2">&quot;athena:CreateDataCatalog&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="s2">&quot;glue:BatchCreatePartition&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="s2">&quot;athena:StartQueryExecution&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="s2">&quot;glue:CreateTable&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="s2">&quot;glue:CreateDatabase&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="s2">&quot;glue:GetTable&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="s2">&quot;glue:GetTables&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="s2">&quot;glue:GetDatabase&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="s2">&quot;glue:GetDatabases&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="s2">&quot;glue:UpdateTable&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="s2">&quot;glue:UpdatePartition&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="s2">&quot;glue:GetPartition&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="s2">&quot;glue:GetPartitions&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="s2">&quot;athena:GetQueryExecution&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="s2">&quot;athena:ListTableMetadata&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="s2">&quot;s3:GetBucketLocation&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="s2">&quot;s3:DescribeJob&quot;</span>
+<span class="w">            </span><span class="p">],</span>
+<span class="w">            </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ResultsBucket&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3:ListBucket&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:s3:::cmoncrawl-testbucket&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ResultsBucket-objects&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                </span><span class="s2">&quot;s3:PutObject&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="s2">&quot;s3:GetObject&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="s2">&quot;s3:DeleteObject&quot;</span>
+<span class="w">            </span><span class="p">],</span>
+<span class="w">            </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:s3:::cmoncrawl-testbucket/*&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;Sid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CommoncrawlBucket&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                </span><span class="s2">&quot;s3:GetObject&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="s2">&quot;s3:ListBucket&quot;</span>
+<span class="w">            </span><span class="p">],</span>
+<span class="w">            </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                </span><span class="s2">&quot;arn:aws:s3:::commoncrawl/*&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="s2">&quot;arn:aws:s3:::commoncrawl&quot;</span>
+<span class="w">            </span><span class="p">]</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="caching">
+<h2>Caching<a class="headerlink" href="#caching" title="Link to this heading"></a></h2>
+<p>If you provide a bucket name when itnializing the <a class="reference internal" href="../generated/cmoncrawl.aggregator.athena_query.html#cmoncrawl.aggregator.athena_query.AthenaAggregator" title="cmoncrawl.aggregator.athena_query.AthenaAggregator"><code class="xref py py-class docutils literal notranslate"><span class="pre">cmoncrawl.aggregator.athena_query.AthenaAggregator</span></code></a>,
+the results of the query will be cached in the bucket. Whenever you make the same query the results will be reused.
+This means that the bucket is not automatically cleaned up and it’s your responsibility to do so.</p>
+<p>If you don’t provide a bucket name, the results will not be cached and randomly generated bucket will be used and deleted
+after the query is finished.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Miscellaneous" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="domain_record.html" class="btn btn-neutral float-right" title="Domain Record" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Hynek Kydlíček.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
