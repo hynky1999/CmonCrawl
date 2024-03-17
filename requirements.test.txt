@@ -1,5 +1,5 @@
 -r requirements.txt
 python-dotenv==1.0.0
 moto==4.2.5
-mysqlclient==2.2.0
+mysqlclient==2.2.4
 parameterized==0.9.0
