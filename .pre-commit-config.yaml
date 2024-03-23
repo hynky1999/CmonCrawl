@@ -12,7 +12,7 @@ repos:
     -   id: mixed-line-ending
 
 - repo: https://github.com/myint/autoflake
-  rev: v1.4
+  rev: v2.3.1
   hooks:
     - id: autoflake
 

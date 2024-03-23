@@ -4,6 +4,7 @@ import aioboto3
 from botocore.config import Config
 from botocore.exceptions import ClientError
 
+from cmoncrawl.common.caching import AbstractDomainRecordCache
 from cmoncrawl.common.types import DomainRecord
 from cmoncrawl.processor.dao.base import DownloadError, ICC_Dao
 
@@ -15,6 +16,7 @@ class S3Dao(ICC_Dao):
     Args:
         aws_profile (str, optional): The AWS profile to use for the download. Defaults to None.
         bucket_name (str, optional): The name of the S3 bucket. Defaults to "commoncrawl".
+        cache (AbstractDomainRecordCache, optional): Cache to use for downloading from s3.
 
     Attributes:
         bucket_name (str): The name of the S3 bucket.
@@ -32,11 +34,15 @@ class S3Dao(ICC_Dao):
     """
 
     def __init__(
-        self, aws_profile: str | None = None, bucket_name: str = "commoncrawl"
+        self,
+        aws_profile: str | None = None,
+        bucket_name: str = "commoncrawl",
+        cache: AbstractDomainRecordCache | None = None,
     ) -> None:
         self.bucket_name = bucket_name
         self.aws_profile = aws_profile
         self.client = None
+        self.cache = cache
 
     async def __aenter__(self) -> "S3Dao":
         # We handle the retries ourselves, so we disable the botocore retries
@@ -73,6 +79,11 @@ class S3Dao(ICC_Dao):
                 "S3Dao client is not initialized, did you forget to use async with?"
             )
 
+        if self.cache:
+            cached_bytes = self.cache.get(domain_record)
+            if cached_bytes is not None:
+                return cached_bytes
+
         file_name = domain_record.filename
         byte_range = f"bytes={domain_record.offset}-{domain_record.offset+domain_record.length-1}"
 
@@ -83,5 +94,8 @@ class S3Dao(ICC_Dao):
             file_bytes = await response["Body"].read()
         except ClientError as e:
             raise DownloadError(f"AWS: {e.response['Error']['Message']}", 500)
+
+        if self.cache:
+            self.cache.set(domain_record, file_bytes)
 
         return file_bytes
