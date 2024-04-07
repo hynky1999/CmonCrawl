@@ -10,6 +10,7 @@ from cmoncrawl.common.types import ExtractConfig
 from cmoncrawl.integrations.extract import (
     ExtractMode,
     extract_from_files,
+    load_config,
 )
 from cmoncrawl.integrations.utils import DAOname
 
@@ -30,11 +31,14 @@ class ExtractFiles(unittest.IsolatedAsyncioTestCase):
 
     async def test_load_config(self):
         cfg_path = self.base_folder / "cfg.json"
-        with open(cfg_path, "r") as f:
-            js = json.load(f)
-            cfg: ExtractConfig = ExtractConfig.model_validate(js)
+        cfg: ExtractConfig = load_config(cfg_path)
 
         self.assertEqual(cfg.routes[0].extractors[0].name, "test_extractor")
+
+    async def test_load_config_invalid_json(self):
+        cfg_path = self.base_folder / "cfg_invalid.json"
+        with self.assertRaises(ValueError):
+            load_config(cfg_path)
 
     @parameterized.expand([(DAOname.API,), (DAOname.S3,)])
     async def test_extract_from_records(self, dao: DAOname):

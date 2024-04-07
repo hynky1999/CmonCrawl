@@ -104,6 +104,8 @@ Set up a configuration file, `config.json`, to specify the behavior of your extr
     ]
 }
 ```
+Please note that the configuration file `config.json` must be a valid JSON. Therefore, comments as shown in the example above cannot be included directly in the JSON file.
+
 
 ### Step: 4 Run the extractor
 Test your extractor with the following command:

@@ -174,8 +174,13 @@ def get_domain_records_html(
 
 
 def load_config(config_path: Path) -> ExtractConfig:
-    with open(config_path, "r") as f:
-        config = json.load(f)
+    try:
+        with open(config_path, "r") as f:
+            config = json.load(f)
+    except Exception as e:
+        raise ValueError(
+            f"Failed to load extractor config. Ensure it's valid JSON."
+        ) from e
     return ExtractConfig.model_validate(config)
 
 
@@ -273,9 +278,11 @@ def run_extract(args: argparse.Namespace):
         _extract_task,
         [
             (
-                args.output_path / f"{file.stem}"
-                if args.n_proc != 1
-                else args.output_path,
+                (
+                    args.output_path / f"{file.stem}"
+                    if args.n_proc != 1
+                    else args.output_path
+                ),
                 config,
                 [file],
                 args,
