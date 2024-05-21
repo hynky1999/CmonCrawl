@@ -48,7 +48,7 @@ In order to use the athena module, you must have AWS account with following cred
                 "Resource": "arn:aws:s3:::cmoncrawl-testbucket"
             },
             {
-                "Sid": "ResultsBucket-objects",
+                "Sid": "ResultsBucketObjects",
                 "Effect": "Allow",
                 "Action": [
                     "s3:PutObject",
